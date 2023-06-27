@@ -1,166 +1,168 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState, useEffect, useRef, useContext } from 'react'
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import {
     // GET_TABLEDATA,
     // GET_ALL_FITNESS_PACKAGE_BY_TYPE,
     // GET_ALL_CLIENT_PACKAGE,
     GET_TAG_BY_ID
-} from '../../graphQL/queries'
-import { useQuery } from '@apollo/client'
-import { Row, Col, Dropdown } from 'react-bootstrap'
-import SchedulerPage from '../../../program-builder/program-template/scheduler'
-import moment from 'moment'
-import FitnessAction from '../FitnessAction'
-import AuthContext from '../../../../context/auth-context'
-import { Link } from 'react-router-dom'
+} from '../../graphQL/queries';
+import { useQuery } from '@apollo/client';
+import { Row, Col, Dropdown } from 'react-bootstrap';
+import SchedulerPage from '../../../program-builder/program-template/scheduler';
+import moment from 'moment';
+import FitnessAction from '../FitnessAction';
+import AuthContext from '../../../../context/auth-context';
+import { Link } from 'react-router-dom';
 // import YoutubeActive from "./assets/youtube_active.svg";
 
-import { flattenObj } from '../../../../components/utils/responseFlatten'
-import '../Group/actionButton.css'
-import Loader from '../../../../components/Loader/Loader'
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import '../Group/actionButton.css';
+import Loader from '../../../../components/Loader/Loader';
 
 const Scheduler: React.FC = () => {
-    const auth = useContext(AuthContext)
-    const last = window.location.pathname.split('/').reverse()
-    const tagId = window.location.pathname.split('/').pop()
-    const [show, setShow] = useState(false)
+    const auth = useContext(AuthContext);
+    const last = window.location.pathname.split('/').reverse();
+    const tagId = window.location.pathname.split('/').pop();
+    const [show, setShow] = useState(false);
     // const [totalClasses, setTotalClasses] = useState<any>([]);
-    const [tag, setTag] = useState<any>()
-    const [scheduleDate, setScheduleDate] = useState(moment().startOf('month').format('YYYY-MM-DD'))
-    const [channelStartDate, setChannelStartDate] = useState('')
-    const [channelEndDate, setChannelEndDate] = useState('')
+    const [tag, setTag] = useState<any>();
+    const [scheduleDate, setScheduleDate] = useState(
+        moment().startOf('month').format('YYYY-MM-DD')
+    );
+    const [channelStartDate, setChannelStartDate] = useState('');
+    const [channelEndDate, setChannelEndDate] = useState('');
     // this is used for monthly toggle
-    const [prevDate, setPrevDate] = useState('')
-    const [nextDate, setNextDate] = useState('')
-    const [sessionIds, setSessionIds] = useState<any>([])
-    const [clientIds, setClientIds] = useState<any>([])
+    const [prevDate, setPrevDate] = useState('');
+    const [nextDate, setNextDate] = useState('');
+    const [sessionIds, setSessionIds] = useState<any>([]);
+    const [clientIds, setClientIds] = useState<any>([]);
     // these are the sessions that will passed onto the scheduler
-    const [schedulerSessions, setSchedulerSessions] = useState<any>([])
+    const [schedulerSessions, setSchedulerSessions] = useState<any>([]);
 
-    const fitnessActionRef = useRef<any>(null)
+    const fitnessActionRef = useRef<any>(null);
 
     useEffect(() => {
         setTimeout(() => {
-            setShow(true)
-        }, 1500)
-    }, [show])
+            setShow(true);
+        }, 1500);
+    }, [show]);
 
     function handleRangeDates(startDate: string, endDate: string) {
-        setPrevDate(moment(startDate).format('YYYY-MM-DD'))
+        setPrevDate(moment(startDate).format('YYYY-MM-DD'));
 
         if (moment(startDate).add(30, 'days').isBefore(moment(endDate))) {
-            setNextDate(moment(startDate).add(30, 'days').format('YYYY-MM-DD'))
+            setNextDate(moment(startDate).add(30, 'days').format('YYYY-MM-DD'));
         } else {
-            setNextDate(moment(endDate).format('YYYY-MM-DD'))
+            setNextDate(moment(endDate).format('YYYY-MM-DD'));
         }
     }
 
     const mainQuery = useQuery(GET_TAG_BY_ID, {
         variables: { id: tagId },
         onCompleted: (data) => loadTagData(data)
-    })
+    });
 
     function loadTagData(data: any) {
-        setSchedulerSessions(data)
-        const flattenData = flattenObj({ ...data })
+        setSchedulerSessions(data);
+        const flattenData = flattenObj({ ...data });
 
-        const total = [0]
-        const clientValues = [...clientIds]
-        const values = [...flattenData.tags[0].sessions]
-        const ids = [...sessionIds]
+        const total = [0];
+        const clientValues = [...clientIds];
+        const values = [...flattenData.tags[0].sessions];
+        const ids = [...sessionIds];
         for (let i = 0; i < values.length; i++) {
-            ids.push(values[i].id)
+            ids.push(values[i].id);
             if (values[i].tag === 'Classic') {
-                total[0] += 1
+                total[0] += 1;
             }
         }
         setChannelStartDate(
             moment(flattenData.tags[0].fitnesspackage.Start_date).format('YYYY-MM-DD')
-        )
-        setChannelEndDate(moment(flattenData.tags[0].fitnesspackage.End_date).format('YYYY-MM-DD'))
+        );
+        setChannelEndDate(moment(flattenData.tags[0].fitnesspackage.End_date).format('YYYY-MM-DD'));
         handleRangeDates(
             flattenData.tags[0].fitnesspackage.Start_date,
             flattenData.tags[0].fitnesspackage.End_date
-        )
-        setSessionIds(ids)
-        setClientIds(clientValues)
+        );
+        setSessionIds(ids);
+        setClientIds(clientValues);
         // setTotalClasses(total);
-        setTag(flattenData.tags[0])
+        setTag(flattenData.tags[0]);
     }
 
     function calculateLastSession(sessions) {
         if (sessions.length === 0) {
-            return 'N/A'
+            return 'N/A';
         }
 
-        const moments = sessions.map((d) => moment(d.session_date))
-        const maxDate = moment.max(moments)
+        const moments = sessions.map((d) => moment(d.session_date));
+        const maxDate = moment.max(moments);
 
-        return maxDate.format('MMM Do,YYYY')
+        return maxDate.format('MMM Do,YYYY');
     }
 
     function calculateDailySessions(sessions) {
         const dailySessions = sessions.filter(
             (ses: any) => ses.session_date === moment().format('YYYY-MM-DD')
-        )
-        return dailySessions.length >= 1 ? dailySessions.length : 'N/A'
+        );
+        return dailySessions.length >= 1 ? dailySessions.length : 'N/A';
     }
 
     function calculateDays(sd: string, ed: string) {
-        const days = moment(ed).diff(moment(sd), 'days')
-        return days + 1
+        const days = moment(ed).diff(moment(sd), 'days');
+        return days + 1;
     }
 
     function handleDatePicked(date: string) {
         // setScheduleDate(moment(date).format('YYYY-MM-DD'));
 
-        setPrevDate(moment(date).format('YYYY-MM-DD'))
+        setPrevDate(moment(date).format('YYYY-MM-DD'));
 
         if (moment(date).add(30, 'days').isBefore(moment(channelEndDate))) {
-            setNextDate(moment(date).add(30, 'days').format('YYYY-MM-DD'))
+            setNextDate(moment(date).add(30, 'days').format('YYYY-MM-DD'));
         } else {
-            setNextDate(moment(channelEndDate).format('YYYY-MM-DD'))
+            setNextDate(moment(channelEndDate).format('YYYY-MM-DD'));
         }
     }
 
     // this is to handle the left chevron, if we have to display it or no.
     function handlePrevDisplay(date: string) {
-        return moment(date).isSame(moment(channelStartDate)) ? 'none' : ''
+        return moment(date).isSame(moment(channelStartDate)) ? 'none' : '';
     }
 
     // this is to handle the right chevron, if we have to display it or no.
     function handleNextDisplay(date: string) {
-        return moment(date).isSame(moment(channelEndDate)) ? 'none' : ''
+        return moment(date).isSame(moment(channelEndDate)) ? 'none' : '';
     }
 
     function handlePrevMonth(date: string) {
         // setScheduleDate(moment(date).subtract(1, 'month').format('YYYY-MM-DD'));
-        setNextDate(moment(date).format('YYYY-MM-DD'))
+        setNextDate(moment(date).format('YYYY-MM-DD'));
 
         if (moment(date).subtract(30, 'days').isSameOrAfter(moment(channelStartDate))) {
-            setPrevDate(moment(date).subtract(30, 'days').format('YYYY-MM-DD'))
+            setPrevDate(moment(date).subtract(30, 'days').format('YYYY-MM-DD'));
         } else {
-            setPrevDate(moment(channelStartDate).format('YYYY-MM-DD'))
+            setPrevDate(moment(channelStartDate).format('YYYY-MM-DD'));
         }
     }
 
     function handleNextMonth(date: string) {
         // setScheduleDate(moment(date).add(1, 'month').format('YYYY-MM-DD'));
-        setPrevDate(moment(date).format('YYYY-MM-DD'))
+        setPrevDate(moment(date).format('YYYY-MM-DD'));
 
         if (moment(date).add(30, 'days').isBefore(moment(channelEndDate))) {
-            setNextDate(moment(date).add(30, 'days').format('YYYY-MM-DD'))
+            setNextDate(moment(date).add(30, 'days').format('YYYY-MM-DD'));
         } else {
-            setNextDate(moment(channelEndDate).format('YYYY-MM-DD'))
+            setNextDate(moment(channelEndDate).format('YYYY-MM-DD'));
         }
     }
 
     function handleCallback() {
-        mainQuery.refetch()
+        mainQuery.refetch();
         // setSessionIds([]);
     }
 
-    if (!show) return <Loader />
+    if (!show) return <Loader />;
     else
         return (
             <div className="col-lg-12">
@@ -211,7 +213,7 @@ const Scheduler: React.FC = () => {
                                                     tag.client_packages
                                                         .slice(0, 4)
                                                         .map((item, index) => {
-                                                            const postionLeft = 8
+                                                            const postionLeft = 8;
                                                             return (
                                                                 <img
                                                                     key={index}
@@ -226,7 +228,7 @@ const Scheduler: React.FC = () => {
                                                                         }%`
                                                                     }}
                                                                 />
-                                                            )
+                                                            );
                                                         })
                                                 )}
                                             </div>
@@ -247,7 +249,7 @@ const Scheduler: React.FC = () => {
                                                         id: last[0],
                                                         actionType: 'allClients',
                                                         type: 'Live Stream Channel'
-                                                    })
+                                                    });
                                                 }}
                                             >
                                                 View all
@@ -342,7 +344,7 @@ const Scheduler: React.FC = () => {
                                     cursor: 'pointer'
                                 }}
                                 onClick={() => {
-                                    handlePrevMonth(prevDate)
+                                    handlePrevMonth(prevDate);
                                 }}
                                 className="rounded-circle"
                             >
@@ -360,7 +362,7 @@ const Scheduler: React.FC = () => {
                                     cursor: 'pointer'
                                 }}
                                 onClick={() => {
-                                    handleNextMonth(nextDate)
+                                    handleNextMonth(nextDate);
                                 }}
                             >
                                 <i className="fa fa-chevron-right ml-4"></i>
@@ -389,7 +391,7 @@ const Scheduler: React.FC = () => {
                     <FitnessAction ref={fitnessActionRef} callback={() => mainQuery} />
                 </Row>
             </div>
-        )
-}
+        );
+};
 
-export default Scheduler
+export default Scheduler;

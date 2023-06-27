@@ -1,14 +1,14 @@
-import { useMutation, useQuery } from '@apollo/client'
-import React, { useContext, useState } from 'react'
-import authContext from '../../context/auth-context'
-import { Form, Card, Row, Col } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
-import { CREATE_NOTIFICATION_SETTINGS, GET_NOTIFICATION_SETTINGS } from './queries'
-import { flattenObj } from '../../components/utils/responseFlatten'
+import { useMutation, useQuery } from '@apollo/client';
+import React, { useContext, useState } from 'react';
+import authContext from '../../context/auth-context';
+import { Form, Card, Row, Col } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import { CREATE_NOTIFICATION_SETTINGS, GET_NOTIFICATION_SETTINGS } from './queries';
+import { flattenObj } from '../../components/utils/responseFlatten';
 
 const NotificationSetting: React.FC = () => {
-    const auth = useContext(authContext)
-    const [isSettingNotificationCreated, setIsSettingNotificationCreated] = useState<number>(0)
+    const auth = useContext(authContext);
+    const [isSettingNotificationCreated, setIsSettingNotificationCreated] = useState<number>(0);
 
     // eslint-disable-next-line
     const { data: get_notifications, refetch: refetch_notifications } = useQuery(
@@ -16,14 +16,14 @@ const NotificationSetting: React.FC = () => {
         {
             variables: { id: auth.userid },
             onCompleted: (data) => {
-                const flattenData = flattenObj({ ...data })
-                setIsSettingNotificationCreated(flattenData.notificationSettings?.length)
+                const flattenData = flattenObj({ ...data });
+                setIsSettingNotificationCreated(flattenData.notificationSettings?.length);
             }
         }
-    )
+    );
 
     //Notification  Settings
-    const [createNotificationSetting] = useMutation(CREATE_NOTIFICATION_SETTINGS)
+    const [createNotificationSetting] = useMutation(CREATE_NOTIFICATION_SETTINGS);
 
     const createNotification = () => {
         createNotificationSetting({
@@ -48,8 +48,8 @@ const NotificationSetting: React.FC = () => {
                     users_permissions_user: auth.userid
                 }
             }
-        })
-    }
+        });
+    };
 
     return (
         <div>
@@ -78,8 +78,8 @@ const NotificationSetting: React.FC = () => {
                                     checked={isSettingNotificationCreated ? true : false}
                                     disabled={isSettingNotificationCreated !== 0 ? true : false}
                                     onChange={() => {
-                                        createNotification()
-                                        refetch_notifications()
+                                        createNotification();
+                                        refetch_notifications();
                                     }}
                                 />
                             </Form>
@@ -335,7 +335,7 @@ const NotificationSetting: React.FC = () => {
                 ) : null}
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default NotificationSetting
+export default NotificationSetting;

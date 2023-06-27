@@ -1,8 +1,8 @@
-import React from 'react'
-import { Tab, Tabs } from 'react-bootstrap'
-import MonthlySalesGraph from './MonthlySalesGraph'
-import WeeklySalesGraph from './WeeklySalesGraph'
-import '../Styles/navTabStyles.css'
+import React from 'react';
+import { Tab, Tabs } from 'react-bootstrap';
+import MonthlySalesGraph from './MonthlySalesGraph';
+import WeeklySalesGraph from './WeeklySalesGraph';
+import '../Styles/navTabStyles.css';
 
 const SalesGraph: React.FC = () => {
     return (
@@ -16,7 +16,7 @@ const SalesGraph: React.FC = () => {
                 </Tab>
             </Tabs>
         </div>
-    )
-}
+    );
+};
 
-export default SalesGraph
+export default SalesGraph;

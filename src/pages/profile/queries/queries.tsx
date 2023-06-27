@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const FETCH_USER_PROFILE_DATA = gql`
     query fetchUserProfileData($id: ID!) {
@@ -66,7 +66,7 @@ export const FETCH_USER_PROFILE_DATA = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_USER_PROFILE_DATA = gql`
     mutation updateUserProfileData($id: ID!, $data: UsersPermissionsUserInput!) {
@@ -76,7 +76,7 @@ export const UPDATE_USER_PROFILE_DATA = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_ADDRESS_DATA = gql`
     mutation updateAddressData($id: ID!, $data: AddressInput!) {
@@ -89,7 +89,7 @@ export const UPDATE_ADDRESS_DATA = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_ADDRESS = gql`
     mutation createAddress($data: AddressInput!) {
@@ -108,7 +108,7 @@ export const CREATE_ADDRESS = gql`
             }
         }
     }
-`
+`;
 
 export const DELETE_ADDRESS = gql`
     mutation deleteAddress($id: ID!) {
@@ -121,7 +121,7 @@ export const DELETE_ADDRESS = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_EDUCATION_DETAILS = gql`
     mutation createEducationDetails($data: EducationalDetailInput!) {
@@ -131,7 +131,7 @@ export const CREATE_EDUCATION_DETAILS = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_EDUCATION_DETAILS = gql`
     mutation updateEducationData($id: ID!, $data: EducationalDetailInput!) {
@@ -141,7 +141,7 @@ export const UPDATE_EDUCATION_DETAILS = gql`
             }
         }
     }
-`
+`;
 
 export const DELETE_EDUCATION_DETAILS = gql`
     mutation deleteEducationData($id: ID!) {
@@ -154,7 +154,7 @@ export const DELETE_EDUCATION_DETAILS = gql`
             }
         }
     }
-`
+`;
 
 export const FETCH_USERS_PROFILE_DATA = gql`
     query fetchUsersProfileData($id: ID) {
@@ -220,7 +220,7 @@ export const FETCH_USERS_PROFILE_DATA = gql`
             }
         }
     }
-`
+`;
 
 export const ADDRESSES_IS_PRIMARY = gql`
     query addresses($id: ID, $is_primary: Boolean) {
@@ -249,7 +249,7 @@ export const ADDRESSES_IS_PRIMARY = gql`
             }
         }
     }
-`
+`;
 
 export const ADDRESS = gql`
     query address($id: ID) {
@@ -272,7 +272,7 @@ export const ADDRESS = gql`
             }
         }
     }
-`
+`;
 
 export const ADDRESSES = gql`
     query Addresses($id: ID, $start: Int, $limit: Int) {
@@ -304,7 +304,7 @@ export const ADDRESSES = gql`
             }
         }
     }
-`
+`;
 
 export const EDUCATIONAL_DETAILS = gql`
     query educationalDetails($id: ID, $start: Int, $limit: Int) {
@@ -329,4 +329,4 @@ export const EDUCATIONAL_DETAILS = gql`
             }
         }
     }
-`
+`;

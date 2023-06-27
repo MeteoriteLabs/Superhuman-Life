@@ -1,19 +1,19 @@
-import { Row, Button } from 'react-bootstrap'
-import React, { useRef, useState } from 'react'
-import './styles.css'
-import 'slick-carousel/slick/slick.css'
-import 'slick-carousel/slick/slick-theme.css'
-import Slider from 'react-slick'
-import GoalCard from './Card'
-import CreateGoal from './addGoal'
-import { GET_GOALS_NEW } from './queries'
-import { useQuery } from '@apollo/client'
-import { flattenObj } from '../../../../../components/utils/responseFlatten'
+import { Row, Button } from 'react-bootstrap';
+import React, { useRef, useState } from 'react';
+import './styles.css';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import Slider from 'react-slick';
+import GoalCard from './Card';
+import CreateGoal from './addGoal';
+import { GET_GOALS_NEW } from './queries';
+import { useQuery } from '@apollo/client';
+import { flattenObj } from '../../../../../components/utils/responseFlatten';
 
 const Goals: React.FC = () => {
-    const CreateGoalComponent = useRef<any>(null)
-    const [goals, setGoals] = useState<any>([])
-    const last = window.location.pathname.split('/').pop()
+    const CreateGoalComponent = useRef<any>(null);
+    const [goals, setGoals] = useState<any>([]);
+    const last = window.location.pathname.split('/').pop();
 
     const settings = {
         dots: true,
@@ -41,26 +41,26 @@ const Goals: React.FC = () => {
                 }
             }
         ]
-    }
+    };
 
     function getDate(time: any) {
-        const dateObj = new Date(time)
-        const month = dateObj.getMonth() + 1
-        const year = dateObj.getFullYear()
-        const date = dateObj.getDate()
+        const dateObj = new Date(time);
+        const month = dateObj.getMonth() + 1;
+        const year = dateObj.getFullYear();
+        const date = dateObj.getDate();
 
-        return `${date}-${month}-${year}`
+        return `${date}-${month}-${year}`;
     }
 
-    const fetchData = useQuery(GET_GOALS_NEW, { variables: { id: last }, onCompleted: loadData })
+    const fetchData = useQuery(GET_GOALS_NEW, { variables: { id: last }, onCompleted: loadData });
 
     function loadData(data: any) {
-        const flattenData = flattenObj({ ...data })
-        setGoals(flattenData)
+        const flattenData = flattenObj({ ...data });
+        setGoals(flattenData);
     }
 
     function refetchQueryCallback() {
-        fetchData.refetch()
+        fetchData.refetch();
     }
 
     return (
@@ -77,7 +77,7 @@ const Goals: React.FC = () => {
                                     CreateGoalComponent.current.TriggerForm({
                                         id: null,
                                         type: 'create'
-                                    })
+                                    });
                                 }}
                             >
                                 <i className="fas fa-plus-circle"></i> New Goal
@@ -97,7 +97,7 @@ const Goals: React.FC = () => {
                                     <GoalCard
                                         key={index}
                                         click={() => {
-                                            window.location.href = `/pillar/${Detail.id}/${last}`
+                                            window.location.href = `/pillar/${Detail.id}/${last}`;
                                         }}
                                         goalName={Detail?.goals[0]?.name}
                                         startDate={getDate(Date.parse(Detail?.start))}
@@ -105,7 +105,7 @@ const Goals: React.FC = () => {
                                         updatedBy={Detail?.assigned_by[0]?.username}
                                         updatedOn={getDate(Date.parse(Detail?.updatedAt))}
                                     />
-                                )
+                                );
                             })}
                     </Slider>
                 </div>
@@ -175,7 +175,7 @@ const Goals: React.FC = () => {
                     </div>
                </div> */}
         </div>
-    )
-}
+    );
+};
 
-export default Goals
+export default Goals;

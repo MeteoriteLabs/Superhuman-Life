@@ -1,40 +1,40 @@
-import { useMutation, useQuery } from '@apollo/client'
-import React, { useImperativeHandle, useState, useContext } from 'react'
-import StatusModal from '../../../components/StatusModal/StatusModal'
+import { useMutation, useQuery } from '@apollo/client';
+import React, { useImperativeHandle, useState, useContext } from 'react';
+import StatusModal from '../../../components/StatusModal/StatusModal';
 import {
     CREATE_USER_PACKAGE,
     UPDATE_BOOKING_STATUS,
     UPDATE_TAG,
     CREATE_TAG
-} from '../GraphQL/mutation'
-import { GET_TAGS } from '../GraphQL/queries'
-import authContext from '../../../context/auth-context'
-import { Subject } from 'rxjs'
-import { flattenObj } from '../../../components/utils/responseFlatten'
+} from '../GraphQL/mutation';
+import { GET_TAGS } from '../GraphQL/queries';
+import authContext from '../../../context/auth-context';
+import { Subject } from 'rxjs';
+import { flattenObj } from '../../../components/utils/responseFlatten';
 
 interface Operation {
-    id: string
-    type: string
-    actionType: 'manage' | 'view' | 'request' | 'accept' | 'reject'
-    formData: any
+    id: string;
+    type: string;
+    actionType: 'manage' | 'view' | 'request' | 'accept' | 'reject';
+    formData: any;
 }
 
 const BookingAction = (props: { refetchBookings: () => void }, ref: any) => {
-    const [operation, setOperation] = useState<Operation>({} as Operation)
-    const modalTrigger = new Subject()
-    const [showStatusModal, setShowStatusModal] = useState<boolean>(false)
-    const auth = useContext(authContext)
-    const [tagsDetails, setTagsDetails] = useState<any>([])
+    const [operation, setOperation] = useState<Operation>({} as Operation);
+    const modalTrigger = new Subject();
+    const [showStatusModal, setShowStatusModal] = useState<boolean>(false);
+    const auth = useContext(authContext);
+    const [tagsDetails, setTagsDetails] = useState<any>([]);
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: any) => {
-            modalTrigger.next(true)
-            setOperation(msg)
+            modalTrigger.next(true);
+            setOperation(msg);
             if (msg.actionType === 'accept' || msg.actionType === 'reject') {
-                setShowStatusModal(true)
+                setShowStatusModal(true);
             }
         }
-    }))
+    }));
 
     // eslint-disable-next-line
     const { data: get_tags } = useQuery(GET_TAGS, {
@@ -42,13 +42,13 @@ const BookingAction = (props: { refetchBookings: () => void }, ref: any) => {
             id: auth.userid
         },
         onCompleted: (data) => {
-            const flattenData = flattenObj({ ...data })
-            setTagsDetails(flattenData.tags)
+            const flattenData = flattenObj({ ...data });
+            setTagsDetails(flattenData.tags);
         }
-    })
+    });
 
-    const [updateTag] = useMutation(UPDATE_TAG)
-    const [createTag] = useMutation(CREATE_TAG)
+    const [updateTag] = useMutation(UPDATE_TAG);
+    const [createTag] = useMutation(CREATE_TAG);
 
     const [updateBookingStatus] = useMutation(UPDATE_BOOKING_STATUS, {
         onCompleted: (data) => {
@@ -69,7 +69,7 @@ const BookingAction = (props: { refetchBookings: () => void }, ref: any) => {
                     }
                 },
                 onCompleted: (data) => {
-                    const flattenData = flattenObj({ ...data })
+                    const flattenData = flattenObj({ ...data });
 
                     if (
                         operation.type === 'On-Demand PT' ||
@@ -82,7 +82,7 @@ const BookingAction = (props: { refetchBookings: () => void }, ref: any) => {
                                 fitnessPackageID:
                                     flattenData?.createClientPackage.fitnesspackages[0]?.id
                             }
-                        })
+                        });
                     } else {
                         const tag =
                             tagsDetails &&
@@ -91,7 +91,7 @@ const BookingAction = (props: { refetchBookings: () => void }, ref: any) => {
                                 (currentValue) =>
                                     currentValue.fitnesspackage.packagename ===
                                     flattenData.createClientPackage.fitnesspackages[0].packagename
-                            )
+                            );
 
                         for (let i = 0; i < tag.length; i++) {
                             updateTag({
@@ -101,31 +101,31 @@ const BookingAction = (props: { refetchBookings: () => void }, ref: any) => {
                                         client_packages: [flattenData.createClientPackage.id]
                                     }
                                 }
-                            })
+                            });
                         }
                     }
                 }
-            })
-            props.refetchBookings()
+            });
+            props.refetchBookings();
         }
-    })
+    });
 
     const [createUserPackage] = useMutation(CREATE_USER_PACKAGE, {
         onCompleted: (data) => {
-            props.refetchBookings()
+            props.refetchBookings();
         }
-    })
+    });
 
     const statusChangeHandler = () => {
         const updateValue = {
             id: operation.id,
             Booking_status: operation.actionType === 'accept' ? 'accepted' : 'rejected'
-        }
+        };
 
         updateBookingStatus({
             variables: updateValue
-        })
-    }
+        });
+    };
 
     return (
         <div>
@@ -143,7 +143,7 @@ const BookingAction = (props: { refetchBookings: () => void }, ref: any) => {
                 />
             )}
         </div>
-    )
-}
+    );
+};
 
-export default React.forwardRef(BookingAction)
+export default React.forwardRef(BookingAction);

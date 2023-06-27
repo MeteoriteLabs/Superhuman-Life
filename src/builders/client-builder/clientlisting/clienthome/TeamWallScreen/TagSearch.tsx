@@ -1,21 +1,21 @@
-import { useState, useRef, useContext } from 'react'
-import { InputGroup, FormControl, Container } from 'react-bootstrap'
-import { gql, useQuery } from '@apollo/client'
-import AuthContext from '../../../../../context/auth-context'
-import { CHECK_NOTES_NEW } from './queries'
-import { flattenObj } from '../../../../../components/utils/responseFlatten'
+import { useState, useRef, useContext } from 'react';
+import { InputGroup, FormControl, Container } from 'react-bootstrap';
+import { gql, useQuery } from '@apollo/client';
+import AuthContext from '../../../../../context/auth-context';
+import { CHECK_NOTES_NEW } from './queries';
+import { flattenObj } from '../../../../../components/utils/responseFlatten';
 
 const TagSearch = (props: any) => {
-    const last = window.location.pathname.split('/').pop()
-    const [packageLists, setPackageLists] = useState<any[]>([])
-    const [searchInput, setSearchInput] = useState(null)
-    const [errorMsg, setErrorMsg] = useState('')
-    const [selected, setSelected] = useState<any[]>([])
-    const inputField = useRef<any>()
-    const auth = useContext(AuthContext)
-    let skipval = true
-    const Arr: any = []
-    const [idArray, setIdArray] = useState<any>()
+    const last = window.location.pathname.split('/').pop();
+    const [packageLists, setPackageLists] = useState<any[]>([]);
+    const [searchInput, setSearchInput] = useState(null);
+    const [errorMsg, setErrorMsg] = useState('');
+    const [selected, setSelected] = useState<any[]>([]);
+    const inputField = useRef<any>();
+    const auth = useContext(AuthContext);
+    let skipval = true;
+    const Arr: any = [];
+    const [idArray, setIdArray] = useState<any>();
 
     const GET_GOALLIST = gql`
         query TagListQuery($filter: String!, $id: ID) {
@@ -34,7 +34,7 @@ const TagSearch = (props: any) => {
                 }
             }
         }
-    `
+    `;
 
     const GET_GOALLIST_ID = gql`
         query TagListQuery($id: ID) {
@@ -47,16 +47,16 @@ const TagSearch = (props: any) => {
                 }
             }
         }
-    `
+    `;
 
     useQuery(GET_GOALLIST_ID, {
         variables: { id: props.value },
         onCompleted: storeName,
         skip: !props.value
-    })
+    });
     function storeName(e: any) {
-        const flattenData = flattenObj({ ...e })
-        setSelected([{ value: flattenData.workouts[0].workouttitle, id: props.value }])
+        const flattenData = flattenObj({ ...e });
+        setSelected([{ value: flattenData.workouts[0].workouttitle, id: props.value }]);
     }
 
     function FetchPackageList(_variable: any = { filter: ' ', id: auth.userid }) {
@@ -64,81 +64,81 @@ const TagSearch = (props: any) => {
             variables: _variable,
             onCompleted: loadPackageList,
             skip: !searchInput
-        })
+        });
     }
 
     function loadPackageList(data: any) {
-        const flattenData = flattenObj({ ...data })
+        const flattenData = flattenObj({ ...data });
         setPackageLists(
             [...flattenData.workouts].map((p) => {
                 if (!idArray.includes(p.id)) {
                     return {
                         id: p.id,
                         name: p.workouttitle
-                    }
+                    };
                 }
-                return {}
+                return {};
             })
-        )
+        );
     }
     function FetchNotes(_variable: any = { id: auth.userid, clientid: last }) {
-        useQuery(CHECK_NOTES_NEW, { variables: _variable, onCompleted: loadNotes })
+        useQuery(CHECK_NOTES_NEW, { variables: _variable, onCompleted: loadNotes });
     }
     function loadNotes(d: any) {
-        const flattenData = flattenObj({ ...d })
+        const flattenData = flattenObj({ ...d });
         for (let i = 0; i < flattenData.feedbackNotes.length; i++) {
-            Arr.push(flattenData.feedbackNotes[i].resource_id)
+            Arr.push(flattenData.feedbackNotes[i].resource_id);
         }
-        setIdArray(Arr)
+        setIdArray(Arr);
     }
 
     function Search(data: any) {
         if (data.length > 0) {
-            setSearchInput(data)
-            skipval = false
+            setSearchInput(data);
+            skipval = false;
         } else {
-            setPackageLists([])
+            setPackageLists([]);
         }
     }
 
     function handleSelectedPackageAdd(name: any, id: any) {
-        const values = [...selected]
+        const values = [...selected];
         if (values.length === 1) {
-            setErrorMsg('(Only One Tag Allowed)')
+            setErrorMsg('(Only One Tag Allowed)');
         } else {
-            const a = values.find((e) => e.id === id)
+            const a = values.find((e) => e.id === id);
             if (!a) {
-                values.push({ value: name, id: id })
-                setSelected(values)
+                values.push({ value: name, id: id });
+                setSelected(values);
             }
             props.onChange(
                 values
                     .map((e) => {
-                        return e.id
+                        return e.id;
                     })
                     .join(',')
-            )
-            inputField.current.value = ''
-            setPackageLists([])
-            skipval = true
+            );
+            inputField.current.value = '';
+            setPackageLists([]);
+            skipval = true;
         }
     }
 
     function handleSelectedPackageRemove(name: any) {
-        const values = [...selected]
-        values.splice(name, 1)
-        setSelected(values)
-        setErrorMsg('')
+        const values = [...selected];
+        values.splice(name, 1);
+        setSelected(values);
+        setErrorMsg('');
         props.onChange(
             values
                 .map((e) => {
-                    return e.id
+                    return e.id;
                 })
                 .join(',')
-        )
+        );
     }
-    FetchNotes({ id: auth.userid, clientid: last })
-    FetchPackageList({ filter: searchInput, skip: skipval })
+    FetchNotes({ id: auth.userid, clientid: last });
+    FetchPackageList({ filter: searchInput, skip: skipval });
     return (
         <>
             <label style={{ fontSize: 17 }}>Tag</label>
@@ -151,8 +151,8 @@ const TagSearch = (props: any) => {
                     id="package"
                     ref={inputField}
                     onChange={(e) => {
-                        e.preventDefault()
-                        Search(e.target.value)
+                        e.preventDefault();
+                        Search(e.target.value);
                     }}
                     autoComplete="off"
                 />
@@ -167,16 +167,16 @@ const TagSearch = (props: any) => {
                                     className="m-2 p-1 shadow-sm rounded bg-white"
                                     value={p.id}
                                     onClick={(e) => {
-                                        e.preventDefault()
-                                        handleSelectedPackageAdd(p.name, p.id)
+                                        e.preventDefault();
+                                        handleSelectedPackageAdd(p.name, p.id);
                                     }}
                                 >
                                     {p.name}
                                 </option>
                             </Container>
-                        )
+                        );
                     }
-                    return ''
+                    return '';
                 })}
             </>
             <>
@@ -210,11 +210,11 @@ const TagSearch = (props: any) => {
                                 onClick={() => handleSelectedPackageRemove(val.value)}
                             ></i>
                         </div>
-                    )
+                    );
                 })}
             </>
         </>
-    )
-}
+    );
+};
 
-export default TagSearch
+export default TagSearch;

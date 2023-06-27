@@ -1,24 +1,24 @@
-import React, { ChangeEvent } from 'react'
-import { Col, Row, Form } from 'react-bootstrap'
+import React, { ChangeEvent } from 'react';
+import { Col, Row, Form } from 'react-bootstrap';
 
 const AddressForm: React.FC<{
     value: {
-        city: string
-        address1: string
-        type: string
-        address2: string
-        state: string
-        country: string
-        zipcode: string
-    }
-    onChange: (params: string | null) => void
+        city: string;
+        address1: string;
+        type: string;
+        address2: string;
+        state: string;
+        country: string;
+        zipcode: string;
+    };
+    onChange: (params: string | null) => void;
 }> = ({ value, onChange }) => {
     const handleChange = (e) => {
-        const { name, value } = e.target
+        const { name, value } = e.target;
 
-        let formValues = { ...value }
-        onChange(JSON.stringify({ ...formValues, [name]: value }))
-    }
+        let formValues = { ...value };
+        onChange(JSON.stringify({ ...formValues, [name]: value }));
+    };
 
     return (
         <>
@@ -133,7 +133,7 @@ const AddressForm: React.FC<{
                 </Col>
             </Row>
         </>
-    )
-}
+    );
+};
 
-export default AddressForm
+export default AddressForm;

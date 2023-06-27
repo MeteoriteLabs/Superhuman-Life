@@ -1,14 +1,14 @@
-import React, { useState, useRef } from 'react'
-import { InputGroup, FormControl, Container } from 'react-bootstrap'
-import { gql, useQuery } from '@apollo/client'
-import { flattenObj } from '../utils/responseFlatten'
+import React, { useState, useRef } from 'react';
+import { InputGroup, FormControl, Container } from 'react-bootstrap';
+import { gql, useQuery } from '@apollo/client';
+import { flattenObj } from '../utils/responseFlatten';
 
 const EquipmentList: React.FC<{ value: string[]; onChange: (args: string) => void }> = (props) => {
-    const [fitnessEquipments, setFitnessEquipments] = useState<any[]>([])
-    const [searchInput, setSearchInput] = useState(null)
-    const [selected, setSelected] = useState<any[]>(props.value?.length > 0 ? props.value : [])
-    const inputField = useRef<any>()
-    let skipval: Boolean = true
+    const [fitnessEquipments, setFitnessEquipments] = useState<any[]>([]);
+    const [searchInput, setSearchInput] = useState(null);
+    const [selected, setSelected] = useState<any[]>(props.value?.length > 0 ? props.value : []);
+    const inputField = useRef<any>();
+    let skipval: Boolean = true;
 
     const GET_EQUIPMENTLIST = gql`
         query equipmentListQuery($filter: String!) {
@@ -21,65 +21,65 @@ const EquipmentList: React.FC<{ value: string[]; onChange: (args: string) => voi
                 }
             }
         }
-    `
+    `;
 
     function FetchEquipmentList(_variable: {} = { filter: ' ' }) {
         useQuery(GET_EQUIPMENTLIST, {
             variables: _variable,
             onCompleted: loadEquipmentList,
             skip: !searchInput
-        })
+        });
     }
 
     function loadEquipmentList(data: any) {
-        const flattenedData = flattenObj({ ...data })
+        const flattenedData = flattenObj({ ...data });
         setFitnessEquipments(
             [...flattenedData.equipmentLists].map((equipment) => {
                 return {
                     id: equipment.id,
                     name: equipment.name
-                }
+                };
             })
-        )
+        );
     }
 
     function EquipmentSearch(data: any): void {
         if (data.length > 0) {
-            setSearchInput(data)
-            skipval = false
+            setSearchInput(data);
+            skipval = false;
         } else {
-            setFitnessEquipments([])
+            setFitnessEquipments([]);
         }
     }
 
     function handleSelectedEquipmentAdd(name: any, id: any) {
-        const values = [...selected]
-        let a = values.find((e) => e.id === id)
+        const values = [...selected];
+        let a = values.find((e) => e.id === id);
         if (!a) {
-            values.push({ name: name, id: id })
-            setSelected(values)
+            values.push({ name: name, id: id });
+            setSelected(values);
         }
-        inputField.current.value = ''
-        setFitnessEquipments([])
-        skipval = true
+        inputField.current.value = '';
+        setFitnessEquipments([]);
+        skipval = true;
     }
 
     function handleSelectedEquipmentRemove(name: any) {
-        const values = [...selected]
-        values.splice(name, 1)
-        setSelected(values)
+        const values = [...selected];
+        values.splice(name, 1);
+        setSelected(values);
     }
 
     props.onChange(
         selected
             .map((e) => {
-                return e.id
+                return e.id;
             })
             .join(',')
             .toString()
-    )
+    );
 
-    FetchEquipmentList({ filter: searchInput, skip: skipval })
+    FetchEquipmentList({ filter: searchInput, skip: skipval });
 
     return (
         <>
@@ -91,8 +91,8 @@ const EquipmentList: React.FC<{ value: string[]; onChange: (args: string) => voi
                     id="equipment"
                     ref={inputField}
                     onChange={(e) => {
-                        e.preventDefault()
-                        EquipmentSearch(e.target.value)
+                        e.preventDefault();
+                        EquipmentSearch(e.target.value);
                     }}
                     autoComplete="off"
                 />
@@ -107,14 +107,14 @@ const EquipmentList: React.FC<{ value: string[]; onChange: (args: string) => voi
                                 value={equipment.id}
                                 key={equipment.id}
                                 onClick={(e) => {
-                                    e.preventDefault()
-                                    handleSelectedEquipmentAdd(equipment.name, equipment.id)
+                                    e.preventDefault();
+                                    handleSelectedEquipmentAdd(equipment.name, equipment.id);
                                 }}
                             >
                                 {equipment.name}
                             </option>
                         </Container>
-                    )
+                    );
                 })}
             </>
             <>
@@ -148,11 +148,11 @@ const EquipmentList: React.FC<{ value: string[]; onChange: (args: string) => voi
                                 onClick={() => handleSelectedEquipmentRemove(val.name)}
                             ></i>
                         </div>
-                    )
+                    );
                 })}
             </>
         </>
-    )
-}
+    );
+};
 
-export default EquipmentList
+export default EquipmentList;

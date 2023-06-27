@@ -1,14 +1,14 @@
-import { useState } from 'react'
-import Pages from './components/pages'
-import PagesComponent from './components/pagesComponent'
-import SectionComponent from './components/sectionComponent'
+import { useState } from 'react';
+import Pages from './components/pages';
+import PagesComponent from './components/pagesComponent';
+import SectionComponent from './components/sectionComponent';
 
-import styles from '../styles/fitnessTemplate_01.module.css'
-import { SetFirstLetterToUpperCase } from '../../lib/StringManipulation'
+import styles from '../styles/fitnessTemplate_01.module.css';
+import { SetFirstLetterToUpperCase } from '../../lib/StringManipulation';
 
 function FitnessTemplate_01(): JSX.Element {
-    const [page, setPage] = useState<string>('')
-    const [section, setSection] = useState<string>('')
+    const [page, setPage] = useState<string>('');
+    const [section, setSection] = useState<string>('');
 
     return (
         <div className={styles.navContainer}>
@@ -16,8 +16,8 @@ function FitnessTemplate_01(): JSX.Element {
                 <div
                     className={styles.breadCrumbText}
                     onClick={() => {
-                        setPage('')
-                        setSection('')
+                        setPage('');
+                        setSection('');
                     }}
                     style={{ color: page ? '#999' : '#fff' }}
                 >
@@ -27,7 +27,7 @@ function FitnessTemplate_01(): JSX.Element {
                     <div
                         className={styles.breadCrumbText}
                         onClick={() => {
-                            setSection('')
+                            setSection('');
                         }}
                         style={{ color: section ? '#999' : '#fff' }}
                     >
@@ -58,7 +58,7 @@ function FitnessTemplate_01(): JSX.Element {
                 </>
             )}
         </div>
-    )
+    );
 }
 
-export default FitnessTemplate_01
+export default FitnessTemplate_01;

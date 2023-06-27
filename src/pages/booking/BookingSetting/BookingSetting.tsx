@@ -1,7 +1,7 @@
-import { Card, Tab, Tabs } from 'react-bootstrap'
-import * as Icon from 'react-bootstrap-icons'
-import { NavLink } from 'react-router-dom'
-import BookingFitness from './BookingFitness/BookingFitness'
+import { Card, Tab, Tabs } from 'react-bootstrap';
+import * as Icon from 'react-bootstrap-icons';
+import { NavLink } from 'react-router-dom';
+import BookingFitness from './BookingFitness/BookingFitness';
 
 export default function BookingSetting(props) {
     return (
@@ -31,5 +31,5 @@ export default function BookingSetting(props) {
                 </Card.Body>
             </Card>
         </div>
-    )
+    );
 }

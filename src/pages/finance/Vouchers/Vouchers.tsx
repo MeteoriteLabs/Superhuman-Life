@@ -1,14 +1,14 @@
-import React from 'react'
-import { Badge, Row, Col, Button, InputGroup, FormControl, Container, Card } from 'react-bootstrap'
-import { useContext, useMemo, useRef, useState } from 'react'
-import Table from '../../../components/table/index'
-import ActionButton from '../../../components/actionbutton'
-import { useQuery } from '@apollo/client'
-import { GET_ALL_VOUCHERS } from '../graphQL/queries'
-import authContext from '../../../context/auth-context'
-import moment from 'moment'
-import VoucherAction from './VoucherAction'
-import containsSubstring from '../../../components/utils/containsSubstring'
+import React from 'react';
+import { Badge, Row, Col, Button, InputGroup, FormControl, Container, Card } from 'react-bootstrap';
+import { useContext, useMemo, useRef, useState } from 'react';
+import Table from '../../../components/table/index';
+import ActionButton from '../../../components/actionbutton';
+import { useQuery } from '@apollo/client';
+import { GET_ALL_VOUCHERS } from '../graphQL/queries';
+import authContext from '../../../context/auth-context';
+import moment from 'moment';
+import VoucherAction from './VoucherAction';
+import containsSubstring from '../../../components/utils/containsSubstring';
 
 interface VoucherTs {
     TriggerForm: ({
@@ -16,48 +16,48 @@ interface VoucherTs {
         actionType,
         current_status
     }: {
-        id?: string | number
-        actionType: string
-        current_status?: string
-    }) => void
+        id?: string | number;
+        actionType: string;
+        current_status?: string;
+    }) => void;
 }
 interface RowTs {
     row: {
         values: {
-            discount_percentage?: string
-            expiry_date?: string
-            Status?: string
-            flat_discount: number
-        }
-        original: { id: string; Status: string }
-    }
+            discount_percentage?: string;
+            expiry_date?: string;
+            Status?: string;
+            flat_discount: number;
+        };
+        original: { id: string; Status: string };
+    };
 }
 
 export default function Vouchers(): JSX.Element {
-    const auth = useContext(authContext)
-    const [dataTable, setDataTable] = useState<Record<string, unknown>[]>([])
-    const voucherActionRef = useRef<VoucherTs>(null)
-    const searchInput = useRef<HTMLInputElement>(null)
-    const [AllVouchersData, setAllVouchersData] = useState<Record<string, unknown>>()
-    const [page, setPage] = useState<number>(1)
-    const [totalRecords, setTotalRecords] = useState<number>(0)
+    const auth = useContext(authContext);
+    const [dataTable, setDataTable] = useState<Record<string, unknown>[]>([]);
+    const voucherActionRef = useRef<VoucherTs>(null);
+    const searchInput = useRef<HTMLInputElement>(null);
+    const [AllVouchersData, setAllVouchersData] = useState<Record<string, unknown>>();
+    const [page, setPage] = useState<number>(1);
+    const [totalRecords, setTotalRecords] = useState<number>(0);
 
     const fetch = useQuery(GET_ALL_VOUCHERS, {
         variables: { id: auth.userid, start: page * 10 - 10, limit: 10 },
         onCompleted: (data) => {
-            loadData(data)
-            setAllVouchersData(data)
-            setTotalRecords(data.vouchers.meta.pagination.total)
+            loadData(data);
+            setAllVouchersData(data);
+            setTotalRecords(data.vouchers.meta.pagination.total);
         }
-    })
+    });
 
     const loadData = (data, filter?: string) => {
         setDataTable(
             [...data.vouchers.data]
                 .map((voucher) => {
-                    const todayDate = moment(new Date())
-                    const expiryDate = moment(voucher.attributes.expiry_date)
-                    const diff = expiryDate.diff(todayDate)
+                    const todayDate = moment(new Date());
+                    const expiryDate = moment(voucher.attributes.expiry_date);
+                    const diff = expiryDate.diff(todayDate);
                     return {
                         id: voucher.id,
                         voucher_name: voucher.attributes.voucher_name,
@@ -69,19 +69,19 @@ export default function Vouchers(): JSX.Element {
                             diff <= 0 || voucher.attributes.Usage_restriction <= 0
                                 ? 'Expired'
                                 : voucher.attributes.Status
-                    }
+                    };
                 })
                 .filter((voucher) => {
                     if (filter) {
-                        return containsSubstring(voucher.voucher_name, filter)
+                        return containsSubstring(voucher.voucher_name, filter);
                     }
-                    return true
+                    return true;
                 })
-        )
-    }
+        );
+    };
 
     function refetchQueryCallback() {
-        fetch.refetch()
+        fetch.refetch();
     }
 
     const columns = useMemo(
@@ -97,7 +97,7 @@ export default function Vouchers(): JSX.Element {
                                 ? `${row.values.discount_percentage} %`
                                 : 'N/A'}{' '}
                         </p>
-                    )
+                    );
                 }
             },
             {
@@ -108,14 +108,14 @@ export default function Vouchers(): JSX.Element {
                         <p className="mb-0">
                             {row.values.flat_discount ? `INR ${row.values.flat_discount}` : 'N/A'}
                         </p>
-                    )
+                    );
                 }
             },
             {
                 accessor: 'expiry_date',
                 Header: 'Expiry',
                 Cell: ({ row }: RowTs) => {
-                    return <p className="mb-0">{row.values.expiry_date}</p>
+                    return <p className="mb-0">{row.values.expiry_date}</p>;
                 }
             },
             { accessor: 'Usage_restriction', Header: 'Usage' },
@@ -123,19 +123,19 @@ export default function Vouchers(): JSX.Element {
                 accessor: 'Status',
                 Header: 'Status',
                 Cell: ({ row }: RowTs) => {
-                    let statusColor = ''
+                    let statusColor = '';
                     switch (row.values.Status) {
                         case 'Active':
-                            statusColor = 'success'
-                            break
+                            statusColor = 'success';
+                            break;
 
                         case 'Expired':
-                            statusColor = 'danger'
-                            break
+                            statusColor = 'danger';
+                            break;
 
                         case 'Disabled':
-                            statusColor = 'warning'
-                            break
+                            statusColor = 'warning';
+                            break;
                     }
                     return (
                         <>
@@ -147,7 +147,7 @@ export default function Vouchers(): JSX.Element {
                                 {row.values.Status}
                             </Badge>
                         </>
-                    )
+                    );
                 }
             },
             {
@@ -158,44 +158,44 @@ export default function Vouchers(): JSX.Element {
                         voucherActionRef.current?.TriggerForm({
                             id: row.original.id,
                             actionType: 'view'
-                        })
-                    }
+                        });
+                    };
                     const editHandler = () => {
                         voucherActionRef.current?.TriggerForm({
                             id: row.original.id,
                             actionType: 'edit'
-                        })
-                    }
+                        });
+                    };
                     const deleteHandler = () => {
                         voucherActionRef.current?.TriggerForm({
                             id: row.original.id,
                             actionType: 'delete'
-                        })
-                    }
+                        });
+                    };
                     const statusChangeHandler = () => {
                         voucherActionRef.current?.TriggerForm({
                             id: row.original.id,
                             actionType: 'toggle-status',
                             current_status: row.original.Status
-                        })
-                    }
+                        });
+                    };
                     const arrayAction = [
                         { actionName: 'View', actionClick: viewHandler },
                         { actionName: 'Edit', actionClick: editHandler },
                         { actionName: 'Delete', actionClick: deleteHandler },
                         { actionName: 'Status', actionClick: statusChangeHandler }
-                    ]
+                    ];
 
-                    return <ActionButton arrayAction={arrayAction}></ActionButton>
+                    return <ActionButton arrayAction={arrayAction}></ActionButton>;
                 }
             }
         ],
         []
-    )
+    );
 
     const pageHandler = (selectedPageNumber: number) => {
-        setPage(selectedPageNumber)
-    }
+        setPage(selectedPageNumber);
+    };
 
     return (
         <div className="mt-3">
@@ -212,8 +212,8 @@ export default function Vouchers(): JSX.Element {
                                 <Button
                                     variant="outline-secondary"
                                     onClick={(e) => {
-                                        e.preventDefault()
-                                        loadData(AllVouchersData, searchInput.current?.value)
+                                        e.preventDefault();
+                                        loadData(AllVouchersData, searchInput.current?.value);
                                     }}
                                 >
                                     <i className="fas fa-search"></i>
@@ -227,7 +227,7 @@ export default function Vouchers(): JSX.Element {
                                 variant="outline-secondary"
                                 size="sm"
                                 onClick={() => {
-                                    voucherActionRef.current?.TriggerForm({ actionType: 'create' })
+                                    voucherActionRef.current?.TriggerForm({ actionType: 'create' });
                                 }}
                             >
                                 <i className="fas fa-plus-circle"></i> Create Voucher
@@ -269,5 +269,5 @@ export default function Vouchers(): JSX.Element {
                 </Row>
             ) : null}
         </div>
-    )
+    );
 }

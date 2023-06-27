@@ -1,69 +1,69 @@
-import { useState, useEffect } from 'react'
-import { GET_TAG_BY_ID } from '../../graphQL/queries'
-import { UPDATE_USERPACKAGE_EFFECTIVEDATE } from '../../graphQL/mutation'
-import { useQuery, useMutation } from '@apollo/client'
-import { Row, Col, Dropdown, Modal, InputGroup, FormControl, Button } from 'react-bootstrap'
-import SchedulerPage from '../../../program-builder/program-template/scheduler'
-import moment from 'moment'
-import { Link } from 'react-router-dom'
-import '../Group/actionButton.css'
-import '../fitness.css'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
-import Loader from '../../../../components/Loader/Loader'
+import { useState, useEffect } from 'react';
+import { GET_TAG_BY_ID } from '../../graphQL/queries';
+import { UPDATE_USERPACKAGE_EFFECTIVEDATE } from '../../graphQL/mutation';
+import { useQuery, useMutation } from '@apollo/client';
+import { Row, Col, Dropdown, Modal, InputGroup, FormControl, Button } from 'react-bootstrap';
+import SchedulerPage from '../../../program-builder/program-template/scheduler';
+import moment from 'moment';
+import { Link } from 'react-router-dom';
+import '../Group/actionButton.css';
+import '../fitness.css';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import Loader from '../../../../components/Loader/Loader';
 
 const Scheduler = () => {
-    const last = window.location.pathname.split('/').reverse()
-    const tagId = window.location.pathname.split('/').pop()
-    const [show, setShow] = useState(false)
+    const last = window.location.pathname.split('/').reverse();
+    const tagId = window.location.pathname.split('/').pop();
+    const [show, setShow] = useState(false);
     // eslint-disable-next-line
-    const [userPackage, setUserPackage] = useState<any>([])
-    const [editDatesModal, setEditdatesModal] = useState<boolean>(false)
-    const [startDate, setStartDate] = useState<string>('')
-    const [totalClasses, setTotalClasses] = useState<any>([])
-    const [tag, setTag] = useState<any>()
-    let programIndex
+    const [userPackage, setUserPackage] = useState<any>([]);
+    const [editDatesModal, setEditdatesModal] = useState<boolean>(false);
+    const [startDate, setStartDate] = useState<string>('');
+    const [totalClasses, setTotalClasses] = useState<any>([]);
+    const [tag, setTag] = useState<any>();
+    let programIndex;
 
     useEffect(() => {
         setTimeout(() => {
-            setShow(true)
-        }, 1500)
-    }, [show])
+            setShow(true);
+        }, 1500);
+    }, [show]);
 
     useQuery(GET_TAG_BY_ID, {
         variables: { id: tagId },
         onCompleted: (data) => loadTagData(data)
-    })
+    });
 
     function loadTagData(data: any) {
-        const flattenData = flattenObj({ ...data })
-        const total = [0, 0, 0, 0, 0]
-        const values = [...flattenData.tags[0].sessions]
+        const flattenData = flattenObj({ ...data });
+        const total = [0, 0, 0, 0, 0];
+        const values = [...flattenData.tags[0].sessions];
         for (let i = 0; i < values.length; i++) {
             if (values[i].tag === 'One-On-One' && values[i].mode === 'Online') {
-                total[0] += 1
+                total[0] += 1;
             } else if (values[i].tag === 'One-On-One' && values[i].mode === 'Offline') {
-                total[1] += 1
+                total[1] += 1;
             } else if (values[i].tag === 'Group Class' && values[i].mode === 'Online') {
-                total[2] += 1
+                total[2] += 1;
             } else if (values[i].tag === 'Group Class' && values[i].mode === 'Offline') {
-                total[3] += 1
+                total[3] += 1;
             } else {
-                total[4] += 1
+                total[4] += 1;
             }
         }
-        setTotalClasses(total)
-        setTag(flattenData.tags[0])
+        setTotalClasses(total);
+        setTag(flattenData.tags[0]);
     }
 
-    const handleCloseDatesModal = () => setEditdatesModal(false)
-    const handleShowDatesModal = () => setEditdatesModal(true)
+    const handleCloseDatesModal = () => setEditdatesModal(false);
+    const handleShowDatesModal = () => setEditdatesModal(true);
 
-    const [updateDate] = useMutation(UPDATE_USERPACKAGE_EFFECTIVEDATE)
+    const [updateDate] = useMutation(UPDATE_USERPACKAGE_EFFECTIVEDATE);
 
     if (userPackage.length) {
         programIndex = userPackage.findIndex(
             (item) => item.programId === last[0] && item.clientId === last[1]
-        )
+        );
     }
 
     function handleDateEdit() {
@@ -72,29 +72,29 @@ const Scheduler = () => {
                 id: userPackage[programIndex].userPackageId,
                 effectiveDate: moment(startDate).format('YYYY-MM-DD') + 'T00:00:00.000Z'
             }
-        })
+        });
 
-        handleCloseDatesModal()
+        handleCloseDatesModal();
     }
 
     function handleTimeFormatting(data: any, duration: number) {
-        const digits = duration <= 30 ? 2 : 3
+        const digits = duration <= 30 ? 2 : 3;
         return data.toLocaleString('en-US', {
             minimumIntegerDigits: digits.toString(),
             useGrouping: false
-        })
+        });
     }
 
     function handleTotalClasses(data: any, duration: number) {
-        let sum = 0
+        let sum = 0;
         for (let i = 0; i < data.length; i++) {
-            sum += data[i]
+            sum += data[i];
         }
-        const formattedSum = handleTimeFormatting(sum, duration)
-        return formattedSum
+        const formattedSum = handleTimeFormatting(sum, duration);
+        return formattedSum;
     }
 
-    if (!show) return <Loader />
+    if (!show) return <Loader />;
     else
         return (
             <div className="col-lg-12">
@@ -389,7 +389,7 @@ const Scheduler = () => {
                                         : startDate
                                 }
                                 onChange={(e) => {
-                                    setStartDate(e.target.value)
+                                    setStartDate(e.target.value);
                                 }}
                                 type="date"
                             />
@@ -403,7 +403,7 @@ const Scheduler = () => {
                             variant="outline-success"
                             disabled={startDate === '' ? true : false}
                             onClick={() => {
-                                handleDateEdit()
+                                handleDateEdit();
                             }}
                         >
                             Submit
@@ -411,7 +411,7 @@ const Scheduler = () => {
                     </Modal.Footer>
                 </Modal>
             </div>
-        )
-}
+        );
+};
 
-export default Scheduler
+export default Scheduler;

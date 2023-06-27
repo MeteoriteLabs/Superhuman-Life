@@ -1,35 +1,35 @@
-import ActionButton from '../../../../../components/actionbutton/index'
-import { useMemo, useState, useContext } from 'react'
-import { useQuery } from '@apollo/client'
-import { Badge } from 'react-bootstrap'
-import ClientTable from '../../../../../components/table/client-table'
-import { GET_CLIENT_DATA_NEW } from '../../queries'
-import AuthContext from '../../../../../context/auth-context'
-import { flattenObj } from '../../../../../components/utils/responseFlatten'
+import ActionButton from '../../../../../components/actionbutton/index';
+import { useMemo, useState, useContext } from 'react';
+import { useQuery } from '@apollo/client';
+import { Badge } from 'react-bootstrap';
+import ClientTable from '../../../../../components/table/client-table';
+import { GET_CLIENT_DATA_NEW } from '../../queries';
+import AuthContext from '../../../../../context/auth-context';
+import { flattenObj } from '../../../../../components/utils/responseFlatten';
 
 function Movement() {
-    const last = window.location.pathname.split('/').pop()
-    const auth = useContext(AuthContext)
+    const last = window.location.pathname.split('/').pop();
+    const auth = useContext(AuthContext);
     function getDate(time: any) {
-        const dateObj = new Date(time)
-        const month = dateObj.getMonth() + 1
-        const year = dateObj.getFullYear()
-        const date = dateObj.getDate()
+        const dateObj = new Date(time);
+        const month = dateObj.getMonth() + 1;
+        const year = dateObj.getFullYear();
+        const date = dateObj.getDate();
 
-        return `${date}/${month}/${year}`
+        return `${date}/${month}/${year}`;
     }
     function getRenewalDate(time: any, duration: any) {
-        const date = new Date(time)
-        date.setDate(date.getDate() + duration)
-        return getDate(date)
+        const date = new Date(time);
+        date.setDate(date.getDate() + duration);
+        return getDate(date);
     }
     function compareDates(time: any) {
-        const date = new Date(time)
-        const currentdate = new Date()
+        const date = new Date(time);
+        const currentdate = new Date();
         if (date.getTime() < currentdate.getTime()) {
-            return true
+            return true;
         }
-        return false
+        return false;
     }
     const columns = useMemo<any>(
         () => [
@@ -63,7 +63,7 @@ function Movement() {
                                         ''
                                     )}
                                 </>
-                            )
+                            );
                         }
                     },
                     {
@@ -115,29 +115,29 @@ function Movement() {
                         Cell: ({ row }: any) => {
                             const actionClick1 = () => {
                                 //handleRedirect(row.original.id);
-                            }
+                            };
                             const arrayAction = [
                                 { actionName: 'Manage', actionClick: actionClick1 }
-                            ]
+                            ];
 
-                            return <ActionButton arrayAction={arrayAction}></ActionButton>
+                            return <ActionButton arrayAction={arrayAction}></ActionButton>;
                         }
                     }
                 ]
             }
         ],
         []
-    )
+    );
 
-    const [dataActivetable, setActiveDataTable] = useState<Record<string, unknown>[]>([])
-    const [dataHistorytable, setHistoryDataTable] = useState<Record<string, unknown>[]>([])
+    const [dataActivetable, setActiveDataTable] = useState<Record<string, unknown>[]>([]);
+    const [dataHistorytable, setHistoryDataTable] = useState<Record<string, unknown>[]>([]);
 
     function FetchData(_variables: Record<string, unknown> = { id: auth.userid, clientid: last }) {
-        useQuery(GET_CLIENT_DATA_NEW, { variables: _variables, onCompleted: loadData })
+        useQuery(GET_CLIENT_DATA_NEW, { variables: _variables, onCompleted: loadData });
     }
 
     function loadData(data: any) {
-        const flattenData = flattenObj({ ...data })
+        const flattenData = flattenObj({ ...data });
         setHistoryDataTable(
             [...flattenData.clientPackages].flatMap((Detail) =>
                 compareDates(getRenewalDate(Detail.effective_date, Detail.package_duration))
@@ -162,7 +162,7 @@ function Movement() {
                       }
                     : []
             )
-        )
+        );
         setActiveDataTable(
             [...flattenData.clientPackages].flatMap((Detail) =>
                 !compareDates(getRenewalDate(Detail.effective_date, Detail.package_duration))
@@ -187,10 +187,10 @@ function Movement() {
                       }
                     : []
             )
-        )
+        );
     }
 
-    FetchData({ id: auth.userid, clientid: last })
+    FetchData({ id: auth.userid, clientid: last });
     return (
         <div>
             <div>
@@ -206,7 +206,7 @@ function Movement() {
                 <ClientTable columns={columns} data={dataHistorytable} />
             </div>
         </div>
-    )
+    );
 }
 
-export default Movement
+export default Movement;

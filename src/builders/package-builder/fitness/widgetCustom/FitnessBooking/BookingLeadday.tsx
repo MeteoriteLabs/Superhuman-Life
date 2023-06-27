@@ -1,10 +1,10 @@
-import React from 'react'
-import Form from 'react-bootstrap/Form'
+import React from 'react';
+import Form from 'react-bootstrap/Form';
 
 interface UserData {
-    widgetProps: any
-    actionType: string
-    userData: any
+    widgetProps: any;
+    actionType: string;
+    userData: any;
 }
 
 const BookingLeadday: React.FC<UserData> = (props) => {
@@ -43,7 +43,7 @@ const BookingLeadday: React.FC<UserData> = (props) => {
                 ''
             )}
         </>
-    )
-}
+    );
+};
 
-export default BookingLeadday
+export default BookingLeadday;

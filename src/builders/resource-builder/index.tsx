@@ -1,6 +1,6 @@
-import { Card, Tab, Tabs, TabContent } from 'react-bootstrap'
-import MessagePage from './notifications'
-import MindsetPage from './message'
+import { Card, Tab, Tabs, TabContent } from 'react-bootstrap';
+import MessagePage from './notifications';
+import MindsetPage from './message';
 // import InformationPage from "./information bank";
 
 export default function ResourcePage() {
@@ -40,5 +40,5 @@ export default function ResourcePage() {
                 </Card.Body>
             </Card>
         </>
-    )
+    );
 }

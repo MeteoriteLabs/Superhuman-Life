@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom'
-import { Card } from 'react-bootstrap'
-import WorkHours from './workHours/workHours'
+import { Link } from 'react-router-dom';
+import { Card } from 'react-bootstrap';
+import WorkHours from './workHours/workHours';
 
 const Availability = () => {
     return (
@@ -19,7 +19,7 @@ const Availability = () => {
                 </Card.Body>
             </Card>
         </>
-    )
-}
+    );
+};
 
-export default Availability
+export default Availability;

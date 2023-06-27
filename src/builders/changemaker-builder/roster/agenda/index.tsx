@@ -1,13 +1,13 @@
-import { useState } from 'react'
-import { Col, Row, Accordion, Card } from 'react-bootstrap'
-import Chevron from './Chevron'
+import { useState } from 'react';
+import { Col, Row, Accordion, Card } from 'react-bootstrap';
+import Chevron from './Chevron';
 
 const RosterAgenda = (props: any) => {
-    const data = props?.data[0]?.session?.workout
-    const [active, setActive] = useState(null)
+    const data = props?.data[0]?.session?.workout;
+    const [active, setActive] = useState(null);
 
     function toggleAccodian(id) {
-        setActive(id)
+        setActive(id);
     }
 
     return (
@@ -48,7 +48,7 @@ const RosterAgenda = (props: any) => {
                         <span>
                             {data?.fitnessdisciplines
                                 ?.map((item: any) => {
-                                    return item.disciplinename
+                                    return item.disciplinename;
                                 })
                                 .join(', ')}
                         </span>
@@ -69,7 +69,7 @@ const RosterAgenda = (props: any) => {
                         <span>
                             {data?.muscle_groups
                                 ?.map((item: any) => {
-                                    return item.name
+                                    return item.name;
                                 })
                                 .join(', ')}
                         </span>
@@ -78,7 +78,7 @@ const RosterAgenda = (props: any) => {
                         <h6>
                             {data?.equipment_lists
                                 ?.map((item: any) => {
-                                    return item.name
+                                    return item.name;
                                 })
                                 .join(', ')}
                         </h6>
@@ -188,7 +188,7 @@ const RosterAgenda = (props: any) => {
                                                         </Row>
                                                     </div>
                                                 </>
-                                            )
+                                            );
                                         })}
                                     <br />
                                     {data?.warmup[0]?.type === 'text' &&
@@ -210,7 +210,7 @@ const RosterAgenda = (props: any) => {
                                                         ></div>
                                                     </div>
                                                 </>
-                                            )
+                                            );
                                         })}
                                     <br />
                                     {data?.warmup[0]?.type === 'url' &&
@@ -228,7 +228,7 @@ const RosterAgenda = (props: any) => {
                                                         <span>{item.value}</span>
                                                     </div>
                                                 </>
-                                            )
+                                            );
                                         })}
                                 </Card.Body>
                             </Accordion.Collapse>
@@ -313,7 +313,7 @@ const RosterAgenda = (props: any) => {
                                                         </Row>
                                                     </div>
                                                 </>
-                                            )
+                                            );
                                         })}
                                     <br />
                                     {data?.mainmovement[0]?.type === 'text' &&
@@ -335,7 +335,7 @@ const RosterAgenda = (props: any) => {
                                                         ></div>
                                                     </div>
                                                 </>
-                                            )
+                                            );
                                         })}
                                     <br />
                                     {data?.mainmovement[0]?.type === 'url' &&
@@ -353,7 +353,7 @@ const RosterAgenda = (props: any) => {
                                                         <span>{item.value}</span>
                                                     </div>
                                                 </>
-                                            )
+                                            );
                                         })}
                                 </Card.Body>
                             </Accordion.Collapse>
@@ -438,7 +438,7 @@ const RosterAgenda = (props: any) => {
                                                         </Row>
                                                     </div>
                                                 </>
-                                            )
+                                            );
                                         })}
                                     <br />
                                     {data?.cooldown[0]?.type === 'text' &&
@@ -460,7 +460,7 @@ const RosterAgenda = (props: any) => {
                                                         ></div>
                                                     </div>
                                                 </>
-                                            )
+                                            );
                                         })}
                                     <br />
                                     {data?.cooldown[0]?.type === 'url' &&
@@ -478,7 +478,7 @@ const RosterAgenda = (props: any) => {
                                                         <span>{item.value}</span>
                                                     </div>
                                                 </>
-                                            )
+                                            );
                                         })}
                                 </Card.Body>
                             </Accordion.Collapse>
@@ -487,7 +487,7 @@ const RosterAgenda = (props: any) => {
                 </Accordion>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default RosterAgenda
+export default RosterAgenda;

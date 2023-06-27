@@ -1,12 +1,12 @@
-import { useState } from 'react'
-import { Button, Col, Modal, Row } from 'react-bootstrap'
+import { useState } from 'react';
+import { Button, Col, Modal, Row } from 'react-bootstrap';
 
 function StatusModal(props: any) {
-    const [eventConnections] = useState<any>(props.EventConnectedDetails)
+    const [eventConnections] = useState<any>(props.EventConnectedDetails);
 
     function handleClick() {
-        props.onClick()
-        props.onHide()
+        props.onClick();
+        props.onHide();
     }
 
     function handleBodyRender() {
@@ -50,7 +50,7 @@ function StatusModal(props: any) {
                                             {`${index + 1})`}
                                             {` ${val.title}`}
                                         </h5>
-                                    )
+                                    );
                                 }
                             )}
                         </div>
@@ -66,7 +66,7 @@ function StatusModal(props: any) {
                                         {`${index + 1})`}
                                         {` ${val.tag_name}`}
                                     </h5>
-                                )
+                                );
                             })}
                         </div>
                     )}
@@ -76,7 +76,7 @@ function StatusModal(props: any) {
                     </span>
                 </div>
             </>
-        )
+        );
     }
 
     return (
@@ -118,7 +118,7 @@ function StatusModal(props: any) {
                 </Modal.Footer>
             </Modal>
         </>
-    )
+    );
 }
 
-export default StatusModal
+export default StatusModal;

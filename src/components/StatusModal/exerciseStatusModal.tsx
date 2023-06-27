@@ -1,71 +1,71 @@
-import React, { useState, useEffect } from 'react'
-import { Button, Col, Modal, Row } from 'react-bootstrap'
-import Loader from '../../components/Loader/Loader'
+import React, { useState, useEffect } from 'react';
+import { Button, Col, Modal, Row } from 'react-bootstrap';
+import Loader from '../../components/Loader/Loader';
 
 const StatusModal: React.FC<{
-    buttonRight: string
-    buttonLeft: string
-    modalTitle: string
-    show: boolean
-    modalBody: string
-    onClick: () => void
-    onHide: () => void
-    EventConnectedDetails: any[]
-    ExistingEventId: string
+    buttonRight: string;
+    buttonLeft: string;
+    modalTitle: string;
+    show: boolean;
+    modalBody: string;
+    onClick: () => void;
+    onHide: () => void;
+    EventConnectedDetails: any[];
+    ExistingEventId: string;
 }> = (props) => {
-    const [eventConnections, setEventConnections] = useState<any[]>([])
-    const [loading, setLoading] = useState<boolean>(false)
+    const [eventConnections, setEventConnections] = useState<any[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
 
     function handleClick() {
-        props.onClick()
-        props.onHide()
+        props.onClick();
+        props.onHide();
     }
 
     useEffect(() => {
         if (props.EventConnectedDetails.length !== 0) {
-            const values = [...eventConnections]
+            const values = [...eventConnections];
             for (let i = 0; i <= props.EventConnectedDetails.length - 1; i++) {
                 if (
                     props.EventConnectedDetails[i].warmup ||
                     props.EventConnectedDetails[i].mainmovement ||
                     props.EventConnectedDetails[i].cooldown !== null
                 ) {
-                    values.push(props.EventConnectedDetails[i])
+                    values.push(props.EventConnectedDetails[i]);
                 }
             }
-            setEventConnections(values)
+            setEventConnections(values);
         }
         setTimeout(() => {
-            setLoading(true)
-        }, 500)
-    }, [props.EventConnectedDetails])
+            setLoading(true);
+        }, 500);
+    }, [props.EventConnectedDetails]);
 
-    const linkedWorkouts: any[] = []
+    const linkedWorkouts: any[] = [];
 
     if (eventConnections.length !== 0) {
-        const values = [...eventConnections]
+        const values = [...eventConnections];
         for (let j = 0; j <= values.length - 1; j++) {
             if (values[j].warmup !== null && values[j].warmup[0]?.type === 'exercise') {
                 for (let k = 0; k <= values[j].warmup.length - 1; k++) {
                     if (values[j].warmup[k].id === props.ExistingEventId) {
-                        linkedWorkouts.push(values[j])
-                        break
+                        linkedWorkouts.push(values[j]);
+                        break;
                     }
                 }
             }
             if (values[j].mainmovement !== null && values[j].mainmovement[0]?.type === 'exercise') {
                 for (let x = 0; x <= values[j].mainmovement.length - 1; x++) {
                     if (values[j].mainmovement[x].id === props.ExistingEventId) {
-                        linkedWorkouts.push(values[j])
-                        break
+                        linkedWorkouts.push(values[j]);
+                        break;
                     }
                 }
             }
             if (values[j].cooldown !== null && values[j].cooldown[0]?.type === 'exercise') {
                 for (let y = 0; y <= values[j].cooldown.length - 1; y++) {
                     if (values[j].cooldown[y].id === props.ExistingEventId) {
-                        linkedWorkouts.push(values[j])
-                        break
+                        linkedWorkouts.push(values[j]);
+                        break;
                     }
                 }
             }
@@ -73,7 +73,7 @@ const StatusModal: React.FC<{
     }
 
     function handleBodyRender() {
-        if (!loading) return <Loader />
+        if (!loading) return <Loader />;
         else
             return (
                 <>
@@ -92,7 +92,7 @@ const StatusModal: React.FC<{
                                         {`${index + 1})`}
                                         {` ${val.workouttitle}`}
                                     </h5>
-                                )
+                                );
                             })}
                         <span>
                             <i className="fas fa-info-circle"></i> Please Make sure you edit the
@@ -100,7 +100,7 @@ const StatusModal: React.FC<{
                         </span>
                     </div>
                 </>
-            )
+            );
     }
 
     return (
@@ -137,7 +137,7 @@ const StatusModal: React.FC<{
                 </Modal.Footer>
             </Modal>
         </>
-    )
-}
+    );
+};
 
-export default StatusModal
+export default StatusModal;

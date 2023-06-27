@@ -1,28 +1,28 @@
-import { useEffect, useState } from 'react'
-import { Form } from 'react-bootstrap'
+import { useEffect, useState } from 'react';
+import { Form } from 'react-bootstrap';
 
 const BookingConfig = (props: any) => {
-    const inputDisabled = props.uiSchema.readonly
+    const inputDisabled = props.uiSchema.readonly;
     const [config, setConfig] = useState(
         props.value !== undefined ? JSON.parse(props.value).config : ''
-    )
+    );
 
     function handleValidation() {
         if (config !== '') {
-            return true
+            return true;
         } else {
-            return false
+            return false;
         }
     }
 
     useEffect(() => {
         if (handleValidation()) {
-            props.onChange(JSON.stringify({ config: config }))
+            props.onChange(JSON.stringify({ config: config }));
         } else {
-            props.onChange(undefined)
+            props.onChange(undefined);
         }
         //eslint-disable-next-line
-    }, [config])
+    }, [config]);
 
     return (
         <>
@@ -54,7 +54,7 @@ const BookingConfig = (props: any) => {
                 </Form.Text>
             </div>
         </>
-    )
-}
+    );
+};
 
-export default BookingConfig
+export default BookingConfig;

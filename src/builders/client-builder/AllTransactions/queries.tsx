@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const GET_TRANSACTIONS = gql`
     query ContactsQuery($senderId: String, $receiverId: String, $receiverType: String) {
@@ -35,7 +35,7 @@ export const GET_TRANSACTIONS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_PAYMENT_SCHEDULE = gql`
     query PaymentScheduleQuery {
@@ -48,4 +48,4 @@ export const GET_PAYMENT_SCHEDULE = gql`
             }
         }
     }
-`
+`;

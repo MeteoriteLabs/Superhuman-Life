@@ -1,7 +1,7 @@
-import { useState } from 'react'
-import { Accordion, Button, Card, Form } from 'react-bootstrap'
-import { Controller } from 'react-hook-form'
-import { ArrowDownShort } from 'react-bootstrap-icons'
+import { useState } from 'react';
+import { Accordion, Button, Card, Form } from 'react-bootstrap';
+import { Controller } from 'react-hook-form';
+import { ArrowDownShort } from 'react-bootstrap-icons';
 
 function BlackBgAccordian({
     title,
@@ -12,19 +12,19 @@ function BlackBgAccordian({
     errors,
     eventKey
 }: {
-    title: string
-    control_description: string
-    control_title: string
-    control_image: string
-    control: any
-    errors: any
-    eventKey: string
+    title: string;
+    control_description: string;
+    control_title: string;
+    control_image: string;
+    control: any;
+    errors: any;
+    eventKey: string;
 }): JSX.Element {
-    const [activeKey, setActiveKey] = useState(false)
+    const [activeKey, setActiveKey] = useState(false);
 
     const handleToggle = () => {
-        setActiveKey((prev) => !prev)
-    }
+        setActiveKey((prev) => !prev);
+    };
 
     return (
         <Accordion style={{ padding: 0 }}>
@@ -105,7 +105,7 @@ function BlackBgAccordian({
                 </Accordion.Collapse>
             </Card>
         </Accordion>
-    )
+    );
 }
 
-export default BlackBgAccordian
+export default BlackBgAccordian;

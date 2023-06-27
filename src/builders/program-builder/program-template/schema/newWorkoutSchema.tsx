@@ -1,12 +1,12 @@
-import TextEditor from '../../../../components/customWidgets/textEditor'
-import EquipmentSearch from '../../../../components/customWidgets/equipmentListSelect'
-import MuscleGroupSearch from '../../../../components/customWidgets/muscleGroupMultiSelect'
-import ExerciseList from '../../../../components/customWidgets/exerciseList'
-import FitnessMultiSelect from '../../../../components/customWidgets/fitnessMultiSelect'
-import Upload from '../../../../components/upload/upload'
-import TimeField from '../../../../components/customWidgets/timeField'
-import DaysInput from '../daysInput'
-import ClassTypeSelect from '../../../../components/customWidgets/classTypeSelect'
+import TextEditor from '../../../../components/customWidgets/textEditor';
+import EquipmentSearch from '../../../../components/customWidgets/equipmentListSelect';
+import MuscleGroupSearch from '../../../../components/customWidgets/muscleGroupMultiSelect';
+import ExerciseList from '../../../../components/customWidgets/exerciseList';
+import FitnessMultiSelect from '../../../../components/customWidgets/fitnessMultiSelect';
+import Upload from '../../../../components/upload/upload';
+import TimeField from '../../../../components/customWidgets/timeField';
+import DaysInput from '../daysInput';
+import ClassTypeSelect from '../../../../components/customWidgets/classTypeSelect';
 
 export const widgets = {
     fitnessSelect: FitnessMultiSelect,
@@ -15,12 +15,12 @@ export const widgets = {
     textEditor: TextEditor,
     upload: Upload,
     exerciseList: ExerciseList
-}
+};
 
 export const schema: any = {
     tag: {
         'ui:widget': (props: { onChange: () => void; value: string }) => {
-            return <ClassTypeSelect onChange={props.onChange} value={props.value} />
+            return <ClassTypeSelect onChange={props.onChange} value={props.value} />;
         }
     },
     day: {
@@ -34,12 +34,12 @@ export const schema: any = {
                     onChange={props.onChange}
                     val={props.value}
                 />
-            )
+            );
         }
     },
     time: {
         'ui:widget': (props: { onChange: () => void; value: string }) => {
-            return <TimeField onChange={props.onChange} value={props.value} />
+            return <TimeField onChange={props.onChange} value={props.value} />;
         }
     },
     level: {
@@ -93,7 +93,7 @@ export const schema: any = {
                         onChange={props.onChange}
                         value={props.value}
                     />
-                )
+                );
             }
         },
         build: {
@@ -121,7 +121,7 @@ export const schema: any = {
                             onChange={props.onChange}
                             value={props.value}
                         />
-                    )
+                    );
                 }
             }
         },
@@ -147,7 +147,7 @@ export const schema: any = {
                             onChange={props.onChange}
                             value={props.value}
                         />
-                    )
+                    );
                 }
             }
         },
@@ -170,9 +170,9 @@ export const schema: any = {
                             onChange={props.onChange}
                             value={props.value}
                         />
-                    )
+                    );
                 }
             }
         }
     }
-}
+};

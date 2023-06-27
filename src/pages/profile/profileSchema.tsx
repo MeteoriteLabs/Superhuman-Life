@@ -1,8 +1,8 @@
-import UploadImageToS3WithNativeSdk from '../../components/upload/upload'
+import UploadImageToS3WithNativeSdk from '../../components/upload/upload';
 
 export const widgets = {
     uploadImageToS3WithNativeSdk: UploadImageToS3WithNativeSdk
-}
+};
 
 // eslint-disable-next-line
 export const schema: any = {
@@ -42,4 +42,4 @@ export const schema: any = {
     Title: {
         'ui:placeholder': 'Enter address label eg: Permanent or Temporary'
     }
-}
+};

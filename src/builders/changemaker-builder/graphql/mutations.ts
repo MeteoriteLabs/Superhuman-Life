@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const CREATE_CHANGEMAKER_HOLIDAY = gql`
     mutation createChangeMakerHoliday(
@@ -18,7 +18,7 @@ export const CREATE_CHANGEMAKER_HOLIDAY = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_CANGEMAKER_WORK_HOUR = gql`
     mutation createChangeMakerWorkHour(
@@ -43,7 +43,7 @@ export const CREATE_CANGEMAKER_WORK_HOUR = gql`
             }
         }
     }
-`
+`;
 
 export const DELETE_CHANGEMAKER_HOLIDAY = gql`
     mutation deleteChangeMakerHoliday($id: ID!) {
@@ -53,7 +53,7 @@ export const DELETE_CHANGEMAKER_HOLIDAY = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_USER_DATA = gql`
     mutation updateUserData($changemaker_weekly_schedule: JSON, $id: ID!) {
@@ -66,7 +66,7 @@ export const UPDATE_USER_DATA = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_USER_BOOKING_TIME = gql`
     mutation updateUserBookingTime(
@@ -86,7 +86,7 @@ export const UPDATE_USER_BOOKING_TIME = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_CHANGEMAKER_AVAILABILITY_HOLIDAY = gql`
     mutation createChangeMakerAvailabilityHoliday(
@@ -107,7 +107,7 @@ export const CREATE_CHANGEMAKER_AVAILABILITY_HOLIDAY = gql`
             }
         }
     }
-`
+`;
 
 export const DELETE_CHANGEMAKER_AVAILABILITY_HOLIDAY = gql`
     mutation deleteChangeMakerHoliday($id: ID!) {
@@ -117,7 +117,7 @@ export const DELETE_CHANGEMAKER_AVAILABILITY_HOLIDAY = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_CHANGEMAKER_AVAILABILITY_WORKHOURS = gql`
     mutation createChangeMakerAvailabilityWorkHours($slots: JSON, $id: ID!, $date: Date) {
@@ -129,7 +129,7 @@ export const CREATE_CHANGEMAKER_AVAILABILITY_WORKHOURS = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS = gql`
     mutation updateCHageMakerAvailabilityWorkHour($id: ID!, $slots: JSON) {
@@ -142,7 +142,7 @@ export const UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_CHANGEMAKER_AVAILABILITY_HOLIDAY = gql`
     mutation updateCHageMakerAvailabilityWorkHour($id: ID!, $title: String) {
@@ -152,4 +152,4 @@ export const UPDATE_CHANGEMAKER_AVAILABILITY_HOLIDAY = gql`
             }
         }
     }
-`
+`;

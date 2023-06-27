@@ -1,19 +1,19 @@
-import { useQuery } from '@apollo/client'
-import { useContext, useMemo, useRef, useState } from 'react'
-import { Badge, Row, Col, Form } from 'react-bootstrap'
-import Table from '../../../../components/table'
-import AuthContext from '../../../../context/auth-context'
-import { GET_SESSIONS_FROM_TAGS } from '../../graphQL/queries'
-import moment from 'moment'
-import ActionButton from '../../../../components/actionbutton'
-import FitnessAction from '../FitnessAction'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
+import { useQuery } from '@apollo/client';
+import { useContext, useMemo, useRef, useState } from 'react';
+import { Badge, Row, Col, Form } from 'react-bootstrap';
+import Table from '../../../../components/table';
+import AuthContext from '../../../../context/auth-context';
+import { GET_SESSIONS_FROM_TAGS } from '../../graphQL/queries';
+import moment from 'moment';
+import ActionButton from '../../../../components/actionbutton';
+import FitnessAction from '../FitnessAction';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
 
 export default function Custom() {
-    const auth = useContext(AuthContext)
-    const [userPackage, setUserPackage] = useState<any>([])
-    const [showHistory, setShowHistory] = useState<boolean>(false)
-    const fitnessActionRef = useRef<any>(null)
+    const auth = useContext(AuthContext);
+    const [userPackage, setUserPackage] = useState<any>([]);
+    const [showHistory, setShowHistory] = useState<boolean>(false);
+    const fitnessActionRef = useRef<any>(null);
 
     const mainQuery = useQuery(GET_SESSIONS_FROM_TAGS, {
         variables: {
@@ -21,25 +21,25 @@ export default function Custom() {
             tagType: 'Custom Fitness'
         },
         onCompleted: (data) => loadData(data)
-    })
+    });
 
     const loadData = (data) => {
-        const flattenData = flattenObj({ ...data })
+        const flattenData = flattenObj({ ...data });
 
         setUserPackage(
             [...flattenData.tags].map((packageItem) => {
-                let renewDay: any = ''
+                let renewDay: any = '';
                 if (
                     packageItem.client_packages &&
                     packageItem.client_packages.length &&
                     packageItem.client_packages[0].fitnesspackages &&
                     packageItem.client_packages[0].fitnesspackages[0].length !== 0
                 ) {
-                    renewDay = new Date(packageItem.client_packages[0].effective_date)
+                    renewDay = new Date(packageItem.client_packages[0].effective_date);
                     renewDay.setDate(
                         renewDay.getDate() +
                             packageItem.client_packages[0].fitnesspackages[0].duration
-                    )
+                    );
                 }
                 return {
                     tagId: packageItem.id,
@@ -102,52 +102,52 @@ export default function Custom() {
                                   packageItem.client_packages[0].effective_date
                               )
                             : null
-                }
+                };
             })
-        )
-    }
+        );
+    };
 
     function handleStatus(sessions: any, effective_date: any, renewDay) {
-        let effectiveDate: any
+        let effectiveDate: any;
         if (sessions.length === 0) {
-            return 'Not_Assigned'
+            return 'Not_Assigned';
         } else if (sessions.length > 0) {
-            let max = 0
+            let max = 0;
             for (let i = 0; i < sessions.length; i++) {
                 if (sessions[i].day_of_program > max) {
-                    max = sessions[i].day_of_program
+                    max = sessions[i].day_of_program;
                 }
             }
-            effectiveDate = moment(effective_date).add(max, 'days').format('MMMM DD,YYYY')
+            effectiveDate = moment(effective_date).add(max, 'days').format('MMMM DD,YYYY');
             if (moment(effectiveDate).isBetween(moment(), moment().subtract(5, 'months'))) {
-                return 'Almost Ending'
+                return 'Almost Ending';
             } else {
-                return 'Assigned'
+                return 'Assigned';
             }
         } else {
             if (moment(effectiveDate) === moment(renewDay)) {
-                return 'Completed'
+                return 'Completed';
             }
         }
     }
 
     function calculateProgramRenewal(sessions: any, effectiveDate: any) {
-        let max = 0
+        let max = 0;
         for (let i = 0; i < sessions.length; i++) {
             if (sessions[i].day_of_program > max) {
-                max = sessions[i].day_of_program
+                max = sessions[i].day_of_program;
             }
         }
 
-        return moment(effectiveDate).add(max, 'days').format('MMMM DD,YYYY')
+        return moment(effectiveDate).add(max, 'days').format('MMMM DD,YYYY');
     }
 
     function handleRedirect(id: any) {
         if (id === 'N/A') {
-            alert('No Program Assigned')
-            return
+            alert('No Program Assigned');
+            return;
         }
-        window.location.href = `/custom/session/scheduler/${id}`
+        window.location.href = `/custom/session/scheduler/${id}`;
     }
 
     const columns = useMemo<any>(
@@ -205,7 +205,7 @@ export default function Custom() {
                                         </Badge>
                                     )}
                                 </>
-                            )
+                            );
                         }
                     },
                     { accessor: 'programRenewal', Header: 'Last Session Date' },
@@ -214,8 +214,8 @@ export default function Custom() {
                         Header: 'Actions',
                         Cell: ({ row }: any) => {
                             const manageHandler = () => {
-                                handleRedirect(row.original.tagId)
-                            }
+                                handleRedirect(row.original.tagId);
+                            };
 
                             const detailsHandler = () => {
                                 fitnessActionRef.current.TriggerForm({
@@ -223,34 +223,34 @@ export default function Custom() {
                                     actionType: 'details',
                                     type: 'Custom Fitness',
                                     rowData: row.original
-                                })
-                            }
+                                });
+                            };
 
                             const arrayAction = [
                                 { actionName: 'Manage', actionClick: manageHandler },
                                 { actionName: 'Details', actionClick: detailsHandler }
-                            ]
+                            ];
 
-                            return <ActionButton arrayAction={arrayAction}></ActionButton>
+                            return <ActionButton arrayAction={arrayAction}></ActionButton>;
                         }
                     }
                 ]
             }
         ],
         []
-    )
+    );
 
     function handleHistoryPackage(data: any) {
-        const flattenData = flattenObj({ ...data })
+        const flattenData = flattenObj({ ...data });
         setUserPackage(
             [...flattenData.tags].map((packageItem) => {
-                let renewDay: any = ''
+                let renewDay: any = '';
                 if (packageItem.client_packages[0].fitnesspackages[0].length !== 0) {
-                    renewDay = new Date(packageItem.client_packages[0].effective_date)
+                    renewDay = new Date(packageItem.client_packages[0].effective_date);
                     renewDay.setDate(
                         renewDay.getDate() +
                             packageItem.client_packages[0].fitnesspackages[0].duration
-                    )
+                    );
                 }
                 return {
                     tagId: packageItem.id,
@@ -277,9 +277,9 @@ export default function Custom() {
                         packageItem.sessions,
                         packageItem.client_packages[0].effective_date
                     )
-                }
+                };
             })
-        )
+        );
     }
 
     if (!showHistory) {
@@ -288,7 +288,7 @@ export default function Custom() {
                 moment(item.packageRenewal).isBefore(moment()) === true
                     ? userPackage.splice(index, 1)
                     : null
-            )
+            );
         }
     }
 
@@ -302,10 +302,10 @@ export default function Custom() {
                         label="Show History"
                         defaultChecked={showHistory}
                         onClick={() => {
-                            setShowHistory(!showHistory)
+                            setShowHistory(!showHistory);
                             mainQuery.refetch().then((res: any) => {
-                                handleHistoryPackage(res.data)
-                            })
+                                handleHistoryPackage(res.data);
+                            });
                         }}
                     />
                 </Form>
@@ -317,5 +317,5 @@ export default function Custom() {
                 </Col>
             </Row>
         </div>
-    )
+    );
 }

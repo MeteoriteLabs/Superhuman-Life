@@ -1,13 +1,13 @@
-import React, { Fragment } from 'react'
-import { Col, Row } from 'react-bootstrap'
+import React, { Fragment } from 'react';
+import { Col, Row } from 'react-bootstrap';
 
 const CustomPreview: React.FC<{
-    packageType
-    ptonline: any
-    ptoffline: any
-    grouponline: any
-    groupoffline: any
-    recordedclasses: any
+    packageType;
+    ptonline: any;
+    ptoffline: any;
+    grouponline: any;
+    groupoffline: any;
+    recordedclasses: any;
 }> = (props) => {
     return (
         <Row>
@@ -74,7 +74,7 @@ const CustomPreview: React.FC<{
                 )}
             </Col>
         </Row>
-    )
-}
+    );
+};
 
-export default CustomPreview
+export default CustomPreview;

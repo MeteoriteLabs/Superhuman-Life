@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const UPDATE_CLIENT_BOOKING = gql`
     mutation updateClientBooking($id: ID!, $data: ClientBookingInput!) {
@@ -14,7 +14,7 @@ export const UPDATE_CLIENT_BOOKING = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_TRANSACTION = gql`
     mutation createTransaction($data: TransactionInput!) {
@@ -24,7 +24,7 @@ export const CREATE_TRANSACTION = gql`
             }
         }
     }
-`
+`;
 
 export const GET_CLIENT_BOOKING = gql`
     query clientBookingQuery($id: ID) {
@@ -104,7 +104,7 @@ export const GET_CLIENT_BOOKING = gql`
             }
         }
     }
-`
+`;
 
 export const GET_TAG = gql`
     query tags($fitnessPackageId: ID) {
@@ -124,7 +124,7 @@ export const GET_TAG = gql`
             }
         }
     }
-`
+`;
 
 export const GET_OFFERING_INVENTORIES = gql`
     query offeringInventoriesQuery($changemaker_id: String, $fitnessPackage_id: ID) {
@@ -154,7 +154,7 @@ export const GET_OFFERING_INVENTORIES = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_SESSION_BOOKING = gql`
     mutation createSessionsBooking($data: SessionsBookingInput!) {
@@ -164,7 +164,7 @@ export const CREATE_SESSION_BOOKING = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_TAG = gql`
     mutation updateTag($id: ID!, $data: TagInput!) {
@@ -174,7 +174,7 @@ export const UPDATE_TAG = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_TAG = gql`
     mutation createTag($data: TagInput!) {
@@ -184,4 +184,4 @@ export const CREATE_TAG = gql`
             }
         }
     }
-`
+`;

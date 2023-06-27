@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const GET_EARNINGS_TRANSACTIONS = gql`
     query TransactionsEarningsQuery(
@@ -25,7 +25,7 @@ export const GET_EARNINGS_TRANSACTIONS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_EXPENSES_TRANSACTIONS = gql`
     query TransactionsExpensesQuery(
@@ -51,7 +51,7 @@ export const GET_EXPENSES_TRANSACTIONS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_USERS_JOINED_DATE = gql`
     query userPermissionUser($id: ID) {
@@ -64,4 +64,4 @@ export const GET_USERS_JOINED_DATE = gql`
             }
         }
     }
-`
+`;

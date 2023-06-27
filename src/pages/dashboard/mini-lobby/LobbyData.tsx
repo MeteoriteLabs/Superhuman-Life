@@ -41,4 +41,4 @@ export const LobbyData = [
         label: 'Learn',
         id: 6
     }
-]
+];

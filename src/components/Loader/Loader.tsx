@@ -1,6 +1,6 @@
-import React from 'react'
-import { Spinner } from 'react-bootstrap'
-import './loader.css'
+import React from 'react';
+import { Spinner } from 'react-bootstrap';
+import './loader.css';
 
 const Loader: React.FC<{ msg?: string; style?: { marginTop: string } }> = ({ msg, style }) => {
     return (
@@ -14,7 +14,7 @@ const Loader: React.FC<{ msg?: string; style?: { marginTop: string } }> = ({ msg
                 </div>
             </div>
         </>
-    )
-}
+    );
+};
 
-export default Loader
+export default Loader;

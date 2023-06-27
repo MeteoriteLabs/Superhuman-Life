@@ -1,4 +1,4 @@
-import { Card, Row, Col } from 'react-bootstrap'
+import { Card, Row, Col } from 'react-bootstrap';
 
 const PhysicalHealthScreen = () => {
     const PhysicalHealthCard = (props: any) => {
@@ -50,8 +50,8 @@ const PhysicalHealthScreen = () => {
                     </Card.Footer>
                 </Card>
             </Col>
-        )
-    }
+        );
+    };
 
     return (
         <div>
@@ -63,7 +63,7 @@ const PhysicalHealthScreen = () => {
                 <PhysicalHealthCard title={'Steps Tracker'} />
             </Row>
         </div>
-    )
-}
+    );
+};
 
-export default PhysicalHealthScreen
+export default PhysicalHealthScreen;

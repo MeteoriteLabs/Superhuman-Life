@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 
 const YearOfPassing: React.FC<{ onChange: (args: string) => void; value: string }> = (props) => {
-    const [date, setDate] = useState(props.value)
+    const [date, setDate] = useState(props.value);
 
-    props.onChange(date)
+    props.onChange(date);
 
     return (
         <div>
@@ -13,11 +13,11 @@ const YearOfPassing: React.FC<{ onChange: (args: string) => void; value: string 
                 type="month"
                 value={date}
                 onChange={(d) => {
-                    setDate(d.target.value)
+                    setDate(d.target.value);
                 }}
             />
         </div>
-    )
-}
+    );
+};
 
-export default YearOfPassing
+export default YearOfPassing;

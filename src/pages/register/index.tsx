@@ -1,139 +1,139 @@
-import React, { useRef, useState, useEffect } from 'react'
-import { withTheme } from '@rjsf/core'
-import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4'
-import { Button, Carousel, Col, Container, Modal, ProgressBar, Row } from 'react-bootstrap'
+import React, { useRef, useState, useEffect } from 'react';
+import { withTheme } from '@rjsf/core';
+import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
+import { Button, Carousel, Col, Container, Modal, ProgressBar, Row } from 'react-bootstrap';
 // import SocialLogin from "./SocialLogin";
-import ChangeMakerSelect from '../../components/customWidgets/changeMakerList'
-import LanguageSelect from '../../components/customWidgets/languagesList'
+import ChangeMakerSelect from '../../components/customWidgets/changeMakerList';
+import LanguageSelect from '../../components/customWidgets/languagesList';
 // import OrganizationSelect from "../../components/customWidgets/organizationTypeList";
-import TimeZoneSelect from '../../components/customWidgets/timeZoneSelect'
-import { useMutation } from '@apollo/client'
+import TimeZoneSelect from '../../components/customWidgets/timeZoneSelect';
+import { useMutation } from '@apollo/client';
 import {
     CREATE_ADDRESS,
     CREATE_ORGANIZATION,
     CREATE_EDUCATION_DETAIL,
     UPDATE_USER,
     REGISTER_USER
-} from './mutations'
+} from './mutations';
 // import LocationForm from './Location';
-import EmailForm from './email'
-import UserNameForm from './userName'
-import PhoneNumberForm from './number'
-import YearOfPassingForm from './yearOfPassing'
-import AddressForm from './address'
-import FacebookLogin from 'react-facebook-login'
-import Toaster from '../../components/Toaster'
-import { GoogleOAuthProvider } from '@react-oauth/google'
-import { GoogleLogin } from '@react-oauth/google'
-import { useLinkedIn } from 'react-linkedin-login-oauth2'
-import linkedin from 'react-linkedin-login-oauth2/assets/linkedin.png'
-import './socialLogin.css'
-import Geocode from 'react-geocode'
+import EmailForm from './email';
+import UserNameForm from './userName';
+import PhoneNumberForm from './number';
+import YearOfPassingForm from './yearOfPassing';
+import AddressForm from './address';
+import FacebookLogin from 'react-facebook-login';
+import Toaster from '../../components/Toaster';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import { GoogleLogin } from '@react-oauth/google';
+import { useLinkedIn } from 'react-linkedin-login-oauth2';
+import linkedin from 'react-linkedin-login-oauth2/assets/linkedin.png';
+import './socialLogin.css';
+import Geocode from 'react-geocode';
 
 interface FormValue {
-    email: string
-    fname: string
+    email: string;
+    fname: string;
 }
 
-const linkedinClientId = process.env.REACT_APP_LINKEDIN_CLIENT_ID
-const redirectUriForLinkedin = process.env.REACT_APP_LINKEDIN_REDIRECT_URI
-const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID
-const facebookAppId = process.env.REACT_APP_FACEBOOK_APP_ID
-const facebookPageUrl = process.env.REACT_APP_FACEBOOK_PAGE_URL
-const instagramPageUrl = process.env.REACT_APP_INSTAGRAM_PAGE_URL
-const linkedinPageUrl = process.env.REACT_APP_LINKEDIN_PAGE_URL
+const linkedinClientId = process.env.REACT_APP_LINKEDIN_CLIENT_ID;
+const redirectUriForLinkedin = process.env.REACT_APP_LINKEDIN_REDIRECT_URI;
+const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+const facebookAppId = process.env.REACT_APP_FACEBOOK_APP_ID;
+const facebookPageUrl = process.env.REACT_APP_FACEBOOK_PAGE_URL;
+const instagramPageUrl = process.env.REACT_APP_INSTAGRAM_PAGE_URL;
+const linkedinPageUrl = process.env.REACT_APP_LINKEDIN_PAGE_URL;
 
 const Register: React.FC = () => {
-    const registerSchema = require('./register.json')
+    const registerSchema = require('./register.json');
     // eslint-disable-next-line
-    const Form: any = withTheme(Bootstrap4Theme)
+    const Form: any = withTheme(Bootstrap4Theme);
     // eslint-disable-next-line
-    const formRef = useRef<any>(null)
+    const formRef = useRef<any>(null);
     // eslint-disable-next-line
-    const carouselRef = useRef<any>()
-    const [step, setStep] = useState<number>(1)
-    const [formValues, setFormValues] = useState<FormValue>({} as FormValue)
+    const carouselRef = useRef<any>();
+    const [step, setStep] = useState<number>(1);
+    const [formValues, setFormValues] = useState<FormValue>({} as FormValue);
     // eslint-disable-next-line
-    const [userFormData, setUserFormData] = useState<any>([])
-    const [successScreen, setSuccessScreen] = useState<boolean>(false)
-    const [longitude, setLongitude] = useState<string>('')
-    const [latitude, setLatitude] = useState<string>('')
+    const [userFormData, setUserFormData] = useState<any>([]);
+    const [successScreen, setSuccessScreen] = useState<boolean>(false);
+    const [longitude, setLongitude] = useState<string>('');
+    const [latitude, setLatitude] = useState<string>('');
 
-    Geocode.setApiKey('AIzaSyDDvAlVrvbBYMW08BBosDFM_x2inY-XQ-w')
-    Geocode.setLanguage('en')
+    Geocode.setApiKey('AIzaSyDDvAlVrvbBYMW08BBosDFM_x2inY-XQ-w');
+    Geocode.setLanguage('en');
 
-    const [login, setLogin] = useState<boolean>(false)
-    const [data, setData] = useState({})
+    const [login, setLogin] = useState<boolean>(false);
+    const [data, setData] = useState({});
 
     const redirectToLinkedinPage = () => {
-        window.open(linkedinPageUrl)
-    }
+        window.open(linkedinPageUrl);
+    };
 
     const redirectToInstagramPage = () => {
-        window.open(instagramPageUrl)
-    }
+        window.open(instagramPageUrl);
+    };
 
     const redirectToFacebookPage = () => {
-        window.open(facebookPageUrl)
-    }
+        window.open(facebookPageUrl);
+    };
 
     //Facebook
     const responseFacebook = (response) => {
         // Login failed
         if (response.status === 'unknown') {
-            alert('Login failed!')
-            setLogin(false)
-            return <Toaster type="danger" msg="Login failed" handleCallback={() => false} />
+            alert('Login failed!');
+            setLogin(false);
+            return <Toaster type="danger" msg="Login failed" handleCallback={() => false} />;
         }
-        setData(response)
+        setData(response);
         // setPicture(response.picture.data.url);
         if (response.accessToken) {
-            setLogin(true)
+            setLogin(true);
         } else {
-            setLogin(false)
+            setLogin(false);
         }
-    }
+    };
     // eslint-disable-next-line
     const logout = () => {
-        setLogin(false)
-        setData({})
+        setLogin(false);
+        setData({});
         // setPicture("");
-    }
+    };
 
     //linkedin
     const { linkedInLogin } = useLinkedIn({
         clientId: `${linkedinClientId}`,
         redirectUri: `${redirectUriForLinkedin}`,
         onSuccess: (code) => {
-            console.log(code)
+            console.log(code);
         },
         onError: (error) => {
-            console.log(error)
+            console.log(error);
         }
-    })
+    });
 
     useEffect(() => {
-        localStorage.setItem('dataKey', JSON.stringify(data))
-    }, [data])
+        localStorage.setItem('dataKey', JSON.stringify(data));
+    }, [data]);
 
     useEffect(() => {
-        const items = localStorage.getItem('dataKey')
+        const items = localStorage.getItem('dataKey');
         if (items) {
-            const a = JSON.parse(items)
-            setFormValues({ email: a.email, fname: a.name })
+            const a = JSON.parse(items);
+            setFormValues({ email: a.email, fname: a.name });
         }
-    }, [data])
+    }, [data]);
 
     // eslint-disable-next-line
     const uiSchema: any = {
         email: {
             'ui:widget': (props) => {
-                return <EmailForm {...props} />
+                return <EmailForm {...props} />;
             }
         },
         userName: {
             'ui:widget': (props) => {
-                return <UserNameForm {...props} />
+                return <UserNameForm {...props} />;
             }
         },
         password: {
@@ -152,13 +152,13 @@ const Register: React.FC = () => {
         changemaker: {
             specialist: {
                 'ui:widget': (props) => {
-                    return <ChangeMakerSelect {...props} />
+                    return <ChangeMakerSelect {...props} />;
                 }
             }
         },
         language: {
             'ui:widget': (props) => {
-                return <LanguageSelect {...props} />
+                return <LanguageSelect {...props} />;
             }
         },
         education: {
@@ -170,19 +170,19 @@ const Register: React.FC = () => {
                 'ui:placeholder': 'e.g. Masters in Yoga Therapy',
                 yearOfPassing: {
                     'ui:widget': (props) => {
-                        return <YearOfPassingForm {...props} />
+                        return <YearOfPassingForm {...props} />;
                     }
                 }
             }
         },
         contact: {
             'ui:widget': (props) => {
-                return <PhoneNumberForm {...props} />
+                return <PhoneNumberForm {...props} />;
             }
         },
         address: {
             'ui:widget': (props) => {
-                return <AddressForm {...props} />
+                return <AddressForm {...props} />;
             }
         },
         specification: {
@@ -214,7 +214,7 @@ const Register: React.FC = () => {
         // },
         timezone: {
             'ui:widget': (props) => {
-                return <TimeZoneSelect {...props} />
+                return <TimeZoneSelect {...props} />;
             }
         },
         // "location": {
@@ -271,14 +271,14 @@ const Register: React.FC = () => {
                                 <GoogleOAuthProvider clientId={`${googleClientId}`}>
                                     <GoogleLogin
                                         onSuccess={(credentialResponse) => {
-                                            console.log(credentialResponse)
+                                            console.log(credentialResponse);
                                         }}
                                         onError={() => {
-                                            ;<Toaster
+                                            <Toaster
                                                 type="danger"
                                                 msg="Login Failed"
                                                 handleCallback={() => false}
-                                            />
+                                            />;
                                         }}
                                     />
                                 </GoogleOAuthProvider>
@@ -292,16 +292,16 @@ const Register: React.FC = () => {
                             </a>
                         </span>
                     </div>
-                )
+                );
             }
         }
-    }
+    };
 
-    const [newUserId, setNewUserId] = useState<string>('')
+    const [newUserId, setNewUserId] = useState<string>('');
 
     const [registerUser] = useMutation(REGISTER_USER, {
         onCompleted: (data) => {
-            setNewUserId(data.register.user.id)
+            setNewUserId(data.register.user.id);
 
             updateUser({
                 variables: {
@@ -319,15 +319,15 @@ const Register: React.FC = () => {
                     // let id = e.map(d => {return d.id}).join(',');
                     languages: JSON.parse(userFormData.language)
                         .map((d) => {
-                            return d.id
+                            return d.id;
                         })
                         .join(', ')
                         .split(', '),
                     timezone: JSON.parse(userFormData.timezone)[0].id
                 }
-            })
+            });
         }
-    })
+    });
 
     const [updateUser] = useMutation(UPDATE_USER, {
         onCompleted: () => {
@@ -344,9 +344,9 @@ const Register: React.FC = () => {
                     longitude: longitude,
                     latitude: latitude
                 }
-            })
+            });
         }
-    })
+    });
 
     // eslint-disable-next-line
     const [createOrganization] = useMutation(CREATE_ORGANIZATION, {
@@ -364,9 +364,9 @@ const Register: React.FC = () => {
                     longitude: longitude,
                     latitude: latitude
                 }
-            })
+            });
         }
-    })
+    });
 
     const [createAddress] = useMutation(CREATE_ADDRESS, {
         onCompleted: () => {
@@ -383,34 +383,34 @@ const Register: React.FC = () => {
                         year_of_passing: userFormData.education[educationDetails].yearOfPassing,
                         user: newUserId
                     }
-                })
+                });
             }
         }
-    })
+    });
 
     const [createEducationDetail] = useMutation(CREATE_EDUCATION_DETAIL, {
         onCompleted: () => {
-            setSuccessScreen(true)
-            localStorage.clear()
+            setSuccessScreen(true);
+            localStorage.clear();
         }
-    })
+    });
 
     // eslint-disable-next-line
     async function submitHandler(formData: any) {
         if (step < 4) {
-            setStep(step + 1)
-            carouselRef.current.next()
-            setFormValues({ ...formValues, ...formData })
+            setStep(step + 1);
+            carouselRef.current.next();
+            setFormValues({ ...formValues, ...formData });
         } else {
             // setFormValues({ ...formValues, ...formData });
-            const values = { ...formValues, ...formData }
+            const values = { ...formValues, ...formData };
             // JSON.parse(values.address)
             // JSON.parse(values.changemaker.specialist)
             // JSON.parse(values.language)
             // JSON.parse(values.organization[0]?.Organization_Type)
             // JSON.parse(values.timezone)
 
-            await setUserFormData(values)
+            await setUserFormData(values);
 
             registerUser({
                 variables: {
@@ -418,56 +418,56 @@ const Register: React.FC = () => {
                     name: values.userName,
                     password: values.password
                 }
-            })
+            });
         }
     }
 
     function Validate(formData, errors) {
-        const ele = document.getElementsByClassName('invalidEmail')
-        const ele2 = document.getElementsByClassName('invalidUname')
-        const ele3 = document.getElementsByClassName('invalidNumber')
+        const ele = document.getElementsByClassName('invalidEmail');
+        const ele2 = document.getElementsByClassName('invalidUname');
+        const ele3 = document.getElementsByClassName('invalidNumber');
         if (formData.email) {
             if (ele.length !== 0) {
-                errors.email.addError('Please enter a valid email address')
+                errors.email.addError('Please enter a valid email address');
             }
         }
         if (formData.userName) {
             if (ele2.length !== 0) {
-                errors.userName.addError('Please enter some other username')
+                errors.userName.addError('Please enter some other username');
             }
         }
         if (formData.contact) {
             if (ele3.length !== 0) {
-                errors.contact.addError('Please enter a valid phone number')
+                errors.contact.addError('Please enter a valid phone number');
             }
         }
         if (formData.password !== formData.confirm) {
-            errors.confirm.addError("Passwords don't match")
+            errors.confirm.addError("Passwords don't match");
         }
-        return errors
+        return errors;
     }
 
     function getLocation() {
         if (!navigator.geolocation) {
-            console.log('Geolocation API not supported by this browser.')
+            console.log('Geolocation API not supported by this browser.');
         } else {
-            console.log('Checking location...')
-            navigator.geolocation.getCurrentPosition(success, error)
+            console.log('Checking location...');
+            navigator.geolocation.getCurrentPosition(success, error);
         }
     }
 
     function success(position) {
-        setLatitude(position.coords.latitude.toString())
-        setLongitude(position.coords.longitude.toString())
+        setLatitude(position.coords.latitude.toString());
+        setLongitude(position.coords.longitude.toString());
     }
 
     function error() {
-        console.log('Geolocation error!')
+        console.log('Geolocation error!');
     }
 
     useEffect(() => {
-        getLocation()
-    }, [])
+        getLocation();
+    }, []);
 
     return (
         <>
@@ -613,8 +613,8 @@ const Register: React.FC = () => {
                                         variant="light"
                                         size="sm"
                                         onClick={() => {
-                                            setStep(step - 1)
-                                            carouselRef.current.prev()
+                                            setStep(step - 1);
+                                            carouselRef.current.prev();
                                         }}
                                         disabled={step === 1 ? true : false}
                                     >
@@ -684,7 +684,7 @@ const Register: React.FC = () => {
                 </Row>
             )}
         </>
-    )
-}
+    );
+};
 
-export default Register
+export default Register;

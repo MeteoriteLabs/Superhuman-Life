@@ -1,20 +1,20 @@
-import { useMemo, useState, useRef, useContext } from 'react'
-import { Badge, Button, TabContent, Card, Container, Row, Col } from 'react-bootstrap'
-import Table from '../../../components/table/leads-table'
-import { useQuery } from '@apollo/client'
-import ActionButton from '../../../components/actionbutton/index'
-import { GET_PAYMENT_SCHEDULES } from './queries'
-import { flattenObj } from '../../../components/utils/responseFlatten'
-import CreatePaymentSchedule from './createPaymentSchedule'
-import AuthContext from '../../../context/auth-context'
+import { useMemo, useState, useRef, useContext } from 'react';
+import { Badge, Button, TabContent, Card, Container, Row, Col } from 'react-bootstrap';
+import Table from '../../../components/table/leads-table';
+import { useQuery } from '@apollo/client';
+import ActionButton from '../../../components/actionbutton/index';
+import { GET_PAYMENT_SCHEDULES } from './queries';
+import { flattenObj } from '../../../components/utils/responseFlatten';
+import CreatePaymentSchedule from './createPaymentSchedule';
+import AuthContext from '../../../context/auth-context';
 
 export default function PaymentSchedule() {
-    const auth = useContext(AuthContext)
-    const createPaymentScheduleComponent = useRef<any>(null)
-    const query = window.location.search
-    const params = new URLSearchParams(query)
-    const id = params.get('id')
-    const isChangemaker: boolean = params.get('isChangemaker') === 'true'
+    const auth = useContext(AuthContext);
+    const createPaymentScheduleComponent = useRef<any>(null);
+    const query = window.location.search;
+    const params = new URLSearchParams(query);
+    const id = params.get('id');
+    const isChangemaker: boolean = params.get('isChangemaker') === 'true';
 
     const columns = useMemo<any>(
         () => [
@@ -24,33 +24,33 @@ export default function PaymentSchedule() {
                 accessor: 'cycle',
                 Header: 'Cycle',
                 Cell: ({ row }: any) => {
-                    let cycle: string
+                    let cycle: string;
                     switch (row.values.cycle) {
                         case 1:
-                            cycle = '1st of every month'
-                            break
+                            cycle = '1st of every month';
+                            break;
 
                         case 2:
-                            cycle = '2nd of every month'
-                            break
+                            cycle = '2nd of every month';
+                            break;
 
                         case 3:
-                            cycle = '3rd of every month'
-                            break
+                            cycle = '3rd of every month';
+                            break;
 
                         case 4:
-                            cycle = '4th of every month'
-                            break
+                            cycle = '4th of every month';
+                            break;
 
                         case 5:
-                            cycle = '5th of every month'
-                            break
+                            cycle = '5th of every month';
+                            break;
 
                         default:
-                            cycle = '-NA-'
-                            break
+                            cycle = '-NA-';
+                            break;
                     }
-                    return <>{cycle}</>
+                    return <>{cycle}</>;
                 }
             },
             { accessor: 'amount', Header: 'Amount' },
@@ -59,15 +59,15 @@ export default function PaymentSchedule() {
                 accessor: 'status',
                 Header: 'Status',
                 Cell: ({ row }: any) => {
-                    let statusColor = ''
+                    let statusColor = '';
                     switch (row.values.status) {
                         case 'Activated':
-                            statusColor = 'success'
-                            break
+                            statusColor = 'success';
+                            break;
 
                         case 'Deactivated':
-                            statusColor = 'danger'
-                            break
+                            statusColor = 'danger';
+                            break;
                     }
                     return (
                         <>
@@ -79,7 +79,7 @@ export default function PaymentSchedule() {
                                 {row.values.status === 'Activated' ? 'Activated' : 'Deactivated'}
                             </Badge>
                         </>
-                    )
+                    );
                 }
             },
             {
@@ -91,15 +91,15 @@ export default function PaymentSchedule() {
                             id: row.original.id,
                             type: 'deactivate',
                             current_status: row.original.status === 'Activated' ? true : false
-                        })
-                    }
+                        });
+                    };
 
                     const deleteHandler = () => {
                         createPaymentScheduleComponent.current.TriggerForm({
                             id: row.original.id,
                             type: 'delete'
-                        })
-                    }
+                        });
+                    };
 
                     const arrayAction = [
                         {
@@ -108,16 +108,16 @@ export default function PaymentSchedule() {
                             actionClick: deactivateHandler
                         },
                         { actionName: 'Delete', actionClick: deleteHandler }
-                    ]
+                    ];
 
-                    return <ActionButton arrayAction={arrayAction}></ActionButton>
+                    return <ActionButton arrayAction={arrayAction}></ActionButton>;
                 }
             }
         ],
         []
-    )
+    );
 
-    const [datatable, setDataTable] = useState<Record<string, unknown>[]>([])
+    const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
 
     const fetch = useQuery(GET_PAYMENT_SCHEDULES, {
         skip: !id,
@@ -125,28 +125,28 @@ export default function PaymentSchedule() {
             Source_User_ID: Number(auth.userid)
         },
         onCompleted: loadData
-    })
+    });
 
     function refetchQueryCallback() {
-        fetch.refetch()
+        fetch.refetch();
     }
 
     function getDate(time: number) {
-        const dateObj = new Date(time)
-        const month = dateObj.getMonth() + 1
-        const year = dateObj.getFullYear()
-        const date = dateObj.getDate()
-        return `${date}/${month}/${year}`
+        const dateObj = new Date(time);
+        const month = dateObj.getMonth() + 1;
+        const year = dateObj.getFullYear();
+        const date = dateObj.getDate();
+        return `${date}/${month}/${year}`;
     }
 
     function loadData(data: any) {
-        const flattenData = flattenObj({ ...data.paymentSchedules })
+        const flattenData = flattenObj({ ...data.paymentSchedules });
 
         const getSchedule = flattenData.filter((currentValue) =>
             !isChangemaker
                 ? currentValue.Destination_Contacts_ID === Number(id)
                 : currentValue.Destination_User_ID === Number(id)
-        )
+        );
 
         setDataTable(
             [...getSchedule].flatMap((Detail) => {
@@ -168,9 +168,9 @@ export default function PaymentSchedule() {
                     cycle: Detail.Payment_Cycle,
                     amount: `INR ${Detail.Total_Amount}`,
                     status: Detail.isActive ? 'Activated' : 'Deactivated'
-                }
+                };
             })
-        )
+        );
     }
 
     return (
@@ -187,7 +187,7 @@ export default function PaymentSchedule() {
                                         id: null,
                                         type: 'create',
                                         modal_status: true
-                                    })
+                                    });
                                 }}
                             >
                                 <i className="fas fa-plus-circle"></i> Add Payment Schedule
@@ -203,5 +203,5 @@ export default function PaymentSchedule() {
             </Container>
             <Table columns={columns} data={datatable} />
         </TabContent>
-    )
+    );
 }

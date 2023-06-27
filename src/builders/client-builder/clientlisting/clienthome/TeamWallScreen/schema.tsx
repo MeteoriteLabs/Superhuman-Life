@@ -1,12 +1,12 @@
-import TagSearch from './TagSearch'
-import Widget from './Widget'
-import ClientName from './ClientNameWidget'
+import TagSearch from './TagSearch';
+import Widget from './Widget';
+import ClientName from './ClientNameWidget';
 
 export const widgets = {
     PackageSearch: TagSearch,
     Widget: Widget,
     ClientNameWidget: ClientName
-}
+};
 
 export const schema: any = {
     packagesearch: {
@@ -18,4 +18,4 @@ export const schema: any = {
     clientname: {
         'ui:widget': 'ClientNameWidget'
     }
-}
+};

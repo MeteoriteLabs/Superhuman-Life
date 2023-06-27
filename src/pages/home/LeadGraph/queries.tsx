@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const GET_LEADS = gql`
     query Forms($id: ID, $startDateTime: DateTime, $endDateTime: DateTime) {
@@ -16,4 +16,4 @@ export const GET_LEADS = gql`
             }
         }
     }
-`
+`;

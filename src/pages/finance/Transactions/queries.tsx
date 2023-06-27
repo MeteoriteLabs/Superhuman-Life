@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const GET_TRANSACTIONS = gql`
     query TransactionsQuery {
@@ -28,7 +28,7 @@ export const GET_TRANSACTIONS = gql`
             }
         }
     }
-`
+`;
 
 export const FETCH_CHANGEMAKERS = gql`
     query fetchUsersProfileData {
@@ -42,7 +42,7 @@ export const FETCH_CHANGEMAKERS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_CONTACTS = gql`
     query ContactsQuery($id: ID) {
@@ -63,4 +63,4 @@ export const GET_CONTACTS = gql`
             }
         }
     }
-`
+`;

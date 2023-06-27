@@ -1,48 +1,48 @@
-import React, { useEffect, useState } from 'react'
-import { Form } from 'react-bootstrap'
-import Geocode from 'react-geocode'
+import React, { useEffect, useState } from 'react';
+import { Form } from 'react-bootstrap';
+import Geocode from 'react-geocode';
 import GooglePlacesAutocomplete, {
     geocodeByAddress,
     getLatLng
-} from 'react-google-places-autocomplete'
+} from 'react-google-places-autocomplete';
 
 const Address: React.FC<{ value: string; onChange: (args: string) => void }> = (props) => {
     const [address1, setAddress1] = useState<string>(
         props.value ? JSON.parse(props.value).address1 : ''
-    )
+    );
     const [address2, setAddress2] = useState<string>(
         props.value ? JSON.parse(props.value).address2 : ''
-    )
-    const [city, setCity] = useState<string>(props.value ? JSON.parse(props.value).city : '')
-    const [state, setState] = useState<string>(props.value ? JSON.parse(props.value).state : '')
-    const [zip, setZip] = useState<string>(props.value ? JSON.parse(props.value).zip : '')
+    );
+    const [city, setCity] = useState<string>(props.value ? JSON.parse(props.value).city : '');
+    const [state, setState] = useState<string>(props.value ? JSON.parse(props.value).state : '');
+    const [zip, setZip] = useState<string>(props.value ? JSON.parse(props.value).zip : '');
     const [country, setCountry] = useState<string>(
         props.value ? JSON.parse(props.value).country : ''
-    )
+    );
     const [addressTitle, setAddressTitle] = useState<string>(
         props.value ? JSON.parse(props.value).addressTitle : ''
-    )
+    );
 
-    const [googleAddressShow, setGoogleAddressShow] = useState<boolean>(false)
+    const [googleAddressShow, setGoogleAddressShow] = useState<boolean>(false);
     // eslint-disable-next-line
-    const [value, setValue] = useState<any>(null)
+    const [value, setValue] = useState<any>(null);
 
     if (value !== null) {
         geocodeByAddress(value.label)
             .then((results) => getLatLng(results[0]))
             .then(({ lat, lng }) => {
-                getAddressFromCoordinates(lat.toString(), lng.toString())
-            })
+                getAddressFromCoordinates(lat.toString(), lng.toString());
+            });
     }
 
-    Geocode.setApiKey('AIzaSyDDvAlVrvbBYMW08BBosDFM_x2inY-XQ-w')
-    Geocode.setLanguage('en')
+    Geocode.setApiKey('AIzaSyDDvAlVrvbBYMW08BBosDFM_x2inY-XQ-w');
+    Geocode.setLanguage('en');
 
     function getAddressFromCoordinates(lat: string, lng: string) {
         Geocode.fromLatLng(lat, lng).then(
             (response) => {
-                const address = response.results[0].formatted_address
-                let city, state, country, zip
+                const address = response.results[0].formatted_address;
+                let city, state, country, zip;
                 for (let i = 0; i < response.results[0].address_components.length; i++) {
                     for (
                         let j = 0;
@@ -51,53 +51,53 @@ const Address: React.FC<{ value: string; onChange: (args: string) => void }> = (
                     ) {
                         switch (response.results[0].address_components[i].types[j]) {
                             case 'locality':
-                                city = response.results[0].address_components[i].long_name
-                                break
+                                city = response.results[0].address_components[i].long_name;
+                                break;
                             case 'administrative_area_level_1':
-                                state = response.results[0].address_components[i].long_name
-                                break
+                                state = response.results[0].address_components[i].long_name;
+                                break;
                             case 'country':
-                                country = response.results[0].address_components[i].long_name
-                                break
+                                country = response.results[0].address_components[i].long_name;
+                                break;
                             case 'postal_code':
-                                zip = response.results[0].address_components[i].long_name
-                                break
+                                zip = response.results[0].address_components[i].long_name;
+                                break;
                         }
                     }
                 }
-                setCity(city)
-                setState(state)
-                setZip(zip)
-                setCountry(country)
-                setAddress1(address)
+                setCity(city);
+                setState(state);
+                setZip(zip);
+                setCountry(country);
+                setAddress1(address);
             },
             (error) => {
-                console.error(error)
+                console.error(error);
             }
-        )
+        );
     }
 
     function getLocation() {
         if (!navigator.geolocation) {
-            console.log('Geolocation API not supported by this browser.')
+            console.log('Geolocation API not supported by this browser.');
         } else {
-            console.log('Checking location...')
-            navigator.geolocation.getCurrentPosition(success, error)
+            console.log('Checking location...');
+            navigator.geolocation.getCurrentPosition(success, error);
         }
     }
 
     function success(position) {
-        getAddressFromCoordinates(position.coords.latitude, position.coords.longitude)
+        getAddressFromCoordinates(position.coords.latitude, position.coords.longitude);
     }
 
     function error() {
-        console.log('Geolocation error!')
-        setGoogleAddressShow(true)
+        console.log('Geolocation error!');
+        setGoogleAddressShow(true);
     }
 
     useEffect(() => {
-        getLocation()
-    }, [])
+        getLocation();
+    }, []);
 
     props.onChange(
         JSON.stringify({
@@ -109,7 +109,7 @@ const Address: React.FC<{ value: string; onChange: (args: string) => void }> = (
             country: country,
             addressTitle: addressTitle
         })
-    )
+    );
 
     return (
         <div>
@@ -130,8 +130,8 @@ const Address: React.FC<{ value: string; onChange: (args: string) => void }> = (
                             value,
                             // eslint-disable-next-line
                             onChange: (e: any) => {
-                                setValue(e)
-                                setAddress1(e.label)
+                                setValue(e);
+                                setAddress1(e.label);
                             }
                         }}
                     />
@@ -192,7 +192,7 @@ const Address: React.FC<{ value: string; onChange: (args: string) => void }> = (
                 />
             </Form.Group>
         </div>
-    )
-}
+    );
+};
 
-export default Address
+export default Address;

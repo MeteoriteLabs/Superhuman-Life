@@ -1,43 +1,43 @@
-import { useState } from 'react'
-import { Typeahead } from 'react-bootstrap-typeahead'
-import 'react-bootstrap-typeahead/css/Typeahead.css'
-import { LANGUAGES } from '../../builders/package-builder/fitness/graphQL/queries'
-import { useQuery } from '@apollo/client'
-import { flattenObj } from '../utils/responseFlatten'
+import { useState } from 'react';
+import { Typeahead } from 'react-bootstrap-typeahead';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
+import { LANGUAGES } from '../../builders/package-builder/fitness/graphQL/queries';
+import { useQuery } from '@apollo/client';
+import { flattenObj } from '../utils/responseFlatten';
 
 const MultiSelect = (props: any) => {
     const [multiSelections, setMultiSelections] = useState<any>(
         props.value !== undefined ? JSON.parse(props.value) : []
-    )
-    const [languages, setlanguages] = useState<any[]>([])
+    );
+    const [languages, setlanguages] = useState<any[]>([]);
 
     function FetchData() {
-        useQuery(LANGUAGES, { onCompleted: loadData })
+        useQuery(LANGUAGES, { onCompleted: loadData });
     }
 
     function loadData(data: any) {
-        const flattenedData = flattenObj({ ...data })
+        const flattenedData = flattenObj({ ...data });
         setlanguages(
             [...flattenedData.languages].map((language) => {
                 return {
                     id: language.id,
                     languages: language.languages
-                }
+                };
             })
-        )
+        );
     }
 
     function OnChange(e) {
-        const unique = [...new Map(e.map((m) => [m.id, m])).values()]
-        setMultiSelections(unique)
+        const unique = [...new Map(e.map((m) => [m.id, m])).values()];
+        setMultiSelections(unique);
     }
 
-    FetchData()
+    FetchData();
 
     if (multiSelections.length > 0) {
-        props.onChange(JSON.stringify(multiSelections))
+        props.onChange(JSON.stringify(multiSelections));
     } else {
-        props.onChange(undefined)
+        props.onChange(undefined);
     }
 
     return (
@@ -54,7 +54,7 @@ const MultiSelect = (props: any) => {
                 disabled={props.readonly}
             />
         </div>
-    )
-}
+    );
+};
 
-export default MultiSelect
+export default MultiSelect;

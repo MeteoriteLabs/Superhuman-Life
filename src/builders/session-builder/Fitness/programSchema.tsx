@@ -1,8 +1,8 @@
-import FitnessMultiSelect from '../../../components/customWidget/fitnessMultiSelect'
+import FitnessMultiSelect from '../../../components/customWidget/fitnessMultiSelect';
 
 export const widgets = {
     fitnessSelect: FitnessMultiSelect
-}
+};
 
 export const schema: any = {
     level: {
@@ -21,4 +21,4 @@ export const schema: any = {
     discipline: {
         'ui:widget': 'fitnessSelect'
     }
-}
+};

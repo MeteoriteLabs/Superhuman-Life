@@ -1,7 +1,7 @@
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom';
 
 export default function ChatPage(): JSX.Element {
-    const location = useLocation()
+    const location = useLocation();
 
     return (
         <div>
@@ -10,5 +10,5 @@ export default function ChatPage(): JSX.Element {
                 No content available for <code>{location.pathname}</code>
             </p>
         </div>
-    )
+    );
 }

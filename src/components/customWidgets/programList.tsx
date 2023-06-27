@@ -1,22 +1,22 @@
-import React, { useState, useRef, useContext } from 'react'
-import { InputGroup, FormControl, Container, Col, Row, Button } from 'react-bootstrap'
-import { gql, useQuery } from '@apollo/client'
-import AuthContext from '../../context/auth-context'
-import '../../builders/program-builder/program-template/styles.css'
-import SchedulerEvent from '../../builders/program-builder/program-template/scheduler-event'
-import { flattenObj } from '../utils/responseFlatten'
+import React, { useState, useRef, useContext } from 'react';
+import { InputGroup, FormControl, Container, Col, Row, Button } from 'react-bootstrap';
+import { gql, useQuery } from '@apollo/client';
+import AuthContext from '../../context/auth-context';
+import '../../builders/program-builder/program-template/styles.css';
+import SchedulerEvent from '../../builders/program-builder/program-template/scheduler-event';
+import { flattenObj } from '../utils/responseFlatten';
 
 const ProgramList: React.FC<{
-    callback: (args: string) => void
-    sessionIds: string
-    dayType: string
+    callback: (args: string) => void;
+    sessionIds: string;
+    dayType: string;
 }> = (props) => {
-    const auth = useContext(AuthContext)
-    const [programList, setProgramList] = useState<any[]>([])
-    const [searchInput, setSearchInput] = useState(null)
-    const [selected, setSelected] = useState<any>({})
-    const inputField = useRef<any>()
-    let skipval = true
+    const auth = useContext(AuthContext);
+    const [programList, setProgramList] = useState<any[]>([]);
+    const [searchInput, setSearchInput] = useState(null);
+    const [selected, setSelected] = useState<any>({});
+    const inputField = useRef<any>();
+    let skipval = true;
 
     const GET_PROGRAMLIST = gql`
         query programlistQuery($id: ID!, $filter: String!) {
@@ -87,7 +87,7 @@ const ProgramList: React.FC<{
                 }
             }
         }
-    `
+    `;
 
     function FetchEquipmentList(
         _variable: Record<string, unknown> = { id: auth.userid, filter: ' ' }
@@ -96,11 +96,11 @@ const ProgramList: React.FC<{
             variables: _variable,
             onCompleted: loadProgramList,
             skip: !searchInput
-        })
+        });
     }
 
     function loadProgramList(data: any) {
-        const flattenedData = flattenObj({ ...data })
+        const flattenedData = flattenObj({ ...data });
         setProgramList(
             [...flattenedData.fitnessprograms].map((program) => {
                 return {
@@ -111,17 +111,17 @@ const ProgramList: React.FC<{
                     description: program.description,
                     discpline: program.fitnessdisciplines,
                     events: program.sessions.filter((session: any) => session.Is_restday === false)
-                }
+                };
             })
-        )
+        );
     }
 
     function EquipmentSearch(data: any) {
         if (data.length > 0) {
-            setSearchInput(data)
-            skipval = false
+            setSearchInput(data);
+            skipval = false;
         } else {
-            setProgramList([])
+            setProgramList([]);
         }
     }
 
@@ -142,16 +142,16 @@ const ProgramList: React.FC<{
             description: description,
             discpline: discpline,
             events: events
-        })
-        inputField.current.value = ''
-        setProgramList([])
-        skipval = true
+        });
+        inputField.current.value = '';
+        setProgramList([]);
+        skipval = true;
     }
 
-    const days: any = []
+    const days: any = [];
 
     for (let duration = 1; duration <= selected.duration; duration++) {
-        days.push(duration)
+        days.push(duration);
     }
 
     function renderEventsTable() {
@@ -165,11 +165,11 @@ const ProgramList: React.FC<{
                     programDays={days}
                     programEvents={selected.events}
                 />
-            )
+            );
         }
     }
 
-    FetchEquipmentList({ filter: searchInput, skip: skipval, id: auth.userid })
+    FetchEquipmentList({ filter: searchInput, skip: skipval, id: auth.userid });
 
     return (
         <>
@@ -178,8 +178,8 @@ const ProgramList: React.FC<{
                 variant="outline-danger"
                 className="float-right mb-3"
                 onClick={() => {
-                    props.callback('none')
-                    setSelected({})
+                    props.callback('none');
+                    setSelected({});
                 }}
             >
                 close
@@ -191,9 +191,9 @@ const ProgramList: React.FC<{
                     id="searchInput"
                     ref={inputField}
                     onChange={(e) => {
-                        setSelected({})
-                        e.preventDefault()
-                        EquipmentSearch(e.target.value)
+                        setSelected({});
+                        e.preventDefault();
+                        EquipmentSearch(e.target.value);
                     }}
                     autoComplete="off"
                 />
@@ -207,7 +207,7 @@ const ProgramList: React.FC<{
                                 className="m-2 ml-5 p-2 shadow-sm rounded bg-white "
                                 id={program.id}
                                 onClick={(e) => {
-                                    e.preventDefault()
+                                    e.preventDefault();
                                     handleSelectedEquipmentAdd(
                                         program.name,
                                         program.id,
@@ -216,7 +216,7 @@ const ProgramList: React.FC<{
                                         program.description,
                                         program.discpline,
                                         program.events
-                                    )
+                                    );
                                 }}
                             >
                                 <div>
@@ -232,14 +232,14 @@ const ProgramList: React.FC<{
                                 </div>
                             </div>
                         </Container>
-                    )
+                    );
                 })}
             </>
             <>
                 <div className="mt-5">{renderEventsTable()}</div>
             </>
         </>
-    )
-}
+    );
+};
 
-export default ProgramList
+export default ProgramList;

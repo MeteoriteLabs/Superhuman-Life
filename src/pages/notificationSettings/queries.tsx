@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const CREATE_NOTIFICATION_SETTINGS = gql`
     mutation createNotificationSetting($data: NotificationSettingInput!) {
@@ -12,7 +12,7 @@ export const CREATE_NOTIFICATION_SETTINGS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_NOTIFICATION_SETTINGS = gql`
     query notificationSettings($id: ID) {
@@ -26,4 +26,4 @@ export const GET_NOTIFICATION_SETTINGS = gql`
             }
         }
     }
-`
+`;

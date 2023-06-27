@@ -1,6 +1,6 @@
-import React, { useContext, useImperativeHandle, useState } from 'react'
-import { useQuery, useMutation } from '@apollo/client'
-import ModalView from '../../../../components/modal'
+import React, { useContext, useImperativeHandle, useState } from 'react';
+import { useQuery, useMutation } from '@apollo/client';
+import ModalView from '../../../../components/modal';
 import {
     GET_SCHEDULEREVENTS,
     GET_SCHEDULEREVENTS_PROGRAM_MANAGER,
@@ -10,97 +10,97 @@ import {
     CREATE_SESSION_BOOKING,
     GET_TEMPLATE_SESSIONS,
     UPDATE_FITNESSPORGRAMS_SESSIONS
-} from '../queries'
-import AuthContext from '../../../../context/auth-context'
-import { schema, widgets } from '../schema/restDaySchema'
-import { Subject } from 'rxjs'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
-import moment from 'moment'
+} from '../queries';
+import AuthContext from '../../../../context/auth-context';
+import { schema, widgets } from '../schema/restDaySchema';
+import { Subject } from 'rxjs';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import moment from 'moment';
 
 interface Operation {
-    id: string
-    type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete'
-    current_status: boolean
+    id: string;
+    type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
+    current_status: boolean;
 }
 
 function CreateEditRestDay(props: any, ref: any) {
-    const auth = useContext(AuthContext)
-    const programSchema: { [name: string]: any } = require('../json/restDay.json')
-    const [programDetails, setProgramDetails] = useState<any>({})
-    const [operation, setOperation] = useState<Operation>({} as Operation)
-    const program_id = window.location.pathname.split('/').pop()
+    const auth = useContext(AuthContext);
+    const programSchema: { [name: string]: any } = require('../json/restDay.json');
+    const [programDetails, setProgramDetails] = useState<any>({});
+    const [operation, setOperation] = useState<Operation>({} as Operation);
+    const program_id = window.location.pathname.split('/').pop();
 
-    const [sessionsIds, setSessionsIds] = useState<any>([])
-    const [sessions, setSessions] = useState<any>([])
-    const [templateSessionsIds, setTemplateSessionsIds] = useState<any>([])
-    const [templateSessions, setTemplateSessions] = useState<any>([])
+    const [sessionsIds, setSessionsIds] = useState<any>([]);
+    const [sessions, setSessions] = useState<any>([]);
+    const [templateSessionsIds, setTemplateSessionsIds] = useState<any>([]);
+    const [templateSessions, setTemplateSessions] = useState<any>([]);
 
     useQuery(GET_TEMPLATE_SESSIONS, {
         variables: { id: program_id },
         skip: window.location.pathname.split('/')[1] !== 'programs',
         onCompleted: (data: any) => {
-            const flattenData = flattenObj({ ...data })
-            const templateExistingValues = [...templateSessionsIds]
+            const flattenData = flattenObj({ ...data });
+            const templateExistingValues = [...templateSessionsIds];
             for (let q = 0; q < flattenData.fitnessprograms[0].sessions.length; q++) {
-                templateExistingValues.push(flattenData.fitnessprograms[0].sessions[q].id)
+                templateExistingValues.push(flattenData.fitnessprograms[0].sessions[q].id);
             }
-            setTemplateSessions(flattenData.fitnessprograms[0].sessions)
-            setTemplateSessionsIds(templateExistingValues)
+            setTemplateSessions(flattenData.fitnessprograms[0].sessions);
+            setTemplateSessionsIds(templateExistingValues);
         }
-    })
+    });
 
     useQuery(GET_SESSIONS, {
         variables: { id: program_id },
         skip: window.location.pathname.split('/')[1] === 'programs',
         onCompleted: (data: any) => {
-            const flattenData = flattenObj({ ...data })
-            const sessionsExistingValues = [...sessionsIds]
+            const flattenData = flattenObj({ ...data });
+            const sessionsExistingValues = [...sessionsIds];
             for (let q = 0; q < flattenData.tags[0]?.sessions.length; q++) {
-                sessionsExistingValues.push(flattenData.tags[0].sessions[q].id)
+                sessionsExistingValues.push(flattenData.tags[0].sessions[q].id);
             }
-            setSessions(flattenData.tags[0]?.sessions)
-            setSessionsIds(sessionsExistingValues)
+            setSessions(flattenData.tags[0]?.sessions);
+            setSessionsIds(sessionsExistingValues);
         }
-    })
+    });
 
     const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, {
         onCompleted: (data: any) => {
-            modalTrigger.next(false)
+            modalTrigger.next(false);
         }
-    })
+    });
     const [upateSessions] = useMutation(UPDATE_TAG_SESSIONS, {
         onCompleted: (data: any) => {
-            modalTrigger.next(false)
+            modalTrigger.next(false);
         }
-    })
-    const [createSession] = useMutation(CREATE_SESSION)
+    });
+    const [createSession] = useMutation(CREATE_SESSION);
 
     const [updateTemplateSessions] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, {
         onCompleted: (data: any) => {
-            modalTrigger.next(false)
+            modalTrigger.next(false);
         }
-    })
+    });
 
-    const modalTrigger = new Subject()
+    const modalTrigger = new Subject();
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
-            setOperation(msg)
-            schema.startDate = props.startDate
-            schema.duration = props.duration
-            schema.type = window.location.pathname.split('/')[1] === 'programs' ? 'day' : ''
+            setOperation(msg);
+            schema.startDate = props.startDate;
+            schema.duration = props.duration;
+            schema.type = window.location.pathname.split('/')[1] === 'programs' ? 'day' : '';
 
             if (msg && !msg.id)
                 //render form if no message id
-                modalTrigger.next(true)
+                modalTrigger.next(true);
         }
-    }))
+    }));
 
     function FillDetails(data: any) {
-        const flattenData = flattenObj({ ...data })
-        const details: any = {}
-        const restDays: any[] = []
-        const msg = flattenData
+        const flattenData = flattenObj({ ...data });
+        const details: any = {};
+        const restDays: any[] = [];
+        const msg = flattenData;
         if (window.location.pathname.split('/')[1] === 'programs') {
             msg?.fitnessprograms[0]?.sessions?.map(
                 // eslint-disable-next-line array-callback-return
@@ -109,10 +109,10 @@ function CreateEditRestDay(props: any, ref: any) {
                         return restDays.push({
                             key: val.day_of_program,
                             day: `Day - ${val.day_of_program}`
-                        })
+                        });
                     }
                 }
-            )
+            );
         } else {
             msg.tags[0]?.sessions?.map(
                 // eslint-disable-next-line array-callback-return
@@ -121,18 +121,18 @@ function CreateEditRestDay(props: any, ref: any) {
                         return restDays.push({
                             key: val.day_of_program,
                             day: `${moment(val.session_date).format('Do, MMM YY')}`
-                        })
+                        });
                     }
                 }
-            )
+            );
         }
-        details.day = [...restDays]
+        details.day = [...restDays];
 
-        setProgramDetails(details)
+        setProgramDetails(details);
 
         //if message exists - show form only for edit and view
-        if (['edit', 'view'].indexOf(operation.type) > -1) modalTrigger.next(true)
-        else OnSubmit(null)
+        if (['edit', 'view'].indexOf(operation.type) > -1) modalTrigger.next(true);
+        else OnSubmit(null);
     }
 
     function FetchData() {
@@ -143,29 +143,29 @@ function CreateEditRestDay(props: any, ref: any) {
             {
                 variables: { id: program_id },
                 onCompleted: (e: any) => {
-                    FillDetails(e)
+                    FillDetails(e);
                 }
             }
-        )
+        );
     }
 
     function UpdateProgram(frm: any) {
-        frm.day = JSON.parse(frm.day)
+        frm.day = JSON.parse(frm.day);
 
-        const sessionIds_new: any = []
-        const sessionIds_old: string[] = [...sessionsIds]
-        const templateIds_old: string[] = [...templateSessionsIds]
-        const restDays_old: any = []
+        const sessionIds_new: any = [];
+        const sessionIds_old: string[] = [...sessionsIds];
+        const templateIds_old: string[] = [...templateSessionsIds];
+        const restDays_old: any = [];
 
         function updateSessionFunc(id: any) {
-            sessionIds_new.push(id)
+            sessionIds_new.push(id);
             if (frm.day.length === sessionIds_new.length) {
                 upateSessions({
                     variables: {
                         id: program_id,
                         sessions_ids: sessionIds_old.concat(sessionIds_new)
                     }
-                })
+                });
             }
         }
 
@@ -176,16 +176,16 @@ function CreateEditRestDay(props: any, ref: any) {
                         id: program_id,
                         sessions_ids: templateIds_old.concat(sessionIds_new)
                     }
-                })
+                });
             }
-            sessionIds_new.push(id)
+            sessionIds_new.push(id);
             if (frm.day.length === sessionIds_new.length) {
                 updateTemplateSessions({
                     variables: {
                         id: program_id,
                         sessions_ids: templateIds_old.concat(sessionIds_new)
                     }
-                })
+                });
             }
         }
 
@@ -196,8 +196,8 @@ function CreateEditRestDay(props: any, ref: any) {
                         templateSessions[k].day_of_program === frm.day[j].key &&
                         templateSessions[k].Is_restday === true
                     ) {
-                        frm.day.splice(j, 1)
-                        restDays_old.push(templateSessions[k].id)
+                        frm.day.splice(j, 1);
+                        restDays_old.push(templateSessions[k].id);
                     }
                 }
             }
@@ -208,7 +208,7 @@ function CreateEditRestDay(props: any, ref: any) {
                         sessions[x].day_of_program === frm.day[y].key &&
                         sessions[x].Is_restday === true
                     ) {
-                        frm.day.splice(y, 1)
+                        frm.day.splice(y, 1);
                     }
                 }
             }
@@ -217,10 +217,10 @@ function CreateEditRestDay(props: any, ref: any) {
         // eslint-disable-next-line array-callback-return
         templateSessions.map((item: any, index: number) => {
             if (!restDays_old.includes(item.id) && item.Is_restday) {
-                templateSessions.splice(index, 1)
-                templateIds_old.splice(index, 1)
+                templateSessions.splice(index, 1);
+                templateIds_old.splice(index, 1);
             }
-        })
+        });
 
         if (frm.day.length > 0) {
             for (let i = 0; i < frm.day.length; i++) {
@@ -239,43 +239,43 @@ function CreateEditRestDay(props: any, ref: any) {
                                     session: data.createSession.data.id,
                                     client: program_id
                                 }
-                            })
+                            });
                         } else {
                             if (window.location.pathname.split('/')[1] === 'programs') {
-                                return updateTemplateSessionsFunc(data.createSession.data.id)
+                                return updateTemplateSessionsFunc(data.createSession.data.id);
                             } else {
-                                return updateSessionFunc(data.createSession.data.id)
+                                return updateSessionFunc(data.createSession.data.id);
                             }
                         }
                     }
-                })
+                });
             }
         } else {
-            return updateTemplateSessionsFunc(null)
+            return updateTemplateSessionsFunc(null);
         }
     }
 
     function OnSubmit(frm: any) {
         //bind user id
-        if (frm) frm.user_permissions_user = auth.userid
+        if (frm) frm.user_permissions_user = auth.userid;
 
         switch (operation.type) {
             case 'create':
-                UpdateProgram(frm)
-                break
+                UpdateProgram(frm);
+                break;
         }
     }
 
-    let name = ''
+    let name = '';
     if (operation.type === 'create') {
-        name = 'Rest Day'
+        name = 'Rest Day';
     } else if (operation.type === 'edit') {
-        name = 'Edit'
+        name = 'Edit';
     } else if (operation.type === 'view') {
-        name = 'View'
+        name = 'View';
     }
 
-    FetchData()
+    FetchData();
 
     return (
         <>
@@ -288,10 +288,10 @@ function CreateEditRestDay(props: any, ref: any) {
                 formSubmit={
                     name === 'View'
                         ? () => {
-                              modalTrigger.next(false)
+                              modalTrigger.next(false);
                           }
                         : (frm: any) => {
-                              OnSubmit(frm)
+                              OnSubmit(frm);
                           }
                 }
                 formData={programDetails}
@@ -300,7 +300,7 @@ function CreateEditRestDay(props: any, ref: any) {
                 modalTrigger={modalTrigger}
             />
         </>
-    )
+    );
 }
 
-export default React.forwardRef(CreateEditRestDay)
+export default React.forwardRef(CreateEditRestDay);

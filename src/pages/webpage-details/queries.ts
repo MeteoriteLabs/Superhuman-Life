@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const CREATE_WEBPAGE_DETAILS = gql`
     mutation createWebsiteDataRecord($user: ID!, $template_id: ID!, $frm: JSON) {
@@ -16,7 +16,7 @@ export const CREATE_WEBPAGE_DETAILS = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_WEBSITE_DATA = gql`
     mutation updateWebsiteDataRecord($user: ID!, $frm: JSON, $record_id: ID!, $template_id: ID!) {
@@ -38,7 +38,7 @@ export const UPDATE_WEBSITE_DATA = gql`
             }
         }
     }
-`
+`;
 export const UPDATE_WEBSITE_DATA_TO_EMPTY = gql`
     mutation updateWebsiteDataRecord($user: ID!, $form_data: JSON, $record_id: ID!) {
         updateWebsiteDatum(
@@ -52,7 +52,7 @@ export const UPDATE_WEBSITE_DATA_TO_EMPTY = gql`
             }
         }
     }
-`
+`;
 
 export const FETCH_WEBSITE_DATA = gql`
     query fetchData($id: ID!) {
@@ -68,7 +68,7 @@ export const FETCH_WEBSITE_DATA = gql`
             }
         }
     }
-`
+`;
 
 export const FETCH_WEBSITE_SCHEMA_AND_FORM_JSON = gql`
     query fetchSchemaAndFormJSON($id: ID!) {
@@ -79,7 +79,7 @@ export const FETCH_WEBSITE_SCHEMA_AND_FORM_JSON = gql`
             }
         }
     }
-`
+`;
 
 export const FETCH_PUBLISHED_TEMPLATES = gql`
     query fetchTemplates {
@@ -88,7 +88,7 @@ export const FETCH_PUBLISHED_TEMPLATES = gql`
             id
         }
     }
-`
+`;
 
 export const FETCH_DATA_FORM = gql`
     query formData($id: ID!) {
@@ -100,7 +100,7 @@ export const FETCH_DATA_FORM = gql`
             }
         }
     }
-`
+`;
 
 export const FETCH_TEMPLATE_SCHEMA_FORM = gql`
     query templateData($id: ID!) {
@@ -114,4 +114,4 @@ export const FETCH_TEMPLATE_SCHEMA_FORM = gql`
             }
         }
     }
-`
+`;

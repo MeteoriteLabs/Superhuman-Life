@@ -1,33 +1,33 @@
-import { useRef, useContext, useState } from 'react'
-import { Button, Row, Col, Card, Dropdown, Badge } from 'react-bootstrap'
-import PaymentMethodsAction from '../PaymentMethodsAction'
-import Loader from '../../../../components/Loader/Loader'
-import { useQuery } from '@apollo/client'
-import { GET_BANK_DETAILS } from '../queries'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
-import AuthContext from '../../../../context/auth-context'
+import { useRef, useContext, useState } from 'react';
+import { Button, Row, Col, Card, Dropdown, Badge } from 'react-bootstrap';
+import PaymentMethodsAction from '../PaymentMethodsAction';
+import Loader from '../../../../components/Loader/Loader';
+import { useQuery } from '@apollo/client';
+import { GET_BANK_DETAILS } from '../queries';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import AuthContext from '../../../../context/auth-context';
 
 function BankAccount() {
-    const paymentMethodActionRef = useRef<any>(null)
-    const auth = useContext(AuthContext)
-    const [bankDetails, setBankDetails] = useState<Record<string, unknown>[]>([])
+    const paymentMethodActionRef = useRef<any>(null);
+    const auth = useContext(AuthContext);
+    const [bankDetails, setBankDetails] = useState<Record<string, unknown>[]>([]);
 
     // eslint-disable-next-line
     const { data: get_bank_details, refetch: refetch_bank_details } = useQuery(GET_BANK_DETAILS, {
         variables: { id: auth.userid },
         onCompleted: (data) => {
-            const flattenBankData = flattenObj({ ...data.bankDetails })
-            setBankDetails(flattenBankData)
+            const flattenBankData = flattenObj({ ...data.bankDetails });
+            setBankDetails(flattenBankData);
         }
-    })
+    });
 
     //Delete Bank Details function
     const deleteHandler = (data: any) => {
         paymentMethodActionRef.current.TriggerForm({
             id: data.id,
             actionType: 'deleteBankDetails'
-        })
-    }
+        });
+    };
 
     // calling modal for update option
     function updateBankDetails(data: any) {
@@ -35,7 +35,7 @@ function BankAccount() {
             id: data.id,
             actionType: 'editBankDetails',
             modal_status: true
-        })
+        });
     }
 
     return (
@@ -49,7 +49,7 @@ function BankAccount() {
                         onClick={() => {
                             paymentMethodActionRef.current.TriggerForm({
                                 actionType: 'bank'
-                            })
+                            });
                         }}
                     >
                         <i className="fas fa-plus-circle"></i> Add Bank Account
@@ -107,7 +107,7 @@ function BankAccount() {
                                                                     id: currValue.id,
                                                                     actionType: 'viewBankDetails'
                                                                 }
-                                                            )
+                                                            );
                                                         }}
                                                     >
                                                         View
@@ -144,7 +144,7 @@ function BankAccount() {
                 )}
             </Row>
         </div>
-    )
+    );
 }
 
-export default BankAccount
+export default BankAccount;

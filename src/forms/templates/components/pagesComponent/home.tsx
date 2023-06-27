@@ -1,18 +1,18 @@
-import styles from './style.module.css'
+import styles from './style.module.css';
 
 function Home({
     section,
     setSection
 }: {
-    section: string
-    setSection: (param: string) => void
+    section: string;
+    setSection: (param: string) => void;
 }): JSX.Element {
     return (
         <div className="mt-2">
             <p
                 className={styles.sectionTitle}
                 onClick={() => {
-                    setSection('Home: Hero')
+                    setSection('Home: Hero');
                 }}
             >
                 Hero
@@ -20,7 +20,7 @@ function Home({
             <p
                 className={styles.sectionTitle}
                 onClick={() => {
-                    setSection('Home: Features')
+                    setSection('Home: Features');
                 }}
             >
                 Features
@@ -28,7 +28,7 @@ function Home({
             <p
                 className={styles.sectionTitle}
                 onClick={() => {
-                    setSection('Home: Cta')
+                    setSection('Home: Cta');
                 }}
             >
                 Cta
@@ -37,7 +37,7 @@ function Home({
             <p
                 className={styles.sectionTitle}
                 onClick={() => {
-                    setSection('Home: Pricing')
+                    setSection('Home: Pricing');
                 }}
             >
                 Pricing
@@ -45,13 +45,13 @@ function Home({
             <p
                 className={styles.sectionTitle}
                 onClick={() => {
-                    setSection('Home: Testimonials')
+                    setSection('Home: Testimonials');
                 }}
             >
                 Testimonials
             </p>
         </div>
-    )
+    );
 }
 
-export default Home
+export default Home;

@@ -1,4 +1,4 @@
-import { useMemo, useState, useContext, useRef, useEffect } from 'react'
+import { useMemo, useState, useContext, useRef, useEffect } from 'react';
 import {
     Badge,
     TabContent,
@@ -10,36 +10,36 @@ import {
     Dropdown,
     DropdownButton,
     ButtonGroup
-} from 'react-bootstrap'
-import Table from '../../../components/table/leads-table'
-import ActionButton from '../../../components/actionbutton/index'
-import { useLazyQuery } from '@apollo/client'
-import { GET_SESSION_BOOKINGS, GET_TAGS } from './queries'
-import { flattenObj } from '../../../components/utils/responseFlatten'
-import AuthContext from '../../../context/auth-context'
-import moment from 'moment'
-import { useHistory } from 'react-router-dom'
-import CancelComponent from './CancelComponent'
-import './CardsStyle.css'
-import DropdownItem from 'react-bootstrap/esm/DropdownItem'
+} from 'react-bootstrap';
+import Table from '../../../components/table/leads-table';
+import ActionButton from '../../../components/actionbutton/index';
+import { useLazyQuery } from '@apollo/client';
+import { GET_SESSION_BOOKINGS, GET_TAGS } from './queries';
+import { flattenObj } from '../../../components/utils/responseFlatten';
+import AuthContext from '../../../context/auth-context';
+import moment from 'moment';
+import { useHistory } from 'react-router-dom';
+import CancelComponent from './CancelComponent';
+import './CardsStyle.css';
+import DropdownItem from 'react-bootstrap/esm/DropdownItem';
 
 export default function Program() {
-    const auth = useContext(AuthContext)
-    const [tagName, setTagName] = useState<string[]>([])
-    const [activeCard, setActiveCard] = useState<number>(0)
-    const [selectedTagName, setSelectedTagName] = useState<string>('Show All')
+    const auth = useContext(AuthContext);
+    const [tagName, setTagName] = useState<string[]>([]);
+    const [activeCard, setActiveCard] = useState<number>(0);
+    const [selectedTagName, setSelectedTagName] = useState<string>('Show All');
     const [selectedFromDate, setSelectedFromDate] = useState<string>(
         moment().format('YYYY-MM-DD').toString()
-    )
+    );
     const [selectedToDate, setSelectedToDate] = useState<string>(
         moment().add(2, 'days').format('YYYY-MM-DD').toString()
-    )
-    const [selectedFromTime, setSelectedFromTime] = useState<string>('00:00')
-    const [selectedToTime, setSelectedToTime] = useState<string>('23:00')
-    const [currentDaySessionData, setCurrentDaySessionData] = useState<any>([])
-    const [tomorrowDaySessionData, setTomorrowDaySessionData] = useState<any>([])
-    const [dayAfterTomorrowSessionData, setDayAfterTomorrowSessionData] = useState<any>([])
-    const cancelComponent = useRef<any>(null)
+    );
+    const [selectedFromTime, setSelectedFromTime] = useState<string>('00:00');
+    const [selectedToTime, setSelectedToTime] = useState<string>('23:00');
+    const [currentDaySessionData, setCurrentDaySessionData] = useState<any>([]);
+    const [tomorrowDaySessionData, setTomorrowDaySessionData] = useState<any>([]);
+    const [dayAfterTomorrowSessionData, setDayAfterTomorrowSessionData] = useState<any>([]);
+    const cancelComponent = useRef<any>(null);
 
     const columns = useMemo<any>(
         () => [
@@ -50,27 +50,27 @@ export default function Program() {
                 accessor: 'status',
                 Header: 'Status',
                 Cell: ({ row }: any) => {
-                    let statusColor = ''
+                    let statusColor = '';
                     switch (row.values.status) {
                         case 'Booked':
-                            statusColor = 'success'
-                            break
+                            statusColor = 'success';
+                            break;
 
                         case 'Attended':
-                            statusColor = 'primary'
-                            break
+                            statusColor = 'primary';
+                            break;
 
                         case 'Rescheduled':
-                            statusColor = 'info'
-                            break
+                            statusColor = 'info';
+                            break;
 
                         case 'Canceled':
-                            statusColor = 'secondary'
-                            break
+                            statusColor = 'secondary';
+                            break;
 
                         case 'Rejected':
-                            statusColor = 'danger'
-                            break
+                            statusColor = 'danger';
+                            break;
                     }
                     return (
                         <>
@@ -82,33 +82,33 @@ export default function Program() {
                                 {row.values.status}
                             </Badge>
                         </>
-                    )
+                    );
                 }
             },
             {
                 id: 'edit',
                 Header: 'Actions',
                 Cell: ({ row }: any) => {
-                    const history = useHistory()
+                    const history = useHistory();
                     const routeChange = () => {
-                        const path = `clients`
-                        history.push(path)
-                    }
+                        const path = `clients`;
+                        history.push(path);
+                    };
 
                     const rescheduleHandler = () => {
                         cancelComponent.current.TriggerForm({
                             id: row.original.sessionId,
                             type: 'reschedule',
                             tag: row.original.tag
-                        })
-                    }
+                        });
+                    };
 
                     const cancelHandler = () => {
                         cancelComponent.current.TriggerForm({
                             id: row.original.id,
                             type: 'cancel'
-                        })
-                    }
+                        });
+                    };
 
                     const arrayAction = [
                         {
@@ -127,7 +127,7 @@ export default function Program() {
                             actionName: 'Go to client',
                             actionClick: routeChange
                         }
-                    ]
+                    ];
 
                     const arrayActionForCancelledAndAttended = [
                         {
@@ -138,7 +138,7 @@ export default function Program() {
                             actionName: 'Go to client',
                             actionClick: routeChange
                         }
-                    ]
+                    ];
 
                     const arrayActionForGroup = [
                         {
@@ -153,7 +153,7 @@ export default function Program() {
                             actionName: 'Go to client',
                             actionClick: routeChange
                         }
-                    ]
+                    ];
 
                     return (
                         <ActionButton
@@ -168,14 +168,14 @@ export default function Program() {
                                     : arrayAction
                             }
                         ></ActionButton>
-                    )
+                    );
                 }
             }
         ],
         []
-    )
+    );
 
-    const [datatable, setDataTable] = useState<Record<string, unknown>[]>([])
+    const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
 
     const [
         getTags,
@@ -184,9 +184,9 @@ export default function Program() {
     ] = useLazyQuery(GET_TAGS, {
         fetchPolicy: 'network-only',
         onCompleted: (data) => {
-            const flattenTagData = flattenObj({ ...data.tags })
+            const flattenTagData = flattenObj({ ...data.tags });
 
-            const sessions = flattenTagData.map((currentValue) => currentValue.sessions)
+            const sessions = flattenTagData.map((currentValue) => currentValue.sessions);
 
             const todaysSession =
                 sessions &&
@@ -196,7 +196,7 @@ export default function Program() {
                     .filter(
                         (currentValue) =>
                             currentValue.session_date === moment().format('YYYY-MM-DD')
-                    )
+                    );
 
             const tomorrowsSession =
                 sessions &&
@@ -207,7 +207,7 @@ export default function Program() {
                         (currentValue) =>
                             currentValue.session_date ===
                             moment().add(1, 'days').format('YYYY-MM-DD')
-                    )
+                    );
 
             const dayAfterTomorrowSession =
                 sessions &&
@@ -218,13 +218,13 @@ export default function Program() {
                         (currentValue) =>
                             currentValue.session_date ===
                             moment().add(2, 'days').format('YYYY-MM-DD')
-                    )
+                    );
 
-            setCurrentDaySessionData(todaysSession)
-            setTomorrowDaySessionData(tomorrowsSession)
-            setDayAfterTomorrowSessionData(dayAfterTomorrowSession)
-            const arr = flattenTagData.map((currentValue) => currentValue.tag_name)
-            setTagName(arr)
+            setCurrentDaySessionData(todaysSession);
+            setTomorrowDaySessionData(tomorrowsSession);
+            setDayAfterTomorrowSessionData(dayAfterTomorrowSession);
+            const arr = flattenTagData.map((currentValue) => currentValue.tag_name);
+            setTagName(arr);
 
             if (
                 (todaysSession && todaysSession.length) ||
@@ -242,10 +242,10 @@ export default function Program() {
                                 ? dayAfterTomorrowSession[0].id
                                 : null
                     }
-                })
+                });
             }
         }
-    })
+    });
 
     const [
         getSessionBookings,
@@ -254,12 +254,12 @@ export default function Program() {
     ] = useLazyQuery(GET_SESSION_BOOKINGS, {
         fetchPolicy: 'network-only',
         onCompleted: (data) => {
-            loadData(data)
+            loadData(data);
         }
-    })
+    });
 
     function loadData(data: any) {
-        const flattenBookingsData = flattenObj({ ...data })
+        const flattenBookingsData = flattenObj({ ...data });
 
         setDataTable(
             [...flattenBookingsData.sessionsBookings].flatMap((Detail) => {
@@ -270,19 +270,19 @@ export default function Program() {
                     bookingTime: moment(Detail.createdAt).format('DD/MM/YY, hh:mm A'),
                     status: Detail.Session_booking_status,
                     tag: Detail.session?.tag
-                }
+                };
             })
-        )
+        );
     }
 
     function getStartTime(startTime: string): string {
-        const splitTime: string[] = startTime.split(':')
+        const splitTime: string[] = startTime.split(':');
         const date: moment.Moment = moment().set({
             hour: Number(splitTime[0]),
             minute: Number(splitTime[1])
-        })
-        const time: string = moment(date).format('h:mm A')
-        return time
+        });
+        const time: string = moment(date).format('h:mm A');
+        return time;
     }
 
     useEffect(() => {
@@ -292,9 +292,9 @@ export default function Program() {
                 today: selectedFromDate,
                 dayAfterTomorrow: selectedToDate
             }
-        })
+        });
         // eslint-disable-next-line
-    }, [])
+    }, []);
 
     return (
         <>
@@ -355,7 +355,7 @@ export default function Program() {
                                             type="date"
                                             value={`${selectedFromDate}`}
                                             onChange={(e) => {
-                                                setSelectedFromDate(e.target.value)
+                                                setSelectedFromDate(e.target.value);
                                             }}
                                         />
                                     </Col>
@@ -368,7 +368,7 @@ export default function Program() {
                                             type="date"
                                             value={selectedToDate}
                                             onChange={(e) => {
-                                                setSelectedToDate(e.target.value)
+                                                setSelectedToDate(e.target.value);
                                             }}
                                         />
                                     </Col>
@@ -381,7 +381,7 @@ export default function Program() {
                                             type="time"
                                             value={selectedFromTime}
                                             onChange={(e) => {
-                                                setSelectedFromTime(e.target.value)
+                                                setSelectedFromTime(e.target.value);
                                             }}
                                         />
                                     </Col>
@@ -393,7 +393,7 @@ export default function Program() {
                                             type="time"
                                             value={selectedToTime}
                                             onChange={(e) => {
-                                                setSelectedToTime(e.target.value)
+                                                setSelectedToTime(e.target.value);
                                             }}
                                         />
                                     </Col>
@@ -414,7 +414,7 @@ export default function Program() {
                                                         start_time: selectedFromTime,
                                                         end_time: selectedToTime
                                                     }
-                                                })
+                                                });
                                             }}
                                         >
                                             Apply
@@ -450,7 +450,7 @@ export default function Program() {
                                                                   : 'light'
                                                           }
                                                           onClick={() => {
-                                                              setActiveCard(index)
+                                                              setActiveCard(index);
 
                                                               getSessionBookings({
                                                                   variables: {
@@ -458,7 +458,7 @@ export default function Program() {
                                                                       loginUserId: auth.userid,
                                                                       status: ['Booked']
                                                                   }
-                                                              })
+                                                              });
                                                           }}
                                                       >
                                                           <b>
@@ -477,7 +477,7 @@ export default function Program() {
                                                               ? currentValue.tag
                                                               : null}
                                                       </Card>
-                                                  )
+                                                  );
                                               }
                                           )
                                         : null}
@@ -509,7 +509,7 @@ export default function Program() {
                                                                       currentDaySessionData.length
                                                                       ? currentDaySessionData.length
                                                                       : 0
-                                                              )
+                                                              );
 
                                                               getSessionBookings({
                                                                   variables: {
@@ -517,7 +517,7 @@ export default function Program() {
                                                                       loginUserId: auth.userid,
                                                                       status: ['Booked']
                                                                   }
-                                                              })
+                                                              });
                                                           }}
                                                       >
                                                           <b>
@@ -536,7 +536,7 @@ export default function Program() {
                                                               ? currentValue.tag
                                                               : null}
                                                       </Card>
-                                                  )
+                                                  );
                                               }
                                           )
                                         : null}
@@ -570,7 +570,7 @@ export default function Program() {
                                                                       ? currentDaySessionData.length +
                                                                             tomorrowDaySessionData.length
                                                                       : 0
-                                                              )
+                                                              );
 
                                                               getSessionBookings({
                                                                   variables: {
@@ -578,7 +578,7 @@ export default function Program() {
                                                                       loginUserId: auth.userid,
                                                                       status: ['Booked']
                                                                   }
-                                                              })
+                                                              });
                                                           }}
                                                       >
                                                           <b>
@@ -597,7 +597,7 @@ export default function Program() {
                                                               ? currentValue.tag
                                                               : null}
                                                       </Card>
-                                                  )
+                                                  );
                                               }
                                           )
                                         : null}
@@ -619,5 +619,5 @@ export default function Program() {
                 callback={refetch_session_bookings}
             ></CancelComponent>
         </>
-    )
+    );
 }

@@ -1,4 +1,4 @@
-import { Modal, Button, Row, Col, Form } from 'react-bootstrap'
+import { Modal, Button, Row, Col, Form } from 'react-bootstrap';
 
 const OfferingPricingAssist = (props: any) => {
     return (
@@ -34,7 +34,7 @@ const OfferingPricingAssist = (props: any) => {
                 </Button>
             </Modal.Footer>
         </Modal>
-    )
-}
+    );
+};
 
-export default OfferingPricingAssist
+export default OfferingPricingAssist;

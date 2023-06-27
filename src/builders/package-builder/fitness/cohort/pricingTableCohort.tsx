@@ -1,31 +1,31 @@
-import React, { useState, useContext, useEffect } from 'react'
-import { Row, Col, Form, Table, FormControl, InputGroup } from 'react-bootstrap'
-import { gql, useQuery, useLazyQuery } from '@apollo/client'
-import AuthContext from '../../../../context/auth-context'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
-import moment from 'moment'
+import React, { useState, useContext, useEffect } from 'react';
+import { Row, Col, Form, Table, FormControl, InputGroup } from 'react-bootstrap';
+import { gql, useQuery, useLazyQuery } from '@apollo/client';
+import AuthContext from '../../../../context/auth-context';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import moment from 'moment';
 
 const PricingTable: React.FC<{
-    readonly: boolean
-    onChange: (args: string | null) => void
-    value: string
-    formContext: any
+    readonly: boolean;
+    onChange: (args: string | null) => void;
+    value: string;
+    formContext: any;
 }> = (props) => {
-    const inputDisabled = props.readonly
-    const accomodationDetails = JSON.parse(props.formContext?.programDetails)?.accomodationDetails
-    const accomodationType = JSON.parse(props.formContext.programDetails).residential
-    const mode = JSON.parse(props.formContext.programDetails).mode
+    const inputDisabled = props.readonly;
+    const accomodationDetails = JSON.parse(props.formContext?.programDetails)?.accomodationDetails;
+    const accomodationType = JSON.parse(props.formContext.programDetails).residential;
+    const mode = JSON.parse(props.formContext.programDetails).mode;
 
     function calculateDuration(sd, ed) {
-        const start = moment(sd)
-        const end = moment(ed)
-        const duration = end.diff(start, 'days') + 1
-        return duration
+        const start = moment(sd);
+        const end = moment(ed);
+        const duration = end.diff(start, 'days') + 1;
+        return duration;
     }
 
-    const auth = useContext(AuthContext)
-    const [vouchers, setVouchers] = useState<any>([])
-    const [show, setShow] = useState<boolean>(props.value === 'free' ? true : false)
+    const auth = useContext(AuthContext);
+    const [vouchers, setVouchers] = useState<any>([]);
+    const [show, setShow] = useState<boolean>(props.value === 'free' ? true : false);
     const [pricing, setPricing] = useState<any>(
         props.value && props.value !== 'free'
             ? JSON.parse(props.value)
@@ -45,24 +45,24 @@ const PricingTable: React.FC<{
                       foodPrice: 0
                   }
               ]
-    )
+    );
 
     useEffect(() => {
         const newDuration = calculateDuration(
             JSON.parse(props.formContext.dates).startDate,
             JSON.parse(props.formContext.dates).endDate
-        )
-        const newPricing = [...pricing]
+        );
+        const newPricing = [...pricing];
         if (
             JSON.parse(props.formContext.dates).startDate ===
             JSON.parse(props.formContext.dates).endDate
         ) {
-            newPricing[0].duration = 1
+            newPricing[0].duration = 1;
         } else {
-            newPricing[0].duration = newDuration
+            newPricing[0].duration = newDuration;
         }
-        setPricing(newPricing)
-    }, [])
+        setPricing(newPricing);
+    }, []);
 
     const GET_VOUCHERS = gql`
         query fetchVouchers($expiry: DateTime!, $id: ID!, $start: DateTime!, $status: String!) {
@@ -86,14 +86,14 @@ const PricingTable: React.FC<{
                 }
             }
         }
-    `
+    `;
 
     const [getVouchers] = useLazyQuery(GET_VOUCHERS, {
         onCompleted: (data) => {
-            const flattenData = flattenObj({ ...data })
-            setVouchers(flattenData.vouchers)
+            const flattenData = flattenObj({ ...data });
+            setVouchers(flattenData.vouchers);
         }
-    })
+    });
 
     React.useEffect(() => {
         getVouchers({
@@ -103,8 +103,8 @@ const PricingTable: React.FC<{
                 start: moment().toISOString(),
                 status: 'Active'
             }
-        })
-    }, [])
+        });
+    }, []);
 
     const SAPIEN_PRICING = gql`
         query fetchSapienPricing($id: ID!) {
@@ -130,36 +130,36 @@ const PricingTable: React.FC<{
                 }
             }
         }
-    `
+    `;
 
     function FetchData() {
         useQuery(SAPIEN_PRICING, {
             variables: { id: auth.userid },
             onCompleted: (data) => {
-                loadData(data)
+                loadData(data);
             }
-        })
+        });
     }
 
     function loadData(data) {
-        const flattenData = flattenObj({ ...data })
-        const newValue = [...pricing]
+        const flattenData = flattenObj({ ...data });
+        const newValue = [...pricing];
         newValue.forEach((item, index) => {
             if (item.voucher !== 0 && item.mrp !== null) {
                 item.suggestedPrice = parseInt(
                     ((item.sapienPricing * 100) / (100 - item.voucher)).toFixed(2)
-                )
+                );
             } else {
-                item.suggestedPrice = flattenData.suggestedPricings[0]?.mrp * item.duration
+                item.suggestedPrice = flattenData.suggestedPricings[0]?.mrp * item.duration;
             }
-            item.sapienPricing = flattenData.sapienPricings[0]?.mrp * item.duration
-        })
-        setPricing(newValue)
+            item.sapienPricing = flattenData.sapienPricings[0]?.mrp * item.duration;
+        });
+        setPricing(newValue);
     }
 
     function handleValidation() {
         if (parseInt(pricing[0].mrp) < pricing[0].sapienPricing) {
-            return false
+            return false;
         }
         // here it means if the mode is not equal to residential in the previous step
         if (
@@ -167,7 +167,7 @@ const PricingTable: React.FC<{
             pricing[0].mrp !== null &&
             parseInt(pricing[0].mrp) >= pricing[0].sapienPricing
         ) {
-            return true
+            return true;
         }
         if (accomodationType === '0' || accomodationType === '1') {
             if (
@@ -175,14 +175,14 @@ const PricingTable: React.FC<{
                 isNaN(pricing[0].foodPrice) &&
                 pricing[0].foodPrice === 0
             ) {
-                return false
+                return false;
             }
             if (
                 accomodationDetails.private &&
                 !accomodationDetails.sharing &&
                 pricing[0].privateRoomPrice > 0
             ) {
-                return true
+                return true;
             }
             if (accomodationDetails.sharing && !accomodationDetails.private) {
                 if (
@@ -195,7 +195,7 @@ const PricingTable: React.FC<{
                         pricing[0].twoSharingPrice > 0 &&
                         pricing[0].threeSharingPrice > 0
                     ) {
-                        return true
+                        return true;
                     }
                 }
                 if (
@@ -203,7 +203,7 @@ const PricingTable: React.FC<{
                     accomodationDetails.threeSharingRooms === null
                 ) {
                     if (pricing[0].twoSharingPrice > 0) {
-                        return true
+                        return true;
                     }
                 }
                 if (
@@ -211,7 +211,7 @@ const PricingTable: React.FC<{
                     accomodationDetails.twoSharingRooms === null
                 ) {
                     if (pricing[0].threeSharingPrice > 0) {
-                        return true
+                        return true;
                     }
                 }
             }
@@ -222,11 +222,11 @@ const PricingTable: React.FC<{
                         pricing[0].twoSharingPrice > 0 &&
                         pricing[0].threeSharingPrice > 0
                     ) {
-                        return true
+                        return true;
                     }
                 } else {
                     if (pricing[0].privateRoomPrice > 0 && pricing[0].twoSharingPrice > 0) {
-                        return true
+                        return true;
                     }
                 }
             }
@@ -234,42 +234,42 @@ const PricingTable: React.FC<{
     }
 
     if (show) {
-        props.onChange('free')
+        props.onChange('free');
     } else if (handleValidation()) {
-        props.onChange(JSON.stringify(pricing))
+        props.onChange(JSON.stringify(pricing));
     } else {
-        props.onChange(null)
+        props.onChange(null);
     }
 
     function handlePricingUpdate(value: any, id: any) {
-        const newPricing = [...pricing]
-        newPricing[id].mrp = value
-        setPricing(newPricing)
+        const newPricing = [...pricing];
+        newPricing[id].mrp = value;
+        setPricing(newPricing);
     }
 
     function handleAccomodationPriceUpdate(value: number, id: any, key: string) {
-        const newPricing = [...pricing]
-        newPricing[id][key] = value
-        setPricing(newPricing)
+        const newPricing = [...pricing];
+        newPricing[id][key] = value;
+        setPricing(newPricing);
     }
 
     function handleUpdatePricing(id: any, value: any) {
         if (parseInt(value) !== 1) {
-            const newValue = [...pricing]
-            newValue[id].voucher = parseInt(value)
+            const newValue = [...pricing];
+            newValue[id].voucher = parseInt(value);
             newValue[id].suggestedPrice = parseInt(
                 ((newValue[id].sapienPricing * 100) / (100 - value)).toFixed(2)
-            )
-            setPricing(newValue)
+            );
+            setPricing(newValue);
         } else {
-            const newValue = [...pricing]
-            newValue[id].voucher = parseInt(value)
-            newValue[id].suggestedPrice = newValue[id].sapienPricing
-            setPricing(newValue)
+            const newValue = [...pricing];
+            newValue[id].voucher = parseInt(value);
+            newValue[id].suggestedPrice = newValue[id].sapienPricing;
+            setPricing(newValue);
         }
     }
 
-    FetchData()
+    FetchData();
 
     return (
         <>
@@ -341,7 +341,7 @@ const PricingTable: React.FC<{
                                                 >
                                                     {voucher.voucher_name}
                                                 </option>
-                                            )
+                                            );
                                         })}
                                     </Form.Control>
                                 </td>
@@ -386,7 +386,7 @@ const PricingTable: React.FC<{
                                                         parseInt(e.target.value),
                                                         0,
                                                         'privateRoomPrice'
-                                                    )
+                                                    );
                                                 }}
                                             />
                                         </InputGroup>{' '}
@@ -419,7 +419,7 @@ const PricingTable: React.FC<{
                                                                 parseInt(e.target.value),
                                                                 0,
                                                                 'twoSharingPrice'
-                                                            )
+                                                            );
                                                         }}
                                                     />
                                                 </InputGroup>{' '}
@@ -449,7 +449,7 @@ const PricingTable: React.FC<{
                                                                     parseInt(e.target.value),
                                                                     0,
                                                                     'threeSharingPrice'
-                                                                )
+                                                                );
                                                             }}
                                                         />
                                                     </InputGroup>{' '}
@@ -482,7 +482,7 @@ const PricingTable: React.FC<{
                                                         parseInt(e.target.value),
                                                         0,
                                                         'foodPrice'
-                                                    )
+                                                    );
                                                 }}
                                             />
                                         </InputGroup>{' '}
@@ -516,7 +516,7 @@ const PricingTable: React.FC<{
                                             aria-describedby="inputGroup-sizing-default"
                                             value={pricing[0]?.mrp}
                                             onChange={(e) => {
-                                                handlePricingUpdate(e.target.value, 0)
+                                                handlePricingUpdate(e.target.value, 0);
                                             }}
                                         />
                                     </InputGroup>
@@ -681,7 +681,7 @@ const PricingTable: React.FC<{
                 </div>
             )}
         </>
-    )
-}
+    );
+};
 
-export default PricingTable
+export default PricingTable;

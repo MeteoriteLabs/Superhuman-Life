@@ -1,61 +1,61 @@
-import { useEffect, useState } from 'react'
-import { useMutation } from '@apollo/client'
-import { Button, Form, FormControl, Modal } from 'react-bootstrap'
-import { UPDATE_BOOKING_CONFIG } from '../../GraphQL/mutation'
+import { useEffect, useState } from 'react';
+import { useMutation } from '@apollo/client';
+import { Button, Form, FormControl, Modal } from 'react-bootstrap';
+import { UPDATE_BOOKING_CONFIG } from '../../GraphQL/mutation';
 
 interface FormValue {
-    id: string
-    isAuto: boolean
-    BookingsPerMonth: number
-    bookingsPerDay: number
+    id: string;
+    isAuto: boolean;
+    BookingsPerMonth: number;
+    bookingsPerDay: number;
 }
 
 const ConfirmationModel = (props: any) => {
     // const { formData, modalTrigger } = props;
-    const [isSwitchOn, setIsSwitchOn] = useState<boolean>(false)
-    const [show, setShow] = useState<boolean>(false)
+    const [isSwitchOn, setIsSwitchOn] = useState<boolean>(false);
+    const [show, setShow] = useState<boolean>(false);
 
     props.modalTrigger.subscribe((res: boolean) => {
-        setShow(res)
-    })
+        setShow(res);
+    });
 
     const [formValue, setFormValue] = useState<FormValue>({
         id: props.formData.id,
         isAuto: isSwitchOn,
         BookingsPerMonth: props.formData.bookingPerMonth,
         bookingsPerDay: props.formData.bookingPerDay
-    })
+    });
 
     const onSwitchAction = () => {
-        setIsSwitchOn(!isSwitchOn)
+        setIsSwitchOn(!isSwitchOn);
         setFormValue({
             ...formValue,
             isAuto: isSwitchOn
-        })
-    }
+        });
+    };
 
     const [updateBooking] = useMutation(UPDATE_BOOKING_CONFIG, {
         onCompleted: (data: any) => props.modalTrigger.next(false)
-    })
+    });
 
     const handleSubmit = (e: { preventDefault: () => void }) => {
-        e.preventDefault()
+        e.preventDefault();
         updateBooking({
             variables: formValue
-        })
-    }
+        });
+    };
 
     const handleChange = (e: any) => {
-        const { name, value } = e.target
+        const { name, value } = e.target;
         setFormValue({
             ...formValue,
             [name]: Number(value)
-        })
-    }
+        });
+    };
 
     useEffect(() => {
-        props.formData.confirmations === 'Auto Accept' ? setIsSwitchOn(false) : setIsSwitchOn(true)
-    }, [props.formData])
+        props.formData.confirmations === 'Auto Accept' ? setIsSwitchOn(false) : setIsSwitchOn(true);
+    }, [props.formData]);
 
     return (
         <>
@@ -110,7 +110,7 @@ const ConfirmationModel = (props: any) => {
                             <Button
                                 type="submit"
                                 onClick={() => {
-                                    props.modalTrigger.next(false)
+                                    props.modalTrigger.next(false);
                                 }}
                             >
                                 Submit
@@ -118,7 +118,7 @@ const ConfirmationModel = (props: any) => {
                             <Button
                                 className="btn btn-danger"
                                 onClick={() => {
-                                    props.modalTrigger.next(false)
+                                    props.modalTrigger.next(false);
                                 }}
                             >
                                 Close
@@ -128,7 +128,7 @@ const ConfirmationModel = (props: any) => {
                 </Modal.Body>
             </Modal>
         </>
-    )
-}
+    );
+};
 
-export default ConfirmationModel
+export default ConfirmationModel;

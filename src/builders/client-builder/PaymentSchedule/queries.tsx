@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const GET_CONTACTS = gql`
     query ContactsQuery {
@@ -25,7 +25,7 @@ export const GET_CONTACTS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_PAYMENT_SCHEDULES = gql`
     query PaymentSchedulesQuery($Source_User_ID: Int) {
@@ -50,7 +50,7 @@ export const GET_PAYMENT_SCHEDULES = gql`
             }
         }
     }
-`
+`;
 
 export const ADD_PAYMENT_SCHEDULE = gql`
     mutation createPaymentSchedule($data: PaymentScheduleInput!) {
@@ -60,7 +60,7 @@ export const ADD_PAYMENT_SCHEDULE = gql`
             }
         }
     }
-`
+`;
 
 export const FETCH_CONTACT_DETAILS = gql`
     query contactDetail($id: ID!) {
@@ -79,7 +79,7 @@ export const FETCH_CONTACT_DETAILS = gql`
             }
         }
     }
-`
+`;
 
 export const DELETE_PAYMENT_SCHEDULE = gql`
     mutation deletePaymentSchedule($id: ID!) {
@@ -89,7 +89,7 @@ export const DELETE_PAYMENT_SCHEDULE = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_PAYMENT_SCHEDULE = gql`
     mutation updatePaymentSchedule($id: ID!, $data: PaymentScheduleInput!) {
@@ -99,4 +99,4 @@ export const UPDATE_PAYMENT_SCHEDULE = gql`
             }
         }
     }
-`
+`;

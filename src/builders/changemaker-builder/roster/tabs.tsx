@@ -1,8 +1,8 @@
-import { Tabs, Tab } from 'react-bootstrap'
-import RosterGeneral from './general'
-import RosterAgenda from './agenda'
-import RosterAttendees from './attendees'
-import RosterSettings from './settings'
+import { Tabs, Tab } from 'react-bootstrap';
+import RosterGeneral from './general';
+import RosterAgenda from './agenda';
+import RosterAttendees from './attendees';
+import RosterSettings from './settings';
 
 const RosterTab = (props: any) => {
     return (
@@ -28,7 +28,7 @@ const RosterTab = (props: any) => {
                 </Tab>
             </Tabs>
         </>
-    )
-}
+    );
+};
 
-export default RosterTab
+export default RosterTab;

@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Modal, Col, Row, Container, Button } from 'react-bootstrap'
+import React, { useState } from 'react';
+import { Modal, Col, Row, Container, Button } from 'react-bootstrap';
 
 const HelpModal: React.FC<{ onHide: () => void; show: boolean }> = (props) => {
     return (
@@ -75,11 +75,11 @@ const HelpModal: React.FC<{ onHide: () => void; show: boolean }> = (props) => {
                 </Container>
             </Modal.Body>
         </Modal>
-    )
-}
+    );
+};
 
 const DomainHelpModalComponent: React.FC = () => {
-    const [modalShow, setModalShow] = useState<boolean>(false)
+    const [modalShow, setModalShow] = useState<boolean>(false);
 
     return (
         <>
@@ -89,7 +89,7 @@ const DomainHelpModalComponent: React.FC = () => {
 
             <HelpModal show={modalShow} onHide={() => setModalShow(false)} />
         </>
-    )
-}
+    );
+};
 
-export default DomainHelpModalComponent
+export default DomainHelpModalComponent;

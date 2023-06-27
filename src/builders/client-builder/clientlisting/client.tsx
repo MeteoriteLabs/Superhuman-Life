@@ -1,25 +1,25 @@
-import { Card, Tab, Tabs, TabContent } from 'react-bootstrap'
-import Programs from './clienthome/ProgramScreens/clientprograms'
-import Goals from './clienthome/Goalscreen/clientGoals'
-import Orders from './clienthome/OrderScreen/clientOrders'
-import Wall from './clienthome/TeamWallScreen/index'
-import Data from './clienthome/DataScreen/ClientData'
-import ClientSchedular from './clienthome/SchedularScreen'
-import { useQuery } from '@apollo/client'
-import { GET_CLIENT_DATA_NEW } from './queries'
-import { useState, useContext } from 'react'
-import AuthContext from '../../../context/auth-context'
-import { flattenObj } from '../../../components/utils/responseFlatten'
+import { Card, Tab, Tabs, TabContent } from 'react-bootstrap';
+import Programs from './clienthome/ProgramScreens/clientprograms';
+import Goals from './clienthome/Goalscreen/clientGoals';
+import Orders from './clienthome/OrderScreen/clientOrders';
+import Wall from './clienthome/TeamWallScreen/index';
+import Data from './clienthome/DataScreen/ClientData';
+import ClientSchedular from './clienthome/SchedularScreen';
+import { useQuery } from '@apollo/client';
+import { GET_CLIENT_DATA_NEW } from './queries';
+import { useState, useContext } from 'react';
+import AuthContext from '../../../context/auth-context';
+import { flattenObj } from '../../../components/utils/responseFlatten';
 
 function Client() {
-    const last = window.location.pathname.split('/').pop()
-    const auth = useContext(AuthContext)
-    const [clientName, setClientName] = useState<any>(' ')
-    const [clientSex, setClientSex] = useState<any>(' ')
+    const last = window.location.pathname.split('/').pop();
+    const auth = useContext(AuthContext);
+    const [clientName, setClientName] = useState<any>(' ');
+    const [clientSex, setClientSex] = useState<any>(' ');
     function handleRedirect() {
-        window.location.href = `/clients`
+        window.location.href = `/clients`;
     }
-    console.log(auth, last)
+    console.log(auth, last);
     // function FetchData(_variables: { id: auth.userid, clientid: last }) {
     //      useQuery(GET_CLIENT_DATA_NEW, { variables: _variables, onCompleted: loadData });
     // }
@@ -38,7 +38,7 @@ function Client() {
                 <i
                     className="fas fa-arrow-circle-left fa-2x d-inline"
                     onClick={() => {
-                        handleRedirect()
+                        handleRedirect();
                     }}
                     style={{ cursor: 'pointer' }}
                 ></i>
@@ -139,7 +139,7 @@ function Client() {
                 </Card.Body>
             </Card>
         </div>
-    )
+    );
 }
 
-export default Client
+export default Client;

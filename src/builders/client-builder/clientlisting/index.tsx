@@ -1,5 +1,5 @@
-import { useMemo, useContext, useRef, useState } from 'react'
-import ActionButton from '../../../components/actionbutton/index'
+import { useMemo, useContext, useRef, useState } from 'react';
+import ActionButton from '../../../components/actionbutton/index';
 import {
     Badge,
     Button,
@@ -10,24 +10,24 @@ import {
     Container,
     Row,
     Col
-} from 'react-bootstrap'
-import AuthContext from '../../../context/auth-context'
-import { useQuery } from '@apollo/client'
-import { GET_CLIENT_NEW } from './queries'
-import CreateClient from './addclientcomponent'
-import Table from '../../../components/table'
-import { flattenObj } from '../../../components/utils/responseFlatten'
+} from 'react-bootstrap';
+import AuthContext from '../../../context/auth-context';
+import { useQuery } from '@apollo/client';
+import { GET_CLIENT_NEW } from './queries';
+import CreateClient from './addclientcomponent';
+import Table from '../../../components/table';
+import { flattenObj } from '../../../components/utils/responseFlatten';
 
 function ClientListingPage() {
-    const auth = useContext(AuthContext)
-    const [searchFilter, setSearchFilter] = useState('')
-    const searchInput = useRef<any>()
-    const CreateClientComponent = useRef<any>(null)
-    const [page, setPage] = useState<number>(1)
-    const [totalRecords, setTotalRecords] = useState<number>(0)
+    const auth = useContext(AuthContext);
+    const [searchFilter, setSearchFilter] = useState('');
+    const searchInput = useRef<any>();
+    const CreateClientComponent = useRef<any>(null);
+    const [page, setPage] = useState<number>(1);
+    const [totalRecords, setTotalRecords] = useState<number>(0);
 
     function handleRedirect(id: any) {
-        window.location.href = `/client/home/${id}`
+        window.location.href = `/client/home/${id}`;
     }
 
     const columns = useMemo<any>(
@@ -44,7 +44,7 @@ function ClientListingPage() {
                         <>
                             <p className="ml-5 pl-4">{row.value[0][row.value[1]]}</p>
                         </>
-                    )
+                    );
                 }
             },
             {
@@ -66,23 +66,23 @@ function ClientListingPage() {
                 Header: 'Actions',
                 Cell: ({ row }: any) => {
                     const actionClick1 = () => {
-                        handleRedirect(row.original.id)
-                    }
+                        handleRedirect(row.original.id);
+                    };
                     const actionClick2 = () => {
                         //CreateClientComponent.current.TriggerForm({id: row.original.id, type: 'view'})
-                    }
+                    };
                     const actionClick3 = () => {
-                        window.location.href = '/chats'
-                    }
+                        window.location.href = '/chats';
+                    };
                     const actionClick4 = () => {
-                        window.location.href = '/packages'
-                    }
+                        window.location.href = '/packages';
+                    };
                     const actionClick5 = () => {
                         CreateClientComponent.current.TriggerForm({
                             id: row.original.id,
                             type: 'delete'
-                        })
-                    }
+                        });
+                    };
 
                     const arrayAction = [
                         { actionName: 'Go to client', actionClick: actionClick1 },
@@ -90,51 +90,51 @@ function ClientListingPage() {
                         { actionName: 'Chat', actionClick: actionClick3 },
                         { actionName: 'Build Package', actionClick: actionClick4 },
                         { actionName: 'Remove Client', actionClick: actionClick5 }
-                    ]
+                    ];
 
-                    return <ActionButton arrayAction={arrayAction}></ActionButton>
+                    return <ActionButton arrayAction={arrayAction}></ActionButton>;
                 }
             }
         ],
         []
-    )
+    );
 
-    const [datatable, setDataTable] = useState<Record<string, unknown>[]>([])
+    const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
     const fetch = useQuery(GET_CLIENT_NEW, {
         variables: { filter: searchFilter, id: auth.userid, start: page * 10 - 10, limit: 10 },
         onCompleted: (data) => {
-            setTotalRecords(data.clientPackages.meta.pagination.total)
-            loadData(data)
+            setTotalRecords(data.clientPackages.meta.pagination.total);
+            loadData(data);
         }
-    })
+    });
 
     function refetchQueryCallback() {
-        fetch.refetch()
+        fetch.refetch();
     }
 
     function loadData(data: any) {
-        const clientnamecount = {}
-        let flag: any
-        const namearr: any = []
+        const clientnamecount = {};
+        let flag: any;
+        const namearr: any = [];
 
-        const flattenData = flattenObj({ ...data })
+        const flattenData = flattenObj({ ...data });
 
         setDataTable(
             [...flattenData.clientPackages].flatMap((Detail) => {
-                const clientname: any = Detail.users_permissions_user.username
-                const clientemail: any = Detail.users_permissions_user.email
+                const clientname: any = Detail.users_permissions_user.username;
+                const clientemail: any = Detail.users_permissions_user.email;
 
                 if (!clientnamecount[clientname]) {
-                    clientnamecount[clientname] = 1
+                    clientnamecount[clientname] = 1;
                 } else {
-                    clientnamecount[clientname] += 1
+                    clientnamecount[clientname] += 1;
                 }
                 if (!namearr.includes(clientemail)) {
-                    flag = true
-                    namearr.push(clientemail)
+                    flag = true;
+                    namearr.push(clientemail);
                 }
                 if (flag) {
-                    flag = false
+                    flag = false;
                     return {
                         id: Detail.users_permissions_user.id,
                         clientname: Detail.users_permissions_user.username,
@@ -147,16 +147,16 @@ function ClientListingPage() {
                                 : 'N/A',
                         bookings: [clientnamecount, Detail.users_permissions_user.username],
                         status: 'Assigned'
-                    }
+                    };
                 } else {
-                    return []
+                    return [];
                 }
             })
-        )
+        );
     }
     const pageHandler = (selectedPageNumber: number) => {
-        setPage(selectedPageNumber)
-    }
+        setPage(selectedPageNumber);
+    };
 
     return (
         <TabContent>
@@ -173,8 +173,8 @@ function ClientListingPage() {
                                 <Button
                                     variant="outline-secondary"
                                     onClick={(e: any) => {
-                                        e.preventDefault()
-                                        setSearchFilter(searchInput.current.value)
+                                        e.preventDefault();
+                                        setSearchFilter(searchInput.current.value);
                                     }}
                                 >
                                     <i className="fas fa-search"></i>
@@ -188,7 +188,7 @@ function ClientListingPage() {
                                 variant="outline-secondary"
                                 size="sm"
                                 onClick={() => {
-                                    window.open('/add_client', '_self')
+                                    window.open('/add_client', '_self');
                                 }}
                             >
                                 <i className="fas fa-plus-circle"></i> Add Client
@@ -227,7 +227,7 @@ function ClientListingPage() {
                 </Row>
             ) : null}
         </TabContent>
-    )
+    );
 }
 
-export default ClientListingPage
+export default ClientListingPage;

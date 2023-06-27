@@ -1,29 +1,32 @@
-import { useQuery } from '@apollo/client'
-import React, { useContext, useMemo, useRef, useState } from 'react'
-import { Badge, Row, Col } from 'react-bootstrap'
-import Table from '../../../../components/table'
-import AuthContext from '../../../../context/auth-context'
-import { GET_TAGS_FOR_EVENT } from '../../graphQL/queries'
-import FitnessAction from '../FitnessAction'
-import ActionButton from '../../../../components/actionbutton'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
-import moment from 'moment'
-import { Tag, TableContent } from '../Interfaces'
+import { useQuery } from '@apollo/client';
+import React, { useContext, useMemo, useRef, useState } from 'react';
+import { Badge, Row, Col, Button } from 'react-bootstrap';
+import Table from '../../../../components/table';
+import AuthContext from '../../../../context/auth-context';
+import { GET_TAGS_FOR_EVENT } from '../../graphQL/queries';
+import FitnessAction from '../FitnessAction';
+import ActionButton from '../../../../components/actionbutton';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import moment from 'moment';
+import { Tag, TableContent } from '../Interfaces';
 
 const Event: React.FC = () => {
-    const auth = useContext(AuthContext)
-    const [userPackage, setUserPackage] = useState<TableContent[]>([])
-    const fitnessActionRef = useRef<any>(null)
+    const auth = useContext(AuthContext);
+    const [userPackage, setUserPackage] = useState<TableContent[]>([]);
+    const fitnessActionRef = useRef<any>(null);
+    const [page, setPage] = useState<number>(1);
+    const [totalRecords, setTotalRecords] = useState<number>(0);
 
     const mainQuery = useQuery(GET_TAGS_FOR_EVENT, {
-        variables: { id: auth.userid },
+        variables: { id: auth.userid, start: page * 10 - 10, limit: 10 },
         onCompleted: (data) => {
-            loadData(data)
+            loadData(data);
+            setTotalRecords(data.tags.meta.pagination.total);
         }
-    })
+    });
 
     const loadData = (data) => {
-        const flattenData: Tag[] = flattenObj({ ...data.tags })
+        const flattenData: Tag[] = flattenObj({ ...data.tags });
 
         setUserPackage(
             flattenData.map((packageItem) => {
@@ -41,25 +44,25 @@ const Event: React.FC = () => {
                     programName: packageItem.tag_name ? packageItem.tag_name : 'N/A',
                     programStatus: packageItem.fitnesspackage.Status === true ? 'Assigned' : 'N/A',
                     renewal: calculateProgramRenewal(packageItem?.sessions)
-                }
+                };
             })
-        )
-    }
+        );
+    };
 
     const calculateProgramRenewal = (sessions) => {
         if (sessions.length === 0) {
-            return 'N/A'
+            return 'N/A';
         }
 
-        const moments = sessions.map((d) => moment(d.session_date))
-        const maxDate = moment.max(moments)
+        const moments = sessions.map((d) => moment(d.session_date));
+        const maxDate = moment.max(moments);
 
-        return maxDate.format('MMM Do,YYYY')
-    }
+        return maxDate.format('MMM Do,YYYY');
+    };
 
     const handleRedirect = (id: string) => {
-        window.location.href = `/cohort/session/scheduler/${id}`
-    }
+        window.location.href = `/cohort/session/scheduler/${id}`;
+    };
 
     const columns = useMemo(
         () => [
@@ -106,7 +109,7 @@ const Event: React.FC = () => {
                                         </Badge>
                                     )}
                                 </>
-                            )
+                            );
                         }
                     },
                     { accessor: 'renewal', Header: 'Last Session Date' },
@@ -115,38 +118,42 @@ const Event: React.FC = () => {
                         Header: 'Actions',
                         Cell: ({ row }: any) => {
                             const manageHandler = () => {
-                                handleRedirect(row.original.tagId)
-                            }
+                                handleRedirect(row.original.tagId);
+                            };
                             const detailsHandler = () => {
                                 fitnessActionRef.current.TriggerForm({
                                     id: row.original.id,
                                     actionType: 'details',
                                     type: 'Classic Class',
                                     rowData: row.original
-                                })
-                            }
+                                });
+                            };
 
                             const clientsHandler = () => {
                                 fitnessActionRef.current.TriggerForm({
                                     id: row.original.id,
                                     actionType: 'allClients',
                                     type: 'Classic Class'
-                                })
-                            }
+                                });
+                            };
 
                             const arrayAction = [
                                 { actionName: 'Manage', actionClick: manageHandler },
                                 { actionName: 'Details', actionClick: detailsHandler },
                                 { actionName: 'All Clients', actionClick: clientsHandler }
-                            ]
-                            return <ActionButton arrayAction={arrayAction}></ActionButton>
+                            ];
+                            return <ActionButton arrayAction={arrayAction}></ActionButton>;
                         }
                     }
                 ]
             }
         ],
         []
-    )
+    );
+
+    const pageHandler = (selectedPageNumber: number) => {
+        setPage(selectedPageNumber);
+    };
 
     return (
         <div className="mt-5">
@@ -156,8 +163,33 @@ const Event: React.FC = () => {
                     <FitnessAction ref={fitnessActionRef} callback={() => mainQuery} />
                 </Col>
             </Row>
-        </div>
-    )
-}
+            {/* Pagination */}
+            {userPackage && userPackage.length ? (
+                <Row className="justify-content-end">
+                    <Button
+                        variant="outline-dark"
+                        className="m-2"
+                        onClick={() => pageHandler(page - 1)}
+                        disabled={page === 1 ? true : false}
+                    >
+                        Previous
+                    </Button>
 
-export default Event
+                    <Button
+                        variant="outline-dark"
+                        className="m-2"
+                        onClick={() => pageHandler(page + 1)}
+                        disabled={totalRecords > page * 10 - 10 + userPackage.length ? false : true}
+                    >
+                        Next
+                    </Button>
+                    <span className="m-2 bold pt-2">{`${page * 10 - 10 + 1} - ${
+                        page * 10 - 10 + userPackage.length
+                    }`}</span>
+                </Row>
+            ) : null}
+        </div>
+    );
+};
+
+export default Event;

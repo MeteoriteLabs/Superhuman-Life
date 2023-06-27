@@ -1,5 +1,5 @@
-import React from 'react'
-import { Card, Row, Col, ProgressBar } from 'react-bootstrap'
+import React from 'react';
+import { Card, Row, Col, ProgressBar } from 'react-bootstrap';
 
 const PillarCard = (props: any) => {
     return (
@@ -31,7 +31,7 @@ const PillarCard = (props: any) => {
                 <ProgressBar now={60} />
             </div>
         </Card>
-    )
-}
+    );
+};
 
-export default PillarCard
+export default PillarCard;

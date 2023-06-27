@@ -1,39 +1,39 @@
-import React from 'react'
-import { Modal } from 'react-bootstrap'
-import { schema } from './EditClientSchema'
-import Form from '@rjsf/core'
-import { useMutation } from '@apollo/client'
-import { UPDATE_USER } from '../../register/mutations'
+import React from 'react';
+import { Modal } from 'react-bootstrap';
+import { schema } from './EditClientSchema';
+import Form from '@rjsf/core';
+import { useMutation } from '@apollo/client';
+import { UPDATE_USER } from '../../register/mutations';
 
 interface UserDetail {
-    firstname: string
-    lastname: string
-    phone: string
-    email: string
+    firstname: string;
+    lastname: string;
+    phone: string;
+    email: string;
 }
 
 const EditClient: React.FC<{
-    show: boolean
-    onHide: () => void
+    show: boolean;
+    onHide: () => void;
     Client: {
-        First_Name: string
-        Last_Name: string
-        Phone_Number: string
-        email: string
-        id: string | number
-    }[]
+        First_Name: string;
+        Last_Name: string;
+        Phone_Number: string;
+        email: string;
+        id: string | number;
+    }[];
 }> = ({ show, onHide, Client }) => {
     // eslint-disable-next-line
-    const editClientJson: { [name: string]: any } = require('./EditClientJson.json')
+    const editClientJson: { [name: string]: any } = require('./EditClientJson.json');
 
     const formData: UserDetail = {
         firstname: Client[0].First_Name,
         lastname: Client[0].Last_Name,
         email: Client[0].email,
         phone: Client[0].Phone_Number
-    }
+    };
 
-    const [updateUser] = useMutation(UPDATE_USER)
+    const [updateUser] = useMutation(UPDATE_USER);
 
     const onSubmit = (formData: UserDetail) => {
         updateUser({
@@ -46,10 +46,10 @@ const EditClient: React.FC<{
                 phone: formData.phone,
                 uname: `${formData.firstname}${formData.lastname}`
             }
-        })
+        });
 
-        onHide()
-    }
+        onHide();
+    };
 
     return (
         <Modal show={show} onHide={onHide} centered>
@@ -60,14 +60,14 @@ const EditClient: React.FC<{
                 <Form
                     schema={editClientJson}
                     onSubmit={(form) => {
-                        onSubmit(form.formData)
+                        onSubmit(form.formData);
                     }}
                     formData={formData}
                     uiSchema={schema}
                 />
             </Modal.Body>
         </Modal>
-    )
-}
+    );
+};
 
-export default EditClient
+export default EditClient;

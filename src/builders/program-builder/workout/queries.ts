@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const FETCH_DATA = gql`
     query fetchdata($id: ID) {
@@ -62,7 +62,7 @@ export const FETCH_DATA = gql`
             }
         }
     }
-`
+`;
 
 export const FETCH_FITNESS_PROGRAMS = gql`
     query checkSessionQuery($id: ID) {
@@ -84,7 +84,7 @@ export const FETCH_FITNESS_PROGRAMS = gql`
             }
         }
     }
-`
+`;
 
 export const FETCH_FITNESSDISCPLINES = gql`
     query fitnessdiscplines {
@@ -98,7 +98,7 @@ export const FETCH_FITNESSDISCPLINES = gql`
             }
         }
     }
-`
+`;
 
 export const GET_TABLEDATA = gql`
     query fetchdata($id: ID, $filter: String!, $start: Int, $limit: Int) {
@@ -175,7 +175,7 @@ export const GET_TABLEDATA = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_WORKOUT = gql`
     mutation createworkout(
@@ -224,7 +224,7 @@ export const CREATE_WORKOUT = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_WORKOUT = gql`
     mutation updateworkout(
@@ -275,7 +275,7 @@ export const UPDATE_WORKOUT = gql`
             }
         }
     }
-`
+`;
 
 export const DELETE_WORKOUT = gql`
     mutation deleteworkout($id: ID!) {
@@ -288,4 +288,4 @@ export const DELETE_WORKOUT = gql`
             }
         }
     }
-`
+`;

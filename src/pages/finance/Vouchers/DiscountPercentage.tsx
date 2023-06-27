@@ -1,20 +1,20 @@
-import React, { ChangeEvent, useState } from 'react'
-import { InputGroup, FormControl } from 'react-bootstrap'
+import React, { ChangeEvent, useState } from 'react';
+import { InputGroup, FormControl } from 'react-bootstrap';
 
 const DiscountPercentage: React.FC<{
-    value: number
-    onChange: (args: string | null) => void
+    value: number;
+    onChange: (args: string | null) => void;
     // eslint-disable-next-line
-    uiSchema: any
-    readonly: boolean
+    uiSchema: any;
+    readonly: boolean;
 }> = ({ value, onChange, readonly }) => {
-    const [input, setInput] = useState<number>(value ? JSON.parse(`${value}`).input : 0)
+    const [input, setInput] = useState<number>(value ? JSON.parse(`${value}`).input : 0);
 
     const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        setInput(+e.target.value)
-    }
+        setInput(+e.target.value);
+    };
 
-    onChange(JSON.stringify({ input }))
+    onChange(JSON.stringify({ input }));
 
     return (
         <InputGroup className="mb-3">
@@ -30,7 +30,7 @@ const DiscountPercentage: React.FC<{
                 <InputGroup.Text id="basic-addon2">%</InputGroup.Text>
             </InputGroup.Append>
         </InputGroup>
-    )
-}
+    );
+};
 
-export default DiscountPercentage
+export default DiscountPercentage;

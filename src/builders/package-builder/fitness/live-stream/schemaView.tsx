@@ -1,12 +1,12 @@
-import PricingTableChannel from './pricingTableChannel'
-import Upload from '../../../../components/upload/upload'
-import DatesConfig from '../../../../components/customWidgets/datesConfig'
-import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect'
-import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect'
-import ChannelConfig from './channelConfig'
-import LanguageList from '../../../../components/customWidgets/languageSelect'
-import LiveBookingConfig from './bookingConfig'
-import ChannelPrimaryDateConfig from './primaryDatesConfig'
+import PricingTableChannel from './pricingTableChannel';
+import Upload from '../../../../components/upload/upload';
+import DatesConfig from '../../../../components/customWidgets/datesConfig';
+import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect';
+import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect';
+import ChannelConfig from './channelConfig';
+import LanguageList from '../../../../components/customWidgets/languageSelect';
+import LiveBookingConfig from './bookingConfig';
+import ChannelPrimaryDateConfig from './primaryDatesConfig';
 
 export const widgets = {
     pricingTableChannel: PricingTableChannel,
@@ -16,7 +16,7 @@ export const widgets = {
     channelConfig: ChannelConfig,
     liveBookingConfig: LiveBookingConfig,
     liveChannelLanguageSelect: LanguageList
-}
+};
 
 export const schemaView: any = {
     channelName: {
@@ -84,7 +84,7 @@ export const schemaView: any = {
                     title={'Thumbnail'}
                     readonly={true}
                 />
-            )
+            );
         }
     },
     VideoUrl: {
@@ -131,7 +131,7 @@ export const schemaView: any = {
                     type={'Cohort'}
                     readonly={true}
                 />
-            )
+            );
         }
     }
-}
+};

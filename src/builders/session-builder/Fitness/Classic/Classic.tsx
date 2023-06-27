@@ -1,27 +1,27 @@
-import { useQuery } from '@apollo/client'
-import { useContext, useMemo, useRef, useState } from 'react'
-import { Badge, Row, Col, Form } from 'react-bootstrap'
-import Table from '../../../../components/table'
-import AuthContext from '../../../../context/auth-context'
-import { GET_TAGS_FOR_CLASSIC } from '../../graphQL/queries'
-import FitnessAction from '../FitnessAction'
-import ActionButton from '../../../../components/actionbutton'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
-import moment from 'moment'
+import { useQuery } from '@apollo/client';
+import { useContext, useMemo, useRef, useState } from 'react';
+import { Badge, Row, Col, Form } from 'react-bootstrap';
+import Table from '../../../../components/table';
+import AuthContext from '../../../../context/auth-context';
+import { GET_TAGS_FOR_CLASSIC } from '../../graphQL/queries';
+import FitnessAction from '../FitnessAction';
+import ActionButton from '../../../../components/actionbutton';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import moment from 'moment';
 
 const Classic: React.FC = () => {
-    const auth = useContext(AuthContext)
-    const [userPackage, setUserPackage] = useState<any>([])
-    const [showHistory, setShowHistory] = useState<boolean>(false)
-    const fitnessActionRef = useRef<any>(null)
+    const auth = useContext(AuthContext);
+    const [userPackage, setUserPackage] = useState<any>([]);
+    const [showHistory, setShowHistory] = useState<boolean>(false);
+    const fitnessActionRef = useRef<any>(null);
 
     const mainQuery = useQuery(GET_TAGS_FOR_CLASSIC, {
         variables: { id: auth.userid },
         onCompleted: (data) => loadData(data)
-    })
+    });
 
     const loadData = (data: any) => {
-        const flattenData = flattenObj({ ...data })
+        const flattenData = flattenObj({ ...data });
 
         setUserPackage([
             ...flattenData.tags.map((packageItem) => {
@@ -35,13 +35,13 @@ const Classic: React.FC = () => {
                     duration: packageItem.fitnesspackage.duration,
                     expiry: moment(packageItem?.fitnesspackage?.expiry_date).format('MMMM DD,YYYY'),
                     programName: packageItem.tag_name ? packageItem.tag_name : 'N/A'
-                }
+                };
             })
-        ])
-    }
+        ]);
+    };
 
     function handleRedirect(id: any) {
-        window.location.href = `/classic/session/scheduler/${id}`
+        window.location.href = `/classic/session/scheduler/${id}`;
     }
 
     const columns = useMemo(
@@ -89,7 +89,7 @@ const Classic: React.FC = () => {
                                         </Badge>
                                     )}
                                 </>
-                            )
+                            );
                         }
                     },
                     {
@@ -97,41 +97,41 @@ const Classic: React.FC = () => {
                         Header: 'Actions',
                         Cell: ({ row }: any) => {
                             const manageHandler = () => {
-                                handleRedirect(row.original.tagId)
-                            }
+                                handleRedirect(row.original.tagId);
+                            };
                             const detailsHandler = () => {
                                 fitnessActionRef.current.TriggerForm({
                                     id: row.original.id,
                                     actionType: 'details',
                                     type: 'Classic Class',
                                     rowData: row.original
-                                })
-                            }
+                                });
+                            };
 
                             const clientsHandler = () => {
                                 fitnessActionRef.current.TriggerForm({
                                     id: row.original.id,
                                     actionType: 'allClients',
                                     type: 'Classic Class'
-                                })
-                            }
+                                });
+                            };
 
                             const arrayAction = [
                                 { actionName: 'Manage', actionClick: manageHandler },
                                 { actionName: 'Details', actionClick: detailsHandler },
                                 { actionName: 'All Clients', actionClick: clientsHandler }
-                            ]
-                            return <ActionButton arrayAction={arrayAction}></ActionButton>
+                            ];
+                            return <ActionButton arrayAction={arrayAction}></ActionButton>;
                         }
                     }
                 ]
             }
         ],
         []
-    )
+    );
 
     function handleHistoryPackage(data: any) {
-        const flattenData = flattenObj({ ...data })
+        const flattenData = flattenObj({ ...data });
 
         setUserPackage([
             ...flattenData.tags.map((packageItem) => {
@@ -142,9 +142,9 @@ const Classic: React.FC = () => {
                     duration: packageItem.fitnesspackage.duration,
                     expiry: moment(packageItem?.fitnesspackage?.expiry_date).format('MMMM DD,YYYY'),
                     programName: packageItem.tag_name ? packageItem.tag_name : 'N/A'
-                }
+                };
             })
-        ])
+        ]);
     }
 
     if (!showHistory) {
@@ -153,7 +153,7 @@ const Classic: React.FC = () => {
                 moment(item.expiry).isBefore(moment()) === true
                     ? userPackage.splice(index, 1)
                     : null
-            )
+            );
         }
     }
 
@@ -168,10 +168,10 @@ const Classic: React.FC = () => {
                             label="Show History"
                             defaultChecked={showHistory}
                             onClick={() => {
-                                setShowHistory(!showHistory)
+                                setShowHistory(!showHistory);
                                 mainQuery.refetch().then((res: any) => {
-                                    handleHistoryPackage(res.data)
-                                })
+                                    handleHistoryPackage(res.data);
+                                });
                             }}
                         />
                     </Form>
@@ -184,7 +184,7 @@ const Classic: React.FC = () => {
                 </Col>
             </Row>
         </div>
-    )
-}
+    );
+};
 
-export default Classic
+export default Classic;

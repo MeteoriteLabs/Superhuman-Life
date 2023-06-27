@@ -1,15 +1,15 @@
-import { useContext, useState } from 'react'
-import BarGraph from '../../../components/Graphs/BarGraph/BarGraph'
-import { useQuery } from '@apollo/client'
-import { GET_CLIENTS } from './queries'
-import AuthContext from '../../../context/auth-context'
-import { flattenObj } from '../../../components/utils/responseFlatten'
-import { Row, Col } from 'react-bootstrap'
-import moment from 'moment'
+import { useContext, useState } from 'react';
+import BarGraph from '../../../components/Graphs/BarGraph/BarGraph';
+import { useQuery } from '@apollo/client';
+import { GET_CLIENTS } from './queries';
+import AuthContext from '../../../context/auth-context';
+import { flattenObj } from '../../../components/utils/responseFlatten';
+import { Row, Col } from 'react-bootstrap';
+import moment from 'moment';
 
 function MonthlyClientGraph(): JSX.Element {
-    const [clientsData, setClientsData] = useState<{ index: string; Clients: number }[]>([])
-    const auth = useContext(AuthContext)
+    const [clientsData, setClientsData] = useState<{ index: string; Clients: number }[]>([]);
+    const auth = useContext(AuthContext);
 
     useQuery(GET_CLIENTS, {
         variables: {
@@ -18,17 +18,17 @@ function MonthlyClientGraph(): JSX.Element {
             endDateTime: moment().format()
         },
         onCompleted: (data) => {
-            loadData(data)
+            loadData(data);
         }
-    })
+    });
 
     const loadData = (data) => {
-        const flattenClientsData = flattenObj({ ...data.clientPackages })
+        const flattenClientsData = flattenObj({ ...data.clientPackages });
 
-        const arr: { index: string; Clients: number }[] = []
+        const arr: { index: string; Clients: number }[] = [];
 
         for (let month = 0; month < 12; month++) {
-            const currentMonth = moment().subtract(month, 'months')
+            const currentMonth = moment().subtract(month, 'months');
             arr[month] = {
                 index: `${currentMonth.format('MMM YY')}`,
                 Clients: flattenClientsData.filter(
@@ -36,11 +36,11 @@ function MonthlyClientGraph(): JSX.Element {
                         moment(currentValue.accepted_date).format('MM/YY') ===
                         currentMonth.format('MM/YY')
                 ).length
-            }
+            };
         }
 
-        setClientsData(arr.reverse())
-    }
+        setClientsData(arr.reverse());
+    };
 
     return (
         <Row>
@@ -48,7 +48,7 @@ function MonthlyClientGraph(): JSX.Element {
                 <BarGraph data={clientsData} yAxis={'No. of Clients'} keyName={['Clients']} />
             </Col>
         </Row>
-    )
+    );
 }
 
-export default MonthlyClientGraph
+export default MonthlyClientGraph;

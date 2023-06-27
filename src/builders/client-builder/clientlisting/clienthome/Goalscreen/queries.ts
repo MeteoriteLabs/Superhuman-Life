@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const ADD_GOAL = gql`
     mutation addgoal(
@@ -24,7 +24,7 @@ export const ADD_GOAL = gql`
             }
         }
     }
-`
+`;
 
 export const ADD_GOAL_NEW = gql`
     mutation addgoal(
@@ -48,7 +48,7 @@ export const ADD_GOAL_NEW = gql`
             }
         }
     }
-`
+`;
 
 export const GET_GOALS = gql`
     query getGoals($id: ID) {
@@ -67,7 +67,7 @@ export const GET_GOALS = gql`
             updatedAt
         }
     }
-`
+`;
 
 export const GET_GOALS_NEW = gql`
     query getGoals($id: ID) {
@@ -98,7 +98,7 @@ export const GET_GOALS_NEW = gql`
             }
         }
     }
-`
+`;
 
 export const GET_GOALS_DETAILS = gql`
     query getGoals($id: ID) {
@@ -117,7 +117,7 @@ export const GET_GOALS_DETAILS = gql`
             updatedAt
         }
     }
-`
+`;
 
 export const GET_GOALS_DETAILS_NEW = gql`
     query getGoals($id: ID) {
@@ -148,7 +148,7 @@ export const GET_GOALS_DETAILS_NEW = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_GOALS = gql`
     mutation updategoal(
@@ -176,7 +176,7 @@ export const UPDATE_GOALS = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_GOALS_NEW = gql`
     mutation updategoal(
@@ -202,4 +202,4 @@ export const UPDATE_GOALS_NEW = gql`
             }
         }
     }
-`
+`;

@@ -1,9 +1,9 @@
-import { useContext } from 'react'
-import { ChangeMakerWebsiteContext } from '../../../context/changemakerWebsite-context'
-import { ThreeDots } from 'react-bootstrap-icons'
+import { useContext } from 'react';
+import { ChangeMakerWebsiteContext } from '../../../context/changemakerWebsite-context';
+import { ThreeDots } from 'react-bootstrap-icons';
 
 function WebsiteBuilder_settings(): JSX.Element {
-    const { changemakerWebsiteState } = useContext(ChangeMakerWebsiteContext)
+    const { changemakerWebsiteState } = useContext(ChangeMakerWebsiteContext);
 
     return (
         <>
@@ -82,7 +82,7 @@ function WebsiteBuilder_settings(): JSX.Element {
                 </div>
             </div>
         </>
-    )
+    );
 }
 
-export default WebsiteBuilder_settings
+export default WebsiteBuilder_settings;

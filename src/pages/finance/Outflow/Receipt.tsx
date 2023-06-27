@@ -1,9 +1,9 @@
-import { Table, Button } from 'react-bootstrap'
+import { Table, Button } from 'react-bootstrap';
 
 function Receipt() {
     const printReciept = () => {
-        window.print()
-    }
+        window.print();
+    };
     return (
         <div>
             <h4 className="text-center">Payment Details</h4>
@@ -65,7 +65,7 @@ function Receipt() {
                 </Button>
             </div>
         </div>
-    )
+    );
 }
 
-export default Receipt
+export default Receipt;

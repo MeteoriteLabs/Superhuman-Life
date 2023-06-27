@@ -1,13 +1,13 @@
-import React, { useState } from 'react'
-import { Tabs, Card, Tab } from 'react-bootstrap'
-import ProfileCard from './ProfileOptions/ProfileCard'
-import ProfileNavTab from './ProfileOptions/ProfileNavTab'
-import ChangemakersSettings from './ChangemakersSettings'
+import React, { useState } from 'react';
+import { Tabs, Card, Tab } from 'react-bootstrap';
+import ProfileCard from './ProfileOptions/ProfileCard';
+import ProfileNavTab from './ProfileOptions/ProfileNavTab';
+import ChangemakersSettings from './ChangemakersSettings';
 // import OrganisationsSettings from "./OrganisationsSettings";
-import './profile.css'
+import './profile.css';
 
 const ProfilePage: React.FC = () => {
-    const [key, setKey] = useState<string>('profile')
+    const [key, setKey] = useState<string>('profile');
 
     return (
         <Card className="shadow-sm mt-2" border="light">
@@ -40,7 +40,7 @@ const ProfilePage: React.FC = () => {
                 </Tabs>
             </Card.Body>
         </Card>
-    )
-}
+    );
+};
 
-export default ProfilePage
+export default ProfilePage;

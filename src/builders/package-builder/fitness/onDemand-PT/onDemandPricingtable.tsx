@@ -1,33 +1,33 @@
-import React, { useState, useContext, useEffect } from 'react'
-import { Form, Table, FormControl, InputGroup } from 'react-bootstrap'
-import { gql, useQuery, useLazyQuery } from '@apollo/client'
-import AuthContext from '../../../../context/auth-context'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
-import moment from 'moment'
+import React, { useState, useContext, useEffect } from 'react';
+import { Form, Table, FormControl, InputGroup } from 'react-bootstrap';
+import { gql, useQuery, useLazyQuery } from '@apollo/client';
+import AuthContext from '../../../../context/auth-context';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import moment from 'moment';
 
 const PricingTable: React.FC<{
-    readonly: boolean
-    formContext: any
-    value: string
-    onChange: (args: string | null) => void
+    readonly: boolean;
+    formContext: any;
+    value: string;
+    onChange: (args: string | null) => void;
 }> = (props) => {
-    const inputDisabled = props.readonly
+    const inputDisabled = props.readonly;
 
     function handleReturnType(val: any) {
         if (typeof val === 'string') {
-            return JSON.parse(val)
+            return JSON.parse(val);
         } else {
-            return val
+            return val;
         }
     }
 
-    const classDetails = JSON.parse(props.formContext.programDetails)
+    const classDetails = JSON.parse(props.formContext.programDetails);
 
     const classMode =
-        classDetails.mode === '0' ? 'Online' : classDetails.mode === '1' ? 'Offline' : 'Hybrid'
+        classDetails.mode === '0' ? 'Online' : classDetails.mode === '1' ? 'Offline' : 'Hybrid';
 
-    const auth = useContext(AuthContext)
-    const [vouchers, setVouchers] = useState<any>([])
+    const auth = useContext(AuthContext);
+    const [vouchers, setVouchers] = useState<any>([]);
     const [pricing, setPricing] = useState<any>(
         props.value !== undefined && props.value !== 'free'
             ? handleReturnType(props.value)
@@ -40,7 +40,7 @@ const PricingTable: React.FC<{
                       sapienPricing: null
                   }
               ]
-    )
+    );
 
     const GET_VOUCHERS = gql`
         query fetchVouchers($expiry: DateTime!, $id: ID!, $start: DateTime!, $status: String!) {
@@ -64,14 +64,14 @@ const PricingTable: React.FC<{
                 }
             }
         }
-    `
+    `;
 
     const [getVouchers] = useLazyQuery(GET_VOUCHERS, {
         onCompleted: (data) => {
-            const flattenData = flattenObj({ ...data })
-            setVouchers(flattenData.vouchers)
+            const flattenData = flattenObj({ ...data });
+            setVouchers(flattenData.vouchers);
         }
-    })
+    });
     React.useEffect(() => {
         getVouchers({
             variables: {
@@ -80,19 +80,19 @@ const PricingTable: React.FC<{
                 start: moment().toISOString(),
                 status: 'Active'
             }
-        })
-    }, [])
+        });
+    }, []);
 
     useEffect(() => {
         // eslint-disable-next-line
         pricing.map((item, index: number) => {
             if (item.mrp === 0 || item.mrp === '') {
-                const values = [...pricing]
-                values[index].mrp = null
-                setPricing(values)
+                const values = [...pricing];
+                values[index].mrp = null;
+                setPricing(values);
             }
-        })
-    }, [pricing])
+        });
+    }, [pricing]);
 
     const SUGGESTED_PRICING = gql`
         query fetchSapienPricing($id: ID!) {
@@ -136,103 +136,103 @@ const PricingTable: React.FC<{
                 }
             }
         }
-    `
+    `;
 
     function FetchData() {
         useQuery(SUGGESTED_PRICING, {
             variables: { id: auth.userid },
             onCompleted: (data) => {
-                loadData(data)
+                loadData(data);
             }
-        })
+        });
     }
 
     function loadData(data) {
-        const flattenData = flattenObj({ ...data })
-        const newValue = [...pricing]
+        const flattenData = flattenObj({ ...data });
+        const newValue = [...pricing];
         if (classMode === 'Online') {
             flattenData.suggestedPricings = flattenData.suggestedPricings.filter(
                 (item) => item.Mode === classMode
-            )
+            );
             flattenData.sapienPricings = flattenData.sapienPricings.filter(
                 (item) => item.mode === classMode
-            )
+            );
             newValue.forEach((item, index) => {
                 if (item.voucher !== 0 && item.price !== null) {
                     item.suggestedPrice = parseInt(
                         ((item.sapienPricing * 100) / (100 - item.voucher)).toFixed(2)
-                    )
+                    );
                 } else {
-                    item.suggestedPrice = flattenData.suggestedPricings[0]?.mrp * 1 * item.duration
+                    item.suggestedPrice = flattenData.suggestedPricings[0]?.mrp * 1 * item.duration;
                 }
-                item.sapienPricing = flattenData.sapienPricings[0]?.mrp * 1 * item.duration
-            })
+                item.sapienPricing = flattenData.sapienPricings[0]?.mrp * 1 * item.duration;
+            });
         } else if (classMode === 'Offline') {
             flattenData.suggestedPricings = flattenData.suggestedPricings.filter(
                 (item) => item.Mode === classMode
-            )
+            );
             flattenData.sapienPricings = flattenData.sapienPricings.filter(
                 (item) => item.mode === classMode
-            )
+            );
             newValue.forEach((item, index) => {
                 if (item.voucher !== 0 && item.price !== null) {
                     item.suggestedPrice = parseInt(
                         ((item.sapienPricing * 100) / (100 - item.voucher)).toFixed(2)
-                    )
+                    );
                 } else {
-                    item.suggestedPrice = flattenData.suggestedPricings[0]?.mrp * 1 * item.duration
+                    item.suggestedPrice = flattenData.suggestedPricings[0]?.mrp * 1 * item.duration;
                 }
-                item.sapienPricing = flattenData.sapienPricings[0]?.mrp * 1 * item.duration
-            })
+                item.sapienPricing = flattenData.sapienPricings[0]?.mrp * 1 * item.duration;
+            });
         } else if (classMode === 'Hybrid') {
             newValue.forEach((item, index) => {
                 if (item.voucher !== 0 && item.price !== null) {
                     item.suggestedPrice = parseInt(
                         ((item.sapienPricing * 100) / (100 - item.voucher)).toFixed(2)
-                    )
+                    );
                 } else {
-                    const onlinePrice = flattenData.suggestedPricings[0]?.mrp * 1 * item.duration
-                    const offlinePrice = flattenData.suggestedPricings[1]?.mrp * 1 * item.duration
-                    item.suggestedPrice = onlinePrice + offlinePrice
+                    const onlinePrice = flattenData.suggestedPricings[0]?.mrp * 1 * item.duration;
+                    const offlinePrice = flattenData.suggestedPricings[1]?.mrp * 1 * item.duration;
+                    item.suggestedPrice = onlinePrice + offlinePrice;
                 }
-                const onlinePrice = flattenData.sapienPricings[0]?.mrp * 1 * item.duration
-                const offlinePrice = flattenData.sapienPricings[1]?.mrp * 1 * item.duration
-                item.sapienPricing = onlinePrice + offlinePrice
-            })
+                const onlinePrice = flattenData.sapienPricings[0]?.mrp * 1 * item.duration;
+                const offlinePrice = flattenData.sapienPricings[1]?.mrp * 1 * item.duration;
+                item.sapienPricing = onlinePrice + offlinePrice;
+            });
         }
 
-        setPricing(newValue)
+        setPricing(newValue);
     }
 
     function handlePricingUpdate(value: any, id: any) {
-        const newPricing = [...pricing]
-        newPricing[id].mrp = value
-        setPricing(newPricing)
+        const newPricing = [...pricing];
+        newPricing[id].mrp = value;
+        setPricing(newPricing);
     }
 
     if (pricing[0].mrp !== null && pricing[0].mrp >= parseInt(pricing[0].sapienPricing)) {
-        props.onChange(JSON.stringify(pricing))
+        props.onChange(JSON.stringify(pricing));
     } else {
-        props.onChange(null)
+        props.onChange(null);
     }
 
     function handleUpdatePricing(id: any, value: any) {
         if (parseInt(value) !== 0) {
-            const newValue = [...pricing]
-            newValue[id].voucher = parseInt(value)
+            const newValue = [...pricing];
+            newValue[id].voucher = parseInt(value);
             newValue[id].suggestedPrice = parseInt(
                 ((newValue[id].sapienPricing * 100) / (100 - value)).toFixed(0)
-            )
-            setPricing(newValue)
+            );
+            setPricing(newValue);
         } else {
-            const newValue = [...pricing]
-            newValue[id].voucher = parseInt(value)
-            newValue[id].suggestedPrice = newValue[id].sapienPricing
-            setPricing(newValue)
+            const newValue = [...pricing];
+            newValue[id].voucher = parseInt(value);
+            newValue[id].suggestedPrice = newValue[id].sapienPricing;
+            setPricing(newValue);
         }
     }
 
-    FetchData()
+    FetchData();
 
     return (
         <>
@@ -256,7 +256,7 @@ const PricingTable: React.FC<{
                                         />
                                     </td>
                                     {pricing.map((item, index: number) => {
-                                        return <td key={index}>{1 * item.duration} Classes</td>
+                                        return <td key={index}>{1 * item.duration} Classes</td>;
                                     })}
                                 </tr>
                             )}
@@ -270,7 +270,7 @@ const PricingTable: React.FC<{
                                         />
                                     </td>
                                     {pricing.map((item, index: number) => {
-                                        return <td key={index}>{1 * item.duration} Classes</td>
+                                        return <td key={index}>{1 * item.duration} Classes</td>;
                                     })}
                                 </tr>
                             )}
@@ -298,11 +298,11 @@ const PricingTable: React.FC<{
                                                         >
                                                             {voucher.voucher_name}
                                                         </option>
-                                                    )
+                                                    );
                                                 })}
                                             </Form.Control>
                                         </td>
-                                    )
+                                    );
                                 })}
                             </tr>
                             <tr className="text-center">
@@ -310,7 +310,7 @@ const PricingTable: React.FC<{
                                     <b>Total days</b>
                                 </td>
                                 {pricing.map((item, index: number) => {
-                                    return <td key={index}>{item.duration} session</td>
+                                    return <td key={index}>{item.duration} session</td>;
                                 })}
                             </tr>
                             {/* <tr className="text-center">
@@ -360,7 +360,7 @@ const PricingTable: React.FC<{
                                                     aria-describedby="inputGroup-sizing-default"
                                                     value={pricing[index]?.mrp}
                                                     onChange={(e) => {
-                                                        handlePricingUpdate(e.target.value, index)
+                                                        handlePricingUpdate(e.target.value, index);
                                                     }}
                                                     disabled={inputDisabled}
                                                 />
@@ -375,7 +375,7 @@ const PricingTable: React.FC<{
                                                     </span>
                                                 )}
                                         </td>
-                                    )
+                                    );
                                 })}
                             </tr>
                         </tbody>
@@ -383,7 +383,7 @@ const PricingTable: React.FC<{
                 </div>
             }
         </>
-    )
-}
+    );
+};
 
-export default PricingTable
+export default PricingTable;

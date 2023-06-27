@@ -1,28 +1,28 @@
-import { useState, ChangeEvent } from 'react'
-import { InputGroup, FormControl } from 'react-bootstrap'
-import moment from 'moment'
+import { useState, ChangeEvent } from 'react';
+import { InputGroup, FormControl } from 'react-bootstrap';
+import moment from 'moment';
 
 const PackageDateConfig: React.FC<{
-    readonly?: boolean
-    value: string
-    onChange: (params: string | null) => void
+    readonly?: boolean;
+    value: string;
+    onChange: (params: string | null) => void;
 }> = ({
     readonly,
     value,
     onChange
 }: {
-    readonly?: boolean
-    value: string
-    onChange: (params: string | null) => void
+    readonly?: boolean;
+    value: string;
+    onChange: (params: string | null) => void;
 }) => {
-    const inputDisabled = readonly ? readonly : false
+    const inputDisabled = readonly ? readonly : false;
     const [startDate, setStartDate] = useState(
         value
             ? moment(JSON.parse(value).startDate).format('YYYY-MM-DD')
             : moment().format('YYYY-MM-DD')
-    )
+    );
 
-    onChange(JSON.stringify({ startDate }))
+    onChange(JSON.stringify({ startDate }));
 
     return (
         <div>
@@ -35,7 +35,7 @@ const PackageDateConfig: React.FC<{
                     min={startDate}
                     value={startDate}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                        setStartDate(e.target.value)
+                        setStartDate(e.target.value);
                     }}
                     disabled={inputDisabled}
                 />
@@ -45,7 +45,7 @@ const PackageDateConfig: React.FC<{
                 Set the date for this offering to be available for everyone
             </span>
         </div>
-    )
-}
+    );
+};
 
-export default PackageDateConfig
+export default PackageDateConfig;

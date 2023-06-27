@@ -20,4 +20,4 @@ export const schema: any = {
     accountType: {
         'ui:widget': 'radio'
     }
-}
+};

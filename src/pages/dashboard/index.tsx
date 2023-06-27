@@ -1,28 +1,28 @@
-import { useContext, useState } from 'react'
-import { Container, Row, Col } from 'react-bootstrap'
-import { ImageCaptions } from './dashboard-data/data'
-import { LobbyColors } from './dashboard-data/colors'
-import { Link } from 'react-router-dom'
-import AuthContext from '../../context/auth-context'
-import { GET_USER_ORGANIZATIONS } from './queries'
-import { flattenObj } from '../../components/utils/responseFlatten'
-import { useQuery } from '@apollo/client'
-import './mainLobby.css'
+import { useContext, useState } from 'react';
+import { Container, Row, Col } from 'react-bootstrap';
+import { ImageCaptions } from './dashboard-data/data';
+import { LobbyColors } from './dashboard-data/colors';
+import { Link } from 'react-router-dom';
+import AuthContext from '../../context/auth-context';
+import { GET_USER_ORGANIZATIONS } from './queries';
+import { flattenObj } from '../../components/utils/responseFlatten';
+import { useQuery } from '@apollo/client';
+import './mainLobby.css';
 
 export default function Dashboard() {
-    const auth = useContext(AuthContext)
-    const [organizations, setOrganizations] = useState([])
+    const auth = useContext(AuthContext);
+    const [organizations, setOrganizations] = useState([]);
 
     useQuery(GET_USER_ORGANIZATIONS, {
         variables: { id: auth.userid },
         onCompleted: (data: any) => {
-            const flattendData = flattenObj({ ...data })
-            setOrganizations(flattendData.usersPermissionsUsers[0].organizations)
+            const flattendData = flattenObj({ ...data });
+            setOrganizations(flattendData.usersPermissionsUsers[0].organizations);
         }
-    })
+    });
 
-    const totalNumberOfColors = LobbyColors.length
-    const randomColorInArray = Math.floor(Math.random() * LobbyColors.length)
+    const totalNumberOfColors = LobbyColors.length;
+    const randomColorInArray = Math.floor(Math.random() * LobbyColors.length);
 
     return (
         <>
@@ -120,7 +120,7 @@ export default function Dashboard() {
                                             </div>
                                         </Col>
                                     </Row>
-                                )
+                                );
                             })}
                         </Col>
                     )}
@@ -170,12 +170,12 @@ export default function Dashboard() {
                                             </div>
                                         </Col>
                                     </Col>
-                                )
+                                );
                             })}
                         </Row>
                     )}
                 </Row>
             </Container>
         </>
-    )
+    );
 }

@@ -1,21 +1,21 @@
-import React, { useRef } from 'react'
-import { Button } from 'react-bootstrap'
-import { useHistory } from 'react-router-dom'
-import CreateEditMessage from '../../builders/client-builder/leads/createoredit-leads'
-import CreateEditContact from '../../builders/client-builder/contacts/createEditContact'
-import CreateClient from '../../builders/client-builder/clientlisting/addclientcomponent'
-import Grid from './grid'
+import React, { useRef } from 'react';
+import { Button } from 'react-bootstrap';
+import { useHistory } from 'react-router-dom';
+import CreateEditMessage from '../../builders/client-builder/leads/createoredit-leads';
+import CreateEditContact from '../../builders/client-builder/contacts/createEditContact';
+import CreateClient from '../../builders/client-builder/clientlisting/addclientcomponent';
+import Grid from './grid';
 
 const HomePage: React.FC = () => {
-    const createEditMessageComponent = useRef<any>(null)
-    const createEditContactComponent = useRef<any>(null)
-    const CreateClientComponent = useRef<any>(null)
-    const history = useHistory()
+    const createEditMessageComponent = useRef<any>(null);
+    const createEditContactComponent = useRef<any>(null);
+    const CreateClientComponent = useRef<any>(null);
+    const history = useHistory();
 
     const redirectToFinance = () => {
-        const path = '/finance'
-        history.push(path)
-    }
+        const path = '/finance';
+        history.push(path);
+    };
 
     return (
         <div className="col-lg-12">
@@ -28,7 +28,7 @@ const HomePage: React.FC = () => {
                 variant="outline-dark"
                 size="sm"
                 onClick={() => {
-                    history.push('/add_client')
+                    history.push('/add_client');
                 }}
             >
                 <img src="assets/home_page_images/contacts.svg" alt="add_client" /> Add Client
@@ -45,7 +45,7 @@ const HomePage: React.FC = () => {
                         id: null,
                         type: 'create',
                         modal_status: true
-                    })
+                    });
                 }}
             >
                 <img loading="lazy" src="assets/home_page_images/add_lead.svg" alt="add_lead" /> Add
@@ -63,7 +63,7 @@ const HomePage: React.FC = () => {
                         id: null,
                         type: 'create',
                         modal_status: true
-                    })
+                    });
                 }}
             >
                 <img
@@ -85,7 +85,7 @@ const HomePage: React.FC = () => {
                 <Grid />
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default HomePage
+export default HomePage;

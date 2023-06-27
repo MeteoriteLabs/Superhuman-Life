@@ -10,29 +10,29 @@ import {
     ButtonGroup,
     Row,
     Col
-} from 'react-bootstrap'
-import { GET_ALL_BOOKINGS } from '../../booking/GraphQL/queries'
-import { GET_FITNESS, GET_TAGS } from '../../../builders/package-builder/fitness/graphQL/queries'
-import authContext from '../../../context/auth-context'
-import React, { useContext, useState, useRef } from 'react'
-import { useQuery, useLazyQuery } from '@apollo/client'
-import { flattenObj } from '../../../components/utils/responseFlatten'
-import BookingAction from '../../booking/Movement/BookingAction'
-import moment from 'moment'
-import './style.css'
-import { Link } from 'react-router-dom'
-import NoDataInCard from '../../../components/NoDataInCard'
+} from 'react-bootstrap';
+import { GET_ALL_BOOKINGS } from '../../booking/GraphQL/queries';
+import { GET_FITNESS, GET_TAGS } from '../../../builders/package-builder/fitness/graphQL/queries';
+import authContext from '../../../context/auth-context';
+import React, { useContext, useState, useRef } from 'react';
+import { useQuery, useLazyQuery } from '@apollo/client';
+import { flattenObj } from '../../../components/utils/responseFlatten';
+import BookingAction from '../../booking/Movement/BookingAction';
+import moment from 'moment';
+import './style.css';
+import { Link } from 'react-router-dom';
+import NoDataInCard from '../../../components/NoDataInCard';
 
 const TaskCard: React.FC = () => {
-    const auth = useContext(authContext)
-    const [pendingBookings, setPendingBookings] = useState<any[]>([])
-    const [notPendingBookings, setNotPendingBookings] = useState<any[]>([])
-    const bookingActionRef = useRef<any>(null)
-    const [show, setShow] = useState<boolean>(false)
-    const [dataTable, setDataTable] = useState<any>([])
+    const auth = useContext(authContext);
+    const [pendingBookings, setPendingBookings] = useState<any[]>([]);
+    const [notPendingBookings, setNotPendingBookings] = useState<any[]>([]);
+    const bookingActionRef = useRef<any>(null);
+    const [show, setShow] = useState<boolean>(false);
+    const [dataTable, setDataTable] = useState<any>([]);
 
-    const handleClose = () => setShow(false)
-    const handleShow = () => setShow(true)
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     // eslint-disable-next-line
     const { data: get_booking, refetch: refetchBookings } = useQuery(GET_ALL_BOOKINGS, {
@@ -40,17 +40,17 @@ const TaskCard: React.FC = () => {
             id: auth.userid
         },
         onCompleted: (data) => loadData(data)
-    })
+    });
 
-    const sessionsObj = {}
+    const sessionsObj = {};
 
     //offerings
     // eslint-disable-next-line
     const [tags, { data: get_tags }] = useLazyQuery(GET_TAGS, {
         variables: { id: auth.userid },
         onCompleted: (data) => {
-            const tagsFlattenData = flattenObj({ ...data })
-            const fitnessFlattenData = flattenObj({ ...get_fitness })
+            const tagsFlattenData = flattenObj({ ...data });
+            const fitnessFlattenData = flattenObj({ ...get_fitness });
 
             setDataTable(
                 [...fitnessFlattenData.fitnesspackages].map((item) => {
@@ -60,10 +60,10 @@ const TaskCard: React.FC = () => {
                             .map((curr) => {
                                 return curr.sessions.map((item) => {
                                     sessionsObj[item.session_date] =
-                                        (sessionsObj[item.session_date] || 0) + 1
+                                        (sessionsObj[item.session_date] || 0) + 1;
 
-                                    return sessionsObj
-                                })
+                                    return sessionsObj;
+                                });
                             }),
                         tagId: tagsFlattenData.tags
                             .filter((currentValue) => currentValue.fitnesspackage.id === item.id)
@@ -93,54 +93,54 @@ const TaskCard: React.FC = () => {
                         freeClass: item.groupinstantbooking,
                         startDate: item.Start_date,
                         endDate: moment(item.End_date).add(1, 'days')
-                    }
+                    };
                 })
-            )
+            );
         }
-    })
+    });
 
     // eslint-disable-next-line
     const { data: get_fitness, refetch: refetchFitness } = useQuery(GET_FITNESS, {
         variables: { id: auth.userid },
         onCompleted: () => {
-            tags({ variables: { id: auth.userid } })
+            tags({ variables: { id: auth.userid } });
         }
-    })
+    });
 
     const loadData = (data: { clientBookings: any[] }) => {
-        const flattenData = flattenObj({ ...data.clientBookings })
+        const flattenData = flattenObj({ ...data.clientBookings });
 
         const pendingBookingsArray = flattenData.filter(
             (currentValue) => currentValue.Booking_status === 'pending'
-        )
+        );
 
         const notPendingBookingsArray = flattenData.filter(
             (currentValue) => currentValue.Booking_status !== 'pending'
-        )
-        setNotPendingBookings(notPendingBookingsArray)
-        setPendingBookings(pendingBookingsArray)
-    }
+        );
+        setNotPendingBookings(notPendingBookingsArray);
+        setPendingBookings(pendingBookingsArray);
+    };
 
     const redirectHandler = (id, type) => {
-        let name = ''
+        let name = '';
         if (type === 'Classic Class') {
-            name = 'classic'
+            name = 'classic';
         } else if (type === 'Live Stream Channel') {
-            name = 'channel'
+            name = 'channel';
         } else if (type === 'Cohort') {
-            name = 'cohort'
+            name = 'cohort';
         } else if (type === 'Custom Fitness') {
-            name = 'custom'
+            name = 'custom';
         } else if (type === 'One-On-One') {
-            name = 'pt'
+            name = 'pt';
         } else if (type === 'On-Demand PT') {
-            name = 'pt'
+            name = 'pt';
         } else if (type === 'Group Class') {
-            name = 'group'
+            name = 'group';
         }
 
-        window.open(`${name}/session/scheduler/${id}`, '_self')
-    }
+        window.open(`${name}/session/scheduler/${id}`, '_self');
+    };
 
     return (
         <>
@@ -264,7 +264,7 @@ const TaskCard: React.FC = () => {
                                                                                               index
                                                                                           ],
                                                                                           currentValue.type
-                                                                                      )
+                                                                                      );
                                                                                   }}
                                                                               >
                                                                                   Create{' '}
@@ -463,7 +463,7 @@ const TaskCard: React.FC = () => {
                                                               bookingActionRef.current.TriggerForm({
                                                                   id: currentValue.id,
                                                                   actionType: 'accept'
-                                                              })
+                                                              });
                                                           }}
                                                       >
                                                           Accept
@@ -474,7 +474,7 @@ const TaskCard: React.FC = () => {
                                                               bookingActionRef.current.TriggerForm({
                                                                   id: currentValue.id,
                                                                   actionType: 'reject'
-                                                              })
+                                                              });
                                                           }}
                                                       >
                                                           Reject
@@ -776,7 +776,7 @@ const TaskCard: React.FC = () => {
             </Card>
             <BookingAction ref={bookingActionRef} refetchBookings={refetchBookings} />
         </>
-    )
-}
+    );
+};
 
-export default TaskCard
+export default TaskCard;

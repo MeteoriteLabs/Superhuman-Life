@@ -1,6 +1,6 @@
-import React, { useImperativeHandle, useState, useContext, useEffect } from 'react'
-import { useMutation, useQuery } from '@apollo/client'
-import ModalView from '../../../../components/modal'
+import React, { useImperativeHandle, useState, useContext, useEffect } from 'react';
+import { useMutation, useQuery } from '@apollo/client';
+import ModalView from '../../../../components/modal';
 import {
     FETCH_USER_PROFILE_DATA,
     CREATE_EDUCATION_DETAILS,
@@ -8,53 +8,53 @@ import {
     UPDATE_EDUCATION_DETAILS,
     DELETE_EDUCATION_DETAILS,
     FETCH_USERS_PROFILE_DATA
-} from '../../queries/queries'
-import AuthContext from '../../../../context/auth-context'
-import { Subject } from 'rxjs'
-import { schema, widgets } from '../../profileSchema'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
-import StatusModal from '../../../../components/StatusModal/StatusModal'
-import Toaster from '../../../../components/Toaster'
+} from '../../queries/queries';
+import AuthContext from '../../../../context/auth-context';
+import { Subject } from 'rxjs';
+import { schema, widgets } from '../../profileSchema';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import StatusModal from '../../../../components/StatusModal/StatusModal';
+import Toaster from '../../../../components/Toaster';
 import {
     yearCustomFormats,
     yearTransformErrors
-} from '../../../../components/utils/ValidationPatterns'
+} from '../../../../components/utils/ValidationPatterns';
 
 interface Operation {
-    id: string
-    modal_status: boolean
-    type: 'create' | 'edit' | 'delete'
+    id: string;
+    modal_status: boolean;
+    type: 'create' | 'edit' | 'delete';
 }
 
 interface BasicEducationDetails {
-    Institute_Name: string
-    Type_of_degree: string
-    Specialization: string
-    Year: string
+    Institute_Name: string;
+    Type_of_degree: string;
+    Specialization: string;
+    Year: string;
 }
 
 // eslint-disable-next-line
 const CreateEducation = (props: { callback: () => void }, ref: any) => {
-    const educationJson: unknown = require('./Education.json')
-    const [operation, setOperation] = useState<Operation>({} as Operation)
-    const [educationID, setEducationID] = useState<string[]>([])
-    const [educationDetails, setEducationDetails] = useState({} as BasicEducationDetails)
-    const auth = useContext(AuthContext)
+    const educationJson: unknown = require('./Education.json');
+    const [operation, setOperation] = useState<Operation>({} as Operation);
+    const [educationID, setEducationID] = useState<string[]>([]);
+    const [educationDetails, setEducationDetails] = useState({} as BasicEducationDetails);
+    const auth = useContext(AuthContext);
     // eslint-disable-next-line
-    const [prefill, setPrefill] = useState<any>([])
-    const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false)
-    const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false)
-    const [isEducationDeleted, setIsEducationDeleted] = useState<boolean>(false)
-    const [isEducationUpdated, setIsEducationUpdated] = useState<boolean>(false)
+    const [prefill, setPrefill] = useState<any>([]);
+    const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+    const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+    const [isEducationDeleted, setIsEducationDeleted] = useState<boolean>(false);
+    const [isEducationUpdated, setIsEducationUpdated] = useState<boolean>(false);
 
     const fetch = useQuery(FETCH_USER_PROFILE_DATA, {
         variables: { id: auth.userid },
         skip: operation.type === 'create',
         onCompleted: (response) => {
-            const flattenData = flattenObj({ ...response })
+            const flattenData = flattenObj({ ...response });
 
-            CloseForm()
-            setPrefill(flattenData.usersPermissionsUser.educational_details)
+            CloseForm();
+            setPrefill(flattenData.usersPermissionsUser.educational_details);
 
             setEducationID(
                 response.usersPermissionsUser.data.attributes.educational_details.data &&
@@ -63,47 +63,47 @@ const CreateEducation = (props: { callback: () => void }, ref: any) => {
                           (eduId) => eduId.id
                       )
                     : null
-            )
+            );
         }
-    })
+    });
 
     const [updateProfile] = useMutation(UPDATE_USER_PROFILE_DATA, {
         onCompleted: () => {
-            props.callback()
-            fetch.refetch()
+            props.callback();
+            fetch.refetch();
         },
         refetchQueries: [FETCH_USERS_PROFILE_DATA]
-    })
+    });
 
     const [updateEducationalDetail] = useMutation(UPDATE_EDUCATION_DETAILS, {
         onCompleted: () => {
-            modalTrigger.next(false)
-            props.callback()
-            fetch.refetch()
-            setIsEducationUpdated(!isEducationUpdated)
+            modalTrigger.next(false);
+            props.callback();
+            fetch.refetch();
+            setIsEducationUpdated(!isEducationUpdated);
         }
-    })
+    });
 
     const [deleteEducationData] = useMutation(DELETE_EDUCATION_DETAILS, {
         onCompleted: () => {
-            fetch.refetch()
-            setIsEducationDeleted(!isEducationDeleted)
+            fetch.refetch();
+            setIsEducationDeleted(!isEducationDeleted);
         },
         refetchQueries: [FETCH_USERS_PROFILE_DATA]
-    })
+    });
 
     const [createEducation] = useMutation(CREATE_EDUCATION_DETAILS, {
         onCompleted: (response) => {
-            setIsFormSubmitted(!isFormSubmitted)
-            modalTrigger.next(false)
+            setIsFormSubmitted(!isFormSubmitted);
+            modalTrigger.next(false);
 
-            fetch.refetch()
+            fetch.refetch();
 
             // concatenate previously stored education details IDs with currently added educational details ID
             const contatenatedEducationIdArray =
                 educationID && educationID.length
                     ? educationID.concat([response.createEducationalDetail.data.id])
-                    : [response.createEducationalDetail.data.id]
+                    : [response.createEducationalDetail.data.id];
 
             updateProfile({
                 variables: {
@@ -112,46 +112,46 @@ const CreateEducation = (props: { callback: () => void }, ref: any) => {
                         educational_details: contatenatedEducationIdArray
                     }
                 }
-            })
+            });
         }
-    })
+    });
 
     // Modal trigger
-    const modalTrigger = new Subject()
+    const modalTrigger = new Subject();
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
-            setOperation(msg)
+            setOperation(msg);
 
             //show delete modal
             if (msg.type === 'delete') {
-                setShowDeleteModal(true)
+                setShowDeleteModal(true);
             }
 
             //restrict form to render on delete
             if (msg.type !== 'delete') {
-                modalTrigger.next(true)
+                modalTrigger.next(true);
             }
         }
-    }))
+    }));
 
     useEffect(() => {
         const data =
             prefill && prefill.length
                 ? prefill.find((currValue) => currValue.id === operation.id)
-                : null
-        const details = {} as BasicEducationDetails
-        details.Institute_Name = data ? data.Institute_Name : ''
-        details.Type_of_degree = data ? data.Type_of_degree : ''
-        details.Specialization = data ? data.Specialization : ''
-        details.Year = data ? data.Year : ''
+                : null;
+        const details = {} as BasicEducationDetails;
+        details.Institute_Name = data ? data.Institute_Name : '';
+        details.Type_of_degree = data ? data.Type_of_degree : '';
+        details.Specialization = data ? data.Specialization : '';
+        details.Year = data ? data.Year : '';
 
-        setEducationDetails(details)
-    }, [operation.id, prefill])
+        setEducationDetails(details);
+    }, [operation.id, prefill]);
 
     // Close form after update
     function CloseForm() {
-        if (['edit'].indexOf(operation.type) > -1) modalTrigger.next(false)
+        if (['edit'].indexOf(operation.type) > -1) modalTrigger.next(false);
     }
 
     // Create Education Details
@@ -165,7 +165,7 @@ const CreateEducation = (props: { callback: () => void }, ref: any) => {
                     Year: frm.Year
                 }
             }
-        })
+        });
     }
 
     // Update Education Details
@@ -180,21 +180,21 @@ const CreateEducation = (props: { callback: () => void }, ref: any) => {
                     Year: frm.Year
                 }
             }
-        })
+        });
     }
 
     function DeleteEducation(id: string) {
-        deleteEducationData({ variables: { id: id } })
+        deleteEducationData({ variables: { id: id } });
     }
 
     function OnSubmit(frm) {
         switch (operation.type) {
             case 'create':
-                CreateUserEducation(frm)
-                break
+                CreateUserEducation(frm);
+                break;
             case 'edit':
-                UpdateUserEducation(frm)
-                break
+                UpdateUserEducation(frm);
+                break;
         }
     }
 
@@ -212,7 +212,7 @@ const CreateEducation = (props: { callback: () => void }, ref: any) => {
                 formSchema={educationJson}
                 showing={operation.modal_status}
                 formSubmit={(frm) => {
-                    OnSubmit(frm)
+                    OnSubmit(frm);
                 }}
                 widgets={widgets}
                 modalTrigger={modalTrigger}
@@ -233,7 +233,7 @@ const CreateEducation = (props: { callback: () => void }, ref: any) => {
                     buttonLeft="Cancel"
                     buttonRight="Yes"
                     onClick={() => {
-                        DeleteEducation(operation.id)
+                        DeleteEducation(operation.id);
                     }}
                 />
             )}
@@ -263,7 +263,7 @@ const CreateEducation = (props: { callback: () => void }, ref: any) => {
                 />
             ) : null}
         </>
-    )
-}
+    );
+};
 
-export default React.forwardRef(CreateEducation)
+export default React.forwardRef(CreateEducation);

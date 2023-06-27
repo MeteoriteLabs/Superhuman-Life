@@ -1,50 +1,50 @@
-import React, { useContext, useState } from 'react'
-import AuthContext from '../../../context/auth-context'
-import { Container, Row, Col, Card } from 'react-bootstrap'
-import ChangePasswordPage from '../../changePassword'
-import Modules from '../../Modules'
-import DeleteAccountConfirmation from '../../DeleteAccountConfirmation'
-import { FETCH_USER_PROFILE_DATA } from '../queries/queries'
-import { useQuery } from '@apollo/client'
-import moment from 'moment'
+import React, { useContext, useState } from 'react';
+import AuthContext from '../../../context/auth-context';
+import { Container, Row, Col, Card } from 'react-bootstrap';
+import ChangePasswordPage from '../../changePassword';
+import Modules from '../../Modules';
+import DeleteAccountConfirmation from '../../DeleteAccountConfirmation';
+import { FETCH_USER_PROFILE_DATA } from '../queries/queries';
+import { useQuery } from '@apollo/client';
+import moment from 'moment';
 
 interface ProfileData {
-    About_User: string
-    Clubhouse_URL: string
-    Document_Verified: boolean
-    Facebook_URL: string
-    First_Name: string
-    Last_Name: string
-    LinkedIn_URL: string
-    Phone_Number: string
-    Photo_ID: string
-    Photo_profile_banner_ID: string
-    Twitter_URL: string
-    Verification_ID: string
-    Website_URL: string
-    Youtube_URL: string
-    about_mini_description: string
-    addresses: unknown
-    designations: unknown
-    educational_details: unknown
-    email: string
-    instagram_url: string
-    updatedAt: string
+    About_User: string;
+    Clubhouse_URL: string;
+    Document_Verified: boolean;
+    Facebook_URL: string;
+    First_Name: string;
+    Last_Name: string;
+    LinkedIn_URL: string;
+    Phone_Number: string;
+    Photo_ID: string;
+    Photo_profile_banner_ID: string;
+    Twitter_URL: string;
+    Verification_ID: string;
+    Website_URL: string;
+    Youtube_URL: string;
+    about_mini_description: string;
+    addresses: unknown;
+    designations: unknown;
+    educational_details: unknown;
+    email: string;
+    instagram_url: string;
+    updatedAt: string;
 }
 
 const ChangemakersSettings: React.FC = () => {
-    const [showPasswordSetting, setShowPasswordSetting] = useState<boolean>(false)
-    const [showModuleSetting, setShowModuleSetting] = useState<boolean>(false)
-    const [showDeleteAccountSetting, setShowDeleteAccountSetting] = useState<boolean>(false)
-    const auth = useContext(AuthContext)
-    const [profileData, setProfileData] = useState<ProfileData>({} as ProfileData)
+    const [showPasswordSetting, setShowPasswordSetting] = useState<boolean>(false);
+    const [showModuleSetting, setShowModuleSetting] = useState<boolean>(false);
+    const [showDeleteAccountSetting, setShowDeleteAccountSetting] = useState<boolean>(false);
+    const auth = useContext(AuthContext);
+    const [profileData, setProfileData] = useState<ProfileData>({} as ProfileData);
 
     useQuery(FETCH_USER_PROFILE_DATA, {
         variables: { id: auth.userid },
         onCompleted: (response) => {
-            setProfileData(response.usersPermissionsUser.data.attributes)
+            setProfileData(response.usersPermissionsUser.data.attributes);
         }
-    })
+    });
 
     return (
         <>
@@ -149,7 +149,7 @@ const ChangemakersSettings: React.FC = () => {
                 </Row>
             </Container>
         </>
-    )
-}
+    );
+};
 
-export default ChangemakersSettings
+export default ChangemakersSettings;

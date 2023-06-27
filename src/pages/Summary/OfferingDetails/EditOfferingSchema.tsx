@@ -1,16 +1,16 @@
-import OfferingsList from '../../../components/customWidgets/OfferingsOfferedByChangemaker'
+import OfferingsList from '../../../components/customWidgets/OfferingsOfferedByChangemaker';
 
 export const widgets = {
     offerings: OfferingsList
-}
+};
 
 interface Schema {
     offerings: {
-        'ui:widget': string
-    }
+        'ui:widget': string;
+    };
     packageDuration: {
-        'ui:placeholder': string
-    }
+        'ui:placeholder': string;
+    };
 }
 
 export const schema: Schema = {
@@ -20,4 +20,4 @@ export const schema: Schema = {
     packageDuration: {
         'ui:placeholder': 'Enter Package Duration'
     }
-}
+};

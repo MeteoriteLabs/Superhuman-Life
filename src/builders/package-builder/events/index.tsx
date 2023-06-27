@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo } from 'react';
 import {
     Badge,
     Button,
@@ -10,9 +10,9 @@ import {
     Popover,
     Row,
     TabContent
-} from 'react-bootstrap'
-import CreateFitnessPackageModal from '../../../components/CreateFitnessPackageModal/CreateFitnessPackageModal'
-import Table from '../../../components/table'
+} from 'react-bootstrap';
+import CreateFitnessPackageModal from '../../../components/CreateFitnessPackageModal/CreateFitnessPackageModal';
+import Table from '../../../components/table';
 
 function PaymentWidget({ formData }: any) {
     return (
@@ -51,7 +51,7 @@ function PaymentWidget({ formData }: any) {
                 </Col>
             </Form.Group>
         </Form>
-    )
+    );
 }
 
 export default function EventsTab() {
@@ -100,7 +100,7 @@ export default function EventsTab() {
             }
         ],
         []
-    )
+    );
     const data = useMemo<any>(
         () => [
             {
@@ -127,8 +127,8 @@ export default function EventsTab() {
             }
         ],
         []
-    )
-    const eventSchema: any = require('./event.json')
+    );
+    const eventSchema: any = require('./event.json');
     const uiSchema: any = {
         '1': {
             name: {
@@ -170,10 +170,10 @@ export default function EventsTab() {
         '5': {
             'ui:field': (props: any) => <PaymentWidget {...props} />
         }
-    }
+    };
 
     function onSubmit(formData: any) {
-        alert('Values submitted: ' + JSON.stringify(formData, null, 2))
+        alert('Values submitted: ' + JSON.stringify(formData, null, 2));
     }
 
     return (
@@ -200,5 +200,5 @@ export default function EventsTab() {
             </Card.Title>
             <Table columns={columns} data={data} />
         </TabContent>
-    )
+    );
 }

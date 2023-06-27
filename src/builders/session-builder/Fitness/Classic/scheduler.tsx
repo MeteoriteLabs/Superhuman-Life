@@ -1,83 +1,83 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useState, useEffect, useRef, useContext } from 'react'
+import { useState, useEffect, useRef, useContext } from 'react';
 import {
     GET_TABLEDATA,
     GET_ALL_FITNESS_PACKAGE_BY_TYPE,
     GET_ALL_CLIENT_PACKAGE,
     GET_TAG_BY_ID
-} from '../../graphQL/queries'
-import { useQuery } from '@apollo/client'
-import { Row, Col, Button } from 'react-bootstrap'
-import SchedulerPage from '../../../program-builder/program-template/scheduler'
-import moment from 'moment'
-import FitnessAction from '../FitnessAction'
-import AuthContext from '../../../../context/auth-context'
-import { Link } from 'react-router-dom'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
-import Loader from '../../../../components/Loader/Loader'
+} from '../../graphQL/queries';
+import { useQuery } from '@apollo/client';
+import { Row, Col, Button } from 'react-bootstrap';
+import SchedulerPage from '../../../program-builder/program-template/scheduler';
+import moment from 'moment';
+import FitnessAction from '../FitnessAction';
+import AuthContext from '../../../../context/auth-context';
+import { Link } from 'react-router-dom';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import Loader from '../../../../components/Loader/Loader';
 
 const Scheduler: React.FC = () => {
-    const auth = useContext(AuthContext)
-    const last = window.location.pathname.split('/').reverse()
-    const tagId = window.location.pathname.split('/').pop()
-    const [data, setData] = useState<any[]>([])
-    const [show, setShow] = useState(false)
-    const [userPackage, setUserPackage] = useState<any>([])
-    const [tagSeperation, setTagSeperation] = useState<any>([])
-    const [statusDays, setStatusDays] = useState()
-    const [clientIds, setClientIds] = useState<any>([])
-    const [totalClasses, setTotalClasses] = useState<any>([])
+    const auth = useContext(AuthContext);
+    const last = window.location.pathname.split('/').reverse();
+    const tagId = window.location.pathname.split('/').pop();
+    const [data, setData] = useState<any[]>([]);
+    const [show, setShow] = useState(false);
+    const [userPackage, setUserPackage] = useState<any>([]);
+    const [tagSeperation, setTagSeperation] = useState<any>([]);
+    const [statusDays, setStatusDays] = useState();
+    const [clientIds, setClientIds] = useState<any>([]);
+    const [totalClasses, setTotalClasses] = useState<any>([]);
     // these are the sessions that will passed onto the scheduler
-    const [schedulerSessions, setSchedulerSessions] = useState<any>([])
+    const [schedulerSessions, setSchedulerSessions] = useState<any>([]);
     //im using this session ids from parent only in case of day wise session
-    const [sessionIds, setSessionIds] = useState<any>([])
-    const [tag, setTag] = useState<any>()
-    let programIndex
+    const [sessionIds, setSessionIds] = useState<any>([]);
+    const [tag, setTag] = useState<any>();
+    let programIndex;
 
-    const fitnessActionRef = useRef<any>(null)
+    const fitnessActionRef = useRef<any>(null);
 
     useEffect(() => {
         setTimeout(() => {
-            setShow(true)
-        }, 1500)
-    }, [show])
+            setShow(true);
+        }, 1500);
+    }, [show]);
 
     const mainQuery = useQuery(GET_TAG_BY_ID, {
         variables: { id: tagId },
         onCompleted: (data) => loadTagData(data)
-    })
+    });
 
     function loadTagData(data: any) {
-        setSchedulerSessions(data)
-        const flattenData = flattenObj({ ...data })
-        const total = [0]
-        const clientValues = [...clientIds]
-        const values = [...flattenData.tags[0].sessions]
-        const ids = [...sessionIds]
+        setSchedulerSessions(data);
+        const flattenData = flattenObj({ ...data });
+        const total = [0];
+        const clientValues = [...clientIds];
+        const values = [...flattenData.tags[0].sessions];
+        const ids = [...sessionIds];
         for (let i = 0; i < values.length; i++) {
-            ids.push(values[i].id)
+            ids.push(values[i].id);
             if (values[i].tag === 'Classic') {
-                total[0] += 1
+                total[0] += 1;
             }
         }
-        setClientIds(clientValues)
-        setSessionIds(ids)
-        setTotalClasses(total)
-        setTag(flattenData.tags[0])
+        setClientIds(clientValues);
+        setSessionIds(ids);
+        setTotalClasses(total);
+        setTag(flattenData.tags[0]);
     }
 
     const { data: data4 } = useQuery(GET_TABLEDATA, {
         variables: {
             id: last[0]
         }
-    })
+    });
 
     const { data: data1 } = useQuery(GET_ALL_FITNESS_PACKAGE_BY_TYPE, {
         variables: {
             id: auth.userid,
             type: 'Classic'
         }
-    })
+    });
 
     // const { data: data2 } = useQuery(GET_ALL_PROGRAM_BY_TYPE, {
     //     variables: {
@@ -93,31 +93,31 @@ const Scheduler: React.FC = () => {
             type: 'Classic'
         },
         onCompleted: (data) => console.log()
-    })
+    });
 
     function handleEventsSeperation(data: any, rest_days: any) {
-        let classic = 0
+        let classic = 0;
         if (data) {
             for (let i = 0; i < data.length; i++) {
                 if (data[i].tag === 'Classic') {
-                    classic++
+                    classic++;
                 }
             }
-            setTagSeperation([classic])
-            const arr: any = []
+            setTagSeperation([classic]);
+            const arr: any = [];
             for (let j = 0; j < data.length; j++) {
-                if (arr.includes(parseInt(data[j].day)) === false) arr.push(parseInt(data[j].day))
+                if (arr.includes(parseInt(data[j].day)) === false) arr.push(parseInt(data[j].day));
             }
-            const restDays = rest_days === null ? 0 : rest_days.length
-            setStatusDays(arr.length + restDays)
+            const restDays = rest_days === null ? 0 : rest_days.length;
+            setStatusDays(arr.length + restDays);
         }
     }
 
     function loadData() {
-        const flattenData1 = flattenObj({ ...data1 })
+        const flattenData1 = flattenObj({ ...data1 });
         // const flattenData2 = flattenObj({ ...data2 });
-        const flattenData3 = flattenObj({ ...data3 })
-        const flattenData4 = flattenObj({ ...data4 })
+        const flattenData3 = flattenObj({ ...data3 });
+        const flattenData4 = flattenObj({ ...data4 });
 
         setData(
             [...flattenData4.fitnessprograms].map((detail) => {
@@ -126,7 +126,7 @@ const Scheduler: React.FC = () => {
                     programName: detail.title,
                     discipline: detail.fitnessdisciplines
                         .map((val: any) => {
-                            return val.disciplinename
+                            return val.disciplinename;
                         })
                         .join(', '),
                     level: detail.level,
@@ -134,11 +134,11 @@ const Scheduler: React.FC = () => {
                     duration: detail.duration_days,
                     details: detail.description,
                     restDays: detail.rest_days
-                }
+                };
             })
-        )
+        );
 
-        const arrayData: any[] = []
+        const arrayData: any[] = [];
 
         // let fitnessProgramItem: any = {};
         // for (let i = 0; i < flattenData1?.fitnesspackages.length; i++) {
@@ -156,36 +156,36 @@ const Scheduler: React.FC = () => {
         //     }
         // }
 
-        const arrayA = arrayData.map((item) => item.id)
+        const arrayA = arrayData.map((item) => item.id);
 
         const filterPackage = flattenData1?.fitnesspackages.filter(
             (item: { id: string }) => !arrayA.includes(item.id)
-        )
+        );
         filterPackage.forEach((item) => {
-            arrayData.push(item)
-        })
+            arrayData.push(item);
+        });
 
         const arrayFitnessPackage = arrayData.map((fitnessPackage) => {
-            const client: string[] = []
+            const client: string[] = [];
 
             flattenData3.clientPackages.forEach(
                 (userPackage: {
-                    fitnesspackages: { id: string }
-                    users_permissions_user: { username: string }
+                    fitnesspackages: { id: string };
+                    users_permissions_user: { username: string };
                 }) => {
                     if (fitnessPackage.id === userPackage.fitnesspackages[0].id) {
-                        client.push(userPackage.users_permissions_user.username)
+                        client.push(userPackage.users_permissions_user.username);
                     }
-                    fitnessPackage = { ...fitnessPackage, client }
+                    fitnessPackage = { ...fitnessPackage, client };
                 }
-            )
+            );
 
-            return fitnessPackage
-        })
+            return fitnessPackage;
+        });
 
         for (let i = 0; i < arrayFitnessPackage.length - 1; i++) {
             if (arrayFitnessPackage[i].id === arrayFitnessPackage[i + 1].id) {
-                arrayFitnessPackage.splice(arrayFitnessPackage[i], 1)
+                arrayFitnessPackage.splice(arrayFitnessPackage[i], 1);
             }
         }
 
@@ -217,9 +217,9 @@ const Scheduler: React.FC = () => {
                     programName: packageItem.title ? packageItem.title : 'N/A',
                     programStatus: packageItem.client.length > 0 ? 'Assigned' : 'N/A',
                     renewal: packageItem.title ? '25/08/2021' : 'N/A'
-                }
+                };
             })
-        ])
+        ]);
     }
 
     // if(userPackage.length > 0){
@@ -227,19 +227,19 @@ const Scheduler: React.FC = () => {
     // }
 
     function handleTimeFormatting(data: any, duration: number) {
-        const digits = duration <= 30 ? 2 : 3
+        const digits = duration <= 30 ? 2 : 3;
         return data.toLocaleString('en-US', {
             minimumIntegerDigits: digits.toString(),
             useGrouping: false
-        })
+        });
     }
 
     function handleCallback() {
-        mainQuery.refetch()
+        mainQuery.refetch();
         // setSessionIds([]);
     }
 
-    if (!show) return <Loader />
+    if (!show) return <Loader />;
     else
         return (
             <div className="col-lg-12">
@@ -296,7 +296,7 @@ const Scheduler: React.FC = () => {
                                                         {tag.client_packages
                                                             .slice(0, 4)
                                                             .map((item, index) => {
-                                                                const postionLeft = 8
+                                                                const postionLeft = 8;
                                                                 return (
                                                                     <img
                                                                         key={index}
@@ -312,7 +312,7 @@ const Scheduler: React.FC = () => {
                                                                         }}
                                                                         className="position-absolute"
                                                                     />
-                                                                )
+                                                                );
                                                             })}
                                                         <Button
                                                             onClick={() => {
@@ -322,7 +322,7 @@ const Scheduler: React.FC = () => {
                                                                         actionType: 'allClients',
                                                                         type: 'Classic'
                                                                     }
-                                                                )
+                                                                );
                                                             }}
                                                             style={{ marginLeft: '150px' }}
                                                             variant="outline-primary"
@@ -423,7 +423,7 @@ const Scheduler: React.FC = () => {
                     <FitnessAction ref={fitnessActionRef} callback={() => mainQuery} />
                 </Row>
             </div>
-        )
-}
+        );
+};
 
-export default Scheduler
+export default Scheduler;

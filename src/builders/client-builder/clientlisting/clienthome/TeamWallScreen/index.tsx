@@ -1,67 +1,67 @@
-import { useRef, useState } from 'react'
-import { Card, Button } from 'react-bootstrap'
-import CardComp from './Card'
-import CreatePost from './addPost'
-import { GET_CHANGEMAKERS_NEW } from '../../queries'
-import { GET_NOTES_NEW } from './queries'
-import { useQuery } from '@apollo/client'
-import './Styles.css'
-import { flattenObj } from '../../../../../components/utils/responseFlatten'
+import { useRef, useState } from 'react';
+import { Card, Button } from 'react-bootstrap';
+import CardComp from './Card';
+import CreatePost from './addPost';
+import { GET_CHANGEMAKERS_NEW } from '../../queries';
+import { GET_NOTES_NEW } from './queries';
+import { useQuery } from '@apollo/client';
+import './Styles.css';
+import { flattenObj } from '../../../../../components/utils/responseFlatten';
 
 function Index() {
-    const last = window.location.pathname.split('/').pop()
-    const CreatePostComponent = useRef<any>(null)
-    const [changemaker, setChangemaker] = useState<any>([])
-    const [notes, setNotes] = useState<any>()
+    const last = window.location.pathname.split('/').pop();
+    const CreatePostComponent = useRef<any>(null);
+    const [changemaker, setChangemaker] = useState<any>([]);
+    const [notes, setNotes] = useState<any>();
 
     function FetchData(_variables: Record<string, unknown> = { clientid: last }) {
-        useQuery(GET_CHANGEMAKERS_NEW, { variables: _variables, onCompleted: loadData })
+        useQuery(GET_CHANGEMAKERS_NEW, { variables: _variables, onCompleted: loadData });
     }
     function loadData(data: any) {
-        const flattenData = flattenObj({ ...data })
+        const flattenData = flattenObj({ ...data });
 
-        const changemakers: any = []
-        const namearr: any = []
-        let flag: any
-        ;[...flattenData.clientPackages].map((Detail) => {
-            const changemakerValue = {}
-            const img = 'img'
-            const type = 'type'
-            const id = 'id'
-            const name = Detail.fitnesspackages[0].users_permissions_user.username
+        const changemakers: any = [];
+        const namearr: any = [];
+        let flag: any;
+        [...flattenData.clientPackages].map((Detail) => {
+            const changemakerValue = {};
+            const img = 'img';
+            const type = 'type';
+            const id = 'id';
+            const name = Detail.fitnesspackages[0].users_permissions_user.username;
             if (!namearr.includes(name)) {
-                flag = true
-                namearr.push(name)
+                flag = true;
+                namearr.push(name);
             }
 
             if (flag) {
-                flag = false
+                flag = false;
                 changemakers.push([
                     name,
                     (changemakerValue[img] = '/assets/avatar-1.jpg'),
                     (changemakerValue[type] =
                         Detail.fitnesspackages[0].users_permissions_user?.designations),
                     (changemakerValue[id] = Detail.fitnesspackages[0].users_permissions_user.id)
-                ])
+                ]);
             }
-            setChangemaker(changemakers)
+            setChangemaker(changemakers);
 
-            return {}
-        })
+            return {};
+        });
     }
 
     function FetchNotes(_variables: Record<string, unknown> = { id: last }) {
-        useQuery(GET_NOTES_NEW, { variables: _variables, onCompleted: LoadNotes })
+        useQuery(GET_NOTES_NEW, { variables: _variables, onCompleted: LoadNotes });
     }
 
     function LoadNotes(data: any) {
-        const flattenData = flattenObj({ ...data })
+        const flattenData = flattenObj({ ...data });
         if (data) {
-            setNotes([...flattenData.feedbackNotes])
+            setNotes([...flattenData.feedbackNotes]);
         }
     }
 
-    FetchData({ clientid: last })
+    FetchData({ clientid: last });
 
     // for (let i = 0; i < changemaker.length; i++) {
     //      noteFetch.push(changemaker[i][3]);
@@ -70,7 +70,7 @@ function Index() {
     // if (!noteFetch.includes(last)) {
     //      noteFetch.push(last);
     // }
-    FetchNotes({ id: last })
+    FetchNotes({ id: last });
     return (
         <div>
             <div className="d-flex flex-row-reverse mr-3 p-2">
@@ -80,7 +80,7 @@ function Index() {
                         CreatePostComponent.current.TriggerForm({
                             id: null,
                             type: 'create'
-                        })
+                        });
                     }}
                 >
                     <i className="fas fa-plus-circle"></i> Post
@@ -112,7 +112,7 @@ function Index() {
                                             <h6 className="desc font-weight-light">{e[2]} </h6>
                                         </div>
                                     </div>
-                                )
+                                );
                             })}
                     </div>
                 </Card.Body>
@@ -131,10 +131,10 @@ function Index() {
                             id={e.id}
                             resourceid={e.resource_id}
                         />
-                    )
+                    );
                 })}
         </div>
-    )
+    );
 }
 
-export default Index
+export default Index;

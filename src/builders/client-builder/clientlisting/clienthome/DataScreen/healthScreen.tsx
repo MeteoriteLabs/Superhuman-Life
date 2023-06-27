@@ -1,4 +1,4 @@
-import { Card, Row, Col } from 'react-bootstrap'
+import { Card, Row, Col } from 'react-bootstrap';
 
 const HealthScreen = () => {
     const HealthCard = (props: any) => {
@@ -50,8 +50,8 @@ const HealthScreen = () => {
                     </Card.Footer>
                 </Card>
             </Col>
-        )
-    }
+        );
+    };
 
     return (
         <div>
@@ -62,7 +62,7 @@ const HealthScreen = () => {
                 <HealthCard title={'Health Conditions & Symptoms'} />
             </Row>
         </div>
-    )
-}
+    );
+};
 
-export default HealthScreen
+export default HealthScreen;

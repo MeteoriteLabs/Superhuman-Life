@@ -1,91 +1,91 @@
-import { useMutation, useQuery } from '@apollo/client'
-import React, { useContext, useImperativeHandle, useState } from 'react'
-import { Subject } from 'rxjs'
-import FinanceModal from '../../../components/financeModal/FinanceModal'
-import StatusModal from '../../../components/StatusModal/StatusModal'
-import authContext from '../../../context/auth-context'
-import { schema, widgets } from './VouchersSchema'
-import { CREATE_VOUCHER, DELETE_VOUCHER, EDIT_VOUCHER, TOGGLE_STATUS } from '../graphQL/mutations'
-import { GET_VOUCHERS_BY_ID } from '../graphQL/queries'
-import Toaster from '../../../components/Toaster'
+import { useMutation, useQuery } from '@apollo/client';
+import React, { useContext, useImperativeHandle, useState } from 'react';
+import { Subject } from 'rxjs';
+import FinanceModal from '../../../components/financeModal/FinanceModal';
+import StatusModal from '../../../components/StatusModal/StatusModal';
+import authContext from '../../../context/auth-context';
+import { schema, widgets } from './VouchersSchema';
+import { CREATE_VOUCHER, DELETE_VOUCHER, EDIT_VOUCHER, TOGGLE_STATUS } from '../graphQL/mutations';
+import { GET_VOUCHERS_BY_ID } from '../graphQL/queries';
+import Toaster from '../../../components/Toaster';
 
 interface Vouchers {
-    voucher_name: string
-    percentage_discount: string | null
-    Start_date: string
-    expiry_date: string
-    Usage_restriction: number
-    flat_discount: string | null
-    discount: string
+    voucher_name: string;
+    percentage_discount: string | null;
+    Start_date: string;
+    expiry_date: string;
+    Usage_restriction: number;
+    flat_discount: string | null;
+    discount: string;
 }
 
 interface VouchersForm {
-    id: string
-    user_permissions_user: string
-    voucher_name: string
-    percentage_discount: string
-    Start_date: string
-    expiry_date: string
-    Usage_restriction: number
-    flat_discount: string
+    id: string;
+    user_permissions_user: string;
+    voucher_name: string;
+    percentage_discount: string;
+    Start_date: string;
+    expiry_date: string;
+    Usage_restriction: number;
+    flat_discount: string;
 }
 
 interface Operation {
-    id: string
-    actionType: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete' | 'bank' | 'upi'
-    current_status: string
-    rowData: unknown
+    id: string;
+    actionType: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete' | 'bank' | 'upi';
+    current_status: string;
+    rowData: unknown;
 }
 
 function VoucherAction(props: { callback: () => void }, ref): JSX.Element {
-    const auth = useContext(authContext)
-    const [operation, setOperation] = useState<Operation>({} as Operation)
-    const modalTrigger = new Subject()
-    const [formData, setFormData] = useState<Vouchers>({} as Vouchers)
-    const formSchema = require('./voucher.json')
-    const [showStatusModal, setShowStatusModal] = useState<boolean>(false)
-    const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false)
-    const [isVoucherCreated, setIsVoucherCreated] = useState<boolean>(false)
-    const [isVoucherDeleted, setIsVoucherDeleted] = useState<boolean>(false)
-    const [isVoucherUpdated, setIsVoucherUpdated] = useState<boolean>(false)
-    const [isVoucherStatusUpdated, setIsVoucherStatusUpdated] = useState<boolean>(false)
+    const auth = useContext(authContext);
+    const [operation, setOperation] = useState<Operation>({} as Operation);
+    const modalTrigger = new Subject();
+    const [formData, setFormData] = useState<Vouchers>({} as Vouchers);
+    const formSchema = require('./voucher.json');
+    const [showStatusModal, setShowStatusModal] = useState<boolean>(false);
+    const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+    const [isVoucherCreated, setIsVoucherCreated] = useState<boolean>(false);
+    const [isVoucherDeleted, setIsVoucherDeleted] = useState<boolean>(false);
+    const [isVoucherUpdated, setIsVoucherUpdated] = useState<boolean>(false);
+    const [isVoucherStatusUpdated, setIsVoucherStatusUpdated] = useState<boolean>(false);
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
-            setOperation(msg)
+            setOperation(msg);
 
             // display status modal
             if (msg.actionType === 'toggle-status') {
-                setShowStatusModal(true)
+                setShowStatusModal(true);
             }
 
             // display delete modal
             if (msg.actionType === 'delete') {
-                setShowDeleteModal(true)
+                setShowDeleteModal(true);
             }
 
             //restrict modal to render on delete and change status operation
             if (msg.actionType !== 'delete' && msg.actionType !== 'toggle-status') {
-                modalTrigger.next(true)
+                modalTrigger.next(true);
             }
         }
-    }))
+    }));
 
-    let name = ''
+    let name = '';
     switch (operation.actionType) {
         case 'create': {
-            name = 'Create Voucher'
-            break
+            name = 'Create Voucher';
+            break;
         }
 
         case 'view': {
-            name = 'View Voucher'
-            break
+            name = 'View Voucher';
+            break;
         }
 
         case 'edit': {
-            name = 'Edit Voucher'
-            break
+            name = 'Edit Voucher';
+            break;
         }
     }
 
@@ -98,41 +98,41 @@ function VoucherAction(props: { callback: () => void }, ref): JSX.Element {
             },
             onCompleted: (data) => FillData(data),
             skip: !operation.id
-        })
+        });
 
     const FillData = (data) => {
-        const updateFormData: Vouchers = {} as Vouchers
-        updateFormData.voucher_name = data.vouchers.data[0].attributes.voucher_name
+        const updateFormData: Vouchers = {} as Vouchers;
+        updateFormData.voucher_name = data.vouchers.data[0].attributes.voucher_name;
         updateFormData.percentage_discount = data.vouchers.data[0].attributes.discount_percentage
             ? JSON.stringify({ input: data.vouchers.data[0].attributes.discount_percentage })
-            : null
-        updateFormData.expiry_date = data.vouchers.data[0].attributes.expiry_date
-        updateFormData.Start_date = data.vouchers.data[0].attributes.Start_date
-        updateFormData.Usage_restriction = data.vouchers.data[0].attributes.Usage_restriction
+            : null;
+        updateFormData.expiry_date = data.vouchers.data[0].attributes.expiry_date;
+        updateFormData.Start_date = data.vouchers.data[0].attributes.Start_date;
+        updateFormData.Usage_restriction = data.vouchers.data[0].attributes.Usage_restriction;
         updateFormData.flat_discount = data.vouchers.data[0].attributes.flat_discount
             ? JSON.stringify({ input: data.vouchers.data[0].attributes.flat_discount })
-            : null
+            : null;
         updateFormData.discount = data.vouchers.data[0].attributes.discount_percentage
             ? 'Percentage'
-            : 'Flat'
+            : 'Flat';
 
-        setFormData(updateFormData)
+        setFormData(updateFormData);
 
         if (['edit', 'view'].indexOf(operation.actionType) > -1) {
-            modalTrigger.next(true)
+            modalTrigger.next(true);
         }
-    }
+    };
 
-    FetchData()
+    FetchData();
 
     // Create Voucher
     const [createVoucher] = useMutation(CREATE_VOUCHER, {
         onCompleted: () => {
-            modalTrigger.next(false)
-            props.callback()
-            setIsVoucherCreated(!isVoucherCreated)
+            modalTrigger.next(false);
+            props.callback();
+            setIsVoucherCreated(!isVoucherCreated);
         }
-    })
+    });
 
     const CreateVoucher = (form: VouchersForm) => {
         createVoucher({
@@ -150,39 +150,39 @@ function VoucherAction(props: { callback: () => void }, ref): JSX.Element {
                     flat_discount: form.flat_discount ? JSON.parse(form.flat_discount).input : null
                 }
             }
-        })
-    }
+        });
+    };
 
     //Edit Voucher
     const [editVoucher] = useMutation(EDIT_VOUCHER, {
         onCompleted: () => {
-            modalTrigger.next(false)
-            props.callback()
-            setIsVoucherUpdated(!isVoucherUpdated)
+            modalTrigger.next(false);
+            props.callback();
+            setIsVoucherUpdated(!isVoucherUpdated);
         }
-    })
+    });
 
-    const EditVoucher = (form: VouchersForm) => editVoucher({ variables: form })
+    const EditVoucher = (form: VouchersForm) => editVoucher({ variables: form });
 
     //Delete Voucher
     const [deleteVoucher] = useMutation(DELETE_VOUCHER, {
         onCompleted: () => {
-            props.callback()
-            modalTrigger.next(false)
-            setIsVoucherDeleted(!isVoucherDeleted)
+            props.callback();
+            modalTrigger.next(false);
+            setIsVoucherDeleted(!isVoucherDeleted);
         }
-    })
+    });
 
-    const DeleteVoucher = (id: string | number) => deleteVoucher({ variables: { id: id } })
+    const DeleteVoucher = (id: string | number) => deleteVoucher({ variables: { id: id } });
 
     //Toggle Status
     const [toggleVoucherStatus] = useMutation(TOGGLE_STATUS, {
         onCompleted: () => {
-            props.callback()
-            modalTrigger.next(false)
-            setIsVoucherStatusUpdated(!isVoucherStatusUpdated)
+            props.callback();
+            modalTrigger.next(false);
+            setIsVoucherStatusUpdated(!isVoucherStatusUpdated);
         }
-    })
+    });
 
     const ToggleVoucherStatus = (id: string, Status: string) => {
         toggleVoucherStatus({
@@ -192,25 +192,25 @@ function VoucherAction(props: { callback: () => void }, ref): JSX.Element {
                     Status: Status === 'Active' ? 'Disabled' : 'Active'
                 }
             }
-        })
-    }
+        });
+    };
 
     const OnSubmit = (form: VouchersForm) => {
         //bind user id
         if (form) {
-            form.id = operation.id
-            form.user_permissions_user = auth.userid
+            form.id = operation.id;
+            form.user_permissions_user = auth.userid;
         }
 
         switch (operation.actionType) {
             case 'create':
-                CreateVoucher(form)
-                break
+                CreateVoucher(form);
+                break;
             case 'edit':
-                EditVoucher(form)
-                break
+                EditVoucher(form);
+                break;
         }
-    }
+    };
 
     return (
         <div>
@@ -284,7 +284,7 @@ function VoucherAction(props: { callback: () => void }, ref): JSX.Element {
                 />
             ) : null}
         </div>
-    )
+    );
 }
 
-export default React.forwardRef(VoucherAction)
+export default React.forwardRef(VoucherAction);

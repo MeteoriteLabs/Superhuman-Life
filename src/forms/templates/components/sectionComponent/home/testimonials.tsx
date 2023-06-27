@@ -1,26 +1,26 @@
-import { useForm, Controller, useFieldArray } from 'react-hook-form'
-import style from '../style.module.css'
-import { Accordion, Button, Card, Form } from 'react-bootstrap'
-import { useContext, useEffect, useState } from 'react'
-import { useMutation, useQuery } from '@apollo/client'
-import { UPDATE_WEBSITE_SECTION } from './queries/testimonials'
-import authContext from '../../../../../context/auth-context'
-import { SetReceivingDataAndReset } from './libs/testimonials'
-import { Data, FormData, InputProps } from './@types/testimonialsType'
-import { ChangeMakerWebsiteContext } from '../../../../../context/changemakerWebsite-context'
-import { GET_WEBSITE_SECTION } from './queries'
-import { InputComponent } from './components/TestimonialsComponents'
-import { ArrowDownShort } from 'react-bootstrap-icons'
-import Toaster from '../../../../../components/Toaster'
+import { useForm, Controller, useFieldArray } from 'react-hook-form';
+import style from '../style.module.css';
+import { Accordion, Button, Card, Form } from 'react-bootstrap';
+import { useContext, useEffect, useState } from 'react';
+import { useMutation, useQuery } from '@apollo/client';
+import { UPDATE_WEBSITE_SECTION } from './queries/testimonials';
+import authContext from '../../../../../context/auth-context';
+import { SetReceivingDataAndReset } from './libs/testimonials';
+import { Data, FormData, InputProps } from './@types/testimonialsType';
+import { ChangeMakerWebsiteContext } from '../../../../../context/changemakerWebsite-context';
+import { GET_WEBSITE_SECTION } from './queries';
+import { InputComponent } from './components/TestimonialsComponents';
+import { ArrowDownShort } from 'react-bootstrap-icons';
+import Toaster from '../../../../../components/Toaster';
 
 function Hero(): JSX.Element {
-    const auth = useContext(authContext)
-    const [errorMsg, setErrorMsg] = useState<string>('')
-    const [activeKey, setActiveKey] = useState('')
+    const auth = useContext(authContext);
+    const [errorMsg, setErrorMsg] = useState<string>('');
+    const [activeKey, setActiveKey] = useState('');
 
     const handleToggle = (val: string) => {
-        setActiveKey((prev) => (prev === val ? '' : val))
-    }
+        setActiveKey((prev) => (prev === val ? '' : val));
+    };
 
     // * --------------------- Initial Values ---------------------
 
@@ -28,11 +28,11 @@ function Hero(): JSX.Element {
         title: '',
         sectionId: 0,
         testimonials: []
-    })
-    const testimonials: InputProps[] = ['name', 'designation', 'image', 'text']
+    });
+    const testimonials: InputProps[] = ['name', 'designation', 'image', 'text'];
 
     const { setChangemakerWebsiteState, changemakerWebsiteState } =
-        useContext(ChangeMakerWebsiteContext)
+        useContext(ChangeMakerWebsiteContext);
 
     // * --------------------- Form Configuration ---------------------
 
@@ -46,12 +46,12 @@ function Hero(): JSX.Element {
             title: '',
             testimonials: []
         }
-    })
+    });
 
     const { fields } = useFieldArray<FormData>({
         control,
         name: 'testimonials'
-    })
+    });
 
     // * --------------------- Get the Website Section Data ---------------------
 
@@ -63,19 +63,19 @@ function Hero(): JSX.Element {
         },
 
         onCompleted: (data: Data) => {
-            const sectionData = data.websiteSections.data[0].attributes.sectionData
-            console.log('sectionData', sectionData.testimonials[0].text)
-            SetReceivingDataAndReset({ sectionData, reset, setInitialValues, data, initialValues })
+            const sectionData = data.websiteSections.data[0].attributes.sectionData;
+            console.log('sectionData', sectionData.testimonials[0].text);
+            SetReceivingDataAndReset({ sectionData, reset, setInitialValues, data, initialValues });
         }
-    })
+    });
 
     // * --------------------- Form Submission ---------------------
 
-    const [mutateFunction, { loading, error }] = useMutation(UPDATE_WEBSITE_SECTION)
+    const [mutateFunction, { loading, error }] = useMutation(UPDATE_WEBSITE_SECTION);
 
     const onSubmit = handleSubmit(async (formData) => {
         // ! Need to add image upload
-        const { title, testimonials } = formData
+        const { title, testimonials } = formData;
 
         await mutateFunction({
             variables: {
@@ -86,15 +86,15 @@ function Hero(): JSX.Element {
                         testimonials.length > 0 ? testimonials : initialValues.testimonials
                 })
             }
-        })
-    })
+        });
+    });
 
     useEffect(() => {
         loading
             ? setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: true })
-            : setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: false })
-        error ? setErrorMsg(`${error.name}: ${error.message}`) : setErrorMsg('')
-    }, [loading, error])
+            : setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: false });
+        error ? setErrorMsg(`${error.name}: ${error.message}`) : setErrorMsg('');
+    }, [loading, error]);
 
     return (
         <div className={style.form_container}>
@@ -180,7 +180,7 @@ function Hero(): JSX.Element {
                 </Button>
             </Form>
         </div>
-    )
+    );
 }
 
-export default Hero
+export default Hero;

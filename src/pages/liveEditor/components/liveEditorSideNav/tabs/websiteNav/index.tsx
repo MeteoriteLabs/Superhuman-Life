@@ -1,5 +1,5 @@
-import style from './style.module.css'
-import Forms from '../../../../../../forms'
+import style from './style.module.css';
+import Forms from '../../../../../../forms';
 
 function WebsiteNav(): JSX.Element {
     return (
@@ -10,7 +10,7 @@ function WebsiteNav(): JSX.Element {
                 <Forms />
             </div>
         </div>
-    )
+    );
 }
 
-export default WebsiteNav
+export default WebsiteNav;

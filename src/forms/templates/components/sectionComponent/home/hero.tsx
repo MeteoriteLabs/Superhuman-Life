@@ -1,29 +1,29 @@
-import { useForm, Controller } from 'react-hook-form'
-import style from '../style.module.css'
-import { Button, Form } from 'react-bootstrap'
-import { useMutation, useQuery } from '@apollo/client'
-import { UPDATE_WEBSITE_SECTION } from './queries/hero'
-import { GET_WEBSITE_SECTION } from './queries'
-import authContext from '../../../../../context/auth-context'
-import { useContext, useEffect, useState } from 'react'
-import { ChangeMakerWebsiteContext } from '../../../../../context/changemakerWebsite-context'
-import Toaster from '../../../../../components/Toaster'
+import { useForm, Controller } from 'react-hook-form';
+import style from '../style.module.css';
+import { Button, Form } from 'react-bootstrap';
+import { useMutation, useQuery } from '@apollo/client';
+import { UPDATE_WEBSITE_SECTION } from './queries/hero';
+import { GET_WEBSITE_SECTION } from './queries';
+import authContext from '../../../../../context/auth-context';
+import { useContext, useEffect, useState } from 'react';
+import { ChangeMakerWebsiteContext } from '../../../../../context/changemakerWebsite-context';
+import Toaster from '../../../../../components/Toaster';
 
 type FormData = {
-    title: string
-    description: string
-    image: string
-}
+    title: string;
+    description: string;
+    image: string;
+};
 
 function Hero(): JSX.Element {
-    const auth = useContext(authContext)
-    const [errorMsg, setErrorMsg] = useState<string>('')
+    const auth = useContext(authContext);
+    const [errorMsg, setErrorMsg] = useState<string>('');
     const [initialValues, setInitialValues] = useState({
         title: '',
         description: '',
         image: '',
         sectionId: ''
-    })
+    });
 
     const {
         handleSubmit,
@@ -36,10 +36,10 @@ function Hero(): JSX.Element {
             description: initialValues.description,
             image: initialValues.image
         }
-    })
+    });
 
     const { setChangemakerWebsiteState, changemakerWebsiteState } =
-        useContext(ChangeMakerWebsiteContext)
+        useContext(ChangeMakerWebsiteContext);
 
     useQuery(GET_WEBSITE_SECTION, {
         variables: {
@@ -54,20 +54,20 @@ function Hero(): JSX.Element {
                 title: data.websiteSections.data[0].attributes.sectionData.title,
                 description: data.websiteSections.data[0].attributes.sectionData.description,
                 image: data.websiteSections.data[0].attributes.sectionData.image
-            })
+            });
             reset({
                 title: data.websiteSections.data[0].attributes.sectionData.title,
                 description: data.websiteSections.data[0].attributes.sectionData.description,
                 image: data.websiteSections.data[0].attributes.sectionData.image
-            })
+            });
         }
-    })
+    });
 
-    const [mutateFunction, { loading, error }] = useMutation(UPDATE_WEBSITE_SECTION)
+    const [mutateFunction, { loading, error }] = useMutation(UPDATE_WEBSITE_SECTION);
 
     const onSubmit = handleSubmit(async (formData) => {
         // ! Need to add image upload
-        const { title, description, image } = formData
+        const { title, description, image } = formData;
 
         await mutateFunction({
             variables: {
@@ -76,15 +76,15 @@ function Hero(): JSX.Element {
                 desc: description ? description : initialValues.description,
                 image: image ? image : initialValues.image
             }
-        })
-    })
+        });
+    });
 
     useEffect(() => {
         loading
             ? setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: true })
-            : setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: false })
-        error ? setErrorMsg(`${error.name}: ${error.message}`) : setErrorMsg('')
-    }, [loading, error])
+            : setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: false });
+        error ? setErrorMsg(`${error.name}: ${error.message}`) : setErrorMsg('');
+    }, [loading, error]);
 
     return (
         <div className={style.form_container}>
@@ -157,7 +157,7 @@ function Hero(): JSX.Element {
                 </Button>
             </Form>
         </div>
-    )
+    );
 }
 
-export default Hero
+export default Hero;

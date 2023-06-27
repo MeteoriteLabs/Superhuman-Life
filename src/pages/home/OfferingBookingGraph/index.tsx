@@ -1,7 +1,7 @@
-import { Tab, Tabs } from 'react-bootstrap'
-import MonthlyOfferingBookingGraph from './MonthlyOfferingBookingGraph'
-import WeeklyOfferingBookingGraph from './WeeklyOfferingBookingGraph'
-import '../Styles/navTabStyles.css'
+import { Tab, Tabs } from 'react-bootstrap';
+import MonthlyOfferingBookingGraph from './MonthlyOfferingBookingGraph';
+import WeeklyOfferingBookingGraph from './WeeklyOfferingBookingGraph';
+import '../Styles/navTabStyles.css';
 
 function OfferingBookingGraph(): JSX.Element {
     return (
@@ -15,7 +15,7 @@ function OfferingBookingGraph(): JSX.Element {
                 </Tab>
             </Tabs>
         </div>
-    )
+    );
 }
 
-export default OfferingBookingGraph
+export default OfferingBookingGraph;

@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const GET_ALL_PACKAGES = gql`
     query fitnesspackages($id: ID!) {
@@ -24,4 +24,4 @@ export const GET_ALL_PACKAGES = gql`
             }
         }
     }
-`
+`;

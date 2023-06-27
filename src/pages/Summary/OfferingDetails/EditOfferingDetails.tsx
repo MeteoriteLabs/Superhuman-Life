@@ -1,16 +1,16 @@
-import React from 'react'
-import { Modal } from 'react-bootstrap'
-import { schema, widgets } from './EditOfferingSchema'
-import Form from '@rjsf/core'
-import { UPDATE_CLIENT_BOOKING } from '../queries'
-import { useMutation } from '@apollo/client'
-import moment from 'moment'
-import { PackageDetails } from '../Interface'
+import React from 'react';
+import { Modal } from 'react-bootstrap';
+import { schema, widgets } from './EditOfferingSchema';
+import Form from '@rjsf/core';
+import { UPDATE_CLIENT_BOOKING } from '../queries';
+import { useMutation } from '@apollo/client';
+import moment from 'moment';
+import { PackageDetails } from '../Interface';
 
 interface DefaultClientBooking {
-    offerings: string
-    packageDuration: number
-    effectiveDate: string
+    offerings: string;
+    packageDuration: number;
+    effectiveDate: string;
 }
 
 const EditOffering: React.FC<{ show: boolean; onHide: () => void; Offering: PackageDetails }> = ({
@@ -19,19 +19,19 @@ const EditOffering: React.FC<{ show: boolean; onHide: () => void; Offering: Pack
     Offering
 }) => {
     // eslint-disable-next-line
-    const editOfferingJson: { [name: string]: any } = require('./EditOffering.json')
+    const editOfferingJson: { [name: string]: any } = require('./EditOffering.json');
     const formData: DefaultClientBooking = {
         offerings: Offering.fitnesspackages[0].packagename,
         packageDuration: Offering.package_duration,
         effectiveDate: moment.utc(Offering.effective_date).format('DD/MM/YYYY,h:mm:ss a ')
-    }
+    };
 
-    const [updateUser] = useMutation(UPDATE_CLIENT_BOOKING)
+    const [updateUser] = useMutation(UPDATE_CLIENT_BOOKING);
 
     const onSubmit = (formData: {
-        packageDuration: number
-        effectiveDate: string
-        offerings: string
+        packageDuration: number;
+        effectiveDate: string;
+        offerings: string;
     }) => {
         updateUser({
             variables: {
@@ -41,10 +41,10 @@ const EditOffering: React.FC<{ show: boolean; onHide: () => void; Offering: Pack
                     effective_date: formData.effectiveDate
                 }
             }
-        })
+        });
 
-        onHide()
-    }
+        onHide();
+    };
 
     return (
         <Modal show={show} onHide={onHide} centered>
@@ -55,7 +55,7 @@ const EditOffering: React.FC<{ show: boolean; onHide: () => void; Offering: Pack
                 <Form
                     schema={editOfferingJson}
                     onSubmit={(form) => {
-                        onSubmit(form.formData)
+                        onSubmit(form.formData);
                     }}
                     widgets={widgets}
                     formData={formData}
@@ -63,7 +63,7 @@ const EditOffering: React.FC<{ show: boolean; onHide: () => void; Offering: Pack
                 />
             </Modal.Body>
         </Modal>
-    )
-}
+    );
+};
 
-export default EditOffering
+export default EditOffering;

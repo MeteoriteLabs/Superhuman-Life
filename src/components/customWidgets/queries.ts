@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const DESIGNATIONS = gql`
     query fetchDesignations {
@@ -11,7 +11,7 @@ export const DESIGNATIONS = gql`
             }
         }
     }
-`
+`;
 
 export const LANGUAGES = gql`
     query fetchLanguages {
@@ -24,7 +24,7 @@ export const LANGUAGES = gql`
             }
         }
     }
-`
+`;
 
 export const ORGANIZATION_TYPE = gql`
     query getchOrg {
@@ -37,7 +37,7 @@ export const ORGANIZATION_TYPE = gql`
             }
         }
     }
-`
+`;
 
 export const GET_PROGRAMLIST = gql`
     query programlistQuery($id: ID!, $filter: String!) {
@@ -73,7 +73,7 @@ export const GET_PROGRAMLIST = gql`
             }
         }
     }
-`
+`;
 
 export const GET_FITNESSPACKAGE_DETAILS = gql`
     query fitnesspackageQuery {
@@ -86,7 +86,7 @@ export const GET_FITNESSPACKAGE_DETAILS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_TAGS_BY_TYPE = gql`
     query getTagByType($type: String!, $id: ID!) {
@@ -106,7 +106,7 @@ export const GET_TAGS_BY_TYPE = gql`
             }
         }
     }
-`
+`;
 
 export const GET_SESSIONS_BY_TAG = gql`
     query getSessionsByTag($id: ID!) {
@@ -186,7 +186,7 @@ export const GET_SESSIONS_BY_TAG = gql`
             }
         }
     }
-`
+`;
 
 export const GET_TIMEZONES = gql`
     query getTimezones {
@@ -200,7 +200,7 @@ export const GET_TIMEZONES = gql`
             }
         }
     }
-`
+`;
 
 export const GET_EQUIPMENTLIST = gql`
     query equipmentListQuery {
@@ -213,7 +213,7 @@ export const GET_EQUIPMENTLIST = gql`
             }
         }
     }
-`
+`;
 export const GET_MUSCLEGROUPS = gql`
     query muscleGroupQuery {
         muscleGroups(pagination: { pageSize: 100 }) {
@@ -225,7 +225,7 @@ export const GET_MUSCLEGROUPS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_CONTACTS = gql`
     query ContactsQuery($id: ID) {
@@ -255,7 +255,7 @@ export const GET_CONTACTS = gql`
             }
         }
     }
-`
+`;
 
 export const FETCH_CHANGEMAKERS = gql`
     query fetchUsersProfileData {
@@ -321,7 +321,7 @@ export const FETCH_CHANGEMAKERS = gql`
             }
         }
     }
-`
+`;
 export const FETCH_FITNESS_PACKAGE = gql`
     query offeringInventories($Changemakerid: String) {
         offeringInventories(
@@ -343,7 +343,7 @@ export const FETCH_FITNESS_PACKAGE = gql`
             }
         }
     }
-`
+`;
 
 export const FETCH_FITNESS_PACKAGE_ON_DEMAND_PT = gql`
     query fitnessPackagesForOnDemandPT($id: ID) {
@@ -361,7 +361,7 @@ export const FETCH_FITNESS_PACKAGE_ON_DEMAND_PT = gql`
             }
         }
     }
-`
+`;
 
 export const FETCH_FITNESS_PACKAGE_GROUP_AND_LIVESTREAM_INSTANT_BOOKING = gql`
     query fitnessPackagesForOnDemandPT($id: ID) {
@@ -380,7 +380,7 @@ export const FETCH_FITNESS_PACKAGE_GROUP_AND_LIVESTREAM_INSTANT_BOOKING = gql`
             }
         }
     }
-`
+`;
 
 export const FETCH_FITNESS_PACKAGE_RECORDED_WITH_DURATION_ONE = gql`
     query fitnessPackagesForOnDemandPT($id: ID) {
@@ -400,7 +400,7 @@ export const FETCH_FITNESS_PACKAGE_RECORDED_WITH_DURATION_ONE = gql`
             }
         }
     }
-`
+`;
 
 export const FETCH_SESSIONS = gql`
     query tags($id: ID) {
@@ -424,7 +424,7 @@ export const FETCH_SESSIONS = gql`
             }
         }
     }
-`
+`;
 
 export const FETCH_CLIENTS = gql`
     query clientBookingsTogetClient($id: ID) {
@@ -463,4 +463,4 @@ export const FETCH_CLIENTS = gql`
             }
         }
     }
-`
+`;

@@ -1,7 +1,7 @@
-import { Row, Col } from 'react-bootstrap'
+import { Row, Col } from 'react-bootstrap';
 
 const RosterGeneral = (props: any) => {
-    const data = props?.data[0]?.session
+    const data = props?.data[0]?.session;
 
     return (
         <>
@@ -40,7 +40,7 @@ const RosterGeneral = (props: any) => {
                                 <span>
                                     {data?.workout?.equipment_lists
                                         ?.map((item: any) => {
-                                            return item.name
+                                            return item.name;
                                         })
                                         .join(', ')}
                                 </span>
@@ -55,7 +55,7 @@ const RosterGeneral = (props: any) => {
                                 <span>
                                     {data?.workout?.muscle_groups
                                         ?.map((item: any) => {
-                                            return item.name
+                                            return item.name;
                                         })
                                         .join(', ')}
                                 </span>
@@ -65,7 +65,7 @@ const RosterGeneral = (props: any) => {
                 </Row>
             </div>
         </>
-    )
-}
+    );
+};
 
-export default RosterGeneral
+export default RosterGeneral;

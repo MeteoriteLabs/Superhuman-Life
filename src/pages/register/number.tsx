@@ -1,13 +1,13 @@
-import React, { useState } from 'react'
-import { Form } from 'react-bootstrap'
-import { gql, useQuery } from '@apollo/client'
-import { flattenObj } from '../../components/utils/responseFlatten'
-import PhoneInput from 'react-phone-input-2'
-import 'react-phone-input-2/lib/style.css'
+import React, { useState } from 'react';
+import { Form } from 'react-bootstrap';
+import { gql, useQuery } from '@apollo/client';
+import { flattenObj } from '../../components/utils/responseFlatten';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 
 const Number: React.FC<{ value: string; onChange: (args: string) => void }> = (props) => {
-    const [userNumber, setUserNumber] = useState<string>(props.value)
-    const [user, setUser] = useState<{ id: string; email: string }[]>([])
+    const [userNumber, setUserNumber] = useState<string>(props.value);
+    const [user, setUser] = useState<{ id: string; email: string }[]>([]);
 
     const FETCH_USER = gql`
         query fetchUsersNumber($num: String) {
@@ -20,27 +20,27 @@ const Number: React.FC<{ value: string; onChange: (args: string) => void }> = (p
                 }
             }
         }
-    `
+    `;
 
     useQuery(FETCH_USER, {
         variables: { num: userNumber },
         skip: userNumber === undefined,
         onCompleted: loadData
-    })
+    });
 
     function loadData(data) {
-        const flattenedData = flattenObj({ ...data })
+        const flattenedData = flattenObj({ ...data });
         setUser(
             [...flattenedData.usersPermissionsUsers].map((user) => {
                 return {
                     id: user.id,
                     email: user.Phone_Number
-                }
+                };
             })
-        )
+        );
     }
 
-    props.onChange(userNumber)
+    props.onChange(userNumber);
 
     return (
         <div>
@@ -62,7 +62,7 @@ const Number: React.FC<{ value: string; onChange: (args: string) => void }> = (p
                 )}
             </Form.Group>
         </div>
-    )
-}
+    );
+};
 
-export default Number
+export default Number;

@@ -1,31 +1,31 @@
-import React, { useState, useContext, useRef } from 'react'
-import Form from '@rjsf/core'
-import { widgets } from '../../profileSchema'
+import React, { useState, useContext, useRef } from 'react';
+import Form from '@rjsf/core';
+import { widgets } from '../../profileSchema';
 import {
     FETCH_USER_PROFILE_DATA,
     FETCH_USERS_PROFILE_DATA,
     UPDATE_USER_PROFILE_DATA
-} from '../../queries/queries'
-import AuthContext from '../../../../context/auth-context'
-import { useMutation, useQuery } from '@apollo/client'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
-import Toaster from '../../../../components/Toaster'
-import { Col } from 'react-bootstrap'
+} from '../../queries/queries';
+import AuthContext from '../../../../context/auth-context';
+import { useMutation, useQuery } from '@apollo/client';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import Toaster from '../../../../components/Toaster';
+import { Col } from 'react-bootstrap';
 import {
     phoneCustomFormats,
     phoneTransformErrors
-} from '../../../../components/utils/ValidationPatterns'
-import UploadImageToS3WithNativeSdk from '../../../../components/upload/upload'
-import { UsersPermissionsUser, Schema, FlattenData } from './Interfaces'
+} from '../../../../components/utils/ValidationPatterns';
+import UploadImageToS3WithNativeSdk from '../../../../components/upload/upload';
+import { UsersPermissionsUser, Schema, FlattenData } from './Interfaces';
 
 const BasicProfileForm: React.FC = () => {
-    const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false)
-    const formRef = useRef<any>(null)
-    const auth = useContext(AuthContext)
-    const profileJson: any = require('./BasicProfile.json')
+    const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+    const formRef = useRef<any>(null);
+    const auth = useContext(AuthContext);
+    const profileJson: any = require('./BasicProfile.json');
     const [webpageDetails, setWebPageDetails] = useState<UsersPermissionsUser>(
         {} as UsersPermissionsUser
-    )
+    );
 
     const schema: Schema = {
         Photo_ID: {
@@ -33,7 +33,7 @@ const BasicProfileForm: React.FC = () => {
                 <UploadImageToS3WithNativeSdk
                     value={props.value}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                        props.onChange(event)
+                        props.onChange(event);
                     }}
                     aspectRatio={'4:4'}
                     allowImage={true}
@@ -47,7 +47,7 @@ const BasicProfileForm: React.FC = () => {
                                 }
                             },
                             refetchQueries: [FETCH_USERS_PROFILE_DATA]
-                        })
+                        });
                     }}
                 />
             ),
@@ -75,23 +75,23 @@ const BasicProfileForm: React.FC = () => {
         Phone_Number: {
             'ui:placeholder': 'Enter your 10 digit contact number'
         }
-    }
+    };
 
     const fetch = useQuery<UsersPermissionsUser>(FETCH_USER_PROFILE_DATA, {
         variables: { id: auth.userid },
         onCompleted: (response) => {
-            const flattenData: FlattenData = flattenObj({ ...response })
-            FillDetails(flattenData.usersPermissionsUser)
+            const flattenData: FlattenData = flattenObj({ ...response });
+            FillDetails(flattenData.usersPermissionsUser);
         }
-    })
+    });
 
     const [updateProfile] = useMutation(UPDATE_USER_PROFILE_DATA, {
         onCompleted: () => {
-            setIsFormSubmitted(!isFormSubmitted)
-            fetch.refetch()
+            setIsFormSubmitted(!isFormSubmitted);
+            fetch.refetch();
         },
         refetchQueries: [FETCH_USER_PROFILE_DATA]
-    })
+    });
 
     function updateBasicDetails(frm: any) {
         updateProfile({
@@ -129,17 +129,17 @@ const BasicProfileForm: React.FC = () => {
                             : null
                 }
             }
-        })
+        });
     }
 
     function OnSubmit(frm: any) {
-        updateBasicDetails(frm)
+        updateBasicDetails(frm);
     }
 
     //fillDetails
     function FillDetails(data: UsersPermissionsUser) {
         if (data) {
-            setWebPageDetails({ ...data })
+            setWebPageDetails({ ...data });
         }
     }
 
@@ -151,7 +151,7 @@ const BasicProfileForm: React.FC = () => {
                     schema={profileJson}
                     ref={formRef}
                     onSubmit={(frm: any) => {
-                        OnSubmit(frm)
+                        OnSubmit(frm);
                     }}
                     formData={webpageDetails}
                     widgets={widgets}
@@ -170,7 +170,7 @@ const BasicProfileForm: React.FC = () => {
                 />
             ) : null}
         </>
-    )
-}
+    );
+};
 
-export default BasicProfileForm
+export default BasicProfileForm;

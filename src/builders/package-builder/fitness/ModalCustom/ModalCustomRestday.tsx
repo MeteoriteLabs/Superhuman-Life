@@ -1,14 +1,14 @@
 export default function ModalCustomRestday(PTProps: any) {
-    const { props } = PTProps
-    const duration = PTProps.PTProps.properties.title_package.duration
-    const offlineClasses = PTProps.PTProps.properties.offlineClasses.value
-    const onlineClasses = PTProps.PTProps.properties.onlineClasses.value
-    const restDay = PTProps.PTProps.properties.restDay.value
+    const { props } = PTProps;
+    const duration = PTProps.PTProps.properties.title_package.duration;
+    const offlineClasses = PTProps.PTProps.properties.offlineClasses.value;
+    const onlineClasses = PTProps.PTProps.properties.onlineClasses.value;
+    const restDay = PTProps.PTProps.properties.restDay.value;
 
     PTProps.PTProps.properties.dayAvailable.value =
-        duration - offlineClasses - onlineClasses - restDay
+        duration - offlineClasses - onlineClasses - restDay;
     if (PTProps.PTProps.properties.dayAvailable.value === 0) {
-        props.schema.maximum = 30
+        props.schema.maximum = 30;
     }
 
     return (
@@ -19,16 +19,16 @@ export default function ModalCustomRestday(PTProps: any) {
                 className="py-2 px-2"
                 onChange={(event: any) => {
                     if (PTProps.PTProps.properties.dayAvailable.value <= 0) {
-                        event.target.value = 0
+                        event.target.value = 0;
                     }
 
-                    PTProps.PTProps.properties.restDay.value = parseInt(event.target.value)
-                    PTProps.props.onChange(event.target.value)
+                    PTProps.PTProps.properties.restDay.value = parseInt(event.target.value);
+                    PTProps.props.onChange(event.target.value);
                 }}
                 type="number"
                 min="0"
                 max="30"
             />
         </div>
-    )
+    );
 }

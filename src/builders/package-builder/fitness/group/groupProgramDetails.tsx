@@ -1,54 +1,54 @@
-import React, { useState, useContext, useEffect } from 'react'
-import { Row, Col, Form, InputGroup, FormControl, Button } from 'react-bootstrap'
-import { Typeahead } from 'react-bootstrap-typeahead'
-import 'react-bootstrap-typeahead/css/Typeahead.css'
-import { useQuery, gql } from '@apollo/client'
-import AuthContext from '../../../../context/auth-context'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
-import AddFitnessAddressModal from '../../../../components/customWidgets/AddFitnessAddressModal'
+import React, { useState, useContext, useEffect } from 'react';
+import { Row, Col, Form, InputGroup, FormControl, Button } from 'react-bootstrap';
+import { Typeahead } from 'react-bootstrap-typeahead';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
+import { useQuery, gql } from '@apollo/client';
+import AuthContext from '../../../../context/auth-context';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import AddFitnessAddressModal from '../../../../components/customWidgets/AddFitnessAddressModal';
 
 const GroupProgramDetails: React.FC<{
-    readonly: boolean
-    value: string
-    onChange: (args: string | null) => void
+    readonly: boolean;
+    value: string;
+    onChange: (args: string | null) => void;
 }> = (props) => {
-    const inputDisabled = props.readonly
-    const existingData = props.value === undefined ? undefined : JSON.parse(props.value)
+    const inputDisabled = props.readonly;
+    const existingData = props.value === undefined ? undefined : JSON.parse(props.value);
     if (existingData && existingData.length) {
         existingData.address = {
             id: JSON.parse(existingData?.address)[0].id,
             title: JSON.parse(existingData?.address)[0].title
-        }
+        };
     }
 
-    const [mode, setMode] = useState(props.value ? existingData.mode.toString() : '0')
-    const [addressModal, setAddressModal] = useState<boolean>(false)
+    const [mode, setMode] = useState(props.value ? existingData.mode.toString() : '0');
+    const [addressModal, setAddressModal] = useState<boolean>(false);
 
-    const auth = useContext(AuthContext)
+    const auth = useContext(AuthContext);
     const [singleSelections, setSingleSelections] = useState<any[]>(
         existingData?.address?.length && props.value ? existingData?.address : []
-    )
-    const [addresses, setAddresses] = useState<any[]>([])
+    );
+    const [addresses, setAddresses] = useState<any[]>([]);
     // eslint-disable-next-line
     const [addressTitle, setAddressTitle] = useState(
         props.value ? existingData.addressTag : 'At My Address'
-    )
+    );
     const [onlineClasses, setOnlineClasses] = useState<number>(
         existingData?.online ? existingData.online : 0
-    )
+    );
     const [offlineClasses, setOfflinceClasses] = useState<number>(
         existingData?.offline ? existingData.offline : 0
-    )
-    const [restDays, setRestDays] = useState<number>(existingData?.rest ? existingData.rest : 0)
+    );
+    const [restDays, setRestDays] = useState<number>(existingData?.rest ? existingData.rest : 0);
 
     useEffect(() => {
         if (onlineClasses > 30) {
-            setOnlineClasses(30)
+            setOnlineClasses(30);
         }
         if (offlineClasses > 30) {
-            setOfflinceClasses(30)
+            setOfflinceClasses(30);
         }
-    }, [onlineClasses, offlineClasses, restDays, mode])
+    }, [onlineClasses, offlineClasses, restDays, mode]);
 
     const FETCH_USER_ADDRESSES = gql`
         query addresses($id: ID!) {
@@ -61,86 +61,86 @@ const GroupProgramDetails: React.FC<{
                 }
             }
         }
-    `
+    `;
 
     const mainQuery = useQuery(FETCH_USER_ADDRESSES, {
         variables: { id: auth.userid },
         onCompleted: loadData
-    })
+    });
 
     function loadData(data: any) {
-        const flattenedData = flattenObj({ ...data })
+        const flattenedData = flattenObj({ ...data });
 
         setAddresses(
             [...flattenedData.addresses].map((address) => {
                 return {
                     id: address.id,
                     address1: address.address1
-                }
+                };
             })
-        )
+        );
     }
 
     function OnChange(e) {
-        setSingleSelections(e)
+        setSingleSelections(e);
     }
 
     function handleCallback() {
-        mainQuery.refetch()
+        mainQuery.refetch();
     }
 
     function handleValidation(mode: string) {
         //here we will check for online
         if (restDays < 0) {
-            return false
+            return false;
         }
         if (mode === '0') {
             if (onlineClasses + restDays === 30) {
-                return true
+                return true;
             } else {
-                return false
+                return false;
             }
         }
         //here we will check for offline
         if (mode === '1') {
             if (restDays + offlineClasses === 30) {
                 if (addressTitle === 'At My Address' && singleSelections.length) {
-                    return true
+                    return true;
                 }
                 if (addressTitle === 'At Client Address') {
-                    return true
+                    return true;
                 } else {
-                    return false
+                    return false;
                 }
             } else {
-                return false
+                return false;
             }
         }
         //here we will check for both(hybrid)
         if (mode === '2') {
             if (restDays + offlineClasses + onlineClasses === 30) {
                 if (addressTitle === 'At My Address' && singleSelections.length) {
-                    return true
+                    return true;
                 }
                 if (addressTitle === 'At Client Address') {
-                    return true
+                    return true;
                 } else {
-                    return false
+                    return false;
                 }
             } else {
-                return false
+                return false;
             }
         }
     }
 
     useEffect(() => {
         if (mode === '0') {
-            setOfflinceClasses(0)
-            setSingleSelections([])
+            setOfflinceClasses(0);
+            setSingleSelections([]);
         } else if (mode === '1') {
-            setOnlineClasses(0)
+            setOnlineClasses(0);
         }
-    }, [mode])
+    }, [mode]);
 
     if (handleValidation(mode)) {
         props.onChange(
@@ -152,22 +152,22 @@ const GroupProgramDetails: React.FC<{
                 offline: offlineClasses,
                 rest: restDays
             })
-        )
+        );
     } else {
-        props.onChange(null)
+        props.onChange(null);
     }
 
     useEffect(() => {
         if (mode === '0') {
-            setRestDays(30 - onlineClasses)
+            setRestDays(30 - onlineClasses);
         }
         if (mode === '1') {
-            setRestDays(30 - offlineClasses)
+            setRestDays(30 - offlineClasses);
         }
         if (mode === '2') {
-            setRestDays(30 - (onlineClasses + offlineClasses))
+            setRestDays(30 - (onlineClasses + offlineClasses));
         }
-    }, [onlineClasses, offlineClasses, mode])
+    }, [onlineClasses, offlineClasses, mode]);
 
     return (
         <>
@@ -236,7 +236,7 @@ const GroupProgramDetails: React.FC<{
                                             disabled={inputDisabled}
                                             variant="outline-info"
                                             onClick={() => {
-                                                setAddressModal(true)
+                                                setAddressModal(true);
                                             }}
                                         >
                                             + Add New Address
@@ -248,8 +248,8 @@ const GroupProgramDetails: React.FC<{
                             <AddFitnessAddressModal
                                 show={addressModal}
                                 onHide={() => {
-                                    setAddressModal(false)
-                                    handleCallback()
+                                    setAddressModal(false);
+                                    handleCallback();
                                 }}
                             />
                         </div>
@@ -345,7 +345,7 @@ const GroupProgramDetails: React.FC<{
                 </Row>
             )}
         </>
-    )
-}
+    );
+};
 
-export default GroupProgramDetails
+export default GroupProgramDetails;

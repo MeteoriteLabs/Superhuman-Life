@@ -1,30 +1,30 @@
 export type Data = {
     websiteSections: {
         data: {
-            id: number
+            id: number;
             attributes: {
-                sectionData: SectionData
-            }
-        }[]
-    }
-}
+                sectionData: SectionData;
+            };
+        }[];
+    };
+};
 
 export type SectionData = {
-    title: string
-    testimonials: ServerTestimonials
-}
+    title: string;
+    testimonials: ServerTestimonials;
+};
 
 export type ServerTestimonials = {
-    name: string
-    text: string
-    image: string
-    designation: string
-}[]
+    name: string;
+    text: string;
+    image: string;
+    designation: string;
+}[];
 
 export type FormData = {
-    sectionId: number
-    title: string
-    testimonials: ServerTestimonials
-}
+    sectionId: number;
+    title: string;
+    testimonials: ServerTestimonials;
+};
 
-export type InputProps = 'text' | 'image' | 'designation' | 'name'
+export type InputProps = 'text' | 'image' | 'designation' | 'name';

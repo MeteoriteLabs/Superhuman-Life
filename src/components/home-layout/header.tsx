@@ -1,10 +1,10 @@
-import { Nav, Navbar } from 'react-bootstrap'
-import { NavLink } from 'react-router-dom'
+import { Nav, Navbar } from 'react-bootstrap';
+import { NavLink } from 'react-router-dom';
 
 const headerStyle = {
     backgroundImage: 'linear-gradient(15deg, #4568dc 0%, #b06ab3 100%)',
     color: '#FFF'
-}
+};
 
 export default function HomeTopNav() {
     return (
@@ -35,5 +35,5 @@ export default function HomeTopNav() {
                 </Nav>
             </Navbar.Collapse>
         </Navbar>
-    )
+    );
 }

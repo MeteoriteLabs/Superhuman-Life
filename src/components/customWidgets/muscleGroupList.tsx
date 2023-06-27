@@ -1,14 +1,14 @@
-import { useState, useRef } from 'react'
-import { InputGroup, FormControl, Container } from 'react-bootstrap'
-import { gql, useQuery } from '@apollo/client'
-import { flattenObj } from '../utils/responseFlatten'
+import { useState, useRef } from 'react';
+import { InputGroup, FormControl, Container } from 'react-bootstrap';
+import { gql, useQuery } from '@apollo/client';
+import { flattenObj } from '../utils/responseFlatten';
 
 const MuscleGroupList = (props: any) => {
-    const [muscleGroup, setMuscleGroup] = useState<any[]>([])
-    const [searchInput, setSearchInput] = useState(null)
-    const [selected, setSelected] = useState<any[]>(props.value?.length > 0 ? props.value : [])
-    const inputField = useRef<any>()
-    let skipval: Boolean = true
+    const [muscleGroup, setMuscleGroup] = useState<any[]>([]);
+    const [searchInput, setSearchInput] = useState(null);
+    const [selected, setSelected] = useState<any[]>(props.value?.length > 0 ? props.value : []);
+    const inputField = useRef<any>();
+    let skipval: Boolean = true;
 
     const GET_MUSCLEGROUPS = gql`
         query muscleGroupQuery($filter: String!) {
@@ -21,64 +21,64 @@ const MuscleGroupList = (props: any) => {
                 }
             }
         }
-    `
+    `;
 
     function FetchMuscleGroupList(_variable: {} = { filter: ' ' }) {
         useQuery(GET_MUSCLEGROUPS, {
             variables: _variable,
             onCompleted: loadMuscleGroupList,
             skip: !searchInput
-        })
+        });
     }
 
     function loadMuscleGroupList(data: any) {
-        const flattenedData = flattenObj({ ...data })
+        const flattenedData = flattenObj({ ...data });
         setMuscleGroup(
             [...flattenedData.muscleGroups].map((equipment) => {
                 return {
                     id: equipment.id,
                     name: equipment.name
-                }
+                };
             })
-        )
+        );
     }
 
     function muscleGroupSearch(data: any) {
         if (data.length > 0) {
-            setSearchInput(data)
-            skipval = false
+            setSearchInput(data);
+            skipval = false;
         } else {
-            setMuscleGroup([])
+            setMuscleGroup([]);
         }
     }
 
     function handleSeletedMuscleGroupAdd(name: any, id: any) {
-        const values = [...selected]
-        let a = values.find((e) => e.id === id)
+        const values = [...selected];
+        let a = values.find((e) => e.id === id);
         if (!a) {
-            values.push({ name: name, id: id })
-            setSelected(values)
+            values.push({ name: name, id: id });
+            setSelected(values);
         }
-        inputField.current.value = ''
-        setMuscleGroup([])
-        skipval = true
+        inputField.current.value = '';
+        setMuscleGroup([]);
+        skipval = true;
     }
 
     function handleSelectedMuscleGroupRemove(name: any) {
-        const values = [...selected]
-        values.splice(name, 1)
-        setSelected(values)
+        const values = [...selected];
+        values.splice(name, 1);
+        setSelected(values);
     }
 
     props.onChange(
         selected
             .map((e) => {
-                return e.id
+                return e.id;
             })
             .join(',')
-    )
+    );
 
-    FetchMuscleGroupList({ filter: searchInput, skip: skipval })
+    FetchMuscleGroupList({ filter: searchInput, skip: skipval });
 
     return (
         <>
@@ -90,8 +90,8 @@ const MuscleGroupList = (props: any) => {
                     id="muscleGroup"
                     ref={inputField}
                     onChange={(e) => {
-                        e.preventDefault()
-                        muscleGroupSearch(e.target.value)
+                        e.preventDefault();
+                        muscleGroupSearch(e.target.value);
                     }}
                     autoComplete="off"
                 />
@@ -106,14 +106,14 @@ const MuscleGroupList = (props: any) => {
                                 value={muscle.id}
                                 key={muscle.id}
                                 onClick={(e) => {
-                                    e.preventDefault()
-                                    handleSeletedMuscleGroupAdd(muscle.name, muscle.id)
+                                    e.preventDefault();
+                                    handleSeletedMuscleGroupAdd(muscle.name, muscle.id);
                                 }}
                             >
                                 {muscle.name}
                             </option>
                         </Container>
-                    )
+                    );
                 })}
             </>
             <>
@@ -147,11 +147,11 @@ const MuscleGroupList = (props: any) => {
                                 onClick={() => handleSelectedMuscleGroupRemove(val.name)}
                             ></i>
                         </div>
-                    )
+                    );
                 })}
             </>
         </>
-    )
-}
+    );
+};
 
-export default MuscleGroupList
+export default MuscleGroupList;

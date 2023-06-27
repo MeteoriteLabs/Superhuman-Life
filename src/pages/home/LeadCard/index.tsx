@@ -1,29 +1,29 @@
-import { useContext, useState } from 'react'
-import { Card, Row, Col } from 'react-bootstrap'
-import { useQuery, useMutation } from '@apollo/client'
-import { UPDATE_SEEN_NEW } from '../../../builders/client-builder/leads/queries'
-import { GET_LEADS } from './queries'
-import { flattenObj } from '../../../components/utils/responseFlatten'
-import NoDataInCard from '../../../components/NoDataInCard'
-import AuthContext from '../../../context/auth-context'
-import moment from 'moment'
-import './lead.css'
+import { useContext, useState } from 'react';
+import { Card, Row, Col } from 'react-bootstrap';
+import { useQuery, useMutation } from '@apollo/client';
+import { UPDATE_SEEN_NEW } from '../../../builders/client-builder/leads/queries';
+import { GET_LEADS } from './queries';
+import { flattenObj } from '../../../components/utils/responseFlatten';
+import NoDataInCard from '../../../components/NoDataInCard';
+import AuthContext from '../../../context/auth-context';
+import moment from 'moment';
+import './lead.css';
 
 function LeadComponent() {
-    const [leadData, setLeadData] = useState<any>([])
-    const auth = useContext(AuthContext)
+    const [leadData, setLeadData] = useState<any>([]);
+    const auth = useContext(AuthContext);
 
     useQuery(GET_LEADS, {
         variables: { id: Number(auth.userid) },
         onCompleted: (data) => {
-            const flattenLeadsData = flattenObj({ ...data.websiteContactForms })
-            setLeadData(flattenLeadsData)
+            const flattenLeadsData = flattenObj({ ...data.websiteContactForms });
+            setLeadData(flattenLeadsData);
         }
-    })
+    });
 
     const [updateSeenStatus] = useMutation(UPDATE_SEEN_NEW, {
         refetchQueries: [GET_LEADS]
-    })
+    });
 
     return (
         <Card>
@@ -45,7 +45,7 @@ function LeadComponent() {
                                                 seen: true,
                                                 id: currentValue.id
                                             }
-                                        })
+                                        });
                                     }}
                                 >
                                     {/* Lead name with mail and call option */}
@@ -121,7 +121,7 @@ function LeadComponent() {
                                         </Card.Text>
                                     </Card.Body>
                                 </Card>
-                            )
+                            );
                         })
                     ) : (
                         <NoDataInCard msg={'No Leads cards to show'} />
@@ -129,7 +129,7 @@ function LeadComponent() {
                 </Card.Body>
             </div>
         </Card>
-    )
+    );
 }
 
-export default LeadComponent
+export default LeadComponent;

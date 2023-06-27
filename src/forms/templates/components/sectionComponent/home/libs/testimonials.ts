@@ -1,5 +1,5 @@
-import { UseFormReset } from 'react-hook-form'
-import { Data, FormData, SectionData } from '../@types/testimonialsType'
+import { UseFormReset } from 'react-hook-form';
+import { Data, FormData, SectionData } from '../@types/testimonialsType';
 
 export function SetReceivingDataAndReset({
     sectionData,
@@ -8,11 +8,11 @@ export function SetReceivingDataAndReset({
     reset,
     setInitialValues
 }: {
-    sectionData: SectionData
-    data: Data
-    initialValues: FormData
-    reset: UseFormReset<FormData>
-    setInitialValues: React.Dispatch<React.SetStateAction<FormData>>
+    sectionData: SectionData;
+    data: Data;
+    initialValues: FormData;
+    reset: UseFormReset<FormData>;
+    setInitialValues: React.Dispatch<React.SetStateAction<FormData>>;
 }): void {
     if (initialValues.testimonials.length === 0) {
         setInitialValues({
@@ -20,11 +20,11 @@ export function SetReceivingDataAndReset({
             sectionId: data.websiteSections.data[0].id,
             title: sectionData.title,
             testimonials: sectionData.testimonials
-        })
+        });
 
         reset({
             title: sectionData.title,
             testimonials: sectionData.testimonials
-        })
+        });
     }
 }

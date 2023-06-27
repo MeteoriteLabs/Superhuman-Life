@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState, useContext } from 'react'
+import React, { useMemo, useRef, useState, useContext } from 'react';
 import {
     Badge,
     Button,
@@ -9,22 +9,22 @@ import {
     Container,
     Row,
     Col
-} from 'react-bootstrap'
-import Table from '../../../components/table'
-import { useQuery } from '@apollo/client'
-import AuthContext from '../../../context/auth-context'
-import CreateEditMessage from './createoredit-message'
-import ActionButton from '../../../components/actionbutton/index'
-import { GET_MESSAGES } from './queries'
-import { flattenObj } from '../../../components/utils/responseFlatten'
+} from 'react-bootstrap';
+import Table from '../../../components/table';
+import { useQuery } from '@apollo/client';
+import AuthContext from '../../../context/auth-context';
+import CreateEditMessage from './createoredit-message';
+import ActionButton from '../../../components/actionbutton/index';
+import { GET_MESSAGES } from './queries';
+import { flattenObj } from '../../../components/utils/responseFlatten';
 
 const MindsetPage: React.FC = () => {
-    const [searchFilter, setSearchFilter] = useState<string>('')
-    const searchInput = useRef<any>()
-    const auth = useContext(AuthContext)
-    const createEditMessageComponent = useRef<any>(null)
-    const [page, setPage] = useState<number>(1)
-    const [totalRecords, setTotalRecords] = useState<number>(0)
+    const [searchFilter, setSearchFilter] = useState<string>('');
+    const searchInput = useRef<any>();
+    const auth = useContext(AuthContext);
+    const createEditMessageComponent = useRef<any>(null);
+    const [page, setPage] = useState<number>(1);
+    const [totalRecords, setTotalRecords] = useState<number>(0);
 
     const columns = useMemo<any>(
         () => [
@@ -57,63 +57,63 @@ const MindsetPage: React.FC = () => {
                         createEditMessageComponent.current.TriggerForm({
                             id: row.original.id,
                             type: 'edit'
-                        })
-                    }
+                        });
+                    };
                     const viewHandler = () => {
                         createEditMessageComponent.current.TriggerForm({
                             id: row.original.id,
                             type: 'view'
-                        })
-                    }
+                        });
+                    };
                     const statusChangeHandler = () => {
                         createEditMessageComponent.current.TriggerForm({
                             id: row.original.id,
                             type: 'toggle-status',
                             current_status: row.original.status === 'Active'
-                        })
-                    }
+                        });
+                    };
                     const deleteHandler = () => {
                         createEditMessageComponent.current.TriggerForm({
                             id: row.original.id,
                             type: 'delete'
-                        })
-                    }
+                        });
+                    };
 
                     const arrayAction = [
                         { actionName: 'Edit', actionClick: editHandler },
                         { actionName: 'View', actionClick: viewHandler },
                         { actionName: 'Status', actionClick: statusChangeHandler },
                         { actionName: 'Delete', actionClick: deleteHandler }
-                    ]
+                    ];
 
-                    return <ActionButton arrayAction={arrayAction}></ActionButton>
+                    return <ActionButton arrayAction={arrayAction}></ActionButton>;
                 }
             }
         ],
         []
-    )
+    );
 
     function getDate(time: number) {
-        const dateObj = new Date(time)
-        const month = dateObj.getMonth() + 1
-        const year = dateObj.getFullYear()
-        const date = dateObj.getDate()
+        const dateObj = new Date(time);
+        const month = dateObj.getMonth() + 1;
+        const year = dateObj.getFullYear();
+        const date = dateObj.getDate();
 
-        return `${date}/${month}/${year}`
+        return `${date}/${month}/${year}`;
     }
 
-    const [datatable, setDataTable] = useState<Record<string, unknown>[]>([])
+    const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
 
     const fetch = useQuery(GET_MESSAGES, {
         variables: { filter: searchFilter, id: auth.userid, start: page * 10 - 10, limit: 10 },
         onCompleted: (data) => {
-            setTotalRecords(data.prerecordedMessages.meta.pagination.total)
-            loadData(data)
+            setTotalRecords(data.prerecordedMessages.meta.pagination.total);
+            loadData(data);
         }
-    })
+    });
 
     function loadData(data) {
-        const flattenData = flattenObj({ ...data })
+        const flattenData = flattenObj({ ...data });
 
         setDataTable(
             [...flattenData.prerecordedMessages].map((Detail) => {
@@ -125,18 +125,18 @@ const MindsetPage: React.FC = () => {
                     minidesc: Detail.minidescription,
                     status: Detail.Status ? 'Active' : 'Inactive',
                     updatedon: getDate(Date.parse(Detail.updatedAt))
-                }
+                };
             })
-        )
+        );
     }
 
     function refetchQueryCallback() {
-        fetch.refetch()
+        fetch.refetch();
     }
 
     const pageHandler = (selectedPageNumber: number) => {
-        setPage(selectedPageNumber)
-    }
+        setPage(selectedPageNumber);
+    };
 
     return (
         <>
@@ -154,8 +154,8 @@ const MindsetPage: React.FC = () => {
                                     <Button
                                         variant="outline-secondary"
                                         onClick={(e: any) => {
-                                            e.preventDefault()
-                                            setSearchFilter(searchInput.current.value)
+                                            e.preventDefault();
+                                            setSearchFilter(searchInput.current.value);
                                         }}
                                     >
                                         <i className="fas fa-search"></i>
@@ -173,7 +173,7 @@ const MindsetPage: React.FC = () => {
                                             id: null,
                                             type: 'create',
                                             modal_status: true
-                                        })
+                                        });
                                     }}
                                 >
                                     <i className="fas fa-plus-circle"></i> Create New
@@ -215,7 +215,7 @@ const MindsetPage: React.FC = () => {
                 </Row>
             ) : null}
         </>
-    )
-}
+    );
+};
 
-export default MindsetPage
+export default MindsetPage;

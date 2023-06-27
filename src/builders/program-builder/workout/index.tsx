@@ -1,4 +1,4 @@
-import { useMemo, useContext, useState, useRef } from 'react'
+import { useMemo, useContext, useState, useRef } from 'react';
 import {
     Button,
     Card,
@@ -9,36 +9,36 @@ import {
     InputGroup,
     Row,
     Container
-} from 'react-bootstrap'
-import Table from '../../../components/table'
-import { useQuery, useMutation } from '@apollo/client'
-import { GET_TABLEDATA, CREATE_WORKOUT } from './queries'
-import AuthContext from '../../../context/auth-context'
-import ActionButton from '../../../components/actionbutton'
-import CreateEditWorkout from './createoredit-workout'
-import { flattenObj } from '../../../components/utils/responseFlatten'
-import moment from 'moment'
+} from 'react-bootstrap';
+import Table from '../../../components/table';
+import { useQuery, useMutation } from '@apollo/client';
+import { GET_TABLEDATA, CREATE_WORKOUT } from './queries';
+import AuthContext from '../../../context/auth-context';
+import ActionButton from '../../../components/actionbutton';
+import CreateEditWorkout from './createoredit-workout';
+import { flattenObj } from '../../../components/utils/responseFlatten';
+import moment from 'moment';
 
 export default function EventsTab(): JSX.Element {
-    const auth = useContext(AuthContext)
-    const [show, setShow] = useState<boolean>(false)
-    const [name, setName] = useState('')
-    const [frm, setFrm] = useState<any>()
-    const [tableData, setTableData] = useState<any[]>([])
-    const createEditWorkoutComponent = useRef<any>(null)
-    const [searchFilter, setSearchFilter] = useState('')
-    const searchInput = useRef<HTMLInputElement>(null)
-    const [page, setPage] = useState<number>(1)
-    const [totalRecords, setTotalRecords] = useState<number>(0)
+    const auth = useContext(AuthContext);
+    const [show, setShow] = useState<boolean>(false);
+    const [name, setName] = useState('');
+    const [frm, setFrm] = useState<any>();
+    const [tableData, setTableData] = useState<any[]>([]);
+    const createEditWorkoutComponent = useRef<any>(null);
+    const [searchFilter, setSearchFilter] = useState('');
+    const searchInput = useRef<HTMLInputElement>(null);
+    const [page, setPage] = useState<number>(1);
+    const [totalRecords, setTotalRecords] = useState<number>(0);
 
     const [createWorkout] = useMutation(CREATE_WORKOUT, {
         onCompleted: () => {
-            refetchQueryCallback()
+            refetchQueryCallback();
         }
-    })
+    });
 
-    const handleClose = () => setShow(false)
-    const handleShow = () => setShow(true)
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     function CreateWorkout(
         _variables: Record<string, unknown> = { id: auth.userid, details: frm }
@@ -46,15 +46,15 @@ export default function EventsTab(): JSX.Element {
         frm.rawDiscipline = frm.rawDiscipline
             .map((item: any) => item.id)
             .join(', ')
-            .split(', ')
+            .split(', ');
         frm.rawEquipment = frm.rawEquipment
             .map((item: any) => item.id)
             .join(', ')
-            .split(', ')
+            .split(', ');
         frm.rawMuscleGroup = frm.rawMuscleGroup
             .map((item: any) => item.id)
             .join(', ')
-            .split(', ')
+            .split(', ');
 
         createWorkout({
             variables: {
@@ -75,7 +75,7 @@ export default function EventsTab(): JSX.Element {
                 muscle_groups: frm.rawMuscleGroup,
                 users_permissions_user: frm.users_permissions_user
             }
-        })
+        });
     }
 
     const columns = useMemo<any>(
@@ -96,50 +96,50 @@ export default function EventsTab(): JSX.Element {
                         createEditWorkoutComponent.current.TriggerForm({
                             id: row.original.id,
                             type: 'edit'
-                        })
-                    }
+                        });
+                    };
                     const actionClick2 = () => {
                         createEditWorkoutComponent.current.TriggerForm({
                             id: row.original.id,
                             type: 'view'
-                        })
-                    }
+                        });
+                    };
                     const actionClick3 = () => {
-                        setName(row.original.workoutName + ' copy')
-                        setFrm(row.original)
-                        handleShow()
-                    }
+                        setName(row.original.workoutName + ' copy');
+                        setFrm(row.original);
+                        handleShow();
+                    };
                     const actionClick4 = () => {
                         createEditWorkoutComponent.current.TriggerForm({
                             id: row.original.id,
                             type: 'delete'
-                        })
-                    }
+                        });
+                    };
 
                     const arrayAction = [
                         { actionName: 'Edit', actionClick: actionClick1 },
                         { actionName: 'View', actionClick: actionClick2 },
                         { actionName: 'Duplicate', actionClick: actionClick3 },
                         { actionName: 'Delete', actionClick: actionClick4 }
-                    ]
+                    ];
 
-                    return <ActionButton arrayAction={arrayAction}></ActionButton>
+                    return <ActionButton arrayAction={arrayAction}></ActionButton>;
                 }
             }
         ],
         []
-    )
+    );
 
     const fetch = useQuery(GET_TABLEDATA, {
         variables: { id: auth.userid, filter: searchFilter, start: page * 10 - 10, limit: 10 },
         onCompleted: (data) => {
-            setTotalRecords(data.workouts.meta.pagination.total)
-            loadData(data)
+            setTotalRecords(data.workouts.meta.pagination.total);
+            loadData(data);
         }
-    })
+    });
 
     function refetchQueryCallback() {
-        fetch.refetch()
+        fetch.refetch();
     }
 
     function getDate(time: any) {
@@ -156,17 +156,17 @@ export default function EventsTab(): JSX.Element {
             'Oct',
             'Nov',
             'Dec'
-        ]
-        const dateObj = new Date(time)
-        const month = monthNames[dateObj.getMonth()]
-        const year = dateObj.getFullYear()
-        const date = dateObj.getDate()
+        ];
+        const dateObj = new Date(time);
+        const month = monthNames[dateObj.getMonth()];
+        const year = dateObj.getFullYear();
+        const date = dateObj.getDate();
 
-        return `${date}-${month}-${year}`
+        return `${date}-${month}-${year}`;
     }
 
     function loadData(data: any) {
-        const flattenData = flattenObj({ ...data })
+        const flattenData = flattenObj({ ...data });
         setTableData(
             [...flattenData.workouts].map((detail) => {
                 return {
@@ -175,7 +175,7 @@ export default function EventsTab(): JSX.Element {
                     rawDiscipline: detail.fitnessdisciplines,
                     discipline: detail.fitnessdisciplines
                         .map((val: any) => {
-                            return val.disciplinename
+                            return val.disciplinename;
                         })
                         .join(', '),
                     level: detail.level,
@@ -184,13 +184,13 @@ export default function EventsTab(): JSX.Element {
                     rawMuscleGroup: detail.muscle_groups,
                     muscleGroup: detail.muscle_groups
                         .map((muscle: any) => {
-                            return muscle.name
+                            return muscle.name;
                         })
                         .join(', '),
                     rawEquipment: detail.equipment_lists,
                     equipment: detail.equipment_lists
                         .map((equipment: any) => {
-                            return equipment.name
+                            return equipment.name;
                         })
                         .join(', '),
                     updatedOn: moment(getDate(Date.parse(detail.updatedAt))).format('Do MMM YYYY'),
@@ -203,14 +203,14 @@ export default function EventsTab(): JSX.Element {
                     mainmovement: detail.mainmovement,
                     cooldown: detail.cooldown,
                     workout_video_id: detail.Workout_Video_ID
-                }
+                };
             })
-        )
+        );
     }
 
     const pageHandler = (selectedPageNumber: number) => {
-        setPage(selectedPageNumber)
-    }
+        setPage(selectedPageNumber);
+    };
 
     return (
         <TabContent>
@@ -228,9 +228,9 @@ export default function EventsTab(): JSX.Element {
                                 <Button
                                     variant="outline-secondary"
                                     onClick={(e) => {
-                                        e.preventDefault()
+                                        e.preventDefault();
                                         searchInput.current &&
-                                            setSearchFilter(searchInput.current.value)
+                                            setSearchFilter(searchInput.current.value);
                                     }}
                                 >
                                     <i className="fas fa-search"></i>
@@ -247,7 +247,7 @@ export default function EventsTab(): JSX.Element {
                                     createEditWorkoutComponent.current.TriggerForm({
                                         id: null,
                                         type: 'create'
-                                    })
+                                    });
                                 }}
                             >
                                 <i className="fas fa-plus-circle"></i> Create Workout
@@ -274,8 +274,8 @@ export default function EventsTab(): JSX.Element {
                                         <Button
                                             variant="success"
                                             onClick={() => {
-                                                handleClose()
-                                                CreateWorkout({ id: auth.userid, frm: frm })
+                                                handleClose();
+                                                CreateWorkout({ id: auth.userid, frm: frm });
                                             }}
                                         >
                                             Save Changes
@@ -313,5 +313,5 @@ export default function EventsTab(): JSX.Element {
                 </Row>
             ) : null}
         </TabContent>
-    )
+    );
 }

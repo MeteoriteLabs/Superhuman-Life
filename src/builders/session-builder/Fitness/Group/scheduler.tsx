@@ -1,164 +1,164 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useState, useEffect, useRef, useContext } from 'react'
+import { useState, useEffect, useRef, useContext } from 'react';
 import {
     GET_TABLEDATA,
     GET_ALL_FITNESS_PACKAGE_BY_TYPE,
     GET_ALL_CLIENT_PACKAGE,
     GET_TAG_BY_ID
-} from '../../graphQL/queries'
-import { UPDATE_STARTDATE } from '../../graphQL/mutation'
-import { useQuery, useMutation } from '@apollo/client'
-import { Row, Col, Button, Dropdown, Modal, InputGroup, FormControl } from 'react-bootstrap'
-import SchedulerPage from '../../../program-builder/program-template/scheduler'
-import moment from 'moment'
-import '../fitness.css'
-import FitnessAction from '../FitnessAction'
-import AuthContext from '../../../../context/auth-context'
-import { Link } from 'react-router-dom'
-import TimePicker from 'rc-time-picker'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
-import 'rc-time-picker/assets/index.css'
-import './actionButton.css'
-import Loader from '../../../../components/Loader/Loader'
+} from '../../graphQL/queries';
+import { UPDATE_STARTDATE } from '../../graphQL/mutation';
+import { useQuery, useMutation } from '@apollo/client';
+import { Row, Col, Button, Dropdown, Modal, InputGroup, FormControl } from 'react-bootstrap';
+import SchedulerPage from '../../../program-builder/program-template/scheduler';
+import moment from 'moment';
+import '../fitness.css';
+import FitnessAction from '../FitnessAction';
+import AuthContext from '../../../../context/auth-context';
+import { Link } from 'react-router-dom';
+import TimePicker from 'rc-time-picker';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import 'rc-time-picker/assets/index.css';
+import './actionButton.css';
+import Loader from '../../../../components/Loader/Loader';
 
 const Scheduler = () => {
-    const auth = useContext(AuthContext)
-    const last = window.location.pathname.split('/').reverse()
-    const tagId = window.location.pathname.split('/').pop()
-    const [data, setData] = useState<any[]>([])
-    const [show, setShow] = useState(false)
-    const [userPackage, setUserPackage] = useState<any>([])
-    const [editDatesModal, setEditdatesModal] = useState(false)
-    const [editTimeModal, setEditTimeModal] = useState(false)
-    const [startDate, setStartDate] = useState('')
-    const [totalClasses, setTotalClasses] = useState<any>([])
-    const [sessionIds, setSessionIds] = useState<any>([])
-    const [clientIds, setClientIds] = useState<any>([])
+    const auth = useContext(AuthContext);
+    const last = window.location.pathname.split('/').reverse();
+    const tagId = window.location.pathname.split('/').pop();
+    const [data, setData] = useState<any[]>([]);
+    const [show, setShow] = useState(false);
+    const [userPackage, setUserPackage] = useState<any>([]);
+    const [editDatesModal, setEditdatesModal] = useState(false);
+    const [editTimeModal, setEditTimeModal] = useState(false);
+    const [startDate, setStartDate] = useState('');
+    const [totalClasses, setTotalClasses] = useState<any>([]);
+    const [sessionIds, setSessionIds] = useState<any>([]);
+    const [clientIds, setClientIds] = useState<any>([]);
     // these are the sessions that will passed onto the scheduler
-    const [schedulerSessions, setSchedulerSessions] = useState<any>([])
+    const [schedulerSessions, setSchedulerSessions] = useState<any>([]);
     // the group end and start date are actual dates
-    const [groupStartDate, setGroupStartDate] = useState('')
-    const [groupEndDate, setGroupEndDate] = useState('')
+    const [groupStartDate, setGroupStartDate] = useState('');
+    const [groupEndDate, setGroupEndDate] = useState('');
     // this is used for monthly toggle
-    const [prevDate, setPrevDate] = useState('')
-    const [nextDate, setNextDate] = useState('')
-    const [tagSeperation, setTagSeperation] = useState<any>([])
-    const [statusDays, setStatusDays] = useState()
-    const [tag, setTag] = useState<any>()
+    const [prevDate, setPrevDate] = useState('');
+    const [nextDate, setNextDate] = useState('');
+    const [tagSeperation, setTagSeperation] = useState<any>([]);
+    const [statusDays, setStatusDays] = useState();
+    const [tag, setTag] = useState<any>();
 
-    let programIndex
+    let programIndex;
 
-    const fitnessActionRef = useRef<any>(null)
+    const fitnessActionRef = useRef<any>(null);
 
-    const handleCloseDatesModal = () => setEditdatesModal(false)
-    const handleShowDatesModal = () => setEditdatesModal(true)
+    const handleCloseDatesModal = () => setEditdatesModal(false);
+    const handleShowDatesModal = () => setEditdatesModal(true);
 
-    const handleCloseTimeModal = () => setEditTimeModal(false)
-    const handleShowTimeModal = () => setEditTimeModal(true)
+    const handleCloseTimeModal = () => setEditTimeModal(false);
+    const handleShowTimeModal = () => setEditTimeModal(true);
 
-    const [updateDate] = useMutation(UPDATE_STARTDATE)
+    const [updateDate] = useMutation(UPDATE_STARTDATE);
 
     useEffect(() => {
         setTimeout(() => {
-            setShow(true)
-        }, 1500)
-    }, [show])
+            setShow(true);
+        }, 1500);
+    }, [show]);
 
     function handleRangeDates(startDate: string, endDate: string) {
-        setPrevDate(moment(startDate).format('YYYY-MM-DD'))
+        setPrevDate(moment(startDate).format('YYYY-MM-DD'));
 
         if (moment(startDate).add(30, 'days').isBefore(moment(endDate))) {
-            setNextDate(moment(startDate).add(30, 'days').format('YYYY-MM-DD'))
+            setNextDate(moment(startDate).add(30, 'days').format('YYYY-MM-DD'));
         } else {
-            setNextDate(moment(endDate).format('YYYY-MM-DD'))
+            setNextDate(moment(endDate).format('YYYY-MM-DD'));
         }
     }
 
     const mainQuery = useQuery(GET_TAG_BY_ID, {
         variables: { id: tagId },
         onCompleted: (data) => loadTagData(data)
-    })
+    });
 
     function loadTagData(data: any) {
-        setSchedulerSessions(data)
-        const flattenData = flattenObj({ ...data })
-        const total = [0, 0]
-        const clientValues = [...clientIds]
-        const values = [...flattenData.tags[0].sessions]
-        const ids = [...sessionIds]
+        setSchedulerSessions(data);
+        const flattenData = flattenObj({ ...data });
+        const total = [0, 0];
+        const clientValues = [...clientIds];
+        const values = [...flattenData.tags[0].sessions];
+        const ids = [...sessionIds];
         for (let i = 0; i < flattenData.tags[0].client_packages.length; i++) {
-            clientValues.push(flattenData.tags[0].client_packages[i].users_permissions_user.id)
+            clientValues.push(flattenData.tags[0].client_packages[i].users_permissions_user.id);
         }
         for (let i = 0; i < values.length; i++) {
-            ids.push(values[i].id)
+            ids.push(values[i].id);
             if (values[i].mode === 'Online') {
-                total[0] += 1
+                total[0] += 1;
             } else if (values[i].mode === 'Offline') {
-                total[1] += 1
+                total[1] += 1;
             }
         }
         setGroupStartDate(
             moment(flattenData.tags[0].fitnesspackage.Start_date).format('YYYY-MM-DD')
-        )
-        setGroupEndDate(moment(flattenData.tags[0].fitnesspackage.End_date).format('YYYY-MM-DD'))
+        );
+        setGroupEndDate(moment(flattenData.tags[0].fitnesspackage.End_date).format('YYYY-MM-DD'));
         handleRangeDates(
             flattenData.tags[0].fitnesspackage.Start_date,
             flattenData.tags[0].fitnesspackage.End_date
-        )
-        setClientIds(clientValues)
-        setSessionIds(ids)
-        setTotalClasses(total)
-        setTag(flattenData.tags[0])
+        );
+        setClientIds(clientValues);
+        setSessionIds(ids);
+        setTotalClasses(total);
+        setTag(flattenData.tags[0]);
     }
 
     const { data: data4 } = useQuery(GET_TABLEDATA, {
         variables: {
             id: last[0]
         }
-    })
+    });
 
     const { data: data1 } = useQuery(GET_ALL_FITNESS_PACKAGE_BY_TYPE, {
         variables: {
             id: auth.userid,
             type: 'Group Class'
         }
-    })
+    });
 
     const { data: data3 } = useQuery(GET_ALL_CLIENT_PACKAGE, {
         variables: {
             id: auth.userid,
             type: 'Group Class'
         }
-    })
+    });
 
     function handleEventsSeperation(data: any, rest_days: any) {
-        let grouponline = 0
-        let groupoffline = 0
+        let grouponline = 0;
+        let groupoffline = 0;
         if (data) {
             for (let i = 0; i < data.length; i++) {
                 if (data[i].tag === 'Group Class') {
                     if (data[i].mode === 'Online') {
-                        grouponline++
+                        grouponline++;
                     } else {
-                        groupoffline++
+                        groupoffline++;
                     }
                 }
             }
-            setTagSeperation([grouponline, groupoffline])
-            const arr: any = []
+            setTagSeperation([grouponline, groupoffline]);
+            const arr: any = [];
             for (let j = 0; j < data.length; j++) {
-                if (arr.includes(parseInt(data[j].day)) === false) arr.push(parseInt(data[j].day))
+                if (arr.includes(parseInt(data[j].day)) === false) arr.push(parseInt(data[j].day));
             }
-            const restDays = rest_days === null ? 0 : rest_days.length
-            setStatusDays(arr.length + restDays)
+            const restDays = rest_days === null ? 0 : rest_days.length;
+            setStatusDays(arr.length + restDays);
         }
     }
 
     const loadData = () => {
-        const flattenData1 = flattenObj({ ...data1 })
+        const flattenData1 = flattenObj({ ...data1 });
         // const flattenData2 = flattenObj({...data2});
-        const flattenData3 = flattenObj({ ...data3 })
-        const flattenData4 = flattenObj({ ...data4 })
+        const flattenData3 = flattenObj({ ...data3 });
+        const flattenData4 = flattenObj({ ...data4 });
 
         setData(
             [...flattenData4.fitnessprograms].map((detail) => {
@@ -167,7 +167,7 @@ const Scheduler = () => {
                     programName: detail.title,
                     discipline: detail.fitnessdisciplines
                         .map((val: any) => {
-                            return val.disciplinename
+                            return val.disciplinename;
                         })
                         .join(', '),
                     level: detail.level,
@@ -177,20 +177,20 @@ const Scheduler = () => {
                     duration: detail.duration_days,
                     details: detail.description,
                     restDays: detail.rest_days
-                }
+                };
             })
-        )
-        const arrayFitnessPackage: any[] = []
-        const arrayData: any[] = []
+        );
+        const arrayFitnessPackage: any[] = [];
+        const arrayData: any[] = [];
 
-        const arrayA = arrayData.map((item) => item.id)
+        const arrayA = arrayData.map((item) => item.id);
 
         const filterPackage = flattenData1?.fitnesspackages.filter(
             (item: { id: string }) => !arrayA.includes(item.id)
-        )
+        );
         filterPackage.forEach((item) => {
-            arrayData.push(item)
-        })
+            arrayData.push(item);
+        });
 
         for (let i = 0; i < arrayData.length; i++) {
             for (let j = 0; j < flattenData3.clientPackages.length; j++) {
@@ -202,10 +202,10 @@ const Scheduler = () => {
                         arrayFitnessPackage.push({
                             ...arrayData[i],
                             ...flattenData3.clientPackages[j].users_permissions_user
-                        })
+                        });
                     } else {
-                        arrayFitnessPackage.push(arrayData[i])
-                        break
+                        arrayFitnessPackage.push(arrayData[i]);
+                        break;
                     }
                 }
             }
@@ -239,22 +239,22 @@ const Scheduler = () => {
                     programName: packageItem.title ? packageItem.title : 'N/A',
                     programStatus: packageItem.username ? 'Assigned' : 'N/A',
                     renewal: packageItem.title ? '25/08/2021' : 'N/A'
-                }
+                };
             })
-        ])
-    }
+        ]);
+    };
 
-    const arr: any = []
+    const arr: any = [];
     for (let i = 0; i < userPackage.length - 1; i++) {
         if (userPackage[i].id === userPackage[i + 1].id) {
             if (userPackage[i].proManagerFitnessId === userPackage[i + 1].proManagerFitnessId) {
                 if (typeof userPackage[i].client === 'string') {
-                    arr[0] = userPackage[i].client
+                    arr[0] = userPackage[i].client;
                 }
-                arr.push(userPackage[i + 1].client)
-                userPackage[i + 1].client = arr
-                userPackage.splice(i, 1)
-                i--
+                arr.push(userPackage[i + 1].client);
+                userPackage[i + 1].client = arr;
+                userPackage.splice(i, 1);
+                i--;
             }
         }
     }
@@ -262,14 +262,14 @@ const Scheduler = () => {
     if (userPackage.length > 0) {
         programIndex = userPackage.findIndex(
             (item) => item.proManagerId === last[1] && item.proManagerFitnessId === last[0]
-        )
+        );
     }
 
     function handleDateEdit() {
         const edate = moment(startDate).add(
             moment(data[0].edate).diff(data[0].sdate, 'days'),
             'days'
-        )
+        );
 
         updateDate({
             variables: {
@@ -277,31 +277,31 @@ const Scheduler = () => {
                 startDate: moment(startDate).format('YYYY-MM-DD'),
                 endDate: moment(edate).format('YYYY-MM-DD')
             }
-        })
+        });
 
-        handleCloseDatesModal()
+        handleCloseDatesModal();
     }
 
     function handleTimeFormatting(data: any, duration: number) {
-        const digits = duration <= 30 ? 2 : 3
+        const digits = duration <= 30 ? 2 : 3;
         return data.toLocaleString('en-US', {
             minimumIntegerDigits: digits.toString(),
             useGrouping: false
-        })
+        });
     }
 
     function handleTotalClasses(data: any, duration: number) {
-        let sum = 0
+        let sum = 0;
         for (let i = 0; i < data.length; i++) {
-            sum += data[i]
+            sum += data[i];
         }
-        const formattedSum = handleTimeFormatting(sum, duration)
-        return formattedSum
+        const formattedSum = handleTimeFormatting(sum, duration);
+        return formattedSum;
     }
 
     function handleCallback() {
         // setSessionIds([]);
-        mainQuery.refetch()
+        mainQuery.refetch();
     }
 
     function handleDatePicked(date: string) {
@@ -310,43 +310,43 @@ const Scheduler = () => {
 
     function handlePrevMonth(date: string) {
         // setGroupStartDate(moment(date).subtract(1, 'month').format('YYYY-MM-DD'));
-        setNextDate(moment(date).format('YYYY-MM-DD'))
+        setNextDate(moment(date).format('YYYY-MM-DD'));
 
         if (moment(date).subtract(30, 'days').isSameOrAfter(moment(groupStartDate))) {
-            setPrevDate(moment(date).subtract(30, 'days').format('YYYY-MM-DD'))
+            setPrevDate(moment(date).subtract(30, 'days').format('YYYY-MM-DD'));
         } else {
-            setPrevDate(moment(groupStartDate).format('YYYY-MM-DD'))
+            setPrevDate(moment(groupStartDate).format('YYYY-MM-DD'));
         }
     }
 
     function handleNextMonth(date: string) {
         // setGroupStartDate(moment(date).add(1, 'month').format('YYYY-MM-DD'));
-        setPrevDate(moment(date).format('YYYY-MM-DD'))
+        setPrevDate(moment(date).format('YYYY-MM-DD'));
 
         if (moment(date).add(30, 'days').isBefore(moment(groupEndDate))) {
-            setNextDate(moment(date).add(30, 'days').format('YYYY-MM-DD'))
+            setNextDate(moment(date).add(30, 'days').format('YYYY-MM-DD'));
         } else {
-            setNextDate(moment(groupEndDate).format('YYYY-MM-DD'))
+            setNextDate(moment(groupEndDate).format('YYYY-MM-DD'));
         }
     }
 
     // this is to handle the left chevron, if we have to display it or no.
     function handlePrevDisplay(date: string) {
-        return moment(date).isSame(moment(groupStartDate)) ? 'none' : ''
+        return moment(date).isSame(moment(groupStartDate)) ? 'none' : '';
     }
 
     // this is to handle the right chevron, if we have to display it or no.
     function handleNextDisplay(date: string) {
-        return moment(date).isSame(moment(groupEndDate)) ? 'none' : ''
+        return moment(date).isSame(moment(groupEndDate)) ? 'none' : '';
     }
 
     // this is to calculate the number of days for the scheduler
     function calculateDays(sd: string, ed: string) {
-        const days = moment(ed).diff(moment(sd), 'days')
-        return days + 1
+        const days = moment(ed).diff(moment(sd), 'days');
+        return days + 1;
     }
 
-    if (!show) return <Loader />
+    if (!show) return <Loader />;
     else
         return (
             <div className="col-lg-12">
@@ -411,7 +411,7 @@ const Scheduler = () => {
                                                             tag.client_packages
                                                                 .slice(0, 4)
                                                                 .map((item, index) => {
-                                                                    const postionLeft = 8
+                                                                    const postionLeft = 8;
                                                                     return (
                                                                         <div key={index}>
                                                                             <img
@@ -431,7 +431,7 @@ const Scheduler = () => {
                                                                                 className="position-absolute"
                                                                             />
                                                                         </div>
-                                                                    )
+                                                                    );
                                                                 })
                                                         )}
                                                         <Button
@@ -442,7 +442,7 @@ const Scheduler = () => {
                                                                         actionType: 'allClients',
                                                                         type: 'Group Class'
                                                                     }
-                                                                )
+                                                                );
                                                             }}
                                                             style={{ marginLeft: '90px' }}
                                                             variant="outline-primary"
@@ -602,7 +602,7 @@ const Scheduler = () => {
                                     cursor: 'pointer'
                                 }}
                                 onClick={() => {
-                                    handlePrevMonth(prevDate)
+                                    handlePrevMonth(prevDate);
                                 }}
                                 className="rounded-circle"
                             >
@@ -620,7 +620,7 @@ const Scheduler = () => {
                                     cursor: 'pointer'
                                 }}
                                 onClick={() => {
-                                    handleNextMonth(nextDate)
+                                    handleNextMonth(nextDate);
                                 }}
                             >
                                 <i className="fa fa-chevron-right ml-4"></i>
@@ -661,7 +661,7 @@ const Scheduler = () => {
                                             : startDate
                                     }
                                     onChange={(e) => {
-                                        setStartDate(e.target.value)
+                                        setStartDate(e.target.value);
                                     }}
                                     type="date"
                                 />
@@ -675,7 +675,7 @@ const Scheduler = () => {
                                 variant="outline-success"
                                 disabled={startDate === '' ? true : false}
                                 onClick={() => {
-                                    handleDateEdit()
+                                    handleDateEdit();
                                 }}
                             >
                                 Submit
@@ -714,7 +714,7 @@ const Scheduler = () => {
                             <Button
                                 variant="outline-success"
                                 onClick={() => {
-                                    handleDateEdit()
+                                    handleDateEdit();
                                 }}
                             >
                                 Submit
@@ -723,7 +723,7 @@ const Scheduler = () => {
                     </Modal>
                 }
             </div>
-        )
-}
+        );
+};
 
-export default Scheduler
+export default Scheduler;

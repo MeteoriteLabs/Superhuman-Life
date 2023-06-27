@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const GET_TRIGGERS = gql`
     query FetchTypesTriggers {
@@ -11,7 +11,7 @@ export const GET_TRIGGERS = gql`
             }
         }
     }
-`
+`;
 
 export const ADD_MESSAGE = gql`
     mutation msg(
@@ -41,7 +41,7 @@ export const ADD_MESSAGE = gql`
             }
         }
     }
-`
+`;
 export const UPDATE_MESSAGE = gql`
     mutation updatemsg(
         $title: String
@@ -72,7 +72,7 @@ export const UPDATE_MESSAGE = gql`
             }
         }
     }
-`
+`;
 
 export const GET_MESSAGES = gql`
     query FeedSearchQuery($filter: String!, $id: ID!) {
@@ -113,7 +113,7 @@ export const GET_MESSAGES = gql`
             }
         }
     }
-`
+`;
 export const DELETE_MESSAGE = gql`
     mutation deleteMessage($id: ID!) {
         deleteInformationbankmessage(id: $id) {
@@ -122,7 +122,7 @@ export const DELETE_MESSAGE = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_STATUS = gql`
     mutation updatestatus($status: Boolean, $messageid: ID!) {
@@ -132,7 +132,7 @@ export const UPDATE_STATUS = gql`
             }
         }
     }
-`
+`;
 export const GET_MESSAGE = gql`
     query getmessage($id: ID!) {
         informationbankmessages(filters: { id: { eq: $id } }) {
@@ -164,4 +164,4 @@ export const GET_MESSAGE = gql`
             }
         }
     }
-`
+`;

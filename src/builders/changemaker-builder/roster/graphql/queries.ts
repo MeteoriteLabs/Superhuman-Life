@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const GET_SESSION_AND_SESSION_BOOKINGS = gql`
     query getSessionAndSessionsBookings($id: ID!) {
@@ -83,7 +83,7 @@ export const GET_SESSION_AND_SESSION_BOOKINGS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_SESSIONS_BASED_ON_DATE = gql`
     query getSessionsBasedOnDate($date: Date!, $id: ID!) {
@@ -96,7 +96,7 @@ export const GET_SESSIONS_BASED_ON_DATE = gql`
             }
         }
     }
-`
+`;
 
 export const GET_TAG_BASED_ON_SESSION = gql`
     query getTagBasedOnSession($id: ID!, $lowerDate: Date!, $upperDate: Date!, $userid: ID!) {
@@ -161,7 +161,7 @@ export const GET_TAG_BASED_ON_SESSION = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_ATTENDANCE_DATA = gql`
     mutation updateAttendanceData($id: ID!, $status: ENUM_SESSIONSBOOKING_SESSION_BOOKING_STATUS!) {
@@ -171,7 +171,7 @@ export const UPDATE_ATTENDANCE_DATA = gql`
             }
         }
     }
-`
+`;
 
 export const GET_PARTICULAR_CLIENT = gql`
     query getParticularClient($id: ID!, $username: String) {
@@ -207,4 +207,4 @@ export const GET_PARTICULAR_CLIENT = gql`
             }
         }
     }
-`
+`;

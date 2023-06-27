@@ -1,4 +1,4 @@
-import { useMemo, useState, useRef, useContext, useEffect } from 'react'
+import { useMemo, useState, useRef, useContext, useEffect } from 'react';
 import {
     Badge,
     Button,
@@ -9,30 +9,30 @@ import {
     Container,
     Row,
     Col
-} from 'react-bootstrap'
-import Table from '../../../components/table/leads-table'
-import { useQuery, useMutation } from '@apollo/client'
-import AuthContext from '../../../context/auth-context'
-import ActionButton from '../../../components/actionbutton/index'
-import CreateEditMessage from './createoredit-leads'
-import { GET_LEADS_NEW, UPDATE_SEEN_NEW } from './queries'
-import { flattenObj } from '../../../components/utils/responseFlatten'
+} from 'react-bootstrap';
+import Table from '../../../components/table/leads-table';
+import { useQuery, useMutation } from '@apollo/client';
+import AuthContext from '../../../context/auth-context';
+import ActionButton from '../../../components/actionbutton/index';
+import CreateEditMessage from './createoredit-leads';
+import { GET_LEADS_NEW, UPDATE_SEEN_NEW } from './queries';
+import { flattenObj } from '../../../components/utils/responseFlatten';
 
 export default function Leads() {
-    const auth = useContext(AuthContext)
-    const [searchFilter, setSearchFilter] = useState<any>(null)
-    const [data, setData] = useState<any>([])
-    const [nameArr, setNameArr] = useState<any>([])
-    const searchInput = useRef<any>()
-    const createEditMessageComponent = useRef<any>(null)
-    const [page, setPage] = useState<number>(1)
-    const [totalRecords, setTotalRecords] = useState<number>(0)
+    const auth = useContext(AuthContext);
+    const [searchFilter, setSearchFilter] = useState<any>(null);
+    const [data, setData] = useState<any>([]);
+    const [nameArr, setNameArr] = useState<any>([]);
+    const searchInput = useRef<any>();
+    const createEditMessageComponent = useRef<any>(null);
+    const [page, setPage] = useState<number>(1);
+    const [totalRecords, setTotalRecords] = useState<number>(0);
 
     const [updateSeenStatus] = useMutation(UPDATE_SEEN_NEW, {
         onCompleted: (e: any) => {
-            fetch.refetch()
+            fetch.refetch();
         }
-    })
+    });
 
     const columns = useMemo<any>(
         () => [
@@ -118,20 +118,20 @@ export default function Leads() {
                         createEditMessageComponent.current.TriggerForm({
                             id: row.original.id,
                             type: 'edit'
-                        })
-                    }
+                        });
+                    };
                     const viewHandler = () => {
                         createEditMessageComponent.current.TriggerForm({
                             id: row.original.id,
                             type: 'view'
-                        })
-                    }
+                        });
+                    };
                     const deleteHandler = () => {
                         createEditMessageComponent.current.TriggerForm({
                             id: row.original.id,
                             type: 'delete'
-                        })
-                    }
+                        });
+                    };
 
                     const markAsUnreadHandler = () => {
                         updateSeenStatus({
@@ -139,8 +139,8 @@ export default function Leads() {
                                 seen: false,
                                 id: row.original.id
                             }
-                        })
-                    }
+                        });
+                    };
 
                     const markAsReadHandler = () => {
                         updateSeenStatus({
@@ -148,8 +148,8 @@ export default function Leads() {
                                 seen: true,
                                 id: row.original.id
                             }
-                        })
-                    }
+                        });
+                    };
 
                     const arrayAction = [
                         { actionName: 'Edit', actionClick: editHandler },
@@ -157,50 +157,50 @@ export default function Leads() {
                         { actionName: 'Mark as Unread', actionClick: markAsUnreadHandler },
                         { actionName: 'Mark as Read', actionClick: markAsReadHandler },
                         { actionName: 'Delete', actionClick: deleteHandler }
-                    ]
+                    ];
 
-                    return <ActionButton arrayAction={arrayAction}></ActionButton>
+                    return <ActionButton arrayAction={arrayAction}></ActionButton>;
                 }
             }
         ],
         []
-    )
+    );
 
     function getDate(time: any) {
-        const dateObj = new Date(time)
-        const month = dateObj.getMonth() + 1
-        const year = dateObj.getFullYear()
-        const date = dateObj.getDate()
+        const dateObj = new Date(time);
+        const month = dateObj.getMonth() + 1;
+        const year = dateObj.getFullYear();
+        const date = dateObj.getDate();
 
-        return `${date}/${month}/${year}`
+        return `${date}/${month}/${year}`;
     }
 
-    const [datatable, setDataTable] = useState<Record<string, unknown>[]>([])
+    const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
 
     const fetch = useQuery(GET_LEADS_NEW, {
         variables: { filter: searchFilter, id: auth.userid, start: page * 10 - 10, limit: 10 },
         onCompleted: (data) => {
-            setTotalRecords(data.websiteContactForms.meta.pagination.total)
-            loadData(data)
+            setTotalRecords(data.websiteContactForms.meta.pagination.total);
+            loadData(data);
         }
-    })
+    });
 
     function refetchQueryCallback() {
-        fetch.refetch()
+        fetch.refetch();
     }
 
     function loadData(data: any) {
-        const namearr: any = []
-        const flattenData = flattenObj({ ...data })
-        setData([...flattenData.websiteContactForms])
+        const namearr: any = [];
+        const flattenData = flattenObj({ ...data });
+        setData([...flattenData.websiteContactForms]);
         setDataTable(
             [...flattenData.websiteContactForms].flatMap((Detail) => {
                 if (!namearr.includes(Detail.Details?.leadsdetails?.name)) {
-                    namearr.push(Detail.Details?.leadsdetails?.name)
-                    namearr.push(Detail.Details?.leadsdetails?.name?.toLowerCase())
+                    namearr.push(Detail.Details?.leadsdetails?.name);
+                    namearr.push(Detail.Details?.leadsdetails?.name?.toLowerCase());
                 }
                 if (!namearr.includes(Detail.Details?.leadsdetails?.status)) {
-                    namearr.push(Detail.Details?.leadsdetails.status?.toLowerCase())
+                    namearr.push(Detail.Details?.leadsdetails.status?.toLowerCase());
                 }
 
                 return {
@@ -213,10 +213,10 @@ export default function Leads() {
                     status: Detail.Details?.status,
                     isseen: Detail?.isSeen,
                     lastupdated: getDate(Date.parse(Detail.updatedAt))
-                }
+                };
             })
-        )
-        setNameArr(namearr)
+        );
+        setNameArr(namearr);
     }
 
     useEffect(() => {
@@ -239,12 +239,12 @@ export default function Leads() {
                             source: Detail.Details.source,
                             status: Detail.Details.status,
                             lastupdated: getDate(Date.parse(Detail.updatedAt))
-                        }
+                        };
                     } else {
-                        return []
+                        return [];
                     }
                 })
-            )
+            );
         }
 
         if (searchFilter === '') {
@@ -259,15 +259,15 @@ export default function Leads() {
                         source: Detail.Details.source,
                         status: Detail.Details.status,
                         lastupdated: getDate(Date.parse(Detail.updatedAt))
-                    }
+                    };
                 })
-            )
+            );
         }
-    }, [searchFilter, data, nameArr])
+    }, [searchFilter, data, nameArr]);
 
     const pageHandler = (selectedPageNumber: number) => {
-        setPage(selectedPageNumber)
-    }
+        setPage(selectedPageNumber);
+    };
 
     return (
         <TabContent>
@@ -284,8 +284,8 @@ export default function Leads() {
                                 <Button
                                     variant="outline-secondary"
                                     onClick={(e: any) => {
-                                        e.preventDefault()
-                                        setSearchFilter(searchInput.current.value)
+                                        e.preventDefault();
+                                        setSearchFilter(searchInput.current.value);
                                     }}
                                 >
                                     <i className="fas fa-search"></i>
@@ -303,7 +303,7 @@ export default function Leads() {
                                         id: null,
                                         type: 'create',
                                         modal_status: true
-                                    })
+                                    });
                                 }}
                             >
                                 <i className="fas fa-plus-circle"></i> Add Lead
@@ -342,5 +342,5 @@ export default function Leads() {
                 </Row>
             ) : null}
         </TabContent>
-    )
+    );
 }

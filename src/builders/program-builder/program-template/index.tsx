@@ -1,38 +1,38 @@
-import { useState, useEffect } from 'react'
-import { useQuery } from '@apollo/client'
-import { GET_TABLEDATA } from './queries'
-import { Row, Col } from 'react-bootstrap'
-import Scheduler from './scheduler'
-import SessionContext from '../../../context/session-context'
-import { flattenObj } from '../../../components/utils/responseFlatten'
-import Loader from '../../../components/Loader/Loader'
+import { useState, useEffect } from 'react';
+import { useQuery } from '@apollo/client';
+import { GET_TABLEDATA } from './queries';
+import { Row, Col } from 'react-bootstrap';
+import Scheduler from './scheduler';
+import SessionContext from '../../../context/session-context';
+import { flattenObj } from '../../../components/utils/responseFlatten';
+import Loader from '../../../components/Loader/Loader';
 
 const ProgramManager = (props: any) => {
-    const last = window.location.pathname.split('/').pop()
-    const [data, setData] = useState<any[]>([])
-    const [show, setShow] = useState(false)
-    const [sessionIds, setSessionIds] = useState<any[]>([])
+    const last = window.location.pathname.split('/').pop();
+    const [data, setData] = useState<any[]>([]);
+    const [show, setShow] = useState(false);
+    const [sessionIds, setSessionIds] = useState<any[]>([]);
 
     useEffect(() => {
         setTimeout(() => {
-            setShow(true)
-        }, 1500)
-    }, [show])
+            setShow(true);
+        }, 1500);
+    }, [show]);
 
-    const mainQuery = useQuery(GET_TABLEDATA, { variables: { id: last }, onCompleted: loadData })
+    const mainQuery = useQuery(GET_TABLEDATA, { variables: { id: last }, onCompleted: loadData });
 
     function loadData(data: any) {
-        const flattenData = flattenObj({ ...data })
+        const flattenData = flattenObj({ ...data });
         const restDayData = flattenData.fitnessprograms[0].sessions.filter(
             (session: any) => session.Is_restday === true
-        )
+        );
         const sessionData = flattenData.fitnessprograms[0].sessions.filter(
             (val: any) => !restDayData.includes(val)
-        )
-        const values = [...sessionIds]
+        );
+        const values = [...sessionIds];
         flattenData.fitnessprograms[0].sessions.forEach((program: any) => {
-            values.push(program.id)
-        })
+            values.push(program.id);
+        });
         setData(
             [...flattenData.fitnessprograms].map((detail) => {
                 return {
@@ -40,7 +40,7 @@ const ProgramManager = (props: any) => {
                     programName: detail.title,
                     discipline: detail.fitnessdisciplines
                         .map((val: any) => {
-                            return val.disciplinename
+                            return val.disciplinename;
                         })
                         .join(', '),
                     level: detail.level,
@@ -48,18 +48,18 @@ const ProgramManager = (props: any) => {
                     details: detail.description,
                     restDays: restDayData,
                     sessions: sessionData
-                }
+                };
             })
-        )
-        setSessionIds(values)
+        );
+        setSessionIds(values);
     }
 
     function queryCallback() {
-        mainQuery.refetch()
-        setSessionIds([])
+        mainQuery.refetch();
+        setSessionIds([]);
     }
 
-    if (!show) return <Loader />
+    if (!show) return <Loader />;
     else
         return (
             <div className="col-lg-12">
@@ -104,6 +104,6 @@ const ProgramManager = (props: any) => {
                     </Col>
                 </Row>
             </div>
-        )
-}
-export default ProgramManager
+        );
+};
+export default ProgramManager;

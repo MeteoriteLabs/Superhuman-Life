@@ -1,57 +1,57 @@
-import React, { useState, useEffect, useContext, ChangeEvent } from 'react'
-import { Form, Modal, Button } from 'react-bootstrap'
-import Geocode from 'react-geocode'
+import React, { useState, useEffect, useContext, ChangeEvent } from 'react';
+import { Form, Modal, Button } from 'react-bootstrap';
+import Geocode from 'react-geocode';
 import GooglePlacesAutocomplete, {
     geocodeByAddress,
     getLatLng
-} from 'react-google-places-autocomplete'
-import { useMutation } from '@apollo/client'
-import { CREATE_ADDRESS } from '../../builders/package-builder/fitness/graphQL/mutations'
-import authContext from '../../context/auth-context'
-import axios from 'axios'
-import API_END_POINTS from '../../components/utils/integration'
+} from 'react-google-places-autocomplete';
+import { useMutation } from '@apollo/client';
+import { CREATE_ADDRESS } from '../../builders/package-builder/fitness/graphQL/mutations';
+import authContext from '../../context/auth-context';
+import axios from 'axios';
+import API_END_POINTS from '../../components/utils/integration';
 
 const AddFitnessAddressModal: React.FC<{ onHide: () => void; show: boolean }> = ({
     onHide,
     show
 }) => {
-    const auth = useContext(authContext)
-    const [googleAddressShow, setGoogleAddressShow] = useState<boolean>(false)
-    const [address1, setAddress1] = useState<string>('')
-    const [city, setCity] = useState<string>('')
-    const [state, setState] = useState<string>('')
-    const [zip, setZip] = useState<string>('')
-    const [country, setCountry] = useState<string>('')
-    const [title, setTitle] = useState<string>('')
-    const [value, setValue] = useState<any>(null)
-    const [longitude, setLongitude] = useState<string>('')
-    const [latitude, setLatitude] = useState<string>('')
-    const [errors, setErrors] = useState<string>('')
+    const auth = useContext(authContext);
+    const [googleAddressShow, setGoogleAddressShow] = useState<boolean>(false);
+    const [address1, setAddress1] = useState<string>('');
+    const [city, setCity] = useState<string>('');
+    const [state, setState] = useState<string>('');
+    const [zip, setZip] = useState<string>('');
+    const [country, setCountry] = useState<string>('');
+    const [title, setTitle] = useState<string>('');
+    const [value, setValue] = useState<any>(null);
+    const [longitude, setLongitude] = useState<string>('');
+    const [latitude, setLatitude] = useState<string>('');
+    const [errors, setErrors] = useState<string>('');
 
     const [createAddress] = useMutation(CREATE_ADDRESS, {
         onCompleted: () => {
-            onHide()
-            setAddress1('')
-            setCity('')
-            setCountry('')
-            setZip('')
-            setTitle('')
-            setValue('')
+            onHide();
+            setAddress1('');
+            setCity('');
+            setCountry('');
+            setZip('');
+            setTitle('');
+            setValue('');
         }
-    })
+    });
 
     if (value) {
         geocodeByAddress(value.label)
             .then((results) => getLatLng(results[0]))
             .then(({ lat, lng }) => {
-                getAddressFromCoordinates(lat.toString(), lng.toString())
-            })
+                getAddressFromCoordinates(lat.toString(), lng.toString());
+            });
     }
     function getAddressFromCoordinates(lat: string, lng: string) {
         Geocode.fromLatLng(lat, lng).then(
             (response) => {
-                const address = response.results[0].formatted_address
-                let city, state, country, zip
+                const address = response.results[0].formatted_address;
+                let city, state, country, zip;
                 for (let i = 0; i < response.results[0].address_components.length; i++) {
                     for (
                         let j = 0;
@@ -60,55 +60,55 @@ const AddFitnessAddressModal: React.FC<{ onHide: () => void; show: boolean }> = 
                     ) {
                         switch (response.results[0].address_components[i].types[j]) {
                             case 'locality':
-                                city = response.results[0].address_components[i].long_name
-                                break
+                                city = response.results[0].address_components[i].long_name;
+                                break;
                             case 'administrative_area_level_1':
-                                state = response.results[0].address_components[i].long_name
-                                break
+                                state = response.results[0].address_components[i].long_name;
+                                break;
                             case 'country':
-                                country = response.results[0].address_components[i].long_name
-                                break
+                                country = response.results[0].address_components[i].long_name;
+                                break;
                             case 'postal_code':
-                                zip = response.results[0].address_components[i].long_name
-                                break
+                                zip = response.results[0].address_components[i].long_name;
+                                break;
                         }
                     }
                 }
-                setCity(city)
-                setState(state)
-                setZip(zip)
-                setCountry(country)
-                setAddress1(address)
+                setCity(city);
+                setState(state);
+                setZip(zip);
+                setCountry(country);
+                setAddress1(address);
             },
             (error) => {
-                console.error(error)
+                console.error(error);
             }
-        )
+        );
     }
 
     function getLocation() {
         if (!navigator.geolocation) {
-            console.log('Geolocation API not supported by this browser.')
+            console.log('Geolocation API not supported by this browser.');
         } else {
-            console.log('Checking location...')
-            navigator.geolocation.getCurrentPosition(success, error)
+            console.log('Checking location...');
+            navigator.geolocation.getCurrentPosition(success, error);
         }
     }
 
     function success(position) {
-        setLatitude(position.coords.latitude.toString())
-        setLongitude(position.coords.longitude.toString())
-        getAddressFromCoordinates(position.coords.latitude, position.coords.longitude)
+        setLatitude(position.coords.latitude.toString());
+        setLongitude(position.coords.longitude.toString());
+        getAddressFromCoordinates(position.coords.latitude, position.coords.longitude);
     }
 
     function error() {
-        console.log('Geolocation error!')
-        setGoogleAddressShow(true)
+        console.log('Geolocation error!');
+        setGoogleAddressShow(true);
     }
 
     useEffect(() => {
-        getLocation()
-    }, [])
+        getLocation();
+    }, []);
 
     function handleDisable() {
         if (
@@ -119,14 +119,14 @@ const AddFitnessAddressModal: React.FC<{ onHide: () => void; show: boolean }> = 
             country !== '' &&
             title !== ''
         ) {
-            return false
+            return false;
         } else {
-            return true
+            return true;
         }
     }
 
     function handleAddressAdd() {
-        validateAddress()
+        validateAddress();
     }
 
     const validateAddress = async () => {
@@ -136,9 +136,9 @@ const AddFitnessAddressModal: React.FC<{ onHide: () => void; show: boolean }> = 
                     address: `${address1},${city},${state},${country}`,
                     key: process.env.REACT_APP_GOOGLE_MAP_KEY
                 }
-            })
+            });
 
-            const { status, results } = response.data
+            const { status, results } = response.data;
 
             if (status === 'OK' && results.length > 0) {
                 // Valid address
@@ -154,18 +154,18 @@ const AddFitnessAddressModal: React.FC<{ onHide: () => void; show: boolean }> = 
                         longitude: longitude,
                         latitude: latitude
                     }
-                })
-                setErrors('')
+                });
+                setErrors('');
                 // Proceed with further actions, such as displaying the map
             } else {
                 // Invalid address
-                setErrors('Invalid address, Please enter correct address')
+                setErrors('Invalid address, Please enter correct address');
             }
         } catch (error) {
             // Handle error
-            console.log('Error occurred:', error)
+            console.log('Error occurred:', error);
         }
-    }
+    };
 
     return (
         <Modal show={show} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
@@ -189,8 +189,8 @@ const AddFitnessAddressModal: React.FC<{ onHide: () => void; show: boolean }> = 
                             selectProps={{
                                 value,
                                 onChange: (e: any) => {
-                                    setValue(e)
-                                    setAddress1(e.label)
+                                    setValue(e);
+                                    setAddress1(e.label);
                                 }
                             }}
                         />
@@ -259,7 +259,7 @@ const AddFitnessAddressModal: React.FC<{ onHide: () => void; show: boolean }> = 
                 </Button>
             </Modal.Footer>
         </Modal>
-    )
-}
+    );
+};
 
-export default AddFitnessAddressModal
+export default AddFitnessAddressModal;

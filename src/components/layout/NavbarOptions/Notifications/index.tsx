@@ -1,50 +1,50 @@
-import { Row, Col, Button, Card, Spinner } from 'react-bootstrap'
-import Icons from '../../../Icons'
-import { Link } from 'react-router-dom'
-import { useQuery, useMutation, useLazyQuery } from '@apollo/client'
-import { useContext, useState } from 'react'
-import authContext from '../../../../context/auth-context'
+import { Row, Col, Button, Card, Spinner } from 'react-bootstrap';
+import Icons from '../../../Icons';
+import { Link } from 'react-router-dom';
+import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
+import { useContext, useState } from 'react';
+import authContext from '../../../../context/auth-context';
 import {
     GET_CHANGEMAKER_NOTIFICATION,
     MARK_NOTIFICATION_AS_READ,
     DELETE_NOTIFICATION,
     GET_CHANGEMAKER_NOTIFICATION_All_RECORS
-} from './queries'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
-import moment from 'moment'
-import './style.css'
-import NoDataFound from '../../../NoDataFound'
-import Loader from '../../../Loader/Loader'
+} from './queries';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import moment from 'moment';
+import './style.css';
+import NoDataFound from '../../../NoDataFound';
+import Loader from '../../../Loader/Loader';
 
 const images = {
     '/offerings': 'assets/notifications/offerings.svg',
     '/clients': 'assets/notifications/users.svg'
-}
+};
 
 interface Notification {
-    id: string
-    DateTime: Date
-    Title: string
-    Body: string
-    OnClickRoute: string
-    ContactID: string | number
-    type: string
-    IsRead: boolean
+    id: string;
+    DateTime: Date;
+    Title: string;
+    Body: string;
+    OnClickRoute: string;
+    ContactID: string | number;
+    type: string;
+    IsRead: boolean;
 }
 
 function Notifications(): JSX.Element {
-    const auth = useContext(authContext)
-    const [notifications, setNotifications] = useState<Notification[]>([])
-    const [page, setPage] = useState<number>(1)
-    const [totalRecords, setTotalRecords] = useState<number>(0)
-    const [allNotifications, setAllNotifications] = useState<Notification[]>([])
+    const auth = useContext(authContext);
+    const [notifications, setNotifications] = useState<Notification[]>([]);
+    const [page, setPage] = useState<number>(1);
+    const [totalRecords, setTotalRecords] = useState<number>(0);
+    const [allNotifications, setAllNotifications] = useState<Notification[]>([]);
 
     const { loading: loading_notifications, refetch: refetch_changemaker_notifications } = useQuery(
         GET_CHANGEMAKER_NOTIFICATION,
         {
             variables: { id: auth.userid, start: page * 10 - 10 },
             onCompleted: (data) => {
-                const flattenData = flattenObj({ ...data })
+                const flattenData = flattenObj({ ...data });
                 // setNotifications(flattenData.changemakerNotifications);
                 getAllNotifications({
                     variables: {
@@ -52,21 +52,21 @@ function Notifications(): JSX.Element {
                         pageSize: data.changemakerNotifications.meta.pagination.total
                     },
                     onCompleted: (data) => {
-                        const flattenData = flattenObj({ ...data })
-                        setTotalRecords(data.changemakerNotifications.meta.pagination.total)
-                        setAllNotifications(flattenData.changemakerNotifications)
+                        const flattenData = flattenObj({ ...data });
+                        setTotalRecords(data.changemakerNotifications.meta.pagination.total);
+                        setAllNotifications(flattenData.changemakerNotifications);
                     }
-                })
-                setNotifications(flattenData.changemakerNotifications)
+                });
+                setNotifications(flattenData.changemakerNotifications);
             }
         }
-    )
+    );
 
     const [getAllNotifications, { data: get_all_notifications }] = useLazyQuery(
         GET_CHANGEMAKER_NOTIFICATION_All_RECORS
-    )
+    );
 
-    const [changeNotificationStatus] = useMutation(MARK_NOTIFICATION_AS_READ)
+    const [changeNotificationStatus] = useMutation(MARK_NOTIFICATION_AS_READ);
 
     function markAsRead(id: string) {
         changeNotificationStatus({
@@ -75,26 +75,26 @@ function Notifications(): JSX.Element {
                 setNotifications((prev) =>
                     prev.map((notification) => {
                         if (notification.id === id) {
-                            return { ...notification, IsRead: true }
+                            return { ...notification, IsRead: true };
                         }
-                        return notification
+                        return notification;
                     })
-                )
-                refetch_changemaker_notifications()
+                );
+                refetch_changemaker_notifications();
             }
-        })
+        });
     }
 
-    const [deleteNotification] = useMutation(DELETE_NOTIFICATION)
+    const [deleteNotification] = useMutation(DELETE_NOTIFICATION);
 
     function deleteNoti(id: string) {
         deleteNotification({
             variables: { id: id },
             onCompleted: () => {
-                setNotifications((prev) => prev.filter((notification) => notification.id !== id))
-                refetch_changemaker_notifications()
+                setNotifications((prev) => prev.filter((notification) => notification.id !== id));
+                refetch_changemaker_notifications();
             }
-        })
+        });
     }
 
     function markAsUnread(id: string) {
@@ -104,14 +104,14 @@ function Notifications(): JSX.Element {
                 setNotifications((prev) =>
                     prev.map((notification) => {
                         if (notification.id === id) {
-                            return { ...notification, IsRead: false }
+                            return { ...notification, IsRead: false };
                         }
-                        return notification
+                        return notification;
                     })
-                )
-                refetch_changemaker_notifications()
+                );
+                refetch_changemaker_notifications();
             }
-        })
+        });
     }
 
     const readAll = () => {
@@ -122,35 +122,35 @@ function Notifications(): JSX.Element {
                     setNotifications((prev) =>
                         prev.map((notification) => {
                             if (notification.id === allNotifications[i].id) {
-                                return { ...notification, IsRead: true }
+                                return { ...notification, IsRead: true };
                             }
-                            return notification
+                            return notification;
                         })
-                    )
-                    refetch_changemaker_notifications()
+                    );
+                    refetch_changemaker_notifications();
                 }
-            })
+            });
         }
-    }
+    };
 
     const deleteAll = () => {
         for (let i = 0; i < allNotifications.length; i++) {
             deleteNotification({
                 variables: { id: allNotifications[i].id },
                 onCompleted: () => {
-                    refetch_changemaker_notifications()
+                    refetch_changemaker_notifications();
                 }
-            })
+            });
         }
-    }
+    };
 
     const loadPage = (pageNumber: number) => {
-        setPage(pageNumber)
-        refetch_changemaker_notifications()
-    }
+        setPage(pageNumber);
+        refetch_changemaker_notifications();
+    };
 
     if (loading_notifications && notifications.length === 0) {
-        return <Loader msg={'Loading notifications...'} />
+        return <Loader msg={'Loading notifications...'} />;
     }
 
     return (
@@ -251,7 +251,7 @@ function Notifications(): JSX.Element {
                                                                     display: 'flex'
                                                                 }}
                                                                 onClick={() => {
-                                                                    markAsUnread(currentValue.id)
+                                                                    markAsUnread(currentValue.id);
                                                                 }}
                                                             >
                                                                 <Icons
@@ -273,7 +273,7 @@ function Notifications(): JSX.Element {
                                                                     display: 'flex'
                                                                 }}
                                                                 onClick={() => {
-                                                                    markAsRead(currentValue.id)
+                                                                    markAsRead(currentValue.id);
                                                                 }}
                                                             >
                                                                 <Icons
@@ -304,7 +304,7 @@ function Notifications(): JSX.Element {
                                     </Row>
                                 </div>
                             </>
-                        )
+                        );
                     })
                 ) : (
                     <NoDataFound msg={'Opps ! Notifications not found'} />
@@ -339,7 +339,7 @@ function Notifications(): JSX.Element {
                 ) : null}
             </div>
         </div>
-    )
+    );
 }
 
-export default Notifications
+export default Notifications;

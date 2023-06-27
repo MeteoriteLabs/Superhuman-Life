@@ -1,46 +1,46 @@
-import React, { useEffect, useContext, useState } from 'react'
-import { useHistory } from 'react-router-dom'
-import { Button } from 'react-bootstrap'
-import AuthContext from '../../context/auth-context'
-import axios from 'axios'
+import React, { useEffect, useContext, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
+import AuthContext from '../../context/auth-context';
+import axios from 'axios';
 
 interface PaymentDetails {
-    cfLinkId: number
-    customerDetails: { customerPhone: string; customerEmail: string; customerName: string }
-    linkAmount: number
-    linkAmountPaid: number
-    linkAutoReminders: boolean
-    linkCreatedAt: string
-    linkCurrency: string
-    linkExpiryTime: string
-    linkId: string
-    linkMeta: { upiIntent: string }
-    linkMinimumPartialAmount: null
-    linkNotes: Record<string, never>
-    linkNotify: { sendSms: boolean; sendEmail: boolean }
-    linkPartialPayments: boolean
-    linkPurpose: string
-    linkStatus: string
-    linkUrl: string
+    cfLinkId: number;
+    customerDetails: { customerPhone: string; customerEmail: string; customerName: string };
+    linkAmount: number;
+    linkAmountPaid: number;
+    linkAutoReminders: boolean;
+    linkCreatedAt: string;
+    linkCurrency: string;
+    linkExpiryTime: string;
+    linkId: string;
+    linkMeta: { upiIntent: string };
+    linkMinimumPartialAmount: null;
+    linkNotes: Record<string, never>;
+    linkNotify: { sendSms: boolean; sendEmail: boolean };
+    linkPartialPayments: boolean;
+    linkPurpose: string;
+    linkStatus: string;
+    linkUrl: string;
 }
 
 const Failed: React.FC = () => {
-    const auth = useContext(AuthContext)
-    const history = useHistory()
-    const query = window.location.search
-    const params = new URLSearchParams(query)
-    const bookingId = params.get('bookingid')
-    const [linkId, setLinkId] = useState<string | null>(null)
-    const [paymentDetails, setPaymentDetails] = useState<PaymentDetails>()
+    const auth = useContext(AuthContext);
+    const history = useHistory();
+    const query = window.location.search;
+    const params = new URLSearchParams(query);
+    const bookingId = params.get('bookingid');
+    const [linkId, setLinkId] = useState<string | null>(null);
+    const [paymentDetails, setPaymentDetails] = useState<PaymentDetails>();
 
     const routeChange = () => {
-        const path = `/add_client`
-        history.push(path)
-    }
+        const path = `/add_client`;
+        history.push(path);
+    };
 
     const config = {
         headers: { Authorization: `Bearer ${auth.token}` }
-    }
+    };
 
     useEffect(() => {
         // Fetch data from GET API using the postId
@@ -51,13 +51,13 @@ const Failed: React.FC = () => {
                     config
                 )
                 .then((response) => {
-                    console.log(response.data.cfLink)
-                    setPaymentDetails(response.data.cfLink)
-                    setLinkId(response.data.cfLink.linkId)
-                })
-        }
-        fetchData()
-    }, [])
+                    console.log(response.data.cfLink);
+                    setPaymentDetails(response.data.cfLink);
+                    setLinkId(response.data.cfLink.linkId);
+                });
+        };
+        fetchData();
+    }, []);
 
     return (
         <>
@@ -87,7 +87,7 @@ const Failed: React.FC = () => {
                 </Button>
             </div>
         </>
-    )
-}
+    );
+};
 
-export default Failed
+export default Failed;

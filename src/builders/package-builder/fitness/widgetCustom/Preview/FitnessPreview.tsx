@@ -1,54 +1,54 @@
-import React, { Fragment, useEffect, useState } from 'react'
-import { Carousel, Card } from 'react-bootstrap'
-import './fitnessPreview.css'
-import ClassicPreview from './ClassicPreview'
-import CustomPreview from './CustomPreview'
-import PTGroupPreview from './PTGroupPreview'
-import RecordedPreview from './RecordedPreview'
-import SocialMediaComponent from '../../../../../components/customWidgets/SocialMediaComponent'
+import React, { Fragment, useEffect, useState } from 'react';
+import { Carousel, Card } from 'react-bootstrap';
+import './fitnessPreview.css';
+import ClassicPreview from './ClassicPreview';
+import CustomPreview from './CustomPreview';
+import PTGroupPreview from './PTGroupPreview';
+import RecordedPreview from './RecordedPreview';
+import SocialMediaComponent from '../../../../../components/customWidgets/SocialMediaComponent';
 
 interface UserData {
-    disciplines: any
-    ptclasssize: any
-    ptonline: any
-    ptoffline: any
-    URL: string
-    level: any
-    grouponline: any
-    groupoffline: any
-    recordedclasses: any
-    classsize: any
-    mode: any
+    disciplines: any;
+    ptclasssize: any;
+    ptonline: any;
+    ptoffline: any;
+    URL: string;
+    level: any;
+    grouponline: any;
+    groupoffline: any;
+    recordedclasses: any;
+    classsize: any;
+    mode: any;
 }
 
 const FitnessPreview: React.FC<{
-    userData: UserData
-    fitnesspackagepricing: any
-    packageType: any
-    type: any
-    actionType: any
+    userData: UserData;
+    fitnesspackagepricing: any;
+    packageType: any;
+    type: any;
+    actionType: any;
 }> = (props) => {
-    const [onlineClassesType, setOnlineClassesType] = useState<number>()
-    const [offlineClassesType, setOffineClassesType] = useState<number>()
-    const [updatePricing] = useState(props.fitnesspackagepricing)
-    const [sizeType, setSizeType] = useState<string | number>()
-    const [index, setIndex] = useState<number>(0)
+    const [onlineClassesType, setOnlineClassesType] = useState<number>();
+    const [offlineClassesType, setOffineClassesType] = useState<number>();
+    const [updatePricing] = useState(props.fitnesspackagepricing);
+    const [sizeType, setSizeType] = useState<string | number>();
+    const [index, setIndex] = useState<number>(0);
     const handleSelect = (selectedIndex, e) => {
-        setIndex(selectedIndex)
-    }
+        setIndex(selectedIndex);
+    };
 
     if (typeof props.userData.disciplines !== 'object')
-        props.userData.disciplines = JSON.parse(props.userData.disciplines)
+        props.userData.disciplines = JSON.parse(props.userData.disciplines);
 
     useEffect(() => {
         if (props.packageType === 'personal-training') {
-            setOnlineClassesType(props.userData.ptonline)
-            setOffineClassesType(props.userData.ptoffline)
-            setSizeType(props.userData.ptclasssize)
+            setOnlineClassesType(props.userData.ptonline);
+            setOffineClassesType(props.userData.ptoffline);
+            setSizeType(props.userData.ptclasssize);
         } else if (props.packageType === 'group') {
-            setOnlineClassesType(props.userData.grouponline)
-            setOffineClassesType(props.userData.groupoffline)
-            setSizeType(props.userData.classsize)
+            setOnlineClassesType(props.userData.grouponline);
+            setOffineClassesType(props.userData.groupoffline);
+            setSizeType(props.userData.classsize);
         }
     }, [
         props.packageType,
@@ -59,7 +59,7 @@ const FitnessPreview: React.FC<{
         props.userData.groupoffline,
         props.userData.classsize,
         props.userData.ptclasssize
-    ])
+    ]);
 
     return (
         <Fragment>
@@ -82,16 +82,16 @@ const FitnessPreview: React.FC<{
             ) : (
                 <Carousel slide={true} touch={true} activeIndex={index} onSelect={handleSelect}>
                     {updatePricing.map((item, idx: number) => {
-                        let beginnerTag = ''
-                        let intermediateTag = ''
-                        let advancedTag = ''
+                        let beginnerTag = '';
+                        let intermediateTag = '';
+                        let advancedTag = '';
 
                         if (props.userData.level === 'Beginner') {
-                            beginnerTag = 'beginnerTag'
+                            beginnerTag = 'beginnerTag';
                         } else if (props.userData.level === 'Intermediate') {
-                            intermediateTag = 'intermediateTag'
+                            intermediateTag = 'intermediateTag';
                         } else if (props.userData.level === 'Advanced') {
-                            advancedTag = 'advancedTag'
+                            advancedTag = 'advancedTag';
                         }
 
                         return (
@@ -140,7 +140,7 @@ const FitnessPreview: React.FC<{
                                                                             {item.disciplinename}
                                                                         </p>
                                                                     </div>
-                                                                )
+                                                                );
                                                             }
                                                         )}
                                                     </div>
@@ -216,14 +216,14 @@ const FitnessPreview: React.FC<{
                                     </Card.Body>
                                 </Card>
                             </Carousel.Item>
-                        )
+                        );
                     })}
                 </Carousel>
             )}
 
             <SocialMediaComponent url={props.userData.URL} />
         </Fragment>
-    )
-}
+    );
+};
 
-export default FitnessPreview
+export default FitnessPreview;

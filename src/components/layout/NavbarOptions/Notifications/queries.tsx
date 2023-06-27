@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const GET_CHANGEMAKER_NOTIFICATION = gql`
     query changemakerNotifications($id: ID, $start: Int) {
@@ -27,7 +27,7 @@ export const GET_CHANGEMAKER_NOTIFICATION = gql`
             }
         }
     }
-`
+`;
 
 export const GET_CHANGEMAKER_NOTIFICATION_All_RECORS = gql`
     query changemakerNotifications($id: ID, $pageSize: Int) {
@@ -55,7 +55,7 @@ export const GET_CHANGEMAKER_NOTIFICATION_All_RECORS = gql`
             }
         }
     }
-`
+`;
 
 export const MARK_NOTIFICATION_AS_READ = gql`
     mutation updateChangemakerNotification($id: ID!, $IsRead: Boolean) {
@@ -68,7 +68,7 @@ export const MARK_NOTIFICATION_AS_READ = gql`
             }
         }
     }
-`
+`;
 
 export const DELETE_NOTIFICATION = gql`
     mutation updateChangemakerNotification($id: ID!) {
@@ -78,4 +78,4 @@ export const DELETE_NOTIFICATION = gql`
             }
         }
     }
-`
+`;

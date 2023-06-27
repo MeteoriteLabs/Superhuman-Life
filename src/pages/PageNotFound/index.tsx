@@ -1,6 +1,6 @@
-import React from 'react'
-import './style.css'
-import { Link } from 'react-router-dom'
+import React from 'react';
+import './style.css';
+import { Link } from 'react-router-dom';
 
 const PageNotFound: React.FC = () => {
     return (
@@ -199,7 +199,7 @@ const PageNotFound: React.FC = () => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default PageNotFound
+export default PageNotFound;

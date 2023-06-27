@@ -1,37 +1,37 @@
-import React, { useState, useContext, useEffect } from 'react'
-import { Form, Table, FormControl, InputGroup } from 'react-bootstrap'
-import { gql, useQuery, useLazyQuery } from '@apollo/client'
-import AuthContext from '../../../../context/auth-context'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
-import moment from 'moment'
+import React, { useState, useContext, useEffect } from 'react';
+import { Form, Table, FormControl, InputGroup } from 'react-bootstrap';
+import { gql, useQuery, useLazyQuery } from '@apollo/client';
+import AuthContext from '../../../../context/auth-context';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import moment from 'moment';
 
 const PricingTable: React.FC<{
-    readonly: boolean
-    onChange: (args: string | null) => void
-    value: string
-    formContext: any
+    readonly: boolean;
+    onChange: (args: string | null) => void;
+    value: string;
+    formContext: any;
 }> = (props) => {
-    const inputDisabled = props.readonly
+    const inputDisabled = props.readonly;
 
     function handleReturnType(val: any) {
         if (typeof val === 'string') {
-            return JSON.parse(val)
+            return JSON.parse(val);
         } else {
-            return val
+            return val;
         }
     }
-    const classDetails = JSON.parse(props.formContext.programDetails)
+    const classDetails = JSON.parse(props.formContext.programDetails);
 
     const classMode =
-        classDetails.mode === '0' ? 'Online' : classDetails.mode === '1' ? 'Offline' : 'Hybrid'
-    const ptOnlineClasses = classDetails.ptOnline
-    const ptOfflineClasses = classDetails.ptOffline
-    const groupOnlineClasses = classDetails.groupOnline
-    const groupOfflineClasses = classDetails.groupOffline
-    const recorded = classDetails.recorded
+        classDetails.mode === '0' ? 'Online' : classDetails.mode === '1' ? 'Offline' : 'Hybrid';
+    const ptOnlineClasses = classDetails.ptOnline;
+    const ptOfflineClasses = classDetails.ptOffline;
+    const groupOnlineClasses = classDetails.groupOnline;
+    const groupOfflineClasses = classDetails.groupOffline;
+    const recorded = classDetails.recorded;
 
-    const auth = useContext(AuthContext)
-    const [vouchers, setVouchers] = useState<any>([])
+    const auth = useContext(AuthContext);
+    const [vouchers, setVouchers] = useState<any>([]);
     const [pricing, setPricing] = useState<any>(
         props.value && props.value !== 'free'
             ? handleReturnType(props.value)
@@ -65,7 +65,7 @@ const PricingTable: React.FC<{
                       sapienPricing: null
                   }
               ]
-    )
+    );
 
     const GET_VOUCHERS = gql`
         query fetchVouchers($expiry: DateTime!, $id: ID!, $start: DateTime!, $status: String!) {
@@ -89,14 +89,14 @@ const PricingTable: React.FC<{
                 }
             }
         }
-    `
+    `;
 
     const [getVouchers] = useLazyQuery(GET_VOUCHERS, {
         onCompleted: (data) => {
-            const flattenData = flattenObj({ ...data })
-            setVouchers(flattenData.vouchers)
+            const flattenData = flattenObj({ ...data });
+            setVouchers(flattenData.vouchers);
         }
-    })
+    });
 
     React.useEffect(() => {
         getVouchers({
@@ -106,19 +106,19 @@ const PricingTable: React.FC<{
                 start: moment().toISOString(),
                 status: 'Active'
             }
-        })
-    }, [])
+        });
+    }, []);
 
     useEffect(() => {
         // eslint-disable-next-line
         pricing.map((item, index) => {
             if (item.mrp === 0 || item.mrp === '') {
-                const values = [...pricing]
-                values[index].mrp = null
-                setPricing(values)
+                const values = [...pricing];
+                values[index].mrp = null;
+                setPricing(values);
             }
-        })
-    }, [pricing])
+        });
+    }, [pricing]);
 
     const SUGGESTED_PRICING = gql`
         query fetchSapienPricing($id: ID!) {
@@ -170,15 +170,15 @@ const PricingTable: React.FC<{
                 }
             }
         }
-    `
+    `;
 
     function FetchData() {
         useQuery(SUGGESTED_PRICING, {
             variables: { id: auth.userid },
             onCompleted: (data) => {
-                loadData(data)
+                loadData(data);
             }
-        })
+        });
     }
 
     function handleSuggestedPricingCalculation(
@@ -191,7 +191,7 @@ const PricingTable: React.FC<{
             ptOfflinePrice: number,
             groupOnlinePrice: number,
             groupOfflinePrice: number,
-            classicPrice: number
+            classicPrice: number;
         if (mode === 'Online') {
             ptOnlinePrice =
                 suggestedPricings[
@@ -200,7 +200,7 @@ const PricingTable: React.FC<{
                     )
                 ]?.mrp *
                 ptOnlineClasses *
-                (duration / 30)
+                (duration / 30);
             groupOnlinePrice =
                 suggestedPricings[
                     suggestedPricings.findIndex(
@@ -208,7 +208,7 @@ const PricingTable: React.FC<{
                     )
                 ]?.mrp *
                 groupOnlineClasses *
-                (duration / 30)
+                (duration / 30);
             classicPrice =
                 suggestedPricings[
                     suggestedPricings.findIndex(
@@ -216,8 +216,8 @@ const PricingTable: React.FC<{
                     )
                 ]?.mrp *
                 recorded *
-                (duration / 30)
-            return ptOnlinePrice + groupOnlinePrice + classicPrice
+                (duration / 30);
+            return ptOnlinePrice + groupOnlinePrice + classicPrice;
         } else if (mode === 'Offline') {
             ptOfflinePrice =
                 suggestedPricings[
@@ -226,7 +226,7 @@ const PricingTable: React.FC<{
                     )
                 ]?.mrp *
                 ptOfflineClasses *
-                (duration / 30)
+                (duration / 30);
             groupOfflinePrice =
                 suggestedPricings[
                     suggestedPricings.findIndex(
@@ -234,7 +234,7 @@ const PricingTable: React.FC<{
                     )
                 ]?.mrp *
                 groupOfflineClasses *
-                (duration / 30)
+                (duration / 30);
             classicPrice =
                 suggestedPricings[
                     suggestedPricings.findIndex(
@@ -242,8 +242,8 @@ const PricingTable: React.FC<{
                     )
                 ]?.mrp *
                 recorded *
-                (duration / 30)
-            return ptOfflinePrice + groupOfflinePrice + classicPrice
+                (duration / 30);
+            return ptOfflinePrice + groupOfflinePrice + classicPrice;
         } else if (mode === 'Hybrid') {
             ptOnlinePrice =
                 suggestedPricings[
@@ -253,7 +253,7 @@ const PricingTable: React.FC<{
                     )
                 ]?.mrp *
                 ptOnlineClasses *
-                (duration / 30)
+                (duration / 30);
             groupOnlinePrice =
                 suggestedPricings[
                     suggestedPricings.findIndex(
@@ -262,7 +262,7 @@ const PricingTable: React.FC<{
                     )
                 ]?.mrp *
                 groupOnlineClasses *
-                (duration / 30)
+                (duration / 30);
             ptOfflinePrice =
                 suggestedPricings[
                     suggestedPricings.findIndex(
@@ -271,7 +271,7 @@ const PricingTable: React.FC<{
                     )
                 ]?.mrp *
                 ptOfflineClasses *
-                (duration / 30)
+                (duration / 30);
             groupOfflinePrice =
                 suggestedPricings[
                     suggestedPricings.findIndex(
@@ -280,7 +280,7 @@ const PricingTable: React.FC<{
                     )
                 ]?.mrp *
                 groupOfflineClasses *
-                (duration / 30)
+                (duration / 30);
             classicPrice =
                 suggestedPricings[
                     suggestedPricings.findIndex(
@@ -288,10 +288,10 @@ const PricingTable: React.FC<{
                     )
                 ]?.mrp *
                 recorded *
-                (duration / 30)
+                (duration / 30);
             return (
                 ptOnlinePrice + groupOnlinePrice + ptOfflinePrice + groupOfflinePrice + classicPrice
-            )
+            );
         }
     }
 
@@ -305,7 +305,7 @@ const PricingTable: React.FC<{
             ptOfflinePrice: number,
             groupOnlinePrice: number,
             groupOfflinePrice: number,
-            classicPrice: number
+            classicPrice: number;
         if (mode === 'Online') {
             ptOnlinePrice =
                 sapienPricings[
@@ -314,7 +314,7 @@ const PricingTable: React.FC<{
                     )
                 ].mrp *
                 ptOnlineClasses *
-                (duration / 30)
+                (duration / 30);
             const groupOnlinePrice =
                 sapienPricings[
                     sapienPricings.findIndex(
@@ -322,7 +322,7 @@ const PricingTable: React.FC<{
                     )
                 ].mrp *
                 groupOnlineClasses *
-                (duration / 30)
+                (duration / 30);
             const classicPrice =
                 sapienPricings[
                     sapienPricings.findIndex(
@@ -330,8 +330,8 @@ const PricingTable: React.FC<{
                     )
                 ].mrp *
                 recorded *
-                (duration / 30)
-            return ptOnlinePrice + groupOnlinePrice + classicPrice
+                (duration / 30);
+            return ptOnlinePrice + groupOnlinePrice + classicPrice;
         } else if (mode === 'Offline') {
             ptOfflinePrice =
                 sapienPricings[
@@ -340,7 +340,7 @@ const PricingTable: React.FC<{
                     )
                 ].mrp *
                 ptOfflineClasses *
-                (duration / 30)
+                (duration / 30);
             groupOfflinePrice =
                 sapienPricings[
                     sapienPricings.findIndex(
@@ -348,7 +348,7 @@ const PricingTable: React.FC<{
                     )
                 ].mrp *
                 groupOfflineClasses *
-                (duration / 30)
+                (duration / 30);
             classicPrice =
                 sapienPricings[
                     sapienPricings.findIndex(
@@ -356,8 +356,8 @@ const PricingTable: React.FC<{
                     )
                 ].mrp *
                 recorded *
-                (duration / 30)
-            return ptOfflinePrice + groupOfflinePrice + classicPrice
+                (duration / 30);
+            return ptOfflinePrice + groupOfflinePrice + classicPrice;
         } else if (mode === 'Hybrid') {
             ptOnlinePrice =
                 sapienPricings[
@@ -367,7 +367,7 @@ const PricingTable: React.FC<{
                     )
                 ].mrp *
                 ptOnlineClasses *
-                (duration / 30)
+                (duration / 30);
             groupOnlinePrice =
                 sapienPricings[
                     sapienPricings.findIndex(
@@ -376,7 +376,7 @@ const PricingTable: React.FC<{
                     )
                 ].mrp *
                 groupOnlineClasses *
-                (duration / 30)
+                (duration / 30);
             ptOfflinePrice =
                 sapienPricings[
                     sapienPricings.findIndex(
@@ -385,7 +385,7 @@ const PricingTable: React.FC<{
                     )
                 ].mrp *
                 ptOfflineClasses *
-                (duration / 30)
+                (duration / 30);
             groupOfflinePrice =
                 sapienPricings[
                     sapienPricings.findIndex(
@@ -394,7 +394,7 @@ const PricingTable: React.FC<{
                     )
                 ].mrp *
                 groupOfflineClasses *
-                (duration / 30)
+                (duration / 30);
             classicPrice =
                 sapienPricings[
                     sapienPricings.findIndex(
@@ -402,29 +402,29 @@ const PricingTable: React.FC<{
                     )
                 ].mrp *
                 recorded *
-                (duration / 30)
+                (duration / 30);
             return (
                 ptOnlinePrice + groupOnlinePrice + ptOfflinePrice + groupOfflinePrice + classicPrice
-            )
+            );
         }
     }
 
     function loadData(data) {
-        const flattenData = flattenObj({ ...data })
+        const flattenData = flattenObj({ ...data });
 
-        const newValue = [...pricing]
+        const newValue = [...pricing];
         if (classMode === 'Online') {
             flattenData.suggestedPricings = flattenData.suggestedPricings.filter(
                 (item) => item.Mode === classMode
-            )
+            );
             flattenData.sapienPricings = flattenData.sapienPricings.filter(
                 (item) => item.mode === classMode
-            )
+            );
             newValue.forEach((item, index) => {
                 if (item.voucher !== 0 && item.price !== null) {
                     item.suggestedPrice = parseInt(
                         ((item.sapienPricing * 100) / (100 - item.voucher)).toFixed(2)
-                    )
+                    );
                 } else {
                     // flattenData.suggestedPricings[0]?.mrp * onlineClasses * (item.duration / 30);
                     item.suggestedPrice = handleSuggestedPricingCalculation(
@@ -432,114 +432,114 @@ const PricingTable: React.FC<{
                         item,
                         flattenData.suggestedPricings,
                         item.duration
-                    )
+                    );
                 }
                 item.sapienPricing = handleSapienPricingCalculation(
                     classMode,
                     item,
                     flattenData.sapienPricings,
                     item.duration
-                )
-            })
+                );
+            });
         } else if (classMode === 'Offline') {
             flattenData.suggestedPricings = flattenData.suggestedPricings.filter(
                 (item) =>
                     item.Mode === classMode || item.fitness_package_type.type === 'Classic Class'
-            )
+            );
             flattenData.sapienPricings = flattenData.sapienPricings.filter(
                 (item) =>
                     item.mode === classMode || item.fitness_package_type.type === 'Classic Class'
-            )
+            );
             newValue.forEach((item, index) => {
                 if (item.voucher !== 0 && item.price !== null) {
                     item.suggestedPrice = parseInt(
                         ((item.sapienPricing * 100) / (100 - item.voucher)).toFixed(2)
-                    )
+                    );
                 } else {
                     item.suggestedPrice = handleSuggestedPricingCalculation(
                         classMode,
                         item,
                         flattenData.suggestedPricings,
                         item.duration
-                    )
+                    );
                 }
                 item.sapienPricing = handleSapienPricingCalculation(
                     classMode,
                     item,
                     flattenData.sapienPricings,
                     item.duration
-                )
-            })
+                );
+            });
         } else if (classMode === 'Hybrid') {
             newValue.forEach((item, index) => {
                 if (item.voucher !== 0 && item.price !== null) {
                     item.suggestedPrice = parseInt(
                         ((item.sapienPricing * 100) / (100 - item.voucher)).toFixed(2)
-                    )
+                    );
                 } else {
                     item.suggestedPrice = handleSuggestedPricingCalculation(
                         classMode,
                         item,
                         flattenData.suggestedPricings,
                         item.duration
-                    )
+                    );
                 }
                 item.sapienPricing = handleSapienPricingCalculation(
                     classMode,
                     item,
                     flattenData.sapienPricings,
                     item.duration
-                )
-            })
+                );
+            });
         }
 
-        setPricing(newValue)
+        setPricing(newValue);
     }
 
     function handlePricingUpdate(value: any, id: any) {
-        const newPricing = [...pricing]
-        newPricing[id].mrp = value
-        setPricing(newPricing)
+        const newPricing = [...pricing];
+        newPricing[id].mrp = value;
+        setPricing(newPricing);
     }
 
     function handleValidation() {
-        const values = [...pricing]
-        let res = false
+        const values = [...pricing];
+        let res = false;
         // eslint-disable-next-line
         values.map((item: any) => {
             if (item.mrp !== null && item.mrp >= parseInt(item.sapienPricing)) {
-                res = true
+                res = true;
             }
-        })
-        return res
+        });
+        return res;
     }
 
     useEffect(() => {
         if (handleValidation()) {
-            props.onChange(JSON.stringify(pricing))
+            props.onChange(JSON.stringify(pricing));
         } else {
-            props.onChange(null)
+            props.onChange(null);
         }
-    }, [pricing])
+    }, [pricing]);
 
     function handleUpdatePricing(id: any, value: any) {
         if (parseInt(value) !== 0) {
-            const newValue = [...pricing]
-            newValue[id].voucher = parseInt(value)
+            const newValue = [...pricing];
+            newValue[id].voucher = parseInt(value);
             // ((arraySapient[i] * 100) / (100 - 10)).toFixed(2)
             newValue[id].suggestedPrice = parseInt(
                 ((newValue[id].sapienPricing * 100) / (100 - value)).toFixed(0)
-            )
-            setPricing(newValue)
+            );
+            setPricing(newValue);
         } else {
-            const newValue = [...pricing]
-            newValue[id].voucher = parseInt(value)
-            newValue[id].suggestedPrice = newValue[id].sapienPricing
-            setPricing(newValue)
+            const newValue = [...pricing];
+            newValue[id].voucher = parseInt(value);
+            newValue[id].suggestedPrice = newValue[id].sapienPricing;
+            setPricing(newValue);
         }
     }
 
-    FetchData()
+    FetchData();
 
     return (
         <>
@@ -572,7 +572,7 @@ const PricingTable: React.FC<{
                                             <td key={index}>
                                                 {ptOnlineClasses * (item.duration / 30)} Classes
                                             </td>
-                                        )
+                                        );
                                     })}
                                 </tr>
                             )}
@@ -589,7 +589,7 @@ const PricingTable: React.FC<{
                                             <td key={index}>
                                                 {ptOfflineClasses * (item.duration / 30)} Classes
                                             </td>
-                                        )
+                                        );
                                     })}
                                 </tr>
                             )}
@@ -606,7 +606,7 @@ const PricingTable: React.FC<{
                                             <td key={index}>
                                                 {groupOnlineClasses * (item.duration / 30)} Classes
                                             </td>
-                                        )
+                                        );
                                     })}
                                 </tr>
                             )}
@@ -623,7 +623,7 @@ const PricingTable: React.FC<{
                                             <td key={index}>
                                                 {groupOfflineClasses * (item.duration / 30)} Classes
                                             </td>
-                                        )
+                                        );
                                     })}
                                 </tr>
                             )}
@@ -640,7 +640,7 @@ const PricingTable: React.FC<{
                                         <td key={index}>
                                             {recorded * (item.duration / 30)} Classes
                                         </td>
-                                    )
+                                    );
                                 })}
                             </tr>
                             <tr className="text-center">
@@ -667,11 +667,11 @@ const PricingTable: React.FC<{
                                                         >
                                                             {voucher.voucher_name}
                                                         </option>
-                                                    )
+                                                    );
                                                 })}
                                             </Form.Control>
                                         </td>
-                                    )
+                                    );
                                 })}
                             </tr>
                             <tr className="text-center">
@@ -679,7 +679,7 @@ const PricingTable: React.FC<{
                                     <b>Total days</b>
                                 </td>
                                 {pricing.map((item, index: number) => {
-                                    return <td key={index}>{item.duration} days</td>
+                                    return <td key={index}>{item.duration} days</td>;
                                 })}
                             </tr>
                             {/* <tr className="text-center">
@@ -730,7 +730,7 @@ const PricingTable: React.FC<{
                                                     value={pricing[index]?.mrp}
                                                     disabled={inputDisabled}
                                                     onChange={(e) => {
-                                                        handlePricingUpdate(e.target.value, index)
+                                                        handlePricingUpdate(e.target.value, index);
                                                     }}
                                                 />
                                             </InputGroup>
@@ -744,7 +744,7 @@ const PricingTable: React.FC<{
                                                     </span>
                                                 )}
                                         </td>
-                                    )
+                                    );
                                 })}
                             </tr>
                         </tbody>
@@ -752,7 +752,7 @@ const PricingTable: React.FC<{
                 </div>
             }
         </>
-    )
-}
+    );
+};
 
-export default PricingTable
+export default PricingTable;

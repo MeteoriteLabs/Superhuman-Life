@@ -14,7 +14,7 @@ function ArrowRight({ width, height }: { width?: number; height?: number }): JSX
                 fill="white"
             />
         </svg>
-    )
+    );
 }
 
-export default ArrowRight
+export default ArrowRight;

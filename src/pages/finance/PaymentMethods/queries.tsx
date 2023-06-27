@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const GET_UPI_DETAILS = gql`
     query UPIQuery($id: ID) {
@@ -19,7 +19,7 @@ export const GET_UPI_DETAILS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_BANK_DETAILS = gql`
     query bankDetailsQuery($id: ID) {
@@ -44,7 +44,7 @@ export const GET_BANK_DETAILS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_BANK_DETAILS_IS_PRIMARY = gql`
     query bankDetailsQuery($id: ID) {
@@ -69,7 +69,7 @@ export const GET_BANK_DETAILS_IS_PRIMARY = gql`
             }
         }
     }
-`
+`;
 
 export const GET_UPI_DETAILS_IS_PRIMARY = gql`
     query UPIQuery($id: ID) {
@@ -90,7 +90,7 @@ export const GET_UPI_DETAILS_IS_PRIMARY = gql`
             }
         }
     }
-`
+`;
 
 export const GET_BANK_DETAIL = gql`
     query bankDetailsQuery($id: ID) {
@@ -112,7 +112,7 @@ export const GET_BANK_DETAIL = gql`
             }
         }
     }
-`
+`;
 
 export const GET_UPI_DETAIL = gql`
     query upiDetailQuery($id: ID) {
@@ -130,7 +130,7 @@ export const GET_UPI_DETAIL = gql`
             }
         }
     }
-`
+`;
 
 export const DELETE_UPI = gql`
     mutation deleteUpiDetailsChangemaker($id: ID!) {
@@ -148,7 +148,7 @@ export const DELETE_UPI = gql`
             }
         }
     }
-`
+`;
 
 export const DELETE_BANK_DETAILS = gql`
     mutation deleteBankDetails($id: ID!) {
@@ -170,7 +170,7 @@ export const DELETE_BANK_DETAILS = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_UPI = gql`
     mutation updateUpiDetailsChangemaker($id: ID!, $data: UpiDetailsChangemakerInput!) {
@@ -183,7 +183,7 @@ export const UPDATE_UPI = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_BANK_DETAIL = gql`
     mutation createBankDetail($data: BankDetailInput!) {
@@ -196,7 +196,7 @@ export const CREATE_BANK_DETAIL = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_BANK_DETAILS = gql`
     mutation updateBankDetail($id: ID!, $data: BankDetailInput!) {
@@ -218,4 +218,4 @@ export const UPDATE_BANK_DETAILS = gql`
             }
         }
     }
-`
+`;

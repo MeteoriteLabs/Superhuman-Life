@@ -1,16 +1,16 @@
-import { Fragment } from 'react'
-import Classes from '../Classes'
+import { Fragment } from 'react';
+import Classes from '../Classes';
 
 type Props = {
-    ptonline: number
-    ptoffline: number
-    grouponline: number
-    groupoffline: number
-    recordedclasses: number
-    packageTypeName: string
-    type: 'One-On-One' | 'Group Class' | 'Custom Fitness' | 'Classic Class'
-    mode: 'Online' | 'Offline' | 'Hybird' | 'Workout' | 'Online Workout' | 'Offline Workout'
-}
+    ptonline: number;
+    ptoffline: number;
+    grouponline: number;
+    groupoffline: number;
+    recordedclasses: number;
+    packageTypeName: string;
+    type: 'One-On-One' | 'Group Class' | 'Custom Fitness' | 'Classic Class';
+    mode: 'Online' | 'Offline' | 'Hybird' | 'Workout' | 'Online Workout' | 'Offline Workout';
+};
 export default function CustomPricingTable({
     ptonline,
     ptoffline,
@@ -94,5 +94,5 @@ export default function CustomPricingTable({
                 )}
             </tr>
         </Fragment>
-    )
+    );
 }

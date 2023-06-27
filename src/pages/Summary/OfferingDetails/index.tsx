@@ -1,13 +1,13 @@
-import React, { useState } from 'react'
-import { Row } from 'react-bootstrap'
-import Card from 'react-bootstrap/Card'
-import Button from 'react-bootstrap/Button'
-import moment from 'moment'
-import EditOffering from './EditOfferingDetails'
-import { PackageDetails } from '../Interface'
+import React, { useState } from 'react';
+import { Row } from 'react-bootstrap';
+import Card from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button';
+import moment from 'moment';
+import EditOffering from './EditOfferingDetails';
+import { PackageDetails } from '../Interface';
 
 const OfferingDetails: React.FC<{ Offering: PackageDetails }> = ({ Offering }) => {
-    const [showBookingModal, setShowBookingModal] = useState<boolean>(false)
+    const [showBookingModal, setShowBookingModal] = useState<boolean>(false);
 
     return (
         <Card className="mb-2">
@@ -39,7 +39,7 @@ const OfferingDetails: React.FC<{ Offering: PackageDetails }> = ({ Offering }) =
                 />
             ) : null}
         </Card>
-    )
-}
+    );
+};
 
-export default OfferingDetails
+export default OfferingDetails;

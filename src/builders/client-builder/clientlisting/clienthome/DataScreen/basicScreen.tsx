@@ -1,9 +1,9 @@
-import React from 'react'
-import { Card, Row, Col, ProgressBar, Button, Modal, Form } from 'react-bootstrap'
-import './styles.css'
+import React from 'react';
+import { Card, Row, Col, ProgressBar, Button, Modal, Form } from 'react-bootstrap';
+import './styles.css';
 
 const BasicScreen = (props: any) => {
-    const [generalModalShow, setGeneralModalShow] = React.useState(false)
+    const [generalModalShow, setGeneralModalShow] = React.useState(false);
 
     function HobbiedCard(props: any) {
         return (
@@ -19,7 +19,7 @@ const BasicScreen = (props: any) => {
                     <span style={{ fontWeight: 'bold' }}>{props.title}</span>
                 </div>
             </Col>
-        )
+        );
     }
 
     function HandleGeneralForm(props: any) {
@@ -159,7 +159,7 @@ const BasicScreen = (props: any) => {
                     </Button>
                 </Modal.Footer>
             </Modal>
-        )
+        );
     }
 
     const BasicCard = (props: any) => {
@@ -225,16 +225,16 @@ const BasicScreen = (props: any) => {
                     </Card.Footer>
                 </Card>
             </Col>
-        )
-    }
+        );
+    };
 
     function handleProgressColor(value: number) {
         if (value === 0) {
-            return 'danger'
+            return 'danger';
         } else if (value >= 1 && value <= 99) {
-            return 'warning'
+            return 'warning';
         } else if (value === 100) {
-            return 'success'
+            return 'success';
         }
     }
 
@@ -254,7 +254,7 @@ const BasicScreen = (props: any) => {
             </Row>
             <HandleGeneralForm show={generalModalShow} onHide={() => setGeneralModalShow(false)} />
         </div>
-    )
-}
+    );
+};
 
-export default BasicScreen
+export default BasicScreen;

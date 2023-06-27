@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 const RecordedPreview: React.FC<{ packageType: string; recordedclasses: any }> = (props) => {
     return (
@@ -10,7 +10,7 @@ const RecordedPreview: React.FC<{ packageType: string; recordedclasses: any }> =
             />
             <p>{props.recordedclasses}</p>
         </div>
-    )
-}
+    );
+};
 
-export default RecordedPreview
+export default RecordedPreview;

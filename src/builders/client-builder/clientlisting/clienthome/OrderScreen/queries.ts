@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 export const GET_BOOKINGS = gql`
      query clientBookings($id: ID!, $clientid: ID) {
           clientBookings(
@@ -46,7 +46,7 @@ export const GET_BOOKINGS = gql`
                }
           }
      }
-`
+`;
 
 export const GET_BOOKINGS_NEW = gql`
     query clientBookings($id: ID!, $clientid: ID) {
@@ -100,7 +100,7 @@ export const GET_BOOKINGS_NEW = gql`
             }
         }
     }
-`
+`;
 
 export const ADD_SUGGESTION = gql`
     mutation createSuggestion($id: ID, $fitnesspackage: ID) {
@@ -112,7 +112,7 @@ export const ADD_SUGGESTION = gql`
             }
         }
     }
-`
+`;
 
 export const ADD_SUGGESTION_NEW = gql`
     mutation createSuggestion($id: ID, $fitnesspackage: ID) {
@@ -124,7 +124,7 @@ export const ADD_SUGGESTION_NEW = gql`
             }
         }
     }
-`
+`;
 
 export const GET_FITNESS_PACKAGE_TYPES = gql`
     query fitnessPackageTypes {
@@ -137,4 +137,4 @@ export const GET_FITNESS_PACKAGE_TYPES = gql`
             }
         }
     }
-`
+`;

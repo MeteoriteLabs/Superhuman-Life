@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
-import { Modal, Col, Row, Form, Button } from 'react-bootstrap'
-import './SetUpDomain.css'
+import React, { useState } from 'react';
+import { Modal, Col, Row, Form, Button } from 'react-bootstrap';
+import './SetUpDomain.css';
 
 const HelpModal: React.FC<{ show?: boolean; onHide?: () => void }> = (props) => {
     return (
@@ -43,11 +43,11 @@ const HelpModal: React.FC<{ show?: boolean; onHide?: () => void }> = (props) => 
                 </Button>
             </Modal.Footer>
         </Modal>
-    )
-}
+    );
+};
 
 export const SetUpDomain: React.FC = () => {
-    const [modalShow, setModalShow] = useState<boolean>(false)
+    const [modalShow, setModalShow] = useState<boolean>(false);
 
     return (
         <>
@@ -57,7 +57,7 @@ export const SetUpDomain: React.FC = () => {
 
             <HelpModal show={modalShow} onHide={() => setModalShow(false)} />
         </>
-    )
-}
+    );
+};
 
-export default HelpModal
+export default HelpModal;

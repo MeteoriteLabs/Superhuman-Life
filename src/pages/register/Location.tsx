@@ -1,12 +1,12 @@
-import { Form, Button } from 'react-bootstrap'
+import { Form, Button } from 'react-bootstrap';
 
 const LocationForm = (props: any) => {
     function successCallback(data) {
-        console.log(data)
+        console.log(data);
     }
 
     function failureCallback(error) {
-        console.log(error)
+        console.log(error);
     }
 
     return (
@@ -31,7 +31,7 @@ const LocationForm = (props: any) => {
                     <Form.Control
                         type="text"
                         onChange={(e) => {
-                            props.onChange(e.target.value)
+                            props.onChange(e.target.value);
                         }}
                         placeholder="enter address 1"
                     />
@@ -62,7 +62,7 @@ const LocationForm = (props: any) => {
                 </Form.Group>
             </Form>
         </>
-    )
-}
+    );
+};
 
-export default LocationForm
+export default LocationForm;

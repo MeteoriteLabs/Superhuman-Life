@@ -1,49 +1,49 @@
-import React, { useImperativeHandle, useState } from 'react'
-import { useMutation } from '@apollo/client'
-import ModalView from '../../../components/modal'
-import { ADD_CLIENT_NEW } from './queries'
-import StatusModal from '../../../components/StatusModal/StatusModal'
-import { Subject } from 'rxjs'
-import { schema, widgets } from './schema'
+import React, { useImperativeHandle, useState } from 'react';
+import { useMutation } from '@apollo/client';
+import ModalView from '../../../components/modal';
+import { ADD_CLIENT_NEW } from './queries';
+import StatusModal from '../../../components/StatusModal/StatusModal';
+import { Subject } from 'rxjs';
+import { schema, widgets } from './schema';
 
 interface Operation {
-    id: string
-    modal_status: boolean
-    type: 'create' | 'delete'
+    id: string;
+    modal_status: boolean;
+    type: 'create' | 'delete';
 }
 
 function CreateClient(props: any, ref: any) {
-    const ClientSchema: { [name: string]: any } = require('./client.json')
-    const [operation, setOperation] = useState<Operation>({} as Operation)
-    const [showDeleteModal, setShowDeleteModal] = useState(false)
+    const ClientSchema: { [name: string]: any } = require('./client.json');
+    const [operation, setOperation] = useState<Operation>({} as Operation);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     const [createClient] = useMutation(ADD_CLIENT_NEW, {
         onCompleted: (r: any) => {
-            modalTrigger.next(false)
-            props.callback()
+            modalTrigger.next(false);
+            props.callback();
         }
-    })
+    });
 
-    const modalTrigger = new Subject()
+    const modalTrigger = new Subject();
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
-            setOperation(msg)
+            setOperation(msg);
 
             // set show delete modal for delete operation
             if (msg.type === 'delete') {
-                setShowDeleteModal(true)
+                setShowDeleteModal(true);
             }
 
             // restrict create modal to render for delete operation
             if (msg.type !== 'delete') {
-                modalTrigger.next(true)
+                modalTrigger.next(true);
             }
         }
-    }))
+    }));
 
     function CreateClient(frm: any) {
-        const userName = frm.firstname.slice(0, 1) + ' ' + frm.lastname
+        const userName = frm.firstname.slice(0, 1) + ' ' + frm.lastname;
         createClient({
             variables: {
                 username: userName,
@@ -52,7 +52,7 @@ function CreateClient(props: any, ref: any) {
                 email: frm.email,
                 phone: frm.phone
             }
-        })
+        });
     }
 
     function DeleteClient(id: any) {
@@ -62,8 +62,8 @@ function CreateClient(props: any, ref: any) {
     function OnSubmit(frm: any) {
         switch (operation.type) {
             case 'create':
-                CreateClient(frm)
-                break
+                CreateClient(frm);
+                break;
         }
     }
 
@@ -103,7 +103,7 @@ function CreateClient(props: any, ref: any) {
                     formSchema={ClientSchema}
                     showing={operation.modal_status}
                     formSubmit={(frm: any) => {
-                        OnSubmit(frm)
+                        OnSubmit(frm);
                     }}
                     //  formData={messageDetails}
                     widgets={widgets}
@@ -121,12 +121,12 @@ function CreateClient(props: any, ref: any) {
                     buttonLeft="Cancel"
                     buttonRight="Yes"
                     onClick={() => {
-                        DeleteClient(operation.id)
+                        DeleteClient(operation.id);
                     }}
                 />
             )}
         </>
-    )
+    );
 }
 
-export default React.forwardRef(CreateClient)
+export default React.forwardRef(CreateClient);

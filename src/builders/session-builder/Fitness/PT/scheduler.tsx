@@ -1,70 +1,70 @@
-import { useState, useEffect } from 'react'
-import { GET_TAG_BY_ID } from '../../graphQL/queries'
-import { UPDATE_USERPACKAGE_EFFECTIVEDATE } from '../../graphQL/mutation'
-import { useQuery, useMutation } from '@apollo/client'
-import { Row, Col, Dropdown, Button, Modal, InputGroup, FormControl } from 'react-bootstrap'
-import SchedulerPage from '../../../program-builder/program-template/scheduler'
-import moment from 'moment'
-import { Link } from 'react-router-dom'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
-import '../fitness.css'
-import '../Group/actionButton.css'
-import Loader from '../../../../components/Loader/Loader'
+import { useState, useEffect } from 'react';
+import { GET_TAG_BY_ID } from '../../graphQL/queries';
+import { UPDATE_USERPACKAGE_EFFECTIVEDATE } from '../../graphQL/mutation';
+import { useQuery, useMutation } from '@apollo/client';
+import { Row, Col, Dropdown, Button, Modal, InputGroup, FormControl } from 'react-bootstrap';
+import SchedulerPage from '../../../program-builder/program-template/scheduler';
+import moment from 'moment';
+import { Link } from 'react-router-dom';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import '../fitness.css';
+import '../Group/actionButton.css';
+import Loader from '../../../../components/Loader/Loader';
 
 const Scheduler: React.FC = () => {
     // const auth = useContext(AuthContext);
-    const last = window.location.pathname.split('/').reverse()
-    const tagId = window.location.pathname.split('/').pop()
+    const last = window.location.pathname.split('/').reverse();
+    const tagId = window.location.pathname.split('/').pop();
     // const [data, setData] = useState<any[]>([]);
-    const [show, setShow] = useState(false)
+    const [show, setShow] = useState(false);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [userPackage, setUserPackage] = useState<any>([])
+    const [userPackage, setUserPackage] = useState<any>([]);
     // const [tagSeperation, setTagSeperation] = useState<any>([]);
-    const [editDatesModal, setEditdatesModal] = useState(false)
-    const [startDate, setStartDate] = useState('')
-    const [schedulerSessions, setSchedulerSessions] = useState([])
+    const [editDatesModal, setEditdatesModal] = useState(false);
+    const [startDate, setStartDate] = useState('');
+    const [schedulerSessions, setSchedulerSessions] = useState([]);
     // const [statusDays, setStatusDays] = useState();
-    const [tag, setTag] = useState<any>()
+    const [tag, setTag] = useState<any>();
     // const [restDays, setRestDays] = useState<any>([]);
-    const [totalClasses, setTotalClasses] = useState<any>([])
-    let programIndex
+    const [totalClasses, setTotalClasses] = useState<any>([]);
+    let programIndex;
 
     useEffect(() => {
         setTimeout(() => {
-            setShow(true)
-        }, 1500)
-    }, [show])
+            setShow(true);
+        }, 1500);
+    }, [show]);
 
-    const handleCloseDatesModal = () => setEditdatesModal(false)
-    const handleShowDatesModal = () => setEditdatesModal(true)
+    const handleCloseDatesModal = () => setEditdatesModal(false);
+    const handleShowDatesModal = () => setEditdatesModal(true);
 
-    const [updateDate] = useMutation(UPDATE_USERPACKAGE_EFFECTIVEDATE)
+    const [updateDate] = useMutation(UPDATE_USERPACKAGE_EFFECTIVEDATE);
 
     useQuery(GET_TAG_BY_ID, {
         variables: { id: tagId },
         onCompleted: (data) => loadTagData(data)
-    })
+    });
 
     function loadTagData(data: any) {
-        setSchedulerSessions(data)
-        const flattenData = flattenObj({ ...data })
-        const total = [0, 0, 0, 0, 0]
-        const values = [...flattenData.tags[0].sessions]
+        setSchedulerSessions(data);
+        const flattenData = flattenObj({ ...data });
+        const total = [0, 0, 0, 0, 0];
+        const values = [...flattenData.tags[0].sessions];
         for (let i = 0; i < values.length; i++) {
             if (values[i].tag === 'One-On-One' && values[i].mode === 'Online') {
-                total[0] += 1
+                total[0] += 1;
             } else if (values[i].tag === 'One-On-One' && values[i].mode === 'Offline') {
-                total[1] += 1
+                total[1] += 1;
             } else if (values[i].tag === 'Group Class' && values[i].mode === 'Online') {
-                total[2] += 1
+                total[2] += 1;
             } else if (values[i].tag === 'Group Class' && values[i].mode === 'Offline') {
-                total[3] += 1
+                total[3] += 1;
             } else if (values[i].tag === 'Classic') {
-                total[4] += 1
+                total[4] += 1;
             }
         }
-        setTotalClasses(total)
-        setTag(flattenData.tags[0])
+        setTotalClasses(total);
+        setTag(flattenData.tags[0]);
     }
 
     // const { data: data1 } = useQuery(GET_TABLEDATA, {
@@ -163,7 +163,7 @@ const Scheduler: React.FC = () => {
     if (userPackage.length > 0) {
         programIndex = userPackage.findIndex(
             (item) => item.id === last[1] && item.clientId === last[2]
-        )
+        );
     }
 
     function handleDateEdit() {
@@ -172,28 +172,28 @@ const Scheduler: React.FC = () => {
                 id: userPackage[programIndex].userPackageId,
                 effectiveDate: moment(startDate).format('YYYY-MM-DD') + 'T00:00:00.000Z'
             }
-        })
+        });
 
-        handleCloseDatesModal()
+        handleCloseDatesModal();
     }
 
     function handleTimeFormatting(data: any, duration: number) {
-        const digits = duration <= 30 ? 2 : 3
+        const digits = duration <= 30 ? 2 : 3;
         return (data === undefined ? 0 : data).toLocaleString('en-US', {
             minimumIntegerDigits: digits.toString(),
             useGrouping: false
-        })
+        });
     }
     function handleTotalClasses(data: any, duration: number) {
-        let sum = 0
+        let sum = 0;
         for (let i = 0; i < data.length; i++) {
-            sum += data[i]
+            sum += data[i];
         }
-        const formattedSum = handleTimeFormatting(sum, duration)
-        return formattedSum
+        const formattedSum = handleTimeFormatting(sum, duration);
+        return formattedSum;
     }
 
-    if (!show) return <Loader />
+    if (!show) return <Loader />;
     else
         return (
             <div className="col-lg-12">
@@ -511,7 +511,7 @@ const Scheduler: React.FC = () => {
                                         : startDate
                                 }
                                 onChange={(e) => {
-                                    setStartDate(e.target.value)
+                                    setStartDate(e.target.value);
                                 }}
                                 type="date"
                             />
@@ -525,7 +525,7 @@ const Scheduler: React.FC = () => {
                             variant="outline-success"
                             disabled={startDate === '' ? true : false}
                             onClick={() => {
-                                handleDateEdit()
+                                handleDateEdit();
                             }}
                         >
                             Submit
@@ -533,7 +533,7 @@ const Scheduler: React.FC = () => {
                     </Modal.Footer>
                 </Modal>
             </div>
-        )
-}
+        );
+};
 
-export default Scheduler
+export default Scheduler;

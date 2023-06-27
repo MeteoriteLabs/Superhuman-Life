@@ -1,4 +1,4 @@
-import { useMemo, useState, useContext, useRef } from 'react'
+import { useMemo, useState, useContext, useRef } from 'react';
 import {
     Badge,
     Button,
@@ -9,24 +9,24 @@ import {
     Row,
     Col,
     Form
-} from 'react-bootstrap'
-import Table from '../../../components/table/leads-table'
-import ActionButton from '../../../components/actionbutton/index'
-import { useQuery, useLazyQuery } from '@apollo/client'
-import { GET_TRANSACTIONS, GET_CONTACTS, FETCH_CHANGEMAKERS } from './queries'
-import { flattenObj } from '../../../components/utils/responseFlatten'
-import AuthContext from '../../../context/auth-context'
-import moment from 'moment'
-import { useHistory } from 'react-router-dom'
-import containsSubstring from '../../../components/utils/containsSubstring'
+} from 'react-bootstrap';
+import Table from '../../../components/table/leads-table';
+import ActionButton from '../../../components/actionbutton/index';
+import { useQuery, useLazyQuery } from '@apollo/client';
+import { GET_TRANSACTIONS, GET_CONTACTS, FETCH_CHANGEMAKERS } from './queries';
+import { flattenObj } from '../../../components/utils/responseFlatten';
+import AuthContext from '../../../context/auth-context';
+import moment from 'moment';
+import { useHistory } from 'react-router-dom';
+import containsSubstring from '../../../components/utils/containsSubstring';
 
 export default function Expenses(): JSX.Element {
-    const auth = useContext(AuthContext)
+    const auth = useContext(AuthContext);
 
-    const searchInput = useRef<HTMLInputElement>(null)
-    const [currentFilter, setCurrentFilter] = useState<string>('name')
-    const [page, setPage] = useState<number>(1)
-    const [totalRecords, setTotalRecords] = useState<number>(0)
+    const searchInput = useRef<HTMLInputElement>(null);
+    const [currentFilter, setCurrentFilter] = useState<string>('name');
+    const [page, setPage] = useState<number>(1);
+    const [totalRecords, setTotalRecords] = useState<number>(0);
 
     const columns = useMemo(
         () => [
@@ -40,19 +40,19 @@ export default function Expenses(): JSX.Element {
                 accessor: 'status',
                 Header: 'Status',
                 Cell: ({ row }: { row: { values: { status: string } } }) => {
-                    let statusColor = ''
+                    let statusColor = '';
                     switch (row.values.status) {
                         case 'Success':
-                            statusColor = 'success'
-                            break
+                            statusColor = 'success';
+                            break;
 
                         case 'Refund':
-                            statusColor = 'warning'
-                            break
+                            statusColor = 'warning';
+                            break;
 
                         case 'Failed':
-                            statusColor = 'danger'
-                            break
+                            statusColor = 'danger';
+                            break;
                     }
                     return (
                         <>
@@ -68,18 +68,18 @@ export default function Expenses(): JSX.Element {
                                     : 'Refund'}
                             </Badge>
                         </>
-                    )
+                    );
                 }
             },
             {
                 id: 'edit',
                 Header: 'Actions',
                 Cell: ({ row }: { row: { original: { id: string } } }) => {
-                    const history = useHistory()
+                    const history = useHistory();
                     const routeChange = () => {
-                        const path = `receipt/?id=${row.original.id}`
-                        history.push(path)
-                    }
+                        const path = `receipt/?id=${row.original.id}`;
+                        history.push(path);
+                    };
 
                     const arrayAction = [
                         {
@@ -90,22 +90,22 @@ export default function Expenses(): JSX.Element {
                             actionName: 'Help',
                             actionClick: routeChange
                         }
-                    ]
+                    ];
 
-                    return <ActionButton arrayAction={arrayAction}></ActionButton>
+                    return <ActionButton arrayAction={arrayAction}></ActionButton>;
                 }
             }
         ],
         []
-    )
+    );
 
-    const [datatable, setDataTable] = useState<Record<string, unknown>[]>([])
+    const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
 
     const [contacts, { data: get_contacts }] = useLazyQuery(GET_CONTACTS, {
         onCompleted: () => {
-            loadData()
+            loadData();
         }
-    })
+    });
 
     const [users, { data: get_changemakers }] = useLazyQuery(FETCH_CHANGEMAKERS, {
         onCompleted: () => {
@@ -113,9 +113,9 @@ export default function Expenses(): JSX.Element {
                 variables: {
                     id: auth.userid
                 }
-            })
+            });
         }
-    })
+    });
 
     const { data: get_transaction } = useQuery(GET_TRANSACTIONS, {
         variables: {
@@ -124,15 +124,15 @@ export default function Expenses(): JSX.Element {
             limit: 10
         },
         onCompleted: (data) => {
-            users()
-            setTotalRecords(data.transactions.meta.pagination.total)
+            users();
+            setTotalRecords(data.transactions.meta.pagination.total);
         }
-    })
+    });
 
     function loadData(filter?: string) {
-        const flattenTransactionData = flattenObj({ ...get_transaction })
-        const flattenChangemakerData = flattenObj({ ...get_changemakers })
-        const flattenContactsData = flattenObj({ ...get_contacts })
+        const flattenTransactionData = flattenObj({ ...get_transaction });
+        const flattenChangemakerData = flattenObj({ ...get_changemakers });
+        const flattenContactsData = flattenObj({ ...get_contacts });
 
         setDataTable(
             [...flattenTransactionData.transactions]
@@ -155,24 +155,24 @@ export default function Expenses(): JSX.Element {
                             'DD/MM/YYYY, hh:mm'
                         ),
                         status: Detail.TransactionStatus
-                    }
+                    };
                 })
                 .filter((currentValue) => {
                     if (filter) {
                         if (currentFilter === 'name') {
-                            return containsSubstring(currentValue.name, filter)
+                            return containsSubstring(currentValue.name, filter);
                         } else {
-                            return currentValue.id === filter
+                            return currentValue.id === filter;
                         }
                     } else {
-                        return true
+                        return true;
                     }
                 })
-        )
+        );
     }
     const pageHandler = (selectedPageNumber: number) => {
-        setPage(selectedPageNumber)
-    }
+        setPage(selectedPageNumber);
+    };
 
     return (
         <TabContent>
@@ -200,8 +200,8 @@ export default function Expenses(): JSX.Element {
                                 <Button
                                     variant="outline-secondary"
                                     onClick={(e) => {
-                                        e.preventDefault()
-                                        loadData(searchInput.current?.value)
+                                        e.preventDefault();
+                                        loadData(searchInput.current?.value);
                                     }}
                                 >
                                     <i className="fas fa-search"></i>
@@ -237,5 +237,5 @@ export default function Expenses(): JSX.Element {
                 </Row>
             ) : null}
         </TabContent>
-    )
+    );
 }

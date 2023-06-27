@@ -1,10 +1,10 @@
-import React from 'react'
-import { Row, Col } from 'react-bootstrap'
-import UpcomingCard from './UpcomingCard'
-import LeadCard from './LeadCard/index'
-import GraphSelector from './GraphSelector'
-import LinksCard from './Links'
-import TaskCard from './TaskCard'
+import React from 'react';
+import { Row, Col } from 'react-bootstrap';
+import UpcomingCard from './UpcomingCard';
+import LeadCard from './LeadCard/index';
+import GraphSelector from './GraphSelector';
+import LinksCard from './Links';
+import TaskCard from './TaskCard';
 
 const Grid: React.FC = () => {
     return (
@@ -29,7 +29,7 @@ const Grid: React.FC = () => {
                 </Col>
             </Row>
         </>
-    )
-}
+    );
+};
 
-export default Grid
+export default Grid;

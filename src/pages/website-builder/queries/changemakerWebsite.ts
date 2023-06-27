@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const FETCH_USER_WEBSITE = gql`
     query WebsiteData($id: ID) {
@@ -24,4 +24,4 @@ export const FETCH_USER_WEBSITE = gql`
             }
         }
     }
-`
+`;

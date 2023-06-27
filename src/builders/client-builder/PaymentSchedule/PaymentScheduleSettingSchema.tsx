@@ -56,4 +56,4 @@ export const schema: any = {
     firstPayment: {
         'ui:placeholder': 'Enter First Payment'
     }
-}
+};

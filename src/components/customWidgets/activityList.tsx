@@ -1,31 +1,31 @@
-import React, { ChangeEvent, useState } from 'react'
-import { InputGroup, Row, Col, Form } from 'react-bootstrap'
-import { gql, useQuery } from '@apollo/client'
-import ActivityBuilder from './activityBuilder'
-import { flattenObj } from '../utils/responseFlatten'
+import React, { ChangeEvent, useState } from 'react';
+import { InputGroup, Row, Col, Form } from 'react-bootstrap';
+import { gql, useQuery } from '@apollo/client';
+import ActivityBuilder from './activityBuilder';
+import { flattenObj } from '../utils/responseFlatten';
 
 interface Activity {
-    id: string
-    title: string
+    id: string;
+    title: string;
 }
 
 interface Activities {
-    id: string
+    id: string;
     attributes: {
-        title: string
-    }
-    __typename: string
+        title: string;
+    };
+    __typename: string;
 }
 
 interface ActivityEntityResponseCollection {
-    data: Activities[]
-    length: number
-    __typename: string
+    data: Activities[];
+    length: number;
+    __typename: string;
 }
 
 const ActivityField: React.FC<{ onChange: (params: string | null) => void }> = ({ onChange }) => {
-    const [activity, setActivity] = useState<Activity[]>([])
-    const [selected, setSelected] = useState<Activity>({} as Activity)
+    const [activity, setActivity] = useState<Activity[]>([]);
+    const [selected, setSelected] = useState<Activity>({} as Activity);
 
     const FETCH_ACTIVITIES = gql`
         query activities {
@@ -38,38 +38,38 @@ const ActivityField: React.FC<{ onChange: (params: string | null) => void }> = (
                 }
             }
         }
-    `
+    `;
 
     function FetchData() {
-        useQuery<ActivityEntityResponseCollection>(FETCH_ACTIVITIES, { onCompleted: loadData })
+        useQuery<ActivityEntityResponseCollection>(FETCH_ACTIVITIES, { onCompleted: loadData });
     }
 
     function loadData(data: ActivityEntityResponseCollection) {
-        const flattenedData = flattenObj({ ...data })
+        const flattenedData = flattenObj({ ...data });
         setActivity(
             [...flattenedData.activities].map((activity) => {
                 return {
                     id: activity.id,
                     title: activity.title
-                }
+                };
             })
-        )
+        );
     }
 
-    FetchData()
+    FetchData();
 
     function OnChange(data: string | null) {
         if (data) {
-            const objectToString = JSON.stringify(data)
+            const objectToString = JSON.stringify(data);
 
-            onChange(objectToString)
+            onChange(objectToString);
         }
     }
 
     function handleSelect(data: string) {
-        const values = [...activity]
-        const a = values.find((e) => e.title === data)
-        a && setSelected(a)
+        const values = [...activity];
+        const a = values.find((e) => e.title === data);
+        a && setSelected(a);
     }
 
     return (
@@ -83,12 +83,12 @@ const ActivityField: React.FC<{ onChange: (params: string | null) => void }> = (
                             defaultValue=""
                             placeholder="Choose one Activity"
                             onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                                handleSelect(e.target.value)
+                                handleSelect(e.target.value);
                             }}
                         >
                             <option></option>
                             {activity.map((activity) => {
-                                return <option key={activity.id}>{activity.title}</option>
+                                return <option key={activity.id}>{activity.title}</option>;
                             })}
                         </Form.Control>
                     </InputGroup>
@@ -98,7 +98,7 @@ const ActivityField: React.FC<{ onChange: (params: string | null) => void }> = (
                 <ActivityBuilder activity={selected} onChange={OnChange} />
             </div>
         </>
-    )
-}
+    );
+};
 
-export default ActivityField
+export default ActivityField;

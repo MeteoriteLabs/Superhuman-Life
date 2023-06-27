@@ -1,49 +1,49 @@
-import React, { useEffect, useImperativeHandle, useState, useContext } from 'react'
-import { useMutation, useQuery } from '@apollo/client'
-import ModalView from '../../../components/modal'
+import React, { useEffect, useImperativeHandle, useState, useContext } from 'react';
+import { useMutation, useQuery } from '@apollo/client';
+import ModalView from '../../../components/modal';
 import {
     ADD_CONTACT,
     DELETE_CONTACT,
     GET_CONTACT,
     UPDATE_CONTACT,
     CREATE_NOTIFICATION
-} from './queries'
-import StatusModal from '../../../components/StatusModal/StatusModal'
-import { Subject } from 'rxjs'
-import { schema } from './contactsSchema'
-import { flattenObj } from '../../../components/utils/responseFlatten'
-import AuthContext from '../../../context/auth-context'
+} from './queries';
+import StatusModal from '../../../components/StatusModal/StatusModal';
+import { Subject } from 'rxjs';
+import { schema } from './contactsSchema';
+import { flattenObj } from '../../../components/utils/responseFlatten';
+import AuthContext from '../../../context/auth-context';
 import {
     phoneCustomFormats,
     phoneTransformErrors
-} from '../../../components/utils/ValidationPatterns'
-import Toaster from '../../../components/Toaster'
-import { PaymentDetails } from './PaymentDetailsInterface'
-import moment from 'moment'
+} from '../../../components/utils/ValidationPatterns';
+import Toaster from '../../../components/Toaster';
+import { PaymentDetails } from './PaymentDetailsInterface';
+import moment from 'moment';
 
 interface Operation {
-    id: string
-    modal_status: boolean
-    type: 'create' | 'edit' | 'view' | 'delete'
-    current_status: boolean
+    id: string;
+    modal_status: boolean;
+    type: 'create' | 'edit' | 'view' | 'delete';
+    current_status: boolean;
 }
 
 function CreateEditContact(props: any, ref: any) {
-    const auth = useContext(AuthContext)
-    const contactSchema: Record<string, unknown> = require('./contact.json')
-    const [contactDetails, setContactDetails] = useState({} as PaymentDetails)
-    const [operation, setOperation] = useState<Operation>({} as Operation)
-    const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false)
-    const [modalLabel, setModalLabel] = useState<string>('')
-    const [isCreated, setIsCreated] = useState<boolean>(false)
-    const [isDeleted, setIsDeleted] = useState<boolean>(false)
-    const [isUpdated, setIsUpdated] = useState<boolean>(false)
+    const auth = useContext(AuthContext);
+    const contactSchema: Record<string, unknown> = require('./contact.json');
+    const [contactDetails, setContactDetails] = useState({} as PaymentDetails);
+    const [operation, setOperation] = useState<Operation>({} as Operation);
+    const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+    const [modalLabel, setModalLabel] = useState<string>('');
+    const [isCreated, setIsCreated] = useState<boolean>(false);
+    const [isDeleted, setIsDeleted] = useState<boolean>(false);
+    const [isUpdated, setIsUpdated] = useState<boolean>(false);
 
-    const [createContactNotification] = useMutation(CREATE_NOTIFICATION)
+    const [createContactNotification] = useMutation(CREATE_NOTIFICATION);
 
     const [createContact] = useMutation(ADD_CONTACT, {
         onCompleted: (r: any) => {
-            const flattenData = flattenObj({ ...r })
+            const flattenData = flattenObj({ ...r });
 
             createContactNotification({
                 variables: {
@@ -62,99 +62,99 @@ function CreateEditContact(props: any, ref: any) {
                         ContactID: flattenData.createContact.id
                     }
                 }
-            })
-            modalTrigger.next(false)
-            props.callback()
-            setIsCreated(!isCreated)
+            });
+            modalTrigger.next(false);
+            props.callback();
+            setIsCreated(!isCreated);
         }
-    })
+    });
 
     const [updateContact] = useMutation(UPDATE_CONTACT, {
         onCompleted: (r: any) => {
-            modalTrigger.next(false)
-            props.callback()
-            setIsUpdated(!isUpdated)
+            modalTrigger.next(false);
+            props.callback();
+            setIsUpdated(!isUpdated);
         },
         refetchQueries: [GET_CONTACT]
-    })
+    });
 
     const [deleteContact] = useMutation(DELETE_CONTACT, {
         onCompleted: (e: any) => {
-            modalTrigger.next(false)
-            props.callback()
-            setIsDeleted(!isDeleted)
+            modalTrigger.next(false);
+            props.callback();
+            setIsDeleted(!isDeleted);
         }
-    })
+    });
 
-    const modalTrigger = new Subject()
+    const modalTrigger = new Subject();
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
-            setOperation(msg)
+            setOperation(msg);
 
             // set show delete modal to render for delete operation
             if (msg.type === 'delete') {
-                setShowDeleteModal(true)
+                setShowDeleteModal(true);
             }
 
             // restrict create modal to render for delete operation
             if (msg.type !== 'delete') {
-                modalTrigger.next(true)
+                modalTrigger.next(true);
             }
         }
-    }))
+    }));
 
     useQuery(GET_CONTACT, {
         variables: { id: operation.id },
         skip: !operation.id || operation.type === 'delete',
         onCompleted: (e: any) => {
-            FillDetails(e.contact)
+            FillDetails(e.contact);
         }
-    })
+    });
 
     function FillDetails(data: any) {
-        const flattenData = flattenObj({ ...data })
+        const flattenData = flattenObj({ ...data });
 
-        const detail = {} as PaymentDetails
+        const detail = {} as PaymentDetails;
 
         if (flattenData) {
-            detail.id = flattenData.id
-            detail.firstname = flattenData.firstname
-            detail.lastname = flattenData.lastname
-            detail.email = flattenData.email
-            detail.phone = flattenData.phone
-            detail.appDownloadStatus = flattenData.appDownloadStatus === 'Invited' ? true : false
-            detail.type = flattenData.type
-            detail.isPayee = flattenData.isPayee
+            detail.id = flattenData.id;
+            detail.firstname = flattenData.firstname;
+            detail.lastname = flattenData.lastname;
+            detail.email = flattenData.email;
+            detail.phone = flattenData.phone;
+            detail.appDownloadStatus = flattenData.appDownloadStatus === 'Invited' ? true : false;
+            detail.type = flattenData.type;
+            detail.isPayee = flattenData.isPayee;
             if (flattenData.organisationDetails) {
                 detail.organisationDetails = flattenData.organisationDetails.organisationName
                     ? true
-                    : false
-                detail.organisationName = flattenData.organisationDetails.organisationName
-                detail.gst = flattenData.organisationDetails.gst
+                    : false;
+                detail.organisationName = flattenData.organisationDetails.organisationName;
+                detail.gst = flattenData.organisationDetails.gst;
                 detail.address1 = flattenData.organisationDetails.address1
                     ? flattenData.organisationDetails.address1
-                    : ''
+                    : '';
                 detail.address2 = flattenData.organisationDetails.address2
                     ? flattenData.organisationDetails.address2
-                    : ''
+                    : '';
                 detail.city = flattenData.organisationDetails.city
                     ? flattenData.organisationDetails.city
-                    : ''
+                    : '';
                 detail.state = flattenData.organisationDetails.state
                     ? flattenData.organisationDetails.state
-                    : ''
+                    : '';
                 detail.country = flattenData.organisationDetails.country
                     ? flattenData.organisationDetails.country
-                    : ''
+                    : '';
                 detail.zipcode = flattenData.organisationDetails.zipcode
                     ? flattenData.organisationDetails.zipcode
-                    : ''
-                detail.organisationEmail = flattenData.organisationDetails.organisationEmail
+                    : '';
+                detail.organisationEmail = flattenData.organisationDetails.organisationEmail;
             }
         }
 
-        setContactDetails(detail)
+        setContactDetails(detail);
     }
 
     function CreateContact(frm: any) {
@@ -182,7 +182,7 @@ function CreateEditContact(props: any, ref: any) {
                     }
                 }
             }
-        })
+        });
     }
 
     function EditContact(frm: any) {
@@ -210,7 +210,7 @@ function CreateEditContact(props: any, ref: any) {
                     }
                 }
             }
-        })
+        });
     }
 
     function DeleteContact(id: any) {
@@ -218,26 +218,26 @@ function CreateEditContact(props: any, ref: any) {
             variables: {
                 id
             }
-        })
+        });
     }
 
     function OnSubmit(frm: any) {
         if (modalLabel === 'Edit contact') {
-            EditContact(frm)
+            EditContact(frm);
         } else if (modalLabel === 'Create contact') {
-            CreateContact(frm)
+            CreateContact(frm);
         }
     }
 
     useEffect(() => {
         if (operation.type === 'create') {
-            setModalLabel('Create contact')
+            setModalLabel('Create contact');
         } else if (operation.type === 'edit') {
-            setModalLabel('Edit contact')
+            setModalLabel('Edit contact');
         } else if (operation.type === 'view') {
-            setModalLabel('View contact')
+            setModalLabel('View contact');
         }
-    }, [operation])
+    }, [operation]);
 
     return (
         <>
@@ -250,7 +250,7 @@ function CreateEditContact(props: any, ref: any) {
                 formSchema={contactSchema}
                 showing={operation.modal_status}
                 formSubmit={(frm: any) => {
-                    OnSubmit(frm)
+                    OnSubmit(frm);
                 }}
                 stepperValues={['Basic Contact Details', 'Organisation Settings']}
                 formData={operation.type === 'create' ? {} : contactDetails}
@@ -270,7 +270,7 @@ function CreateEditContact(props: any, ref: any) {
                     buttonLeft="Cancel"
                     buttonRight="Yes"
                     onClick={() => {
-                        DeleteContact(operation.id)
+                        DeleteContact(operation.id);
                     }}
                 />
             )}
@@ -298,7 +298,7 @@ function CreateEditContact(props: any, ref: any) {
                 />
             )}
         </>
-    )
+    );
 }
 
-export default React.forwardRef(CreateEditContact)
+export default React.forwardRef(CreateEditContact);

@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const GET_CHANGEMAKERS_NEW = gql`
     query getclient($clientid: ID) {
@@ -32,7 +32,7 @@ export const GET_CHANGEMAKERS_NEW = gql`
             }
         }
     }
-`
+`;
 
 export const GET_MOODSCALE = gql`
     query scale {
@@ -43,7 +43,7 @@ export const GET_MOODSCALE = gql`
             items
         }
     }
-`
+`;
 
 export const GET_MOODSCALE_NEW = gql`
     query {
@@ -58,7 +58,7 @@ export const GET_MOODSCALE_NEW = gql`
             }
         }
     }
-`
+`;
 
 export const GET_FITNESSSCALE = gql`
     query scale {
@@ -69,7 +69,7 @@ export const GET_FITNESSSCALE = gql`
             items
         }
     }
-`
+`;
 
 export const GET_FITNESSSCALE_NEW = gql`
     query {
@@ -84,7 +84,7 @@ export const GET_FITNESSSCALE_NEW = gql`
             }
         }
     }
-`
+`;
 
 export const ADD_RATING = gql`
     mutation addRating(
@@ -116,7 +116,7 @@ export const ADD_RATING = gql`
             }
         }
     }
-`
+`;
 
 export const ADD_RATING_NEW = gql`
     mutation addRating(
@@ -146,7 +146,7 @@ export const ADD_RATING_NEW = gql`
             }
         }
     }
-`
+`;
 
 export const ADD_NOTE = gql`
     mutation addNote(
@@ -172,7 +172,7 @@ export const ADD_NOTE = gql`
             }
         }
     }
-`
+`;
 
 export const ADD_NOTE_NEW = gql`
     mutation addNote(
@@ -196,7 +196,7 @@ export const ADD_NOTE_NEW = gql`
             }
         }
     }
-`
+`;
 
 export const GET_NOTES = gql`
     query getfeedbackNotes($id: ID) {
@@ -224,7 +224,7 @@ export const GET_NOTES = gql`
             }
         }
     }
-`
+`;
 
 export const GET_NOTES_NEW = gql`
     query getfeedbackNotes($id: ID) {
@@ -277,7 +277,7 @@ export const GET_NOTES_NEW = gql`
             }
         }
     }
-`
+`;
 
 export const GET_NOTES_BYID = gql`
     query getfeedbackNotes($id: ID) {
@@ -305,7 +305,7 @@ export const GET_NOTES_BYID = gql`
             }
         }
     }
-`
+`;
 
 export const GET_NOTES_BYID_NEW = gql`
     query getfeedbackNotes($id: ID) {
@@ -358,7 +358,7 @@ export const GET_NOTES_BYID_NEW = gql`
             }
         }
     }
-`
+`;
 
 export const CHECK_NOTES = gql`
     query checkNotes($id: ID, $clientid: ID) {
@@ -369,7 +369,7 @@ export const CHECK_NOTES = gql`
             resource_id
         }
     }
-`
+`;
 
 export const CHECK_NOTES_NEW = gql`
     query checkNotes($id: ID, $clientid: ID) {
@@ -387,7 +387,7 @@ export const CHECK_NOTES_NEW = gql`
             }
         }
     }
-`
+`;
 
 export const ADD_COMMENT = gql`
     mutation addComment($feedback_note: ID, $comment: String, $users_permissions_user: ID) {
@@ -405,7 +405,7 @@ export const ADD_COMMENT = gql`
             }
         }
     }
-`
+`;
 
 export const ADD_COMMENT_NEW = gql`
     mutation addComment($feedback_note: ID, $comment: String, $users_permissions_user: ID) {
@@ -421,7 +421,7 @@ export const ADD_COMMENT_NEW = gql`
             }
         }
     }
-`
+`;
 
 export const DELETE_NOTE = gql`
     mutation deleteNote($id: ID!) {
@@ -431,7 +431,7 @@ export const DELETE_NOTE = gql`
             }
         }
     }
-`
+`;
 
 export const DELETE_NOTE_NEW = gql`
     mutation deleteNote($id: ID!) {
@@ -441,7 +441,7 @@ export const DELETE_NOTE_NEW = gql`
             }
         }
     }
-`
+`;
 
 export const DELETE_COMMENT = gql`
     mutation deleteComment($id: ID!) {
@@ -451,7 +451,7 @@ export const DELETE_COMMENT = gql`
             }
         }
     }
-`
+`;
 
 export const DELETE_COMMENT_NEW = gql`
     mutation deleteComment($id: ID!) {
@@ -461,7 +461,7 @@ export const DELETE_COMMENT_NEW = gql`
             }
         }
     }
-`
+`;
 
 export const DELETE_RATING = gql`
     mutation deleteRating($id: ID!) {
@@ -471,7 +471,7 @@ export const DELETE_RATING = gql`
             }
         }
     }
-`
+`;
 
 export const DELETE_RATING_NEW = gql`
     mutation deleteRating($id: ID!) {
@@ -481,7 +481,7 @@ export const DELETE_RATING_NEW = gql`
             }
         }
     }
-`
+`;
 
 export const GET_TAGNAME = gql`
     query TagName($id: ID) {
@@ -490,7 +490,7 @@ export const GET_TAGNAME = gql`
             workouttitle
         }
     }
-`
+`;
 
 export const GET_TAGNAME_NEW = gql`
     query TagName($id: ID) {
@@ -503,7 +503,7 @@ export const GET_TAGNAME_NEW = gql`
             }
         }
     }
-`
+`;
 
 export const GET_RATING_NOTES = gql`
     query ratingsforNotes($id: ID, $clientid: ID, $type: String) {
@@ -518,7 +518,7 @@ export const GET_RATING_NOTES = gql`
             type
         }
     }
-`
+`;
 
 export const GET_RATING_NOTES_NEW = gql`
     query ratingsforNotes($id: ID, $clientid: ID, $type: String) {
@@ -547,7 +547,7 @@ export const GET_RATING_NOTES_NEW = gql`
             }
         }
     }
-`
+`;
 
 export const GET_RATING_NOTES_BYID = gql`
     query ratingsforNotes($id: ID, $clientid: ID) {
@@ -557,7 +557,7 @@ export const GET_RATING_NOTES_BYID = gql`
             resource_id
         }
     }
-`
+`;
 
 export const GET_RATING_NOTES_BYID_NEW = gql`
     query ratingsforNotes($id: ID, $clientid: ID) {
@@ -582,7 +582,7 @@ export const GET_RATING_NOTES_BYID_NEW = gql`
             }
         }
     }
-`
+`;
 
 export const GET_NOTES_RATING = gql`
     query ratingsforNotes($id: String, $clientid: ID) {
@@ -617,7 +617,7 @@ export const GET_NOTES_RATING = gql`
             }
         }
     }
-`
+`;
 
 export const GET_NOTES_RATING_NEW = gql`
     query ratingsforNotes($id: String, $clientid: ID) {
@@ -685,7 +685,7 @@ export const GET_NOTES_RATING_NEW = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_NOTES = gql`
     mutation updateNotes(
@@ -713,7 +713,7 @@ export const UPDATE_NOTES = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_NOTES_NEW = gql`
     mutation updateNotes(
@@ -739,7 +739,7 @@ export const UPDATE_NOTES_NEW = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_RATING = gql`
     mutation updateNotes(
@@ -773,7 +773,7 @@ export const UPDATE_RATING = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_RATING_NEW = gql`
     mutation updateNotes(
@@ -805,4 +805,4 @@ export const UPDATE_RATING_NEW = gql`
             }
         }
     }
-`
+`;

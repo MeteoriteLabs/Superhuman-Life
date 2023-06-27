@@ -1,4 +1,4 @@
-import { useMemo, useState, useRef, useContext } from 'react'
+import { useMemo, useState, useRef, useContext } from 'react';
 import {
     Badge,
     Button,
@@ -9,23 +9,23 @@ import {
     Container,
     Row,
     Col
-} from 'react-bootstrap'
-import Table from '../../../components/table'
-import { useQuery, useLazyQuery } from '@apollo/client'
-import AuthContext from '../../../context/auth-context'
-import ActionButton from '../../../components/actionbutton/index'
+} from 'react-bootstrap';
+import Table from '../../../components/table';
+import { useQuery, useLazyQuery } from '@apollo/client';
+import AuthContext from '../../../context/auth-context';
+import ActionButton from '../../../components/actionbutton/index';
 import {
     GET_CONTACTS,
     GET_PAYMENT_SCHEDULES,
     FETCH_CHANGEMAKERS,
     GET_PAYMENT_SCHEDULES_FOR_CHANGEMAKER
-} from './queries'
-import { flattenObj } from '../../../components/utils/responseFlatten'
-import CreateEditPayee from './CreateEditPayee'
-import CreateChangemakerAsPayee from './CreateChangemakerAsPayee'
-import CreateContactAsPayee from './CreateContactAsPayee'
-import { useHistory } from 'react-router-dom'
-import containsSubstring from '../../../components/utils/containsSubstring'
+} from './queries';
+import { flattenObj } from '../../../components/utils/responseFlatten';
+import CreateEditPayee from './CreateEditPayee';
+import CreateChangemakerAsPayee from './CreateChangemakerAsPayee';
+import CreateContactAsPayee from './CreateContactAsPayee';
+import { useHistory } from 'react-router-dom';
+import containsSubstring from '../../../components/utils/containsSubstring';
 
 interface PayeeComponentTs {
     TriggerForm: ({
@@ -33,18 +33,18 @@ interface PayeeComponentTs {
         type,
         modal_status
     }: {
-        id: number | null
-        type: string
-        modal_status: boolean
-    }) => void
+        id: number | null;
+        type: string;
+        modal_status: boolean;
+    }) => void;
 }
 
 export default function Payee(): JSX.Element {
-    const auth = useContext(AuthContext)
-    const searchInput = useRef<HTMLInputElement>(null)
-    const createEditPayeeComponent = useRef<PayeeComponentTs>(null)
-    const createChangemakerAsPayeeComponent = useRef<PayeeComponentTs>(null)
-    const createContactAsPayeeComponent = useRef<PayeeComponentTs>(null)
+    const auth = useContext(AuthContext);
+    const searchInput = useRef<HTMLInputElement>(null);
+    const createEditPayeeComponent = useRef<PayeeComponentTs>(null);
+    const createChangemakerAsPayeeComponent = useRef<PayeeComponentTs>(null);
+    const createContactAsPayeeComponent = useRef<PayeeComponentTs>(null);
 
     const columns = useMemo(
         () => [
@@ -54,15 +54,15 @@ export default function Payee(): JSX.Element {
                 accessor: 'isActive',
                 Header: 'Active',
                 Cell: ({ row }: { row: { values: { isActive: boolean } } }) => {
-                    let statusColor = ''
+                    let statusColor = '';
                     switch (row.values.isActive) {
                         case true:
-                            statusColor = 'success'
-                            break
+                            statusColor = 'success';
+                            break;
 
                         case false:
-                            statusColor = 'danger'
-                            break
+                            statusColor = 'danger';
+                            break;
                     }
                     return (
                         <>
@@ -74,7 +74,7 @@ export default function Payee(): JSX.Element {
                                 {row.values.isActive === true ? 'Activated' : 'Deactivated'}
                             </Badge>
                         </>
-                    )
+                    );
                 }
             },
             { accessor: 'contactsdate', Header: 'Added On' },
@@ -82,11 +82,11 @@ export default function Payee(): JSX.Element {
                 id: 'edit',
                 Header: 'Actions',
                 Cell: ({ row }: { row: { original: { id: number; isChangemaker: boolean } } }) => {
-                    const history = useHistory()
+                    const history = useHistory();
                     const routeChange = () => {
-                        const path = `payment_settings/?id=${row.original.id}&isChangemaker=${row.original.isChangemaker}`
-                        history.push(path)
-                    }
+                        const path = `payment_settings/?id=${row.original.id}&isChangemaker=${row.original.isChangemaker}`;
+                        history.push(path);
+                    };
 
                     const arrayAction = [
                         {
@@ -101,31 +101,31 @@ export default function Payee(): JSX.Element {
                             actionName: 'All transactions',
                             actionClick: routeChange
                         }
-                    ]
+                    ];
 
-                    return <ActionButton arrayAction={arrayAction}></ActionButton>
+                    return <ActionButton arrayAction={arrayAction}></ActionButton>;
                 }
             }
         ],
         []
-    )
+    );
 
-    const [datatable, setDataTable] = useState<Record<string, unknown>[]>([])
+    const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
     function getDate(time: string | number | Date) {
-        const dateObj = new Date(time)
-        const month = dateObj.getMonth() + 1
-        const year = dateObj.getFullYear()
-        const date = dateObj.getDate()
+        const dateObj = new Date(time);
+        const month = dateObj.getMonth() + 1;
+        const year = dateObj.getFullYear();
+        const date = dateObj.getDate();
 
-        return `${date}/${month}/${year}`
+        return `${date}/${month}/${year}`;
     }
 
     const [users, { data: get_changemakers }] = useLazyQuery(FETCH_CHANGEMAKERS, {
         fetchPolicy: 'cache-and-network',
         onCompleted: () => {
-            loadData()
+            loadData();
         }
-    })
+    });
 
     const [
         getChangeMakersSchedule,
@@ -134,9 +134,9 @@ export default function Payee(): JSX.Element {
         fetchPolicy: 'cache-and-network',
         onCompleted: () => {
             // calling fetch changemaker's useLazyQuery function
-            users()
+            users();
         }
-    })
+    });
 
     const [getPaymentSchedules, { data: payment_schedule }] = useLazyQuery(GET_PAYMENT_SCHEDULES, {
         fetchPolicy: 'network-only',
@@ -147,17 +147,17 @@ export default function Payee(): JSX.Element {
                 variables: {
                     id: Number(auth.userid)
                 }
-            })
+            });
         }
-    })
+    });
 
     const { data: get_contacts, refetch: refetch_contacts } = useQuery(GET_CONTACTS, {
         variables: { id: auth.userid },
         onCompleted: (data) => {
-            const flattenContactsData = flattenObj({ ...data })
+            const flattenContactsData = flattenObj({ ...data });
             const contactsArray = flattenContactsData.contacts.map((currentValue) =>
                 Number(currentValue.id)
-            )
+            );
 
             // calling paymentSchedule's useLazyQuery function
             getPaymentSchedules({
@@ -165,28 +165,28 @@ export default function Payee(): JSX.Element {
                     Destination_Contacts_ID: contactsArray,
                     id: Number(auth.userid)
                 }
-            })
+            });
         }
-    })
+    });
 
     function loadData(searchFilter?: string) {
-        const flattenContactsData = flattenObj({ ...get_contacts?.contacts })
+        const flattenContactsData = flattenObj({ ...get_contacts?.contacts });
 
         const flattenContactsFinanceData = flattenObj({
             ...payment_schedule?.paymentSchedules
-        })
+        });
 
         const flattenChangemakersFinanceData = flattenObj({
             ...get_changemakers_payment_schedule?.paymentSchedules
-        })
+        });
 
         const flattenUsers = flattenObj({
             ...get_changemakers?.usersPermissionsUsers
-        })
+        });
 
         const concatenatedContactsAndFinanceArray = flattenContactsData.concat(
             flattenChangemakersFinanceData
-        )
+        );
 
         setDataTable(
             [...concatenatedContactsAndFinanceArray]
@@ -244,14 +244,14 @@ export default function Payee(): JSX.Element {
                             : Detail.Destination_Contacts_ID === null && Detail.isActive === true
                             ? true
                             : false
-                    }
+                    };
                 })
                 .filter((tableData) =>
                     tableData.name && searchFilter
                         ? containsSubstring(tableData.name, searchFilter)
                         : true
                 )
-        )
+        );
     }
 
     return (
@@ -269,8 +269,8 @@ export default function Payee(): JSX.Element {
                                 <Button
                                     variant="outline-secondary"
                                     onClick={(e) => {
-                                        e.preventDefault()
-                                        loadData(searchInput.current?.value)
+                                        e.preventDefault();
+                                        loadData(searchInput.current?.value);
                                     }}
                                 >
                                     <i className="fas fa-search"></i>
@@ -288,7 +288,7 @@ export default function Payee(): JSX.Element {
                                         id: null,
                                         type: 'create',
                                         modal_status: true
-                                    })
+                                    });
                                 }}
                             >
                                 <i className="fas fa-plus-circle"></i> Add New Payee
@@ -312,7 +312,7 @@ export default function Payee(): JSX.Element {
                                         id: null,
                                         type: 'create',
                                         modal_status: true
-                                    })
+                                    });
                                 }}
                             >
                                 <i className="fas fa-plus-circle"></i> Add Changemaker as Payee
@@ -336,7 +336,7 @@ export default function Payee(): JSX.Element {
                                         id: null,
                                         type: 'create',
                                         modal_status: true
-                                    })
+                                    });
                                 }}
                             >
                                 <i className="fas fa-plus-circle"></i> Add Contact as Payee
@@ -354,5 +354,5 @@ export default function Payee(): JSX.Element {
             </Container>
             <Table columns={columns} data={datatable} />
         </TabContent>
-    )
+    );
 }

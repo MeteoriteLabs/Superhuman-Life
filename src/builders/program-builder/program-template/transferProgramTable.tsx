@@ -1,46 +1,46 @@
-import React, { useState, useEffect } from 'react'
-import { Form, Table } from 'react-bootstrap'
-import DaysInput from './daysInput'
+import React, { useState, useEffect } from 'react';
+import { Form, Table } from 'react-bootstrap';
+import DaysInput from './daysInput';
 // import SingleTimeField from '../../../components/customWidgets/singleTimeField';
 // import React, { useState } from 'react';
 // import { Row, Col } from 'react-bootstrap';
-import moment from 'moment'
-import TimePicker from 'rc-time-picker'
-import 'rc-time-picker/assets/index.css'
+import moment from 'moment';
+import TimePicker from 'rc-time-picker';
+import 'rc-time-picker/assets/index.css';
 
 const TransferProgramTable = (props: any) => {
-    const [show, setShow] = useState<boolean>(false)
-    const [data, setData] = useState<any[]>([])
+    const [show, setShow] = useState<boolean>(false);
+    const [data, setData] = useState<any[]>([]);
 
     function handleStartTimeInput(val: any, index: any) {
-        const m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60
-        handleHourChange(val.slice(0, 2) + ':' + (m === 0 ? '00' : m), index)
+        const m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60;
+        handleHourChange(val.slice(0, 2) + ':' + (m === 0 ? '00' : m), index);
     }
 
     function convertToMoment(time: string) {
-        const timeSplit = time.split(':').map(Number)
-        return moment().set({ hour: timeSplit[0], minute: timeSplit[1] })
+        const timeSplit = time.split(':').map(Number);
+        return moment().set({ hour: timeSplit[0], minute: timeSplit[1] });
     }
 
     function handleFormatting(time) {
-        const inputTime: any = time.split(':')
+        const inputTime: any = time.split(':');
         return `${parseInt(inputTime[0]) < 10 ? inputTime[0].charAt(1) : inputTime[0]}:${
             inputTime[1] === '00' ? '0' : inputTime[1]
-        }`
+        }`;
     }
 
     function handleDaysData(e: any, index: any) {
-        const values = [...data]
-        const a = values.find((e) => e.transferId === index)
-        a.day = e
-        setData(values)
+        const values = [...data];
+        const a = values.find((e) => e.transferId === index);
+        a.day = e;
+        setData(values);
     }
 
     function handleHourChange(e: any, index: any) {
-        const values = [...data]
-        const a = values.find((e) => e.transferId === index)
-        a.startTime = handleFormatting(e)
-        setData(values)
+        const values = [...data];
+        const a = values.find((e) => e.transferId === index);
+        a.startTime = handleFormatting(e);
+        setData(values);
     }
 
     // function handleMinChange(e: any, index: any){
@@ -51,7 +51,7 @@ const TransferProgramTable = (props: any) => {
     // }
 
     function handleTransfer(e: any) {
-        const values = [...data]
+        const values = [...data];
         for (let i = 0; i < e.length; i++) {
             values.push({
                 name: e[i].workout === null ? e[i].activity.title : e[i].workout.workouttitle,
@@ -68,23 +68,23 @@ const TransferProgramTable = (props: any) => {
                 mode: e[i].mode,
                 tag: e[i].tag,
                 workout: e[i].workout
-            })
+            });
         }
-        setData(values)
+        setData(values);
     }
 
     useEffect(() => {
-        handleTransfer(props.events)
+        handleTransfer(props.events);
         setTimeout(() => {
-            setShow(true)
-        }, 500)
-    }, [])
+            setShow(true);
+        }, 500);
+    }, []);
 
     useEffect(() => {
-        props.onChange(data)
-    }, [data])
+        props.onChange(data);
+    }, [data]);
 
-    if (!show) return <span style={{ color: 'red' }}>Loading...</span>
+    if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
     else
         return (
             <Table responsive style={{ overflow: 'auto' }}>
@@ -115,7 +115,7 @@ const TransferProgramTable = (props: any) => {
                                         duration={props.duration.length}
                                         dayType={props.dayType}
                                         onChange={(e) => {
-                                            handleDaysData(e, index)
+                                            handleDaysData(e, index);
                                         }}
                                         type="transfer"
                                     />
@@ -130,9 +130,9 @@ const TransferProgramTable = (props: any) => {
                                         minuteStep={15}
                                         onChange={(e) => {
                                             if (e !== null) {
-                                                handleHourChange(e.format('HH:mm'), index)
+                                                handleHourChange(e.format('HH:mm'), index);
                                             } else {
-                                                handleStartTimeInput('00:00', index)
+                                                handleStartTimeInput('00:00', index);
                                             }
                                         }}
                                     />
@@ -166,11 +166,11 @@ const TransferProgramTable = (props: any) => {
                                         </InputGroup>
                                    </td> */}
                             </tr>
-                        )
+                        );
                     })}
                 </tbody>
             </Table>
-        )
-}
+        );
+};
 
-export default TransferProgramTable
+export default TransferProgramTable;

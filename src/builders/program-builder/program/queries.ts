@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const GET_TABLEDATA = gql`
     query ProgramQuery($id: ID, $filter: String!, $start: Int, $limit: Int) {
@@ -67,7 +67,7 @@ export const GET_TABLEDATA = gql`
             }
         }
     }
-`
+`;
 
 export const GET_DATA = gql`
     query ProgramQuery($id: ID) {
@@ -97,7 +97,7 @@ export const GET_DATA = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_SESSION = gql`
     mutation CreateSessions(
@@ -137,7 +137,7 @@ export const CREATE_SESSION = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_PROGRAM = gql`
     mutation createprogram(
@@ -169,7 +169,7 @@ export const CREATE_PROGRAM = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_PROGRAM = gql`
     mutation updateprogram(
@@ -202,7 +202,7 @@ export const UPDATE_PROGRAM = gql`
             }
         }
     }
-`
+`;
 
 export const DELETE_PROGRAM = gql`
     mutation deleteprogram($id: ID!) {
@@ -215,4 +215,4 @@ export const DELETE_PROGRAM = gql`
             }
         }
     }
-`
+`;

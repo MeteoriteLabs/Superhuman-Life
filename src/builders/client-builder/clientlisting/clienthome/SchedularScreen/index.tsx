@@ -1,25 +1,25 @@
-import React, { useState } from 'react'
-import Schedular from '../../../../../builders/program-builder/program-template/scheduler'
-import moment from 'moment'
-import { useQuery } from '@apollo/client'
-import { GET_CLIENT_SESSIONS } from './queries'
-import { flattenObj } from '../../../../../components/utils/responseFlatten'
+import React, { useState } from 'react';
+import Schedular from '../../../../../builders/program-builder/program-template/scheduler';
+import moment from 'moment';
+import { useQuery } from '@apollo/client';
+import { GET_CLIENT_SESSIONS } from './queries';
+import { flattenObj } from '../../../../../components/utils/responseFlatten';
 
 const SchedulerScreen = (props: any) => {
-    const clientsSessions = window.location.href.split('/').pop()
-    const [scheduleDate, setScheduleDate] = useState(moment().format('YYYY-MM-DD'))
-    const [restDays, setRestDays] = useState<any>([])
+    const clientsSessions = window.location.href.split('/').pop();
+    const [scheduleDate, setScheduleDate] = useState(moment().format('YYYY-MM-DD'));
+    const [restDays, setRestDays] = useState<any>([]);
 
     function handleDatePicked(date: any) {
-        setScheduleDate(date)
+        setScheduleDate(date);
     }
 
     function handleSubChangeDay(scheduleDate: any) {
-        setScheduleDate(moment(scheduleDate).subtract(1, 'months').format('YYYY-MM-DD'))
+        setScheduleDate(moment(scheduleDate).subtract(1, 'months').format('YYYY-MM-DD'));
     }
 
     function handleAddChangeDay(date: any) {
-        setScheduleDate(moment(scheduleDate).add(1, 'months').format('YYYY-MM-DD'))
+        setScheduleDate(moment(scheduleDate).add(1, 'months').format('YYYY-MM-DD'));
     }
 
     useQuery(GET_CLIENT_SESSIONS, {
@@ -33,10 +33,10 @@ const SchedulerScreen = (props: any) => {
                 .format('YYYY-MM-DD')
         },
         onCompleted: (data: any) => {
-            const flattenData = flattenObj({ ...data })
-            setRestDays(flattenData)
+            const flattenData = flattenObj({ ...data });
+            setRestDays(flattenData);
         }
-    })
+    });
 
     return (
         <div>
@@ -57,7 +57,7 @@ const SchedulerScreen = (props: any) => {
                 <span
                     onClick={() => {
                         // handleTimeUpdate(scheduleDay - 1);
-                        handleSubChangeDay(scheduleDate)
+                        handleSubChangeDay(scheduleDate);
                     }}
                     className="rounded-circle"
                 >
@@ -73,7 +73,7 @@ const SchedulerScreen = (props: any) => {
                 <span
                     onClick={() => {
                         // handleTimeUpdate(scheduleDay + 1);
-                        handleAddChangeDay(scheduleDate)
+                        handleAddChangeDay(scheduleDate);
                     }}
                 >
                     <i className="fa fa-chevron-right ml-5" style={{ cursor: 'pointer' }}></i>
@@ -90,7 +90,7 @@ const SchedulerScreen = (props: any) => {
                 clientSessions={true}
             />
         </div>
-    )
-}
+    );
+};
 
-export default SchedulerScreen
+export default SchedulerScreen;

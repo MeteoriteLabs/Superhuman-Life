@@ -1,12 +1,12 @@
-import { Fragment } from 'react'
-import Classes from '../Classes'
+import { Fragment } from 'react';
+import Classes from '../Classes';
 
 type Props = {
-    recordedclasses: number
-    packageTypeName: string
-    mode: 'Online' | 'Offline' | 'Hybird' | 'Workout' | 'Online Workout' | 'Offline Workout'
-    type: 'One-On-One' | 'Group Class' | 'Custom Fitness' | 'Classic Class'
-}
+    recordedclasses: number;
+    packageTypeName: string;
+    mode: 'Online' | 'Offline' | 'Hybird' | 'Workout' | 'Online Workout' | 'Offline Workout';
+    type: 'One-On-One' | 'Group Class' | 'Custom Fitness' | 'Classic Class';
+};
 
 export default function RecordedPricingTable({
     recordedclasses,
@@ -31,5 +31,5 @@ export default function RecordedPricingTable({
                 )}
             </tr>
         </Fragment>
-    )
+    );
 }

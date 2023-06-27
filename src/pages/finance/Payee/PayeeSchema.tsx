@@ -1,10 +1,10 @@
-import ContactList from '../../../components/customWidgets/ContactList'
-import Changemaker from '../../../components/customWidgets/Changemakers'
+import ContactList from '../../../components/customWidgets/ContactList';
+import Changemaker from '../../../components/customWidgets/Changemakers';
 
 export const widgets = {
     contactList: ContactList,
     changemaker: Changemaker
-}
+};
 // eslint-disable-next-line
 export const schema: any = {
     PaymentCategory: {
@@ -148,4 +148,4 @@ export const schema: any = {
         'ui:widget': 'changemaker',
         'ui:help': 'Select Changemaker'
     }
-}
+};

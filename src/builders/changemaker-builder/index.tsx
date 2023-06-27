@@ -1,6 +1,6 @@
-import { Card, Tab, Tabs, Button } from 'react-bootstrap'
-import DayView from './dayView'
-import WeekView from './weekView'
+import { Card, Tab, Tabs, Button } from 'react-bootstrap';
+import DayView from './dayView';
+import WeekView from './weekView';
 
 export default function ProgramPage() {
     return (
@@ -30,5 +30,5 @@ export default function ProgramPage() {
                 </Card.Body>
             </Card>
         </div>
-    )
+    );
 }

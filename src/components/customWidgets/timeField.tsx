@@ -1,30 +1,30 @@
-import { useEffect, useState } from 'react'
-import { Row, Col } from 'react-bootstrap'
-import moment from 'moment'
-import TimePicker from 'rc-time-picker'
-import 'rc-time-picker/assets/index.css'
+import { useEffect, useState } from 'react';
+import { Row, Col } from 'react-bootstrap';
+import moment from 'moment';
+import TimePicker from 'rc-time-picker';
+import 'rc-time-picker/assets/index.css';
 
 const TimeFieldInput = (props: any) => {
     const [startTime, setStartTime] = useState(
         props.value ? JSON.parse(props.value).startTime : '00:00'
-    )
-    const [endTime, setEndTime] = useState(props.value ? JSON.parse(props.value).endTime : '23:00')
+    );
+    const [endTime, setEndTime] = useState(props.value ? JSON.parse(props.value).endTime : '23:00');
 
     function handleStartTimeInput(val: any) {
-        const m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60
-        setStartTime(val.slice(0, 2) + ':' + (m === 0 ? '00' : m))
+        const m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60;
+        setStartTime(val.slice(0, 2) + ':' + (m === 0 ? '00' : m));
     }
 
     function handleEndTimeInput(val: any) {
-        const m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60
-        setEndTime(val.slice(0, 2) + ':' + (m === 0 ? '00' : m))
+        const m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60;
+        setEndTime(val.slice(0, 2) + ':' + (m === 0 ? '00' : m));
     }
 
     function handleTimeValidation() {
-        const sh = startTime.split(':')[0]
-        const sm = startTime.split(':')[1]
-        const eh = endTime.split(':')[0]
-        const em = endTime.split(':')[1]
+        const sh = startTime.split(':')[0];
+        const sm = startTime.split(':')[1];
+        const eh = endTime.split(':')[0];
+        const em = endTime.split(':')[1];
 
         if (!props.disabled) {
             if (parseInt(sh) > parseInt(eh)) {
@@ -32,42 +32,42 @@ const TimeFieldInput = (props: any) => {
                     <span id="timeErr" style={{ color: 'red' }}>
                         End Time should be greater than Start Time
                     </span>
-                )
+                );
             } else if (parseInt(sh) === parseInt(eh) && parseInt(sm) === parseInt(em)) {
                 return (
                     <span id="timeErr" style={{ color: 'red' }}>
                         End Time and start Time cannot be the same
                     </span>
-                )
+                );
             } else if (parseInt(sh) === parseInt(eh) && parseInt(sm) > parseInt(em)) {
                 return (
                     <span id="timeErr" style={{ color: 'red' }}>
                         End Time Cannot be lesser than Start Time
                     </span>
-                )
+                );
             }
         }
     }
 
     function convertToMoment(time: string) {
-        const timeSplit = time.split(':').map(Number)
-        return moment().set({ hour: timeSplit[0], minute: timeSplit[1] })
+        const timeSplit = time.split(':').map(Number);
+        return moment().set({ hour: timeSplit[0], minute: timeSplit[1] });
     }
 
     function handleFormatting(time) {
-        const inputTime: any = time.split(':')
+        const inputTime: any = time.split(':');
         return `${parseInt(inputTime[0]) < 10 ? inputTime[0].charAt(1) : inputTime[0]}:${
             inputTime[1] === '00' ? '0' : inputTime[1]
-        }`
+        }`;
     }
 
     function checkIfCorrectTime() {
-        const ele: any = document.getElementById('timeErr')
+        const ele: any = document.getElementById('timeErr');
 
         if (ele) {
-            return false
+            return false;
         } else {
-            return true
+            return true;
         }
     }
 
@@ -76,13 +76,13 @@ const TimeFieldInput = (props: any) => {
             const object = {
                 startTime: handleFormatting(startTime),
                 endTime: handleFormatting(endTime)
-            }
-            props.onChange(JSON.stringify(object))
+            };
+            props.onChange(JSON.stringify(object));
         } else {
-            props.onChange(undefined)
+            props.onChange(undefined);
         }
         // eslint-disable-next-line
-    }, [startTime, endTime])
+    }, [startTime, endTime]);
 
     return (
         <>
@@ -97,9 +97,9 @@ const TimeFieldInput = (props: any) => {
                         use12Hours={true}
                         onChange={(e) => {
                             if (!e) {
-                                setStartTime('00:00')
+                                setStartTime('00:00');
                             } else {
-                                handleStartTimeInput(moment(e).format('HH:mm'))
+                                handleStartTimeInput(moment(e).format('HH:mm'));
                             }
                         }}
                     />
@@ -116,9 +116,9 @@ const TimeFieldInput = (props: any) => {
                         minuteStep={15}
                         onChange={(e) => {
                             if (!e) {
-                                setEndTime('23:00')
+                                setEndTime('23:00');
                             } else {
-                                handleEndTimeInput(moment(e).format('HH:mm'))
+                                handleEndTimeInput(moment(e).format('HH:mm'));
                             }
                         }}
                     />
@@ -126,7 +126,7 @@ const TimeFieldInput = (props: any) => {
             </Row>
             {handleTimeValidation()}
         </>
-    )
-}
+    );
+};
 
-export default TimeFieldInput
+export default TimeFieldInput;

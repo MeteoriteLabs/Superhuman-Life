@@ -1,15 +1,15 @@
-import { useState, useRef } from 'react'
-import { InputGroup, FormControl, Container } from 'react-bootstrap'
-import { gql, useQuery } from '@apollo/client'
-import { flattenObj } from '../../../../../../components/utils/responseFlatten'
+import { useState, useRef } from 'react';
+import { InputGroup, FormControl, Container } from 'react-bootstrap';
+import { gql, useQuery } from '@apollo/client';
+import { flattenObj } from '../../../../../../components/utils/responseFlatten';
 
 const GoalSearch = (props: any) => {
-    const [packageLists, setPackageLists] = useState<any[]>([])
-    const [searchInput, setSearchInput] = useState<any>(props.value ? props.value.name : null)
-    const [errorMsg, setErrorMsg] = useState('')
-    const [selected, setSelected] = useState<any[]>([])
-    const inputField = useRef<any>()
-    let skipval = true
+    const [packageLists, setPackageLists] = useState<any[]>([]);
+    const [searchInput, setSearchInput] = useState<any>(props.value ? props.value.name : null);
+    const [errorMsg, setErrorMsg] = useState('');
+    const [selected, setSelected] = useState<any[]>([]);
+    const inputField = useRef<any>();
+    let skipval = true;
 
     const GET_GOALLIST = gql`
         query GoalsListQuery($filter: String!) {
@@ -22,75 +22,75 @@ const GoalSearch = (props: any) => {
                 }
             }
         }
-    `
+    `;
 
     function FetchPackageList(_variable: Record<string, unknown> = { filter: ' ' }) {
         useQuery(GET_GOALLIST, {
             variables: _variable,
             onCompleted: loadPackageList,
             skip: !searchInput
-        })
+        });
     }
 
     function loadPackageList(data: any) {
-        const flattenData = flattenObj({ ...data })
+        const flattenData = flattenObj({ ...data });
         setPackageLists(
             [...flattenData.goals].map((p) => {
                 return {
                     id: p.id,
                     name: p.name
-                }
+                };
             })
-        )
+        );
     }
 
     function Search(data: any) {
         if (data.length > 0) {
-            setSearchInput(data)
-            skipval = false
+            setSearchInput(data);
+            skipval = false;
         } else {
-            setPackageLists([])
+            setPackageLists([]);
         }
     }
 
     function handleSelectedPackageAdd(name: any, id: any) {
-        const values = [...selected]
+        const values = [...selected];
         if (values.length === 1) {
-            setErrorMsg('(Only One Goal Allowed)')
+            setErrorMsg('(Only One Goal Allowed)');
         } else {
-            const a = values.find((e) => e.id === id)
+            const a = values.find((e) => e.id === id);
             if (!a) {
-                values.push({ value: name, id: id })
-                setSelected(values)
+                values.push({ value: name, id: id });
+                setSelected(values);
             }
             props.onChange(
                 values
                     .map((e) => {
-                        return e.id
+                        return e.id;
                     })
                     .join(',')
-            )
-            inputField.current.value = ''
-            setPackageLists([])
-            skipval = true
+            );
+            inputField.current.value = '';
+            setPackageLists([]);
+            skipval = true;
         }
     }
 
     function handleSelectedPackageRemove(name: any) {
-        const values = [...selected]
-        values.splice(name, 1)
-        setSelected(values)
-        setErrorMsg('')
+        const values = [...selected];
+        values.splice(name, 1);
+        setSelected(values);
+        setErrorMsg('');
         props.onChange(
             values
                 .map((e) => {
-                    return e.id
+                    return e.id;
                 })
                 .join(',')
-        )
+        );
     }
 
-    FetchPackageList({ filter: searchInput, skip: skipval })
+    FetchPackageList({ filter: searchInput, skip: skipval });
 
     return (
         <>
@@ -104,8 +104,8 @@ const GoalSearch = (props: any) => {
                     id="package"
                     ref={inputField}
                     onChange={(e) => {
-                        e.preventDefault()
-                        Search(e.target.value)
+                        e.preventDefault();
+                        Search(e.target.value);
                     }}
                     autoComplete="off"
                 />
@@ -119,14 +119,14 @@ const GoalSearch = (props: any) => {
                                 className="m-2 p-1 shadow-sm rounded bg-white"
                                 value={p.id}
                                 onClick={(e) => {
-                                    e.preventDefault()
-                                    handleSelectedPackageAdd(p.name, p.id)
+                                    e.preventDefault();
+                                    handleSelectedPackageAdd(p.name, p.id);
                                 }}
                             >
                                 {p.name}
                             </option>
                         </Container>
-                    )
+                    );
                 })}
             </>
             <>
@@ -160,11 +160,11 @@ const GoalSearch = (props: any) => {
                                 onClick={() => handleSelectedPackageRemove(val.value)}
                             ></i>
                         </div>
-                    )
+                    );
                 })}
             </>
         </>
-    )
-}
+    );
+};
 
-export default GoalSearch
+export default GoalSearch;

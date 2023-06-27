@@ -1,6 +1,6 @@
-import React, { useContext, useImperativeHandle, useState } from 'react'
-import { useQuery, useMutation } from '@apollo/client'
-import ModalView from '../../../../components/modal'
+import React, { useContext, useImperativeHandle, useState } from 'react';
+import { useQuery, useMutation } from '@apollo/client';
+import ModalView from '../../../../components/modal';
 import {
     GET_SCHEDULEREVENTS,
     CREATE_SESSION,
@@ -8,129 +8,129 @@ import {
     CREATE_SESSION_BOOKING,
     GET_TEMPLATE_SESSIONS,
     UPDATE_FITNESSPORGRAMS_SESSIONS
-} from '../queries'
-import AuthContext from '../../../../context/auth-context'
-import { schema, widgets } from '../schema/newActivitySchema'
-import { Subject } from 'rxjs'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
-import moment from 'moment'
-import Toaster from '../../../../components/Toaster'
+} from '../queries';
+import AuthContext from '../../../../context/auth-context';
+import { schema, widgets } from '../schema/newActivitySchema';
+import { Subject } from 'rxjs';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import moment from 'moment';
+import Toaster from '../../../../components/Toaster';
 
 interface Operation {
-    id: string
-    type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete'
-    current_status: boolean
+    id: string;
+    type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
+    current_status: boolean;
 }
 
 function CreateEditActivity(props: any, ref: any) {
-    const auth = useContext(AuthContext)
+    const auth = useContext(AuthContext);
     const programSchema: {
-        [name: string]: any
-    } = require('../json/newActivity.json')
-    const [programDetails, setProgramDetails] = useState<any>({})
-    const [operation, setOperation] = useState<Operation>({} as Operation)
-    const program_id = window.location.pathname.split('/').pop()
-    const [isCreated, setIsCreated] = useState<boolean>(false)
-    const [isFormUpdated, setIsFormUpdated] = useState<boolean>(false)
+        [name: string]: any;
+    } = require('../json/newActivity.json');
+    const [programDetails, setProgramDetails] = useState<any>({});
+    const [operation, setOperation] = useState<Operation>({} as Operation);
+    const program_id = window.location.pathname.split('/').pop();
+    const [isCreated, setIsCreated] = useState<boolean>(false);
+    const [isFormUpdated, setIsFormUpdated] = useState<boolean>(false);
 
-    const [templateSessionsIds, setTemplateSessionsIds] = useState<any>([])
+    const [templateSessionsIds, setTemplateSessionsIds] = useState<any>([]);
 
     useQuery(GET_TEMPLATE_SESSIONS, {
         variables: { id: program_id },
         skip: window.location.pathname.split('/')[1] !== 'programs',
         onCompleted: (data) => {
-            const flattenData = flattenObj({ ...data })
-            const templateExistingValues = [...templateSessionsIds]
+            const flattenData = flattenObj({ ...data });
+            const templateExistingValues = [...templateSessionsIds];
             for (let q = 0; q < flattenData.fitnessprograms[0].sessions.length; q++) {
-                templateExistingValues.push(flattenData.fitnessprograms[0].sessions[q].id)
+                templateExistingValues.push(flattenData.fitnessprograms[0].sessions[q].id);
             }
-            setTemplateSessionsIds(templateExistingValues)
+            setTemplateSessionsIds(templateExistingValues);
         }
-    })
+    });
 
     const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, {
         onCompleted: () => {
-            modalTrigger.next(false)
-            props.callback()
+            modalTrigger.next(false);
+            props.callback();
         }
-    })
+    });
     const [upateSessions] = useMutation(UPDATE_TAG_SESSIONS, {
         onCompleted: () => {
-            modalTrigger.next(false)
-            props.callback()
-            setIsFormUpdated(!isFormUpdated)
+            modalTrigger.next(false);
+            props.callback();
+            setIsFormUpdated(!isFormUpdated);
         }
-    })
+    });
     const [createSession] = useMutation(CREATE_SESSION, {
         onCompleted: () => {
-            setIsCreated(!isCreated)
+            setIsCreated(!isCreated);
         }
-    })
+    });
 
     const [updateTemplateSessions] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, {
         onCompleted: () => {
-            modalTrigger.next(false)
-            props.callback()
+            modalTrigger.next(false);
+            props.callback();
         }
-    })
+    });
 
-    const modalTrigger = new Subject()
+    const modalTrigger = new Subject();
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
-            setOperation(msg)
-            schema.startDate = props.startDate
-            schema.duration = props.duration
-            schema.type = window.location.pathname.split('/')[1] === 'programs' ? 'day' : ''
+            setOperation(msg);
+            schema.startDate = props.startDate;
+            schema.duration = props.duration;
+            schema.type = window.location.pathname.split('/')[1] === 'programs' ? 'day' : '';
 
             if (msg && !msg.id)
                 //render form if no message id
-                modalTrigger.next(true)
+                modalTrigger.next(true);
         }
-    }))
+    }));
 
     function FillDetails(data: any) {
-        const details: any = {}
-        setProgramDetails(details)
+        const details: any = {};
+        setProgramDetails(details);
 
         //if message exists - show form only for edit and view
-        if (['edit', 'view'].indexOf(operation.type) > -1) modalTrigger.next(true)
-        else OnSubmit(null)
+        if (['edit', 'view'].indexOf(operation.type) > -1) modalTrigger.next(true);
+        else OnSubmit(null);
     }
 
     useQuery(GET_SCHEDULEREVENTS, {
         variables: { id: program_id },
         skip: !operation.id || operation.type === 'toggle-status',
         onCompleted: (e: any) => {
-            FillDetails(e)
+            FillDetails(e);
         }
-    })
+    });
 
     function handleTimeFormat(time: string) {
-        const timeArray = time.split(':')
-        const hours = timeArray[0]
-        const minutes = timeArray[1]
+        const timeArray = time.split(':');
+        const hours = timeArray[0];
+        const minutes = timeArray[1];
         const timeString =
             (parseInt(hours) < 10 ? `0${hours}` : hours) +
             ':' +
-            (parseInt(minutes) === 0 ? `0${minutes}` : minutes)
-        return timeString.toString()
+            (parseInt(minutes) === 0 ? `0${minutes}` : minutes);
+        return timeString.toString();
     }
 
     function UpdateProgram(frm: any) {
-        const existingEvents = props.events === null ? [] : [...props.events]
-        const daysArray: any = []
-        let id: any
+        const existingEvents = props.events === null ? [] : [...props.events];
+        const daysArray: any = [];
+        let id: any;
 
         if (frm.day && frm.newActivity) {
-            frm.day = JSON.parse(frm.day)
-            frm.time = JSON.parse(frm.time)
-            frm.newActivity = JSON.parse(frm.newActivity)
+            frm.day = JSON.parse(frm.day);
+            frm.time = JSON.parse(frm.time);
+            frm.newActivity = JSON.parse(frm.newActivity);
 
-            const name: any = frm.newActivity[0].activity
-            id = frm.newActivity[0].id
-            delete frm.newActivity[0].activity
-            delete frm.newActivity[0].id
+            const name: any = frm.newActivity[0].activity;
+            id = frm.newActivity[0].id;
+            delete frm.newActivity[0].activity;
+            delete frm.newActivity[0].id;
             for (let i = 0; i < frm.day.length; i++) {
                 daysArray.push({
                     day: parseInt(frm.day[i].key),
@@ -140,75 +140,75 @@ function CreateEditActivity(props: any, ref: any) {
                     startTime: frm.time.startTime,
                     endTime: frm.time.endTime,
                     activityTarget: frm.newActivity[0]
-                })
+                });
             }
             for (let j = 0; j < daysArray.length; j++) {
                 if (existingEvents.length === 0) {
-                    existingEvents.push(daysArray[j])
+                    existingEvents.push(daysArray[j]);
                 } else {
                     const timeStart: any = new Date(
                         '01/01/2007 ' + handleTimeFormat(frm.time.startTime)
-                    )
+                    );
                     const timeEnd: any = new Date(
                         '01/01/2007 ' + handleTimeFormat(frm.time.endTime)
-                    )
-                    const diff1 = timeEnd - timeStart
+                    );
+                    const diff1 = timeEnd - timeStart;
                     for (let k = 0; k <= existingEvents.length - 1; k++) {
                         const startTimeHour: any = new Date(
                             '01/01/2007 ' + handleTimeFormat(existingEvents[k].startTime)
-                        )
+                        );
                         const endTimeHour: any = new Date(
                             '01/01/2007 ' + handleTimeFormat(existingEvents[k].endTime)
-                        )
-                        const diff2 = endTimeHour - startTimeHour
+                        );
+                        const diff2 = endTimeHour - startTimeHour;
 
                         if (diff2 < diff1) {
-                            existingEvents.splice(k, 0, daysArray[j])
-                            break
+                            existingEvents.splice(k, 0, daysArray[j]);
+                            break;
                         }
                         if (k === existingEvents.length - 1) {
-                            existingEvents.push(daysArray[j])
-                            break
+                            existingEvents.push(daysArray[j]);
+                            break;
                         }
                     }
                 }
             }
         }
 
-        let lastEventDay = 0
+        let lastEventDay = 0;
 
         for (let m = 0; m <= existingEvents.length - 1; m++) {
             if (existingEvents[m].day > lastEventDay) {
-                lastEventDay = parseInt(existingEvents[m].day)
+                lastEventDay = parseInt(existingEvents[m].day);
             }
         }
 
-        const sessionIds_new: any = []
+        const sessionIds_new: any = [];
         // const sessionIds_old: string[] = [...props.sessionIds];
-        const sessionIds_old: string[] = []
-        const templateIds_old: string[] = [...templateSessionsIds]
+        const sessionIds_old: string[] = [];
+        const templateIds_old: string[] = [...templateSessionsIds];
 
         function updateSessionFunc(id: any) {
-            sessionIds_new.push(id)
+            sessionIds_new.push(id);
             if (frm.day.length === sessionIds_new.length) {
                 upateSessions({
                     variables: {
                         id: program_id,
                         sessions_ids: sessionIds_old.concat(sessionIds_new)
                     }
-                })
+                });
             }
         }
 
         function updateTemplateSessionsFunc(id: any) {
-            sessionIds_new.push(id)
+            sessionIds_new.push(id);
             if (frm.day.length === sessionIds_new.length) {
                 updateTemplateSessions({
                     variables: {
                         id: program_id,
                         sessions_ids: templateIds_old.concat(sessionIds_new)
                     }
-                })
+                });
             }
         }
 
@@ -232,30 +232,30 @@ function CreateEditActivity(props: any, ref: any) {
                                 session: data.createSession.data.id,
                                 client: program_id
                             }
-                        })
+                        });
                     } else {
                         if (window.location.pathname.split('/')[1] === 'programs') {
-                            return updateTemplateSessionsFunc(data.createSession.data.id)
+                            return updateTemplateSessionsFunc(data.createSession.data.id);
                         } else {
-                            return updateSessionFunc(data.createSession.data.id)
+                            return updateSessionFunc(data.createSession.data.id);
                         }
                     }
                 }
-            })
+            });
         }
     }
 
     function OnSubmit(frm: any) {
-        if (frm) frm.user_permissions_user = auth.userid
+        if (frm) frm.user_permissions_user = auth.userid;
         if (frm.name === 'edit' || frm.name === 'view') {
             if (frm.name === 'edit') {
                 //EditMessage(frm);
             }
             if (frm.name === 'view') {
-                modalTrigger.next(false)
+                modalTrigger.next(false);
             }
         } else {
-            UpdateProgram(frm)
+            UpdateProgram(frm);
         }
     }
 
@@ -268,7 +268,7 @@ function CreateEditActivity(props: any, ref: any) {
                 formUISchema={schema}
                 formSchema={programSchema}
                 formSubmit={(frm: any) => {
-                    OnSubmit(frm)
+                    OnSubmit(frm);
                 }}
                 stepperValues={['Schedule', 'Activity']}
                 formData={programDetails}
@@ -292,7 +292,7 @@ function CreateEditActivity(props: any, ref: any) {
                 />
             )}
         </>
-    )
+    );
 }
 
-export default React.forwardRef(CreateEditActivity)
+export default React.forwardRef(CreateEditActivity);

@@ -1,5 +1,5 @@
-import React from 'react'
-import './styles.css'
+import React from 'react';
+import './styles.css';
 
 const ErrorFallback: React.FC = () => {
     return (
@@ -314,7 +314,7 @@ const ErrorFallback: React.FC = () => {
                 Go To home
             </button>
         </div>
-    )
-}
+    );
+};
 
-export default ErrorFallback
+export default ErrorFallback;

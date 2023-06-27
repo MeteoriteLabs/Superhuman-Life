@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const GET_ALL_CLIENT_PACKAGE_BY_TYPE = gql`
     query userPackages($id: ID!, $type: [String], $date: Date) {
@@ -87,7 +87,7 @@ export const GET_ALL_CLIENT_PACKAGE_BY_TYPE = gql`
             }
         }
     }
-`
+`;
 
 export const GET_ALL_WEEKLY_SESSIONOS = gql`
     query weeklySessions($id: ID!, $startDate: Date, $endDate: Date) {
@@ -129,7 +129,7 @@ export const GET_ALL_WEEKLY_SESSIONOS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_ALL_DAILY_SESSIONS = gql`
     query getDailySessions($id: ID!, $Date: Date!) {
@@ -171,7 +171,7 @@ export const GET_ALL_DAILY_SESSIONS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_ALL_CHANGEMAKER_HOLIDAYS = gql`
     query getAllChangeMakerHolidays($id: ID!, $dateUpperLimit: Date, $dateLowerLimit: Date) {
@@ -195,7 +195,7 @@ export const GET_ALL_CHANGEMAKER_HOLIDAYS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_USER_WEEKLY_CONFIG = gql`
     query getUserWeeklyConfig($id: ID!) {
@@ -209,7 +209,7 @@ export const GET_USER_WEEKLY_CONFIG = gql`
             }
         }
     }
-`
+`;
 
 export const GET_ALL_CHANGEMAKER_AVAILABILITY = gql`
     query getAllChangeMakerAvailabilityHolidays($id: ID!, $limit: Int) {
@@ -233,7 +233,7 @@ export const GET_ALL_CHANGEMAKER_AVAILABILITY = gql`
             }
         }
     }
-`
+`;
 
 export const GET_SLOTS_TO_CHECK = gql`
     query getAllChangeMakerAvailabilityHolidays(
@@ -263,7 +263,7 @@ export const GET_SLOTS_TO_CHECK = gql`
             }
         }
     }
-`
+`;
 
 export const GET_ALL_CHANGEMAKER_AVAILABILITY_HOLIDAYS = gql`
     query getAllChangeMakerAvailabilityHolidays(
@@ -294,7 +294,7 @@ export const GET_ALL_CHANGEMAKER_AVAILABILITY_HOLIDAYS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_ALL_CHANGEMAKER_AVAILABILITY_WORKHOURS = gql`
     query getAllChangeMakerAvailabilityHolidays($id: ID!, $date: Date) {
@@ -317,7 +317,7 @@ export const GET_ALL_CHANGEMAKER_AVAILABILITY_WORKHOURS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_CHANGEMAKER_AVAILABILITY_AND_TAGS = gql`
     query changemakerAvailabilityAndTags($id: ID!, $date: Date!, $changemakerDate: Date!) {
@@ -354,4 +354,4 @@ export const GET_CHANGEMAKER_AVAILABILITY_AND_TAGS = gql`
             }
         }
     }
-`
+`;

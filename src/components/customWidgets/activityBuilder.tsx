@@ -1,14 +1,14 @@
-import { useState } from 'react'
-import { InputGroup, Row, Col, Form, FormControl } from 'react-bootstrap'
+import { useState } from 'react';
+import { InputGroup, Row, Col, Form, FormControl } from 'react-bootstrap';
 
 const ActivityBuilder = (props: any) => {
-    const [none, setNone] = useState<boolean>(false)
-    const [time, setTime] = useState<boolean>(false)
-    const [distance, setDistance] = useState<boolean>(false)
-    const [incline, setIncline] = useState<boolean>(false)
-    const [speed, setSpeed] = useState<boolean>(false)
-    const [calories, setCalories] = useState<boolean>(false)
-    const [selected, setSelected] = useState<any>([{}])
+    const [none, setNone] = useState<boolean>(false);
+    const [time, setTime] = useState<boolean>(false);
+    const [distance, setDistance] = useState<boolean>(false);
+    const [incline, setIncline] = useState<boolean>(false);
+    const [speed, setSpeed] = useState<boolean>(false);
+    const [calories, setCalories] = useState<boolean>(false);
+    const [selected, setSelected] = useState<any>([{}]);
 
     function renderOptions() {
         return (
@@ -21,13 +21,13 @@ const ActivityBuilder = (props: any) => {
                             name="group1"
                             type="checkbox"
                             onClick={(e) => {
-                                setNone(!none)
+                                setNone(!none);
                                 setSelected([
                                     {
                                         activity: `${props.activity.title}`,
                                         id: `${props.activity.id}`
                                     }
-                                ])
+                                ]);
                             }}
                         />
                         <Form.Check
@@ -73,85 +73,85 @@ const ActivityBuilder = (props: any) => {
                     </div>
                 </Form>
             </div>
-        )
+        );
     }
 
     function handleDataChange(id: any, data: any) {
-        const values = [...selected]
-        values[0].activity = `${props.activity.title}`
-        values[0].id = `${props.activity.id}`
+        const values = [...selected];
+        values[0].activity = `${props.activity.title}`;
+        values[0].id = `${props.activity.id}`;
         if (id === 1) {
             if (data > 24 || data < 0) {
-                values[0].timeHr = 24
+                values[0].timeHr = 24;
             } else {
-                values[0].timeHr = parseInt(data)
+                values[0].timeHr = parseInt(data);
             }
         } else if (id === 2) {
             if (data > 60 || data < 0) {
-                values[0].timeMin = 59
+                values[0].timeMin = 59;
             } else {
-                values[0].timeMin = parseInt(data)
+                values[0].timeMin = parseInt(data);
             }
         } else if (id === 3) {
-            values[0].distance = parseInt(data)
+            values[0].distance = parseInt(data);
         } else if (id === 4) {
-            values[0].incline = parseInt(data)
+            values[0].incline = parseInt(data);
         } else if (id === 5) {
-            values[0].speed = parseInt(data)
+            values[0].speed = parseInt(data);
         } else {
-            values[0].calories = parseInt(data)
+            values[0].calories = parseInt(data);
         }
-        setSelected(values)
+        setSelected(values);
     }
 
     function handleValidation() {
         if (selected.length !== 0) {
             if (none) {
-                return true
+                return true;
             }
             if (time) {
                 if (selected[0].timeHr > 0 || selected[0].timeMin > 0) {
-                    return true
+                    return true;
                 } else {
-                    return false
+                    return false;
                 }
             }
             if (distance) {
                 if (selected[0].distance > 0) {
-                    return true
+                    return true;
                 } else {
-                    return false
+                    return false;
                 }
             }
             if (incline) {
                 if (selected[0].incline > 0) {
-                    return true
+                    return true;
                 } else {
-                    return false
+                    return false;
                 }
             }
             if (speed) {
                 if (selected[0].speed > 0) {
-                    return true
+                    return true;
                 } else {
-                    return false
+                    return false;
                 }
             }
             if (calories) {
                 if (selected[0].calories > 0) {
-                    return true
+                    return true;
                 } else {
-                    return false
+                    return false;
                 }
             }
         }
-        return false
+        return false;
     }
 
     if (handleValidation()) {
-        props.onChange(selected)
+        props.onChange(selected);
     } else {
-        props.onChange(undefined)
+        props.onChange(undefined);
     }
 
     return (
@@ -238,7 +238,7 @@ const ActivityBuilder = (props: any) => {
                                 placeholder=""
                                 type="number"
                                 onChange={(e) => {
-                                    handleDataChange(4, e.target.value)
+                                    handleDataChange(4, e.target.value);
                                 }}
                             />
                             <InputGroup.Append>
@@ -256,7 +256,7 @@ const ActivityBuilder = (props: any) => {
                             <FormControl
                                 type="number"
                                 onChange={(e) => {
-                                    handleDataChange(5, e.target.value)
+                                    handleDataChange(5, e.target.value);
                                 }}
                             />
                             <InputGroup.Append>
@@ -274,7 +274,7 @@ const ActivityBuilder = (props: any) => {
                             <FormControl
                                 type="number"
                                 onChange={(e) => {
-                                    handleDataChange(6, e.target.value)
+                                    handleDataChange(6, e.target.value);
                                 }}
                             />
                             <InputGroup.Append>
@@ -285,7 +285,7 @@ const ActivityBuilder = (props: any) => {
                 </Form.Row>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default ActivityBuilder
+export default ActivityBuilder;

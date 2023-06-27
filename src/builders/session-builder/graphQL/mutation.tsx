@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const UPDATE_STARTDATE = gql`
     mutation updateStartDate($id: ID!, $startDate: Date!, $endDate: Date!) {
@@ -11,7 +11,7 @@ export const UPDATE_STARTDATE = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_FITNESSPACKAGE_GROUP_TIME = gql`
     mutation updateFitnesspackageGroupTime(
@@ -31,7 +31,7 @@ export const UPDATE_FITNESSPACKAGE_GROUP_TIME = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_USERPACKAGE_EFFECTIVEDATE = gql`
     mutation updateUserPackage($id: ID!, $effectiveDate: DateTime!) {
@@ -42,7 +42,7 @@ export const UPDATE_USERPACKAGE_EFFECTIVEDATE = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_TAG = gql`
     mutation createTag($name: String!, $fitnessPackageID: ID!) {
@@ -52,7 +52,7 @@ export const CREATE_TAG = gql`
             }
         }
     }
-`
+`;
 
 export const EDIT_PROGRAM = gql`
     mutation fitnessprogram(
@@ -84,7 +84,7 @@ export const EDIT_PROGRAM = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_PROGRAM = gql`
     mutation createprogram(
@@ -126,7 +126,7 @@ export const CREATE_PROGRAM = gql`
             }
         }
     }
-`
+`;
 
 export const DELETE_TAG_BATCH = gql`
     mutation deleteBatch($id: ID!) {
@@ -136,4 +136,4 @@ export const DELETE_TAG_BATCH = gql`
             }
         }
     }
-`
+`;

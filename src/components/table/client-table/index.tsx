@@ -1,13 +1,13 @@
-import { Fragment } from 'react'
-import { useTable, useExpanded } from 'react-table'
-import NoDataInCard from '../../NoDataInCard'
-import './client-table.css'
+import { Fragment } from 'react';
+import { useTable, useExpanded } from 'react-table';
+import NoDataInCard from '../../NoDataInCard';
+import './client-table.css';
 
 function ClientTable({ data, columns }: any) {
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
         { columns, data },
         useExpanded
-    )
+    );
 
     return (
         <div className="table-responsive">
@@ -36,8 +36,8 @@ function ClientTable({ data, columns }: any) {
                 </thead>
                 <tbody {...getTableBodyProps()}>
                     {rows.map((row) => {
-                        prepareRow(row)
-                        const rowProps = row.getRowProps()
+                        prepareRow(row);
+                        const rowProps = row.getRowProps();
                         return (
                             <Fragment key={rowProps.key}>
                                 <tr className="rowCard" {...row.getRowProps()}>
@@ -48,12 +48,12 @@ function ClientTable({ data, columns }: any) {
                                     ))}
                                 </tr>
                             </Fragment>
-                        )
+                        );
                     })}
                 </tbody>
             </table>
         </div>
-    )
+    );
 }
 
-export default ClientTable
+export default ClientTable;

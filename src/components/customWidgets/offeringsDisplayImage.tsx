@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 const OfferingsDisaplyImage: React.FC<{ packageType: string; mode: string }> = (props) => {
     return props?.packageType === 'Classic Class' ? (
@@ -12,7 +12,7 @@ const OfferingsDisaplyImage: React.FC<{ packageType: string; mode: string }> = (
             }.svg`}
             alt={`${props.packageType}-${props.mode}`}
         />
-    )
-}
+    );
+};
 
-export default OfferingsDisaplyImage
+export default OfferingsDisaplyImage;

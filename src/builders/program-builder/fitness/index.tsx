@@ -1,7 +1,7 @@
-import { Card, Tab, Tabs } from 'react-bootstrap'
-import ExercisesTab from '../exercises'
-import WorkoutTab from '../workout'
-import ProgramTab from '../program'
+import { Card, Tab, Tabs } from 'react-bootstrap';
+import ExercisesTab from '../exercises';
+import WorkoutTab from '../workout';
+import ProgramTab from '../program';
 
 export default function FitnessTab(): JSX.Element {
     return (
@@ -26,5 +26,5 @@ export default function FitnessTab(): JSX.Element {
                 </Tabs>
             </Card.Body>
         </Card>
-    )
+    );
 }

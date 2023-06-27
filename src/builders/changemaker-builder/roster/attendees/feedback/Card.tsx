@@ -1,74 +1,74 @@
-import { Card, Col, Row, FormControl, InputGroup, Button } from 'react-bootstrap'
-import ActionButton from '../../../../../components/actionbutton/index'
-import CreatePost from './addFeedback'
+import { Card, Col, Row, FormControl, InputGroup, Button } from 'react-bootstrap';
+import ActionButton from '../../../../../components/actionbutton/index';
+import CreatePost from './addFeedback';
 import {
     ADD_COMMENT,
     GET_TAGNAME,
     GET_RATING_NOTES,
     GET_FITNESSSCALE,
     GET_MOODSCALE
-} from './queries'
-import AuthContext from '../../../../../context/auth-context'
-import { useContext, useRef, useState } from 'react'
-import { useMutation, useQuery } from '@apollo/client'
-import './Styles.css'
+} from './queries';
+import AuthContext from '../../../../../context/auth-context';
+import { useContext, useRef, useState } from 'react';
+import { useMutation, useQuery } from '@apollo/client';
+import './Styles.css';
 
 function CardComp(props: any) {
-    const last = window.location.pathname.split('/').pop()
-    const auth = useContext(AuthContext)
-    const comment = useRef<any>()
-    const [name, setName] = useState<any>()
-    const [rating, setRating] = useState<any>()
-    const [img, setImg] = useState<any>()
-    const [rate1, setRate1] = useState<any>()
-    const createEditMessageComponent = useRef<any>()
+    const last = window.location.pathname.split('/').pop();
+    const auth = useContext(AuthContext);
+    const comment = useRef<any>();
+    const [name, setName] = useState<any>();
+    const [rating, setRating] = useState<any>();
+    const [img, setImg] = useState<any>();
+    const [rate1, setRate1] = useState<any>();
+    const createEditMessageComponent = useRef<any>();
 
     const actionClick1 = () => {
         createEditMessageComponent.current.TriggerForm({
             id: props.id,
             resource_id: props.resourceid,
             type: 'editNote'
-        })
-    }
+        });
+    };
     const actionClick2 = () => {
         createEditMessageComponent.current.TriggerForm({
             id: props.id,
             comments: props.comments,
             resourceid: props.resourceid,
             type: 'deleteNote'
-        })
-    }
+        });
+    };
 
     const arrayAction = [
         { actionName: 'Edit', actionClick: actionClick1 },
         { actionName: 'Delete', actionClick: actionClick2 }
-    ]
+    ];
 
     function getDate(time: any) {
-        let dateObj = new Date(time)
-        let month = dateObj.getMonth() + 1
-        let year = dateObj.getFullYear()
-        let date = dateObj.getDate()
+        let dateObj = new Date(time);
+        let month = dateObj.getMonth() + 1;
+        let year = dateObj.getFullYear();
+        let date = dateObj.getDate();
 
-        return `${date}-${month}-${year}`
+        return `${date}-${month}-${year}`;
     }
-    const [createComment] = useMutation(ADD_COMMENT, {})
+    const [createComment] = useMutation(ADD_COMMENT, {});
 
     function FetchData(_variables: {} = { id: props.resourceid }) {
-        useQuery(GET_TAGNAME, { variables: _variables, onCompleted: loadName })
+        useQuery(GET_TAGNAME, { variables: _variables, onCompleted: loadName });
     }
 
     function loadName(d: any) {
-        setName(d.workouts[0].workouttitle)
+        setName(d.workouts[0].workouttitle);
     }
     function FetchRating(_variables: {} = { id: props.resourceid, clientid: last }) {
         useQuery(GET_RATING_NOTES, {
             variables: _variables,
             onCompleted: loadRating
-        })
+        });
     }
     function loadRating(d: any) {
-        setRating(d.ratings)
+        setRating(d.ratings);
     }
     function addComment(val: any) {
         createComment({
@@ -77,28 +77,28 @@ function CardComp(props: any) {
                 comment: val,
                 users_permissions_user: auth.userid
             }
-        })
+        });
     }
     function Fetch() {
-        useQuery(GET_FITNESSSCALE, { onCompleted: loadRating2 })
-        useQuery(GET_MOODSCALE, { onCompleted: loadMood })
+        useQuery(GET_FITNESSSCALE, { onCompleted: loadRating2 });
+        useQuery(GET_MOODSCALE, { onCompleted: loadMood });
     }
 
     function loadRating2(data: any) {
-        ;[...data.ratingScales].map((p) => {
-            setRate1(p.items)
-            return {}
-        })
+        [...data.ratingScales].map((p) => {
+            setRate1(p.items);
+            return {};
+        });
     }
     function loadMood(data: any) {
-        ;[...data.ratingScales].map((p) => {
-            setImg(p.items)
-            return {}
-        })
+        [...data.ratingScales].map((p) => {
+            setImg(p.items);
+            return {};
+        });
     }
-    Fetch()
-    FetchData({ id: props.resourceid })
-    FetchRating({ id: props.resourceid, clientid: last })
+    Fetch();
+    FetchData({ id: props.resourceid });
+    FetchRating({ id: props.resourceid, clientid: last });
 
     return (
         <div>
@@ -133,8 +133,8 @@ function CardComp(props: any) {
                             {rating &&
                                 rating.map((d) => {
                                     if (d.type === 'rpm') {
-                                        let word = rate1[d.rating - 1]
-                                        let string = word.split('-')
+                                        let word = rate1[d.rating - 1];
+                                        let string = word.split('-');
                                         return (
                                             <div className="rounded border border-dark p-2">
                                                 <h6 className="ml-2">Rate Of Perceived Exertion</h6>
@@ -142,7 +142,7 @@ function CardComp(props: any) {
                                                 <p className="rating1">{string[0]} </p>
                                                 <p>{string[1]}</p>
                                             </div>
-                                        )
+                                        );
                                     }
                                     if (d.type === 'mood') {
                                         return (
@@ -153,9 +153,9 @@ function CardComp(props: any) {
                                                     alt=""
                                                 />
                                             </div>
-                                        )
+                                        );
                                     }
-                                    return ''
+                                    return '';
                                 })}
                         </Row>
                     </Card.Text>
@@ -172,7 +172,7 @@ function CardComp(props: any) {
                                     <Button
                                         variant="outline-secondary"
                                         onClick={(e: any) => {
-                                            addComment(comment.current.value)
+                                            addComment(comment.current.value);
                                         }}
                                     >
                                         Add
@@ -183,17 +183,17 @@ function CardComp(props: any) {
                     </Card.Body>
 
                     {props.comments.map((e) => {
-                        const actionClick1 = () => {}
+                        const actionClick1 = () => {};
                         const actionClick2 = () => {
                             createEditMessageComponent.current.TriggerForm({
                                 id: e.id,
                                 type: 'deleteComment'
-                            })
-                        }
+                            });
+                        };
                         const arrayAction = [
                             { actionName: 'Edit', actionClick: actionClick1 },
                             { actionName: 'Delete', actionClick: actionClick2 }
-                        ]
+                        ];
                         return (
                             <Card.Body className="cardBorder">
                                 <Row>
@@ -215,12 +215,12 @@ function CardComp(props: any) {
                                 </Row>
                                 <Card.Text className="ml-3">{e.comment}</Card.Text>
                             </Card.Body>
-                        )
+                        );
                     })}
                 </Card.Body>
             </Card>
         </div>
-    )
+    );
 }
 
-export default CardComp
+export default CardComp;

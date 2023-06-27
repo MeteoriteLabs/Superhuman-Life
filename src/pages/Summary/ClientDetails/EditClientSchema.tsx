@@ -12,4 +12,4 @@ export const schema: any = {
     email: {
         'ui:placeholder': 'Enter Email address'
     }
-}
+};

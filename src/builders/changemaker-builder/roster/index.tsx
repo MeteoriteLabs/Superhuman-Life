@@ -1,50 +1,50 @@
-import { useState, useContext, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { Card, Col, Row, Button, Spinner, Alert } from 'react-bootstrap'
-import moment from 'moment'
-import RosterTabs from './tabs'
+import { useState, useContext, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { Card, Col, Row, Button, Spinner, Alert } from 'react-bootstrap';
+import moment from 'moment';
+import RosterTabs from './tabs';
 import {
     GET_SESSION_AND_SESSION_BOOKINGS,
     GET_TAG_BASED_ON_SESSION,
     GET_PARTICULAR_CLIENT
-} from './graphql/queries'
-import { useQuery } from '@apollo/client'
-import { flattenObj } from '../../../components/utils/responseFlatten'
-import AuthContext from '../../../context/auth-context'
-import Calendar from 'react-calendar'
-import AttendanceModal from './attendance_modal'
-import 'react-calendar/dist/Calendar.css'
-import './styles.css'
+} from './graphql/queries';
+import { useQuery } from '@apollo/client';
+import { flattenObj } from '../../../components/utils/responseFlatten';
+import AuthContext from '../../../context/auth-context';
+import Calendar from 'react-calendar';
+import AttendanceModal from './attendance_modal';
+import 'react-calendar/dist/Calendar.css';
+import './styles.css';
 
 const Roster = () => {
-    const auth = useContext(AuthContext)
-    const [scheduleDate] = useState(moment().format('YYYY-MM-DD'))
-    const [currentDateSessions, setCurrentDateSessions] = useState<any>([])
-    const [restDays, setRestDays] = useState<any>([])
-    const [tags, setTags] = useState<any>([])
-    const [sessionData, setSessionData] = useState<any>([])
-    const [show, setShow] = useState(false)
-    const [anotherDate, setAnotherDate] = useState('')
-    const [showAlert, setShowAlert] = useState(false)
-    const [attendanceModalShow, setAttendanceModalShow] = useState(false)
-    const [choosenDate, setChoosenDate] = useState('')
-    const [bookingStatusDetails, setBookingStatusDetails] = useState<any>([])
+    const auth = useContext(AuthContext);
+    const [scheduleDate] = useState(moment().format('YYYY-MM-DD'));
+    const [currentDateSessions, setCurrentDateSessions] = useState<any>([]);
+    const [restDays, setRestDays] = useState<any>([]);
+    const [tags, setTags] = useState<any>([]);
+    const [sessionData, setSessionData] = useState<any>([]);
+    const [show, setShow] = useState(false);
+    const [anotherDate, setAnotherDate] = useState('');
+    const [showAlert, setShowAlert] = useState(false);
+    const [attendanceModalShow, setAttendanceModalShow] = useState(false);
+    const [choosenDate, setChoosenDate] = useState('');
+    const [bookingStatusDetails, setBookingStatusDetails] = useState<any>([]);
 
     useEffect(() => {
         setTimeout(() => {
-            setShowAlert(false)
-        }, 5000)
-    }, [showAlert])
+            setShowAlert(false);
+        }, 5000);
+    }, [showAlert]);
 
     useQuery(GET_PARTICULAR_CLIENT, {
         variables: {
             id: window.location.pathname.split('/').pop()
         },
         onCompleted: (data) => {
-            const flattenData = flattenObj({ ...data })
-            setBookingStatusDetails(flattenData.sessionsBookings)
+            const flattenData = flattenObj({ ...data });
+            setBookingStatusDetails(flattenData.sessionsBookings);
         }
-    })
+    });
 
     function tileContent({ date, view }) {
         for (let i = 0; i < currentDateSessions?.length; i++) {
@@ -53,14 +53,14 @@ const Roster = () => {
                     moment(date).format('YYYY-MM-DD') &&
                 currentDateSessions[i].type === 'restday'
             ) {
-                return 'sessionRestDay'
+                return 'sessionRestDay';
             }
             if (
                 moment(currentDateSessions[i]?.session_date).format('YYYY-MM-DD') ===
                     moment(date).format('YYYY-MM-DD') &&
                 currentDateSessions[i].type !== 'restday'
             ) {
-                return 'sessionPresent'
+                return 'sessionPresent';
             }
         }
     }
@@ -70,40 +70,40 @@ const Roster = () => {
             (session) =>
                 session.session_date === moment(date).format('YYYY-MM-DD') &&
                 session.type !== 'restday'
-        )
+        );
 
         if (checkingIfSessionExists?.length > 0 && checkingIfSessionExists !== undefined) {
-            window.location.href = `/roster/${checkingIfSessionExists[0].id}`
+            window.location.href = `/roster/${checkingIfSessionExists[0].id}`;
         } else {
-            setShowAlert(true)
-            setChoosenDate(moment(date).format('Do MMM, YY'))
+            setShowAlert(true);
+            setChoosenDate(moment(date).format('Do MMM, YY'));
         }
     }
 
     function handleSorting(data: any) {
         data?.sort((a: any, b: any) => {
-            const btime1: any = moment(a.start_time, 'HH:mm a')
-            const btime2: any = moment(b.start_time, 'HH:mm a')
-            return btime1 - btime2
-        })
+            const btime1: any = moment(a.start_time, 'HH:mm a');
+            const btime2: any = moment(b.start_time, 'HH:mm a');
+            return btime1 - btime2;
+        });
         data?.sort(function (a: any, b: any) {
-            const date1: any = new Date(a.session_date)
-            const date2: any = new Date(b.session_date)
+            const date1: any = new Date(a.session_date);
+            const date2: any = new Date(b.session_date);
 
-            return date1 - date2
-        })
-        data?.filter((sess: any) => sess.Is_Holiday === true)
+            return date1 - date2;
+        });
+        data?.filter((sess: any) => sess.Is_Holiday === true);
         if (scheduleDate === moment().format('YYYY-MM-DD')) {
-            setCurrentDateSessions(data)
+            setCurrentDateSessions(data);
         }
     }
 
     useEffect(() => {
         const restDaysSorted = currentDateSessions?.filter(
             (session) => session.Is_restday === true && session.session_date === anotherDate
-        )
-        setRestDays(restDaysSorted)
-    }, [anotherDate, currentDateSessions])
+        );
+        setRestDays(restDaysSorted);
+    }, [anotherDate, currentDateSessions]);
 
     useQuery(GET_TAG_BASED_ON_SESSION, {
         variables: {
@@ -113,100 +113,100 @@ const Roster = () => {
             upperDate: moment().add(1, 'month').format('YYYY-MM-DD')
         },
         onCompleted: (data: any) => {
-            const flattenData = flattenObj({ ...data })
-            setTags(flattenData?.tags)
-            handleSorting(flattenData?.tags[0]?.sessions)
+            const flattenData = flattenObj({ ...data });
+            setTags(flattenData?.tags);
+            handleSorting(flattenData?.tags[0]?.sessions);
         }
-    })
+    });
 
     useQuery(GET_SESSION_AND_SESSION_BOOKINGS, {
         variables: {
             id: window.location.pathname.split('/').pop()
         },
         onCompleted: (data) => {
-            const flattenedData = flattenObj({ ...data })
+            const flattenedData = flattenObj({ ...data });
             setAnotherDate(
                 moment(flattenedData.sessionsBookings[0]?.session?.session_date).format(
                     'YYYY-MM-DD'
                 )
-            )
-            setSessionData(flattenedData.sessionsBookings)
-            setShow(true)
+            );
+            setSessionData(flattenedData.sessionsBookings);
+            setShow(true);
         }
-    })
+    });
 
     function handleIconRender(tag: any, mode: any) {
         if (tag === 'One-On-One') {
             if (mode === 'Online') {
-                return <img src="/assets/PTonline.svg" alt="pt_online" />
+                return <img src="/assets/PTonline.svg" alt="pt_online" />;
             } else {
-                return <img src="/assets/PToffline.svg" alt="pt_offline" />
+                return <img src="/assets/PToffline.svg" alt="pt_offline" />;
             }
         } else if (tag === 'Group Class') {
             if (mode === 'Online') {
-                return <img src="/assets/Grouponline.svg" alt="group_online" />
+                return <img src="/assets/Grouponline.svg" alt="group_online" />;
             } else {
-                return <img src="/assets/Groupoffline.svg" alt="group_offline" />
+                return <img src="/assets/Groupoffline.svg" alt="group_offline" />;
             }
         }
     }
 
     function toHoursAndMinutes(totalMinutes) {
-        const minutes = totalMinutes % 60
-        const hours = Math.floor(totalMinutes / 60)
+        const minutes = totalMinutes % 60;
+        const hours = Math.floor(totalMinutes / 60);
 
-        return `${padTo2Digits(hours)}:${padTo2Digits(minutes)}`
+        return `${padTo2Digits(hours)}:${padTo2Digits(minutes)}`;
     }
 
     function padTo2Digits(num) {
-        return num.toString().padStart(2, '0')
+        return num.toString().padStart(2, '0');
     }
 
     function handleClassTimeDisplay(time: any) {
-        const value = moment(time, 'hh:mm a').isBefore(moment())
+        const value = moment(time, 'hh:mm a').isBefore(moment());
 
         if (value) {
-            return <span className="text-danger">Class Has Ended</span>
+            return <span className="text-danger">Class Has Ended</span>;
         } else {
-            const leftTime = moment(time, 'hh:mm a').diff(moment(), 'minutes')
-            const timeLeft = toHoursAndMinutes(leftTime)
-            const timeLeftHours = timeLeft.split(':')[0]
-            const timeLeftMinutes = timeLeft.split(':')[1]
+            const leftTime = moment(time, 'hh:mm a').diff(moment(), 'minutes');
+            const timeLeft = toHoursAndMinutes(leftTime);
+            const timeLeftHours = timeLeft.split(':')[0];
+            const timeLeftMinutes = timeLeft.split(':')[1];
             return (
                 <span className="text-success">
                     Class Starts in {timeLeftHours}h {timeLeftMinutes}m
                 </span>
-            )
+            );
         }
     }
 
     function handlePrevSessionLoad(currentId: any) {
-        const location = currentDateSessions.findIndex((session) => session.id === currentId)
+        const location = currentDateSessions.findIndex((session) => session.id === currentId);
         if (location === 0 || currentDateSessions.length === 1) {
-            console.log('no previous sessions available')
+            console.log('no previous sessions available');
         } else if (currentDateSessions[location - 1].Is_restday === true) {
-            console.log('no previous sessions available')
+            console.log('no previous sessions available');
         } else {
-            window.location.href = `/roster/${currentDateSessions[location - 1].id}`
+            window.location.href = `/roster/${currentDateSessions[location - 1].id}`;
         }
     }
 
     function handleNextSessionLoad(currentId: any) {
-        const location = currentDateSessions.findIndex((session) => session.id === currentId)
+        const location = currentDateSessions.findIndex((session) => session.id === currentId);
         if (location === currentDateSessions.length - 1) {
-            console.log('no next sessions available')
+            console.log('no next sessions available');
         } else if (currentDateSessions[location + 1].Is_restday === true) {
-            console.log('no next sessions available')
+            console.log('no next sessions available');
         } else {
-            window.location.href = `/roster/${currentDateSessions[location + 1].id}`
+            window.location.href = `/roster/${currentDateSessions[location + 1].id}`;
         }
     }
 
     function handleBookingStatusCalculations(data: any[], statusToCheck: string) {
         const filteredData = data.filter(
             (session: any) => session.Session_booking_status === statusToCheck
-        )
-        return padTo2Digits(filteredData.length)
+        );
+        return padTo2Digits(filteredData.length);
     }
 
     return (
@@ -233,7 +233,7 @@ const Roster = () => {
                                     onClick={() => {
                                         handlePrevSessionLoad(
                                             window.location.pathname.split('/').pop()
-                                        )
+                                        );
                                     }}
                                     className="rounded-circle"
                                     style={{ cursor: 'pointer', fontSize: '20px' }}
@@ -249,7 +249,7 @@ const Roster = () => {
                                     onClick={() => {
                                         handleNextSessionLoad(
                                             window.location.pathname.split('/').pop()
-                                        )
+                                        );
                                     }}
                                     style={{ cursor: 'pointer', fontSize: '20px' }}
                                 >
@@ -346,7 +346,7 @@ const Roster = () => {
                                 <Button
                                     className="pl-3 pr-3"
                                     onClick={() => {
-                                        setAttendanceModalShow(true)
+                                        setAttendanceModalShow(true);
                                     }}
                                     variant="outline-dark"
                                 >
@@ -416,7 +416,7 @@ const Roster = () => {
                                     <b>
                                         {tags
                                             ?.map((item: any) => {
-                                                return item.tag_name
+                                                return item.tag_name;
                                             })
                                             .join(', ')}
                                     </b>
@@ -461,7 +461,7 @@ const Roster = () => {
                 </div>
             )}
         </>
-    )
-}
+    );
+};
 
-export default Roster
+export default Roster;

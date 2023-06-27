@@ -1,9 +1,9 @@
-import React from 'react'
-import { ResponsiveLine } from '@nivo/line'
+import React from 'react';
+import { ResponsiveLine } from '@nivo/line';
 
 interface ArrayType {
-    x: string
-    y: number
+    x: string;
+    y: number;
 }
 
 const Wrapper = (props) => (
@@ -15,11 +15,11 @@ const Wrapper = (props) => (
             minWidth: '1000px'
         }}
     />
-)
+);
 
 const LineGraph: React.FC<{
-    data: { id: string; color: string; data: ArrayType[] }[]
-    yAxis: string
+    data: { id: string; color: string; data: ArrayType[] }[];
+    yAxis: string;
 }> = (props) => (
     <>
         <Wrapper>
@@ -95,6 +95,6 @@ const LineGraph: React.FC<{
             />
         </Wrapper>
     </>
-)
+);
 
-export default LineGraph
+export default LineGraph;

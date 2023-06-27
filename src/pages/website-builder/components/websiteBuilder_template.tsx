@@ -1,10 +1,10 @@
-import { useContext } from 'react'
-import Toggle from 'react-toggle'
-import { ChangeMakerWebsiteContext } from '../../../context/changemakerWebsite-context'
-import { Link } from 'react-router-dom'
+import { useContext } from 'react';
+import Toggle from 'react-toggle';
+import { ChangeMakerWebsiteContext } from '../../../context/changemakerWebsite-context';
+import { Link } from 'react-router-dom';
 
 function WebsiteBuilder_template(): JSX.Element {
-    const { changemakerWebsiteState } = useContext(ChangeMakerWebsiteContext)
+    const { changemakerWebsiteState } = useContext(ChangeMakerWebsiteContext);
 
     return (
         <div className="my-5" style={{ background: '#000', borderRadius: '15px' }}>
@@ -111,7 +111,7 @@ function WebsiteBuilder_template(): JSX.Element {
                 </Link>
             </div>
         </div>
-    )
+    );
 }
 
-export default WebsiteBuilder_template
+export default WebsiteBuilder_template;

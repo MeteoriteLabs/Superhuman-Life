@@ -1,4 +1,4 @@
-import { useMemo, useState, useContext } from 'react'
+import { useMemo, useState, useContext } from 'react';
 import {
     Badge,
     Button,
@@ -8,22 +8,22 @@ import {
     Container,
     Row,
     Col
-} from 'react-bootstrap'
-import Table from '../../../components/table/leads-table'
-import { useQuery, useLazyQuery } from '@apollo/client'
-import ActionButton from '../../../components/actionbutton/index'
-import { GET_TRANSACTIONS, GET_PAYMENT_SCHEDULE } from './queries'
-import { flattenObj } from '../../../components/utils/responseFlatten'
-import { useHistory } from 'react-router-dom'
-import AuthContext from '../../../context/auth-context'
-import moment from 'moment'
+} from 'react-bootstrap';
+import Table from '../../../components/table/leads-table';
+import { useQuery, useLazyQuery } from '@apollo/client';
+import ActionButton from '../../../components/actionbutton/index';
+import { GET_TRANSACTIONS, GET_PAYMENT_SCHEDULE } from './queries';
+import { flattenObj } from '../../../components/utils/responseFlatten';
+import { useHistory } from 'react-router-dom';
+import AuthContext from '../../../context/auth-context';
+import moment from 'moment';
 
 export default function AllTransactions() {
-    const auth = useContext(AuthContext)
-    const query = window.location.search
-    const params = new URLSearchParams(query)
-    const id: string | null = params.get('id')
-    const isChangemaker: boolean = params.get('isChangemaker') === 'true'
+    const auth = useContext(AuthContext);
+    const query = window.location.search;
+    const params = new URLSearchParams(query);
+    const id: string | null = params.get('id');
+    const isChangemaker: boolean = params.get('isChangemaker') === 'true';
 
     const columns = useMemo<any>(
         () => [
@@ -35,15 +35,15 @@ export default function AllTransactions() {
                 accessor: 'status',
                 Header: 'Status',
                 Cell: ({ row }: any) => {
-                    let statusColor = ''
+                    let statusColor = '';
                     switch (row.values.status) {
                         case 'Success':
-                            statusColor = 'success'
-                            break
+                            statusColor = 'success';
+                            break;
 
                         case 'Failed':
-                            statusColor = 'danger'
-                            break
+                            statusColor = 'danger';
+                            break;
                     }
                     return (
                         <>
@@ -55,18 +55,18 @@ export default function AllTransactions() {
                                 {row.values.status === 'Success' ? 'Success' : 'Failed'}
                             </Badge>
                         </>
-                    )
+                    );
                 }
             },
             {
                 id: 'edit',
                 Header: 'Actions',
                 Cell: ({ row }: any) => {
-                    const history = useHistory()
+                    const history = useHistory();
                     const routeChange = () => {
-                        const path = `receipt/?id=${row.original.id}`
-                        history.push(path)
-                    }
+                        const path = `receipt/?id=${row.original.id}`;
+                        history.push(path);
+                    };
 
                     const arrayAction = [
                         {
@@ -77,22 +77,22 @@ export default function AllTransactions() {
                             actionName: 'Help',
                             actionClick: routeChange
                         }
-                    ]
+                    ];
 
-                    return <ActionButton arrayAction={arrayAction}></ActionButton>
+                    return <ActionButton arrayAction={arrayAction}></ActionButton>;
                 }
             }
         ],
         []
-    )
+    );
 
-    const [datatable, setDataTable] = useState<Record<string, unknown>[]>([])
+    const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
 
     const [paymentSchedules, { data: get_payment_schedule }] = useLazyQuery(GET_PAYMENT_SCHEDULE, {
         onCompleted: (data) => {
-            loadData(data)
+            loadData(data);
         }
-    })
+    });
 
     const { data: get_transaction } = useQuery(GET_TRANSACTIONS, {
         variables: {
@@ -101,13 +101,13 @@ export default function AllTransactions() {
             receiverType: isChangemaker ? 'Changemaker' : 'Contacts'
         },
         onCompleted: (data) => {
-            paymentSchedules()
+            paymentSchedules();
         }
-    })
+    });
 
     function loadData(data: any) {
-        const flattenTransactionData = flattenObj({ ...get_transaction })
-        const flattenPaymentScheduleData = flattenObj({ ...get_payment_schedule })
+        const flattenTransactionData = flattenObj({ ...get_transaction });
+        const flattenPaymentScheduleData = flattenObj({ ...get_payment_schedule });
 
         setDataTable(
             [...flattenTransactionData.transactions].flatMap((Detail) => {
@@ -119,9 +119,9 @@ export default function AllTransactions() {
                     amount: `${Detail.Currency} ${Detail.TransactionAmount}`,
                     transactionDate: moment(Detail.TransactionDateTime).format('DD/MM/YYYY, hh:mm'),
                     status: Detail.TransactionStatus
-                }
+                };
             })
-        )
+        );
     }
 
     return (
@@ -135,7 +135,7 @@ export default function AllTransactions() {
                                 <Button
                                     variant="outline-secondary"
                                     onClick={(e: any) => {
-                                        e.preventDefault()
+                                        e.preventDefault();
                                     }}
                                 >
                                     <i className="fas fa-search"></i>
@@ -147,5 +147,5 @@ export default function AllTransactions() {
             </Container>
             <Table columns={columns} data={datatable} />
         </TabContent>
-    )
+    );
 }

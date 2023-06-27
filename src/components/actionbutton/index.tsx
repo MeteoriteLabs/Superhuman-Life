@@ -1,17 +1,17 @@
-import React from 'react'
-import { Dropdown } from 'react-bootstrap'
-import './button.css'
+import React from 'react';
+import { Dropdown } from 'react-bootstrap';
+import './button.css';
 
 export interface ArrayAction {
-    actionClick: () => void
-    actionName: string
+    actionClick: () => void;
+    actionName: string;
 }
 
 const ActionButton: React.FC<{
-    status?: string
-    arrayAction: ArrayAction[]
+    status?: string;
+    arrayAction: ArrayAction[];
 }> = (props) => {
-    const { status, arrayAction } = props
+    const { status, arrayAction } = props;
 
     const renderItemAction = () => {
         return status !== 'accepted' && status !== 'rejected'
@@ -20,16 +20,16 @@ const ActionButton: React.FC<{
                       <Dropdown.Item key={index} onClick={item.actionClick}>
                           {item.actionName}
                       </Dropdown.Item>
-                  )
+                  );
               })
             : arrayAction.slice(0, 2).map((item, index) => {
                   return (
                       <Dropdown.Item key={index} onClick={item.actionClick}>
                           {item.actionName}
                       </Dropdown.Item>
-                  )
-              })
-    }
+                  );
+              });
+    };
 
     return (
         <Dropdown>
@@ -39,7 +39,7 @@ const ActionButton: React.FC<{
 
             <Dropdown.Menu>{renderItemAction()}</Dropdown.Menu>
         </Dropdown>
-    )
-}
+    );
+};
 
-export default ActionButton
+export default ActionButton;

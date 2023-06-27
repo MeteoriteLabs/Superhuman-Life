@@ -1,41 +1,41 @@
-import React, { useState, useContext } from 'react'
-import { Row, Col, Form, Button } from 'react-bootstrap'
-import { Typeahead } from 'react-bootstrap-typeahead'
-import 'react-bootstrap-typeahead/css/Typeahead.css'
-import { useQuery, gql } from '@apollo/client'
-import AuthContext from '../../../../context/auth-context'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
-import AddFitnessAddressModal from '../../../../components/customWidgets/AddFitnessAddressModal'
+import React, { useState, useContext } from 'react';
+import { Row, Col, Form, Button } from 'react-bootstrap';
+import { Typeahead } from 'react-bootstrap-typeahead';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
+import { useQuery, gql } from '@apollo/client';
+import AuthContext from '../../../../context/auth-context';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import AddFitnessAddressModal from '../../../../components/customWidgets/AddFitnessAddressModal';
 
 const ProgramDetails: React.FC<{
-    readonly: boolean
-    value: string
-    onChange: (args: string | null) => void
-    formContext: any
+    readonly: boolean;
+    value: string;
+    onChange: (args: string | null) => void;
+    formContext: any;
 }> = (props) => {
-    const inputDisabled = props.readonly
+    const inputDisabled = props.readonly;
 
-    const existingData = props.value ? JSON.parse(props.value) : null
+    const existingData = props.value ? JSON.parse(props.value) : null;
 
     if (existingData && existingData.length > 0) {
         existingData.address = {
             id: JSON.parse(existingData?.address)[0].id,
             title: JSON.parse(existingData?.address)[0].title
-        }
+        };
     }
 
-    const [mode, setMode] = useState<string>(props.value ? existingData.mode.toString() : '0')
+    const [mode, setMode] = useState<string>(props.value ? existingData.mode.toString() : '0');
 
-    const [addressModal, setAddressModal] = useState<boolean>(false)
+    const [addressModal, setAddressModal] = useState<boolean>(false);
 
-    const auth = useContext(AuthContext)
+    const auth = useContext(AuthContext);
     const [singleSelections, setSingleSelections] = useState<any[]>(
         existingData?.address?.length && props.value ? existingData?.address : []
-    )
-    const [addresses, setAddresses] = useState<any[]>([])
+    );
+    const [addresses, setAddresses] = useState<any[]>([]);
     const [addressTitle, setAddressTitle] = useState(
         props.value ? existingData.addressTag : 'At My Address'
-    )
+    );
 
     const FETCH_USER_ADDRESSES = gql`
         query addresses($id: ID!) {
@@ -48,44 +48,44 @@ const ProgramDetails: React.FC<{
                 }
             }
         }
-    `
+    `;
 
     const mainQuery = useQuery(FETCH_USER_ADDRESSES, {
         variables: { id: auth.userid },
         onCompleted: loadData
-    })
+    });
 
     function handleCallback() {
-        mainQuery.refetch()
+        mainQuery.refetch();
     }
 
     function loadData(data: any) {
-        const flattenedData = flattenObj({ ...data })
+        const flattenedData = flattenObj({ ...data });
 
         setAddresses(
             [...flattenedData.addresses].map((address) => {
                 return {
                     id: address.id,
                     address1: address.address1
-                }
+                };
             })
-        )
+        );
     }
 
     function OnChange(e) {
-        setSingleSelections(e)
+        setSingleSelections(e);
     }
 
     function handleValidation() {
         if (mode === '0') {
-            return true
+            return true;
         }
         if (mode === '1') {
             if (
                 (addressTitle === 'At My Address' && singleSelections.length !== 0) ||
                 addressTitle === 'At Client Address'
             ) {
-                return true
+                return true;
             }
         }
     }
@@ -97,9 +97,9 @@ const ProgramDetails: React.FC<{
                 address: singleSelections,
                 mode: mode
             })
-        )
+        );
     } else {
-        props.onChange(null)
+        props.onChange(null);
     }
 
     if (handleValidation()) {
@@ -109,9 +109,9 @@ const ProgramDetails: React.FC<{
                 address: singleSelections,
                 mode: mode
             })
-        )
+        );
     } else {
-        props.onChange(null)
+        props.onChange(null);
     }
 
     return (
@@ -158,7 +158,7 @@ const ProgramDetails: React.FC<{
                                             disabled={inputDisabled}
                                             value={addressTitle}
                                             onChange={(e: any) => {
-                                                setAddressTitle(e.target.value)
+                                                setAddressTitle(e.target.value);
                                             }}
                                         >
                                             <option value="At My Address">At My Address</option>
@@ -187,7 +187,7 @@ const ProgramDetails: React.FC<{
                                             variant="outline-info"
                                             disabled={inputDisabled}
                                             onClick={() => {
-                                                setAddressModal(true)
+                                                setAddressModal(true);
                                             }}
                                         >
                                             + Add New Address
@@ -198,8 +198,8 @@ const ProgramDetails: React.FC<{
                             <AddFitnessAddressModal
                                 show={addressModal}
                                 onHide={() => {
-                                    setAddressModal(false)
-                                    handleCallback()
+                                    setAddressModal(false);
+                                    handleCallback();
                                 }}
                             />
                         </div>
@@ -207,7 +207,7 @@ const ProgramDetails: React.FC<{
                 </>
             )}
         </>
-    )
-}
+    );
+};
 
-export default ProgramDetails
+export default ProgramDetails;

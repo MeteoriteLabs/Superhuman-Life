@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const GET_TABLEDATA = gql`
     query getprogramdata($id: ID!) {
@@ -65,7 +65,7 @@ export const GET_TABLEDATA = gql`
             }
         }
     }
-`
+`;
 
 export const FETCH_ACTIVITY = gql`
     query activity($id: ID!) {
@@ -78,7 +78,7 @@ export const FETCH_ACTIVITY = gql`
             }
         }
     }
-`
+`;
 
 export const FETCH_WORKOUT = gql`
     query fetchEvent($id: ID!) {
@@ -117,7 +117,7 @@ export const FETCH_WORKOUT = gql`
             }
         }
     }
-`
+`;
 
 export const PROGRAM_EVENTS = gql`
     query getprogramdata($id: ID!) {
@@ -155,7 +155,7 @@ export const PROGRAM_EVENTS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_SCHEDULEREVENTS_PROGRAM_MANAGER = gql`
     query getSchedulereverntsForProgramManager($id: ID) {
@@ -182,7 +182,7 @@ export const GET_SCHEDULEREVENTS_PROGRAM_MANAGER = gql`
             }
         }
     }
-`
+`;
 
 export const GET_SCHEDULEREVENTS = gql`
     query getschedulerevents($id: ID) {
@@ -209,7 +209,7 @@ export const GET_SCHEDULEREVENTS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_WORKOUT = gql`
     query getworkout($id: ID!) {
@@ -222,7 +222,7 @@ export const GET_WORKOUT = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_FITNESSPROGRAMS = gql`
     mutation updatefitnessprograms(
@@ -249,7 +249,7 @@ export const UPDATE_FITNESSPROGRAMS = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_WORKOUT = gql`
     mutation createworkout(
@@ -296,7 +296,7 @@ export const CREATE_WORKOUT = gql`
             }
         }
     }
-`
+`;
 
 export const GET_CLIENT_SESSIONS = gql`
     query getClientSessions($id: ID!, $startDate: Date, $endDate: Date, $Is_restday: Boolean) {
@@ -355,7 +355,7 @@ export const GET_CLIENT_SESSIONS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_SESSIONS = gql`
     query getSessions($id: ID!, $startDate: Date, $endDate: Date, $Is_restday: Boolean) {
@@ -438,7 +438,7 @@ export const GET_SESSIONS = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_SESSION = gql`
     mutation createSessionMutation(
@@ -478,7 +478,7 @@ export const CREATE_SESSION = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_FITNESSPORGRAMS_SESSIONS = gql`
     mutation updatefitnessprogramsSessions($id: ID!, $sessions_ids: [ID]) {
@@ -488,7 +488,7 @@ export const UPDATE_FITNESSPORGRAMS_SESSIONS = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_TAG_SESSIONS = gql`
     mutation updateTagSessions($id: ID!, $sessions_ids: [ID]) {
@@ -498,7 +498,7 @@ export const UPDATE_TAG_SESSIONS = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_SESSION = gql`
     mutation updateSessionMutation(
@@ -534,7 +534,7 @@ export const UPDATE_SESSION = gql`
             }
         }
     }
-`
+`;
 
 export const DELETE_SESSION = gql`
     mutation deleteSessionMutation($id: ID!) {
@@ -544,7 +544,7 @@ export const DELETE_SESSION = gql`
             }
         }
     }
-`
+`;
 
 export const GET_SLOTS_TO_CHECK = gql`
     query getAllChangeMakerAvailabilityHolidays(
@@ -575,7 +575,7 @@ export const GET_SLOTS_TO_CHECK = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS = gql`
     mutation updateCHageMakerAvailabilityWorkHour($id: ID!, $slots: JSON) {
@@ -588,7 +588,7 @@ export const UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_SESSION_BOOKING = gql`
     mutation createSessionBooking($session: ID, $client: ID, $session_date: Date) {
@@ -608,7 +608,7 @@ export const CREATE_SESSION_BOOKING = gql`
             }
         }
     }
-`
+`;
 
 export const GET_SESSION_BOOKINGS = gql`
     query getSessionBooking($id: ID!) {
@@ -630,7 +630,7 @@ export const GET_SESSION_BOOKINGS = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_SESSION_BOOKING = gql`
     mutation updateSessionBooking($id: ID!, $status: ENUM_SESSIONSBOOKING_SESSION_BOOKING_STATUS) {
@@ -640,7 +640,7 @@ export const UPDATE_SESSION_BOOKING = gql`
             }
         }
     }
-`
+`;
 
 export const GET_TEMPLATE_SESSIONS = gql`
     query getTemplateSessions($id: ID!) {
@@ -661,7 +661,7 @@ export const GET_TEMPLATE_SESSIONS = gql`
             }
         }
     }
-`
+`;
 
 // export const GET_PROGRAM_MANAGER_SESSIONS = gql`
 //   query getProgramManagerSessions($id: ID!){
@@ -677,7 +677,7 @@ export const REPLACE_SESSION_WORKOUT = gql`
             }
         }
     }
-`
+`;
 
 // export const GET_SESSIONS_ON_DATE = gql`
 //      query getSessionsOnDate($id: ID!, $date: Date) {

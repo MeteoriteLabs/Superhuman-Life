@@ -1,20 +1,20 @@
-import React, { useState } from 'react'
-import Form from '@rjsf/bootstrap-4'
-import { Link } from 'react-router-dom'
-import { Button, Modal, Row } from 'react-bootstrap'
-import { useMutation, gql } from '@apollo/client'
-import EmailForm from './email'
+import React, { useState } from 'react';
+import Form from '@rjsf/bootstrap-4';
+import { Link } from 'react-router-dom';
+import { Button, Modal, Row } from 'react-bootstrap';
+import { useMutation, gql } from '@apollo/client';
+import EmailForm from './email';
 
 const ForgotPassword: React.FC = () => {
-    const [emailSent, setEmailSent] = useState<boolean>(false)
-    const loginSchema: any = require('./forgotPassword.json')
+    const [emailSent, setEmailSent] = useState<boolean>(false);
+    const loginSchema: any = require('./forgotPassword.json');
     const uiSchema: any = {
         email: {
             'ui:widget': (props) => {
-                return <EmailForm {...props} />
+                return <EmailForm {...props} />;
             }
         }
-    }
+    };
 
     const FORGOT_PASSWORD = gql`
         mutation forgotPasswordMutation($email: String!) {
@@ -22,26 +22,26 @@ const ForgotPassword: React.FC = () => {
                 ok
             }
         }
-    `
+    `;
 
     const [forgotPassword] = useMutation(FORGOT_PASSWORD, {
         onCompleted: () => {
-            setEmailSent(true)
+            setEmailSent(true);
         }
-    })
+    });
 
     function onSubmit(formData: any) {
-        forgotPassword({ variables: { email: formData.email } })
+        forgotPassword({ variables: { email: formData.email } });
     }
 
     function Validate(formData, errors) {
-        const ele = document.getElementsByClassName('invalidEmail')
+        const ele = document.getElementsByClassName('invalidEmail');
         if (formData.email) {
             if (ele.length !== 0) {
-                errors.email.addError('Please enter a valid email address')
+                errors.email.addError('Please enter a valid email address');
             }
         }
-        return errors
+        return errors;
     }
 
     return (
@@ -123,7 +123,7 @@ const ForgotPassword: React.FC = () => {
                 )}
             </Modal.Body>
         </Modal.Dialog>
-    )
-}
+    );
+};
 
-export default ForgotPassword
+export default ForgotPassword;

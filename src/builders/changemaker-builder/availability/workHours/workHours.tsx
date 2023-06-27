@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext, useEffect } from 'react';
 import {
     Row,
     Col,
@@ -11,16 +11,16 @@ import {
     FormControl,
     InputGroup,
     Spinner
-} from 'react-bootstrap'
-import moment from 'moment'
-import Calendar from 'react-calendar'
-import 'react-calendar/dist/Calendar.css'
+} from 'react-bootstrap';
+import moment from 'moment';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 import {
     GET_USER_WEEKLY_CONFIG,
     GET_ALL_CHANGEMAKER_AVAILABILITY_WORKHOURS,
     GET_ALL_CHANGEMAKER_AVAILABILITY,
     GET_CHANGEMAKER_AVAILABILITY_AND_TAGS
-} from '../../graphql/queries'
+} from '../../graphql/queries';
 import {
     UPDATE_USER_BOOKING_TIME,
     UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS,
@@ -28,14 +28,14 @@ import {
     CREATE_CHANGEMAKER_AVAILABILITY_HOLIDAY,
     UPDATE_CHANGEMAKER_AVAILABILITY_HOLIDAY,
     DELETE_CHANGEMAKER_AVAILABILITY_HOLIDAY
-} from '../../graphql/mutations'
-import { useQuery, useMutation } from '@apollo/client'
-import AuthContext from '../../../../context/auth-context'
-import TimePicker from 'rc-time-picker'
-import 'rc-time-picker/assets/index.css'
-import './styles.css'
-import Toaster from '../../../../components/Toaster'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
+} from '../../graphql/mutations';
+import { useQuery, useMutation } from '@apollo/client';
+import AuthContext from '../../../../context/auth-context';
+import TimePicker from 'rc-time-picker';
+import 'rc-time-picker/assets/index.css';
+import './styles.css';
+import Toaster from '../../../../components/Toaster';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
 
 const configTemplate: any = {
     Sunday: {
@@ -73,57 +73,57 @@ const configTemplate: any = {
         slots: [],
         desc: ''
     }
-}
+};
 
 const WorkHours: React.FC = () => {
-    const auth = useContext(AuthContext)
-    const [value, onChange] = useState(new Date())
-    const [holidays, setHolidays] = useState<any>([])
-    const [month, setMonth] = useState<number>(0)
-    const [showDaysModal, setShowDaysModal] = useState<boolean>(false)
-    const [showDatesModal, setShowDatesModal] = useState<boolean>(false)
-    const [showDatesRangeModal, setShowDatesRangeModal] = useState(false)
-    const [masterSettings, setMasterSettings] = useState<any>([])
-    const [slots, setSlots] = useState<any>([])
-    const [toast, setToast] = useState<boolean>(false)
-    const [deleteToast, setDeleteToast] = useState<boolean>(false)
-    const [show, setShow] = useState<boolean>(false)
-    const [date, setDate] = useState(moment().format('YYYY-MM-DD'))
-    const [allChangeMakerHolidays, setAllChangeMakerHolidays] = useState<any>([])
-    const [errModal, setErrModal] = useState<boolean>(false)
-    const [startDate, setStartDate] = useState(moment().format('YYYY-MM-DD'))
-    const [endDate, setEndDate] = useState(moment().add(1, 'months').format('YYYY-MM-DD'))
-    const [userConfig, setUserConfig] = useState<any>(configTemplate)
-    const [checkState, setCheckState] = useState<boolean>(false)
-    const [holidayCheckState, setHolidayCheckState] = useState<boolean>(false)
-    const [dayHoliday, setDayHoliday] = useState<boolean>(false)
-    const [desc, setDesc] = useState<string>('')
-    const [rangeValue, rangeOnChange] = useState([new Date(), new Date()])
-    const [slotsValidation] = useState<any>([])
-    const [conflictSlots, setConflictSlots] = useState<any>([])
-    const [availability, setAvailability] = useState<any>([])
-    const [fromTime, setFromTime] = useState<string>('00:00')
-    const [toTime, setToTime] = useState<string>('00:00')
-    const [disableAdd, setDisableAdd] = useState<boolean>(false)
-    const [classMode, setClassMode] = useState<string>('')
-    const [errMsg, setErrMsg] = useState<string | null>()
-    const [slotErr, setSlotErr] = useState(false)
+    const auth = useContext(AuthContext);
+    const [value, onChange] = useState(new Date());
+    const [holidays, setHolidays] = useState<any>([]);
+    const [month, setMonth] = useState<number>(0);
+    const [showDaysModal, setShowDaysModal] = useState<boolean>(false);
+    const [showDatesModal, setShowDatesModal] = useState<boolean>(false);
+    const [showDatesRangeModal, setShowDatesRangeModal] = useState(false);
+    const [masterSettings, setMasterSettings] = useState<any>([]);
+    const [slots, setSlots] = useState<any>([]);
+    const [toast, setToast] = useState<boolean>(false);
+    const [deleteToast, setDeleteToast] = useState<boolean>(false);
+    const [show, setShow] = useState<boolean>(false);
+    const [date, setDate] = useState(moment().format('YYYY-MM-DD'));
+    const [allChangeMakerHolidays, setAllChangeMakerHolidays] = useState<any>([]);
+    const [errModal, setErrModal] = useState<boolean>(false);
+    const [startDate, setStartDate] = useState(moment().format('YYYY-MM-DD'));
+    const [endDate, setEndDate] = useState(moment().add(1, 'months').format('YYYY-MM-DD'));
+    const [userConfig, setUserConfig] = useState<any>(configTemplate);
+    const [checkState, setCheckState] = useState<boolean>(false);
+    const [holidayCheckState, setHolidayCheckState] = useState<boolean>(false);
+    const [dayHoliday, setDayHoliday] = useState<boolean>(false);
+    const [desc, setDesc] = useState<string>('');
+    const [rangeValue, rangeOnChange] = useState([new Date(), new Date()]);
+    const [slotsValidation] = useState<any>([]);
+    const [conflictSlots, setConflictSlots] = useState<any>([]);
+    const [availability, setAvailability] = useState<any>([]);
+    const [fromTime, setFromTime] = useState<string>('00:00');
+    const [toTime, setToTime] = useState<string>('00:00');
+    const [disableAdd, setDisableAdd] = useState<boolean>(false);
+    const [classMode, setClassMode] = useState<string>('');
+    const [errMsg, setErrMsg] = useState<string | null>();
+    const [slotErr, setSlotErr] = useState(false);
 
     useEffect(() => {
-        setDate(moment(value).format('YYYY-MM-DD'))
-    }, [value])
+        setDate(moment(value).format('YYYY-MM-DD'));
+    }, [value]);
 
     useEffect(() => {
         if (holidays.length > 0) {
-            setHolidayCheckState(holidays[0]?.Is_Holiday)
-            setCheckState(holidays[0]?.Is_Holiday)
-            setDesc(holidays[0]?.holiday_title)
+            setHolidayCheckState(holidays[0]?.Is_Holiday);
+            setCheckState(holidays[0]?.Is_Holiday);
+            setDesc(holidays[0]?.holiday_title);
         } else {
-            setCheckState(false)
-            setHolidayCheckState(false)
-            setDesc('')
+            setCheckState(false);
+            setHolidayCheckState(false);
+            setDesc('');
         }
-    }, [holidays])
+    }, [holidays]);
 
     const mainQuery = useQuery(GET_CHANGEMAKER_AVAILABILITY_AND_TAGS, {
         variables: {
@@ -132,18 +132,18 @@ const WorkHours: React.FC = () => {
             changemakerDate: date
         },
         onCompleted: (data: any) => {
-            const flattenData = flattenObj({ ...data })
-            setAvailability(flattenData.changemakerAvailabilties)
+            const flattenData = flattenObj({ ...data });
+            setAvailability(flattenData.changemakerAvailabilties);
             const changemakerSlots =
                 flattenData.changemakerAvailabilties.length > 0
                     ? flattenData.changemakerAvailabilties[0]?.AllSlots
-                    : []
-            const sessionSlots = flattenData?.sessions
-            const mergedSlots = sessionSlots?.concat(changemakerSlots)
+                    : [];
+            const sessionSlots = flattenData?.sessions;
+            const mergedSlots = sessionSlots?.concat(changemakerSlots);
 
-            setSlots(mergedSlots)
+            setSlots(mergedSlots);
         }
-    })
+    });
 
     useQuery(GET_ALL_CHANGEMAKER_AVAILABILITY_WORKHOURS, {
         variables: {
@@ -151,10 +151,10 @@ const WorkHours: React.FC = () => {
             id: auth.userid
         },
         onCompleted: (data) => {
-            const flattenData = flattenObj({ ...data })
-            setHolidays(flattenData.changemakerAvailabilties)
+            const flattenData = flattenObj({ ...data });
+            setHolidays(flattenData.changemakerAvailabilties);
         }
-    })
+    });
 
     useQuery(GET_ALL_CHANGEMAKER_AVAILABILITY, {
         variables: {
@@ -162,10 +162,10 @@ const WorkHours: React.FC = () => {
             limit: moment(endDate).diff(moment(startDate), 'days') + 1
         },
         onCompleted: (data) => {
-            const flattenData = flattenObj({ ...data })
-            setAllChangeMakerHolidays(flattenData.changemakerAvailabilties)
+            const flattenData = flattenObj({ ...data });
+            setAllChangeMakerHolidays(flattenData.changemakerAvailabilties);
         }
-    })
+    });
 
     function handleTodaysSlots(todaysEvents: any, changeMakerAvailability: any) {
         const currentDateWorkHours =
@@ -174,101 +174,101 @@ const WorkHours: React.FC = () => {
             changeMakerAvailability[0].AllSlots &&
             changeMakerAvailability[0].AllSlots.length > 0
                 ? [...changeMakerAvailability[0].AllSlots]
-                : []
+                : [];
 
-        const values = todaysEvents.concat(currentDateWorkHours)
+        const values = todaysEvents.concat(currentDateWorkHours);
         values.sort((a: any, b: any) => {
-            const btime1: any = moment(a.start_time, 'HH:mm a')
-            const btime2: any = moment(b.start_time, 'HH:mm a')
-            return btime1 - btime2
-        })
-        setSlots(values)
+            const btime1: any = moment(a.start_time, 'HH:mm a');
+            const btime2: any = moment(b.start_time, 'HH:mm a');
+            return btime1 - btime2;
+        });
+        setSlots(values);
     }
 
     /* eslint-disable */
     function handleDuplicates(sortedPrograms: any, changeMakerAvailability: any) {
         if (sortedPrograms.length > 0) {
-            const values = [...sortedPrograms]
+            const values = [...sortedPrograms];
             for (var i = 0; i < values.length; i++) {
                 for (var j = i + 1; j < values.length - 1; j++) {
                     if (values[i].program.id === values[j].program.id) {
-                        values.splice(j, 1)
+                        values.splice(j, 1);
                     }
                 }
             }
-            handleCurrentDate(values, changeMakerAvailability)
+            handleCurrentDate(values, changeMakerAvailability);
         }
     }
 
     function handleCurrentDate(data: any, changeMakerAvailability: any) {
-        const currentDay: any = []
+        const currentDay: any = [];
         for (var i = 0; i < data?.length; i++) {
-            var date1 = moment()
-            var date2 = moment(data[i].effectiveDate)
-            var diff = date1.diff(date2, 'days')
-            currentDay.push(diff)
+            var date1 = moment();
+            var date2 = moment(data[i].effectiveDate);
+            var diff = date1.diff(date2, 'days');
+            currentDay.push(diff);
         }
-        handleTodaysEvents(data, currentDay, changeMakerAvailability)
+        handleTodaysEvents(data, currentDay, changeMakerAvailability);
     }
 
     function handleTodaysEvents(data: any, currentDay: any, changeMakerAvailability: any) {
-        const todaysPrograms: any = []
+        const todaysPrograms: any = [];
         for (var i = 0; i < data?.length; i++) {
             for (var j = 0; j < data[i]?.program.events?.length; j++) {
                 if (
                     currentDay[i] === parseInt(data[i].program.events[j].day) &&
                     data[i].program.events[j].type === 'workout'
                 ) {
-                    todaysPrograms.push(data[i].program.events[j])
+                    todaysPrograms.push(data[i].program.events[j]);
                 }
             }
         }
-        handleTodaysSlots(todaysPrograms, changeMakerAvailability)
+        handleTodaysSlots(todaysPrograms, changeMakerAvailability);
     }
 
     useQuery(GET_USER_WEEKLY_CONFIG, {
         variables: { id: auth.userid },
         onCompleted: (data) => {
-            const flattenData = flattenObj({ ...data })
-            setMasterSettings(flattenData.usersPermissionsUsers)
+            const flattenData = flattenObj({ ...data });
+            setMasterSettings(flattenData.usersPermissionsUsers);
         }
-    })
+    });
 
-    const [updateUserBookingTime] = useMutation(UPDATE_USER_BOOKING_TIME)
+    const [updateUserBookingTime] = useMutation(UPDATE_USER_BOOKING_TIME);
     const [updateChangemakerAvailabilityWorkHour] = useMutation(
         UPDATE_CHANGEMAKER_AVAILABILITY_WORKHOURS,
         {
             onCompleted: () => {
-                mainQuery.refetch()
-                setFromTime('00:00')
-                setToTime('00:00')
-                setClassMode('none')
+                mainQuery.refetch();
+                setFromTime('00:00');
+                setToTime('00:00');
+                setClassMode('none');
             }
         }
-    )
+    );
     const [createChangemakerAvailabilityWorkHour] = useMutation(
         CREATE_CHANGEMAKER_AVAILABILITY_WORKHOURS,
         {
             onCompleted: () => {
-                mainQuery.refetch()
-                setFromTime('00:00')
-                setToTime('00:00')
-                setClassMode('none')
+                mainQuery.refetch();
+                setFromTime('00:00');
+                setToTime('00:00');
+                setClassMode('none');
             }
         }
-    )
-    const [createChangeMakerHoliday] = useMutation(CREATE_CHANGEMAKER_AVAILABILITY_HOLIDAY)
+    );
+    const [createChangeMakerHoliday] = useMutation(CREATE_CHANGEMAKER_AVAILABILITY_HOLIDAY);
     const [updateChangemakerAvailabilityHoliday] = useMutation(
         UPDATE_CHANGEMAKER_AVAILABILITY_HOLIDAY
-    )
+    );
     const [deleteChangemakerAvailabilityHoliday] = useMutation(
         DELETE_CHANGEMAKER_AVAILABILITY_HOLIDAY,
         {
             onCompleted: () => {
-                setDeleteToast(true)
+                setDeleteToast(true);
             }
         }
-    )
+    );
 
     const daysOfWeek = [
         'Sunday',
@@ -278,23 +278,23 @@ const WorkHours: React.FC = () => {
         'Thursday',
         'Friday',
         'Saturday'
-    ]
+    ];
 
     function tileDisabled({ date, view }) {
-        const values = allChangeMakerHolidays.filter((item: any) => item.Is_Holiday === true)
+        const values = allChangeMakerHolidays.filter((item: any) => item.Is_Holiday === true);
         if (view === 'month') {
             return values?.find(
                 (dDate) =>
                     moment(dDate.date).format('YYYY-MM-DD') === moment(date).format('YYYY-MM-DD')
-            )
+            );
         }
     }
 
     function tileContent({ date, view }) {
-        const values = allChangeMakerHolidays.filter((item: any) => item.Is_Holiday === true)
+        const values = allChangeMakerHolidays.filter((item: any) => item.Is_Holiday === true);
         for (var i = 0; i < values.length; i++) {
             if (moment(values[i].date).format('YYYY-MM-DD') === moment(date).format('YYYY-MM-DD')) {
-                return 'HolidayMark'
+                return 'HolidayMark';
             }
         }
     }
@@ -306,52 +306,52 @@ const WorkHours: React.FC = () => {
                 booking_Online_time: newOnline,
                 booking_Offline_time: newOffline
             }
-        })
+        });
     }
 
     function handleToast() {
         setTimeout(() => {
-            setToast(false)
-        }, 3000)
+            setToast(false);
+        }, 3000);
     }
 
     function handleDeleteToast() {
         setTimeout(() => {
-            setDeleteToast(false)
-        }, 3000)
+            setDeleteToast(false);
+        }, 3000);
     }
 
     function convertToMoment(time: string) {
-        var timeSplit = time.split(':').map(Number)
-        return moment().set({ hour: timeSplit[0], minute: timeSplit[1] })
+        var timeSplit = time.split(':').map(Number);
+        return moment().set({ hour: timeSplit[0], minute: timeSplit[1] });
     }
 
     function handleTimeConversion(time: number) {
-        var val = 60 / (1 / (time / 60))
-        return val
+        var val = 60 / (1 / (time / 60));
+        return val;
     }
 
     useEffect(() => {
         setTimeout(() => {
-            setShow(true)
-        }, 1000)
-    }, [])
+            setShow(true);
+        }, 1000);
+    }, []);
 
     function handleFromTimeInput(val: any) {
-        var m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60
-        setFromTime(val.slice(0, 2) + ':' + (m === 0 ? '00' : m))
+        var m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60;
+        setFromTime(val.slice(0, 2) + ':' + (m === 0 ? '00' : m));
     }
 
     function handleToTimeInput(val: any) {
-        var m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60
-        setToTime(val.slice(0, 2) + ':' + (m === 0 ? '00' : m))
+        var m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60;
+        setToTime(val.slice(0, 2) + ':' + (m === 0 ? '00' : m));
     }
 
     function handleTimeValidation() {
-        var sh = fromTime.split(':')[0]
-        var sm = fromTime.split(':')[1]
-        var eh = toTime.split(':')[0]
-        var em = toTime.split(':')[1]
+        var sh = fromTime.split(':')[0];
+        var sm = fromTime.split(':')[1];
+        var eh = toTime.split(':')[0];
+        var em = toTime.split(':')[1];
 
         if (fromTime !== '00:00' || toTime !== '00:00') {
             if (parseInt(sh) > parseInt(eh)) {
@@ -359,37 +359,37 @@ const WorkHours: React.FC = () => {
                     <span id="timeErr" style={{ color: 'red' }}>
                         End Time should be greater than Start Time
                     </span>
-                )
+                );
             } else if (parseInt(sh) === parseInt(eh) && parseInt(sm) === parseInt(em)) {
                 return (
                     <span id="timeErr" style={{ color: 'red' }}>
                         End Time and start Time cannot be the same
                     </span>
-                )
+                );
             } else if (parseInt(sh) === parseInt(eh) && parseInt(sm) > parseInt(em)) {
                 return (
                     <span id="timeErr" style={{ color: 'red' }}>
                         End Time Cannot be lesser than Start Time
                     </span>
-                )
+                );
             } else {
-                return <span style={{ color: 'green' }}>Valid Time</span>
+                return <span style={{ color: 'green' }}>Valid Time</span>;
             }
         }
     }
 
     function getRandomId(length) {
-        var randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-        var result = ''
+        var randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var result = '';
         for (var i = 0; i < length; i++) {
-            result += randomChars.charAt(Math.floor(Math.random() * randomChars.length))
+            result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
         }
-        return result
+        return result;
     }
 
     function handleWorkTime(fromTime: any, toTime: any, mode: any, date: any, holidays: any) {
-        const values = availability.find((item: any) => item.date === date)
-        var obj: any = {}
+        const values = availability.find((item: any) => item.date === date);
+        var obj: any = {};
 
         if (slots.length !== 0) {
             for (var i = 0; i < slots.length; i++) {
@@ -399,128 +399,128 @@ const WorkHours: React.FC = () => {
                     ) &&
                     moment(fromTime, 'hh:mm:ss').isBefore(moment(slots[i].end_time, 'hh:mm:ss'))
                 ) {
-                    setConflictSlots([slots[i]])
-                    setSlotErr(true)
-                    return
+                    setConflictSlots([slots[i]]);
+                    setSlotErr(true);
+                    return;
                 }
             }
         }
 
         if (values?.Is_Holiday === true) {
-            setErrModal(true)
+            setErrModal(true);
         }
 
         if (values) {
             if (values.Is_Holiday === false) {
-                obj.id = getRandomId(10)
-                obj.start_time = fromTime
-                obj.end_time = toTime
-                obj.mode = mode
-                const userData = values.AllSlots !== null ? [...values.AllSlots] : []
-                userData.push(obj)
+                obj.id = getRandomId(10);
+                obj.start_time = fromTime;
+                obj.end_time = toTime;
+                obj.mode = mode;
+                const userData = values.AllSlots !== null ? [...values.AllSlots] : [];
+                userData.push(obj);
                 updateChangemakerAvailabilityWorkHour({
                     variables: { id: values.id, slots: userData }
-                })
-                setToast(true)
+                });
+                setToast(true);
             }
         } else if (values === undefined) {
-            obj.id = getRandomId(10)
-            obj.start_time = fromTime
-            obj.end_time = toTime
-            obj.mode = mode
-            const userData: any = []
-            userData.push(obj)
+            obj.id = getRandomId(10);
+            obj.start_time = fromTime;
+            obj.end_time = toTime;
+            obj.mode = mode;
+            const userData: any = [];
+            userData.push(obj);
             createChangemakerAvailabilityWorkHour({
                 variables: { id: auth.userid, slots: userData, date: date }
-            })
-            mainQuery.refetch()
-            setToast(true)
+            });
+            mainQuery.refetch();
+            setToast(true);
         }
     }
 
     useEffect(() => {
-        var element = document.getElementById('timeErr')
+        var element = document.getElementById('timeErr');
         if (element !== null) {
-            setDisableAdd(true)
+            setDisableAdd(true);
         } else {
-            setDisableAdd(false)
+            setDisableAdd(false);
         }
-    }, [fromTime, toTime])
+    }, [fromTime, toTime]);
 
-    const [userOfflineTime, setUserOfflineTime]: any = useState(45)
-    const [userOnlineTime, setUserOnlineTime]: any = useState(45)
-    const [dayIndex, setDayIndex]: any = useState(moment().weekday())
-    const [confirmModal, setConfirmModal]: any = useState(false)
-    const [slotId, setSlotId]: any = useState('')
+    const [userOfflineTime, setUserOfflineTime]: any = useState(45);
+    const [userOnlineTime, setUserOnlineTime]: any = useState(45);
+    const [dayIndex, setDayIndex]: any = useState(moment().weekday());
+    const [confirmModal, setConfirmModal]: any = useState(false);
+    const [slotId, setSlotId]: any = useState('');
 
     function handleDeleteWorkHour(id: any) {
-        const objIndex = availability[0]?.AllSlots.findIndex((item: any) => item.id === id)
+        const objIndex = availability[0]?.AllSlots.findIndex((item: any) => item.id === id);
 
-        const values = [...availability[0].AllSlots]
-        values.splice(objIndex, 1)
+        const values = [...availability[0].AllSlots];
+        values.splice(objIndex, 1);
 
         updateChangemakerAvailabilityWorkHour({
             variables: { id: availability[0].id, slots: values }
-        })
+        });
     }
 
     interface NamedParameters {
-        fromTime?: any
-        toTime?: any
-        classMode?: any
-        date?: any
-        dayIndex?: any
-        isHoliday?: boolean
-        desc?: string
-        config: any
+        fromTime?: any;
+        toTime?: any;
+        classMode?: any;
+        date?: any;
+        dayIndex?: any;
+        isHoliday?: boolean;
+        desc?: string;
+        config: any;
     }
 
     function handleDeleteUserConfig(dayIndex, id) {
         const objIndex = userConfig[daysOfWeek[dayIndex]].slots.findIndex(
             (item: any) => item.id === id
-        )
-        const values = [...userConfig[daysOfWeek[dayIndex]].slots]
-        values.splice(objIndex, 1)
+        );
+        const values = [...userConfig[daysOfWeek[dayIndex]].slots];
+        values.splice(objIndex, 1);
 
-        userConfig[daysOfWeek[dayIndex]].slots = values
+        userConfig[daysOfWeek[dayIndex]].slots = values;
 
-        setUserConfig(userConfig)
+        setUserConfig(userConfig);
     }
 
-    const [holidayErr, setHolidayErr] = useState(false)
-    const [holidayConflics, setHolidayConflicts] = useState<any>([])
+    const [holidayErr, setHolidayErr] = useState(false);
+    const [holidayConflics, setHolidayConflicts] = useState<any>([]);
 
     function handleUserConfigHoliday({
         dayIndex,
         isHoliday = false,
         config
     }: NamedParameters): any {
-        const val = config
-        const values = slotsValidation.changemakerAvailabilties
+        const val = config;
+        const values = slotsValidation.changemakerAvailabilties;
         const isExisting = values.filter(
             (item: any) => moment(item.date).format('dddd') === daysOfWeek[dayIndex]
-        )
+        );
 
         if (isExisting?.length !== 0) {
-            setHolidayConflicts(isExisting)
-            setHolidayErr(true)
+            setHolidayConflicts(isExisting);
+            setHolidayErr(true);
         } else {
-            val[daysOfWeek[dayIndex]].isHoliday = isHoliday
-            setUserConfig(val)
+            val[daysOfWeek[dayIndex]].isHoliday = isHoliday;
+            setUserConfig(val);
         }
     }
 
     function handleUserConfigHolidayDesc({ dayIndex, desc = '', config }: NamedParameters): any {
-        const val = config
+        const val = config;
         if (val[daysOfWeek[dayIndex]].isHoliday === true) {
-            val[daysOfWeek[dayIndex]].desc = desc
+            val[daysOfWeek[dayIndex]].desc = desc;
         }
-        setUserConfig(val)
-        setDesc('')
+        setUserConfig(val);
+        setDesc('');
     }
 
-    const [workHourErr, setWorkHourErr] = useState(false)
-    const [workHourConflict, setWorkHourConflict] = useState<any>()
+    const [workHourErr, setWorkHourErr] = useState(false);
+    const [workHourConflict, setWorkHourConflict] = useState<any>();
 
     function handleUserConfig({
         fromTime,
@@ -532,23 +532,23 @@ const WorkHours: React.FC = () => {
         desc = '',
         config
     }: NamedParameters): any {
-        const val = config
-        const values = slotsValidation.changemakerAvailabilties
-        const conflict = [...conflictSlots]
+        const val = config;
+        const values = slotsValidation.changemakerAvailabilties;
+        const conflict = [...conflictSlots];
 
         const holidayExists = values?.find(
             (item: any) =>
                 moment(item.date).format('dddd') === daysOfWeek[dayIndex] &&
                 item.Is_Holiday === true
-        )
+        );
         if (holidayExists) {
-            setWorkHourErr(true)
-            setWorkHourConflict(holidayExists)
-            return
+            setWorkHourErr(true);
+            setWorkHourConflict(holidayExists);
+            return;
         }
 
         for (var i = 0; i < values?.length; i++) {
-            const obj = values[i]?.AllSlots !== null ? [...values[i]?.AllSlots] : []
+            const obj = values[i]?.AllSlots !== null ? [...values[i]?.AllSlots] : [];
             if (
                 moment(values[i].date).format('dddd') === daysOfWeek[dayIndex] &&
                 values[i].Is_Holiday === false
@@ -560,9 +560,9 @@ const WorkHours: React.FC = () => {
                         ) &&
                         moment(fromTime, 'hh:mm:ss').isBefore(moment(obj[j].end_time, 'hh:mm:ss'))
                     ) {
-                        const slotDate = { date: values[i].date }
-                        const obj1: any = { ...slotDate, ...obj[j] }
-                        conflict.push(obj1)
+                        const slotDate = { date: values[i].date };
+                        const obj1: any = { ...slotDate, ...obj[j] };
+                        conflict.push(obj1);
                     } else if (val[daysOfWeek[dayIndex]]?.slots?.length) {
                         for (let k = 0; k < val[daysOfWeek[dayIndex]].slots?.length; k++) {
                             if (
@@ -576,12 +576,12 @@ const WorkHours: React.FC = () => {
                                     moment(val[daysOfWeek[dayIndex]].slots[k].end_time, 'hh:mm:ss')
                                 )
                             ) {
-                                const slotDate = { date: moment().format('YYYY-MM-DD') }
+                                const slotDate = { date: moment().format('YYYY-MM-DD') };
                                 const obj1: any = {
                                     ...slotDate,
                                     ...val[daysOfWeek[dayIndex]].slots[k]
-                                }
-                                conflict.push(obj1)
+                                };
+                                conflict.push(obj1);
                             }
                         }
                     }
@@ -596,43 +596,43 @@ const WorkHours: React.FC = () => {
                             moment(val[daysOfWeek[dayIndex]].slots[x].end_time, 'hh:mm:ss')
                         )
                     ) {
-                        const slotDate = { date: moment().format('YYYY-MM-DD') }
+                        const slotDate = { date: moment().format('YYYY-MM-DD') };
                         const obj1: any = {
                             ...slotDate,
                             ...val[daysOfWeek[dayIndex]].slots[x]
-                        }
-                        conflict.push(obj1)
+                        };
+                        conflict.push(obj1);
                     }
                 }
             }
         }
         if (conflict.length !== 0) {
-            setSlotErr(true)
-            setConflictSlots(conflict)
-            return
+            setSlotErr(true);
+            setConflictSlots(conflict);
+            return;
         }
-        var obj1: any = {}
+        var obj1: any = {};
         obj1 = {
             id: getRandomId(10),
             start_time: fromTime,
             end_time: toTime,
             mode: classMode
-        }
-        val[daysOfWeek[dayIndex]].slots.push(obj1)
-        setUserConfig(val)
-        setDayIndex(dayIndex)
-        setFromTime('00:00')
-        setToTime('00:00')
-        return
+        };
+        val[daysOfWeek[dayIndex]].slots.push(obj1);
+        setUserConfig(val);
+        setDayIndex(dayIndex);
+        setFromTime('00:00');
+        setToTime('00:00');
+        return;
     }
 
     function handleAddHoliday(date: any, event: any) {
-        const values = availability.find((item: any) => item.date === date)
+        const values = availability.find((item: any) => item.date === date);
         if (values) {
             if (values.AllSlots && values.AllSlots.length) {
                 // set a modal to display the error
-                setHolidayConflicts([values])
-                setHolidayErr(true)
+                setHolidayConflicts([values]);
+                setHolidayErr(true);
             }
         } else {
             if (!values.Is_holiday) {
@@ -641,7 +641,7 @@ const WorkHours: React.FC = () => {
                         id: values.id,
                         holiday_title: desc
                     }
-                })
+                });
             }
             createChangeMakerHoliday({
                 variables: {
@@ -649,12 +649,12 @@ const WorkHours: React.FC = () => {
                     description: desc,
                     users_permissions_user: auth.userid
                 }
-            })
-            setToast(true)
+            });
+            setToast(true);
         }
 
-        setDesc('')
-        setDate(moment().format('YYYY-MM-DD'))
+        setDesc('');
+        setDate(moment().format('YYYY-MM-DD'));
     }
 
     function handleDeleteHoliday(event: any) {
@@ -662,11 +662,11 @@ const WorkHours: React.FC = () => {
             variables: {
                 id: event[0].id
             }
-        })
+        });
     }
 
     function handleCustomDates(data: any, date: any) {
-        const diff = moment(date[1]).diff(moment(date[0]), 'days') + 1
+        const diff = moment(date[1]).diff(moment(date[0]), 'days') + 1;
         for (let i = 0; i < diff; i++) {
             createChangeMakerHoliday({
                 variables: {
@@ -674,21 +674,21 @@ const WorkHours: React.FC = () => {
                     description: data,
                     users_permissions_user: auth.userid
                 }
-            })
+            });
         }
-        setDesc('')
-        setDate(moment().format('YYYY-MM-DD'))
+        setDesc('');
+        setDate(moment().format('YYYY-MM-DD'));
     }
 
     function handleUserConfigSubmit(newConfig: any) {
-        const range = moment(endDate).diff(moment(startDate), 'days')
+        const range = moment(endDate).diff(moment(startDate), 'days');
 
         for (let i = 0; i < daysOfWeek.length; i++) {
             if (
                 newConfig[daysOfWeek[i]].isHoliday === false &&
                 newConfig[daysOfWeek[i]].slots.length === 0
             ) {
-                continue
+                continue;
             } else if (newConfig[daysOfWeek[i]].isHoliday === true) {
                 for (var j = 0; j < range; j++) {
                     if (moment(startDate).add(j, 'days').format('dddd') === daysOfWeek[i]) {
@@ -697,7 +697,7 @@ const WorkHours: React.FC = () => {
                             (item: any) =>
                                 moment(item.date).format('dddd') ===
                                 moment(startDate).add(j, 'days').format('dddd')
-                        )
+                        );
                         if (obj?.length > 0) {
                             for (var x = 0; x < obj.length; x++) {
                                 updateChangemakerAvailabilityHoliday({
@@ -705,7 +705,7 @@ const WorkHours: React.FC = () => {
                                         id: obj[x].id,
                                         title: newConfig[daysOfWeek[i]].desc
                                     }
-                                })
+                                });
                             }
                         } else {
                             createChangeMakerHoliday({
@@ -716,7 +716,7 @@ const WorkHours: React.FC = () => {
                                     description: newConfig[daysOfWeek[i]].desc,
                                     users_permissions_user: auth.userid
                                 }
-                            })
+                            });
                         }
                     }
                 }
@@ -728,14 +728,14 @@ const WorkHours: React.FC = () => {
                             (item: any) =>
                                 moment(item.date).format('dddd') ===
                                 moment(startDate).add(j, 'days').format('dddd')
-                        )
+                        );
                         if (obj?.length > 0) {
                             for (var y = 0; y < obj.length; y++) {
-                                const oldSlots = [...obj[y].AllSlots]
-                                const newSlots = [...oldSlots, ...newConfig[daysOfWeek[i]].slots]
+                                const oldSlots = [...obj[y].AllSlots];
+                                const newSlots = [...oldSlots, ...newConfig[daysOfWeek[i]].slots];
                                 updateChangemakerAvailabilityWorkHour({
                                     variables: { id: obj[y].id, slots: newSlots }
-                                })
+                                });
                             }
                         } else {
                             createChangemakerAvailabilityWorkHour({
@@ -746,21 +746,21 @@ const WorkHours: React.FC = () => {
                                     slots: newConfig[daysOfWeek[i]].slots,
                                     id: auth.userid
                                 }
-                            })
+                            });
                         }
                     }
                 }
             }
         }
-        setShowDaysModal(false)
+        setShowDaysModal(false);
     }
 
     function findHolidayIndex(id: any) {
         const obj = allChangeMakerHolidays.findIndex(
             (item: any) =>
                 moment(item.date).format('YYYY-MM-DD') === moment(id).format('YYYY-MM-DD')
-        )
-        return obj
+        );
+        return obj;
     }
 
     if (!show)
@@ -771,7 +771,7 @@ const WorkHours: React.FC = () => {
                     <b>Please wait while we load your Schedule...</b>
                 </h5>
             </div>
-        )
+        );
     else
         return (
             <>
@@ -793,7 +793,7 @@ const WorkHours: React.FC = () => {
                                 <Dropdown.Item
                                     eventKey="1"
                                     onClick={() => {
-                                        setShowDaysModal(true)
+                                        setShowDaysModal(true);
                                     }}
                                 >
                                     Work Hours
@@ -801,7 +801,7 @@ const WorkHours: React.FC = () => {
                                 <Dropdown.Item
                                     eventKey="2"
                                     onClick={() => {
-                                        setShowDatesModal(true)
+                                        setShowDatesModal(true);
                                     }}
                                 >
                                     Booking Time
@@ -809,7 +809,7 @@ const WorkHours: React.FC = () => {
                                 <Dropdown.Item
                                     eventKey="2"
                                     onClick={() => {
-                                        setShowDatesRangeModal(true)
+                                        setShowDatesRangeModal(true);
                                     }}
                                 >
                                     Dates
@@ -843,7 +843,7 @@ const WorkHours: React.FC = () => {
                                     onActiveStartDateChange={({ action }) => {
                                         action === 'next'
                                             ? setMonth(month + 1)
-                                            : setMonth(month - 1)
+                                            : setMonth(month - 1);
                                     }}
                                     value={value}
                                     minDate={moment().startOf('month').toDate()}
@@ -953,13 +953,13 @@ const WorkHours: React.FC = () => {
                                                         src="/assets/delete.svg"
                                                         alt="delete"
                                                         onClick={() => {
-                                                            setConfirmModal(true)
-                                                            setSlotId(item.id)
+                                                            setConfirmModal(true);
+                                                            setSlotId(item.id);
                                                         }}
                                                     />
                                                 </Col>
                                             </Row>
-                                        )
+                                        );
                                     })}
                             </div>
                         </Col>
@@ -1008,8 +1008,8 @@ const WorkHours: React.FC = () => {
                                         style={{ borderRadius: '10px' }}
                                         variant="info"
                                         onClick={() => {
-                                            handleAddHoliday(date, desc)
-                                            handleToast()
+                                            handleAddHoliday(date, desc);
+                                            handleToast();
                                         }}
                                     >
                                         Set Holiday
@@ -1024,8 +1024,8 @@ const WorkHours: React.FC = () => {
                                         style={{ borderRadius: '10px' }}
                                         variant="danger"
                                         onClick={() => {
-                                            handleDeleteHoliday(holidays)
-                                            handleDeleteToast()
+                                            handleDeleteHoliday(holidays);
+                                            handleDeleteToast();
                                         }}
                                     >
                                         Delete Holiday
@@ -1055,7 +1055,7 @@ const WorkHours: React.FC = () => {
                                             showSecond={false}
                                             minuteStep={15}
                                             onChange={(e) => {
-                                                handleFromTimeInput(moment(e).format('HH:mm'))
+                                                handleFromTimeInput(moment(e).format('HH:mm'));
                                             }}
                                         />
                                     </Col>
@@ -1066,7 +1066,7 @@ const WorkHours: React.FC = () => {
                                             showSecond={false}
                                             minuteStep={15}
                                             onChange={(e) => {
-                                                handleToTimeInput(moment(e).format('HH:mm'))
+                                                handleToTimeInput(moment(e).format('HH:mm'));
                                             }}
                                         />
                                     </Col>
@@ -1077,7 +1077,7 @@ const WorkHours: React.FC = () => {
                                 <Form.Control
                                     as="select"
                                     onChange={(e) => {
-                                        setClassMode(e.target.value)
+                                        setClassMode(e.target.value);
                                     }}
                                 >
                                     <option value="none">Select Mode</option>
@@ -1098,8 +1098,8 @@ const WorkHours: React.FC = () => {
                                     style={{ borderRadius: '10px' }}
                                     variant="info"
                                     onClick={() => {
-                                        handleWorkTime(fromTime, toTime, classMode, date, holidays)
-                                        handleToast()
+                                        handleWorkTime(fromTime, toTime, classMode, date, holidays);
+                                        handleToast();
                                     }}
                                 >
                                     Add
@@ -1181,7 +1181,7 @@ const WorkHours: React.FC = () => {
                         <Modal.Header
                             closeButton
                             onHide={() => {
-                                setShowDaysModal(false)
+                                setShowDaysModal(false);
                             }}
                         >
                             <Modal.Title id="contained-modal-title-vcenter">
@@ -1240,7 +1240,7 @@ const WorkHours: React.FC = () => {
                                             <div key={index}>
                                                 <Col
                                                     onClick={(e) => {
-                                                        setDayIndex(index)
+                                                        setDayIndex(index);
                                                     }}
                                                     key={index}
                                                     lg={1}
@@ -1257,7 +1257,7 @@ const WorkHours: React.FC = () => {
                                                     {moment(item, 'ddd').format('ddd')}
                                                 </Col>
                                             </div>
-                                        )
+                                        );
                                     })}
                                 </Row>
                             </div>
@@ -1282,12 +1282,12 @@ const WorkHours: React.FC = () => {
                                                     userConfig[daysOfWeek[dayIndex]]?.isHoliday
                                                 }
                                                 onClick={() => {
-                                                    setDayHoliday(!dayHoliday)
+                                                    setDayHoliday(!dayHoliday);
                                                     handleUserConfigHoliday({
                                                         dayIndex: dayIndex,
                                                         isHoliday: !dayHoliday,
                                                         config: userConfig
-                                                    })
+                                                    });
                                                 }}
                                                 id="custom"
                                                 label="Set Holiday"
@@ -1392,13 +1392,13 @@ const WorkHours: React.FC = () => {
                                                                     handleDeleteUserConfig(
                                                                         dayIndex,
                                                                         item.id
-                                                                    )
+                                                                    );
                                                                 }}
                                                             />
                                                         </div>
                                                     </Col>
                                                 </Row>
-                                            )
+                                            );
                                         }
                                     )}
                                 <Col>
@@ -1434,7 +1434,7 @@ const WorkHours: React.FC = () => {
                                                             dayIndex: dayIndex,
                                                             desc: desc,
                                                             config: userConfig
-                                                        })
+                                                        });
                                                     }}
                                                 >
                                                     Add
@@ -1452,7 +1452,7 @@ const WorkHours: React.FC = () => {
                                                     onChange={(e) => {
                                                         handleFromTimeInput(
                                                             moment(e).format('HH:mm')
-                                                        )
+                                                        );
                                                     }}
                                                 />
                                             </Col>
@@ -1463,7 +1463,9 @@ const WorkHours: React.FC = () => {
                                                     showSecond={false}
                                                     minuteStep={15}
                                                     onChange={(e) => {
-                                                        handleToTimeInput(moment(e).format('HH:mm'))
+                                                        handleToTimeInput(
+                                                            moment(e).format('HH:mm')
+                                                        );
                                                     }}
                                                 />
                                             </Col>
@@ -1471,7 +1473,7 @@ const WorkHours: React.FC = () => {
                                                 <Form.Control
                                                     as="select"
                                                     onChange={(e) => {
-                                                        setClassMode(e.target.value)
+                                                        setClassMode(e.target.value);
                                                     }}
                                                 >
                                                     <option value="">Select Mode</option>
@@ -1499,7 +1501,7 @@ const WorkHours: React.FC = () => {
                                                             date: date,
                                                             dayIndex: dayIndex,
                                                             config: userConfig
-                                                        })
+                                                        });
                                                     }}
                                                 >
                                                     Add
@@ -1523,7 +1525,7 @@ const WorkHours: React.FC = () => {
                             <Button
                                 variant="success"
                                 onClick={() => {
-                                    handleUserConfigSubmit(userConfig)
+                                    handleUserConfigSubmit(userConfig);
                                 }}
                             >
                                 Save
@@ -1541,7 +1543,7 @@ const WorkHours: React.FC = () => {
                         <Modal.Header
                             closeButton
                             onHide={() => {
-                                setShowDatesModal(false)
+                                setShowDatesModal(false);
                             }}
                         >
                             <Modal.Title id="contained-modal-title-vcenter">
@@ -1559,7 +1561,7 @@ const WorkHours: React.FC = () => {
                                         <Form.Control
                                             as="select"
                                             onChange={(e) => {
-                                                setUserOnlineTime(e.target.value)
+                                                setUserOnlineTime(e.target.value);
                                             }}
                                         >
                                             <option value={45}>45 min</option>
@@ -1575,7 +1577,7 @@ const WorkHours: React.FC = () => {
                                         <Form.Control
                                             as="select"
                                             onChange={(e) => {
-                                                setUserOfflineTime(e.target.value)
+                                                setUserOfflineTime(e.target.value);
                                             }}
                                         >
                                             <option value={45}>45 min</option>
@@ -1591,7 +1593,7 @@ const WorkHours: React.FC = () => {
                             <Button
                                 variant="danger"
                                 onClick={() => {
-                                    setShowDatesModal(false)
+                                    setShowDatesModal(false);
                                 }}
                             >
                                 Close
@@ -1602,8 +1604,8 @@ const WorkHours: React.FC = () => {
                                     handleBookingTimeUpdate(
                                         parseInt(userOnlineTime),
                                         parseInt(userOfflineTime)
-                                    )
-                                    setShowDatesModal(false)
+                                    );
+                                    setShowDatesModal(false);
                                 }}
                             >
                                 Save
@@ -1621,7 +1623,7 @@ const WorkHours: React.FC = () => {
                         <Modal.Header
                             closeButton
                             onHide={() => {
-                                setErrModal(false)
+                                setErrModal(false);
                             }}
                         >
                             <Modal.Title id="contained-modal-title-vcenter">
@@ -1633,7 +1635,7 @@ const WorkHours: React.FC = () => {
                             <Button
                                 variant="success"
                                 onClick={() => {
-                                    setErrModal(false)
+                                    setErrModal(false);
                                 }}
                             >
                                 Close
@@ -1651,7 +1653,7 @@ const WorkHours: React.FC = () => {
                         <Modal.Header
                             closeButton
                             onHide={() => {
-                                setWorkHourErr(false)
+                                setWorkHourErr(false);
                             }}
                         >
                             <Modal.Title id="contained-modal-title-vcenter">
@@ -1664,7 +1666,7 @@ const WorkHours: React.FC = () => {
                             <Button
                                 variant="success"
                                 onClick={() => {
-                                    setWorkHourErr(false)
+                                    setWorkHourErr(false);
                                 }}
                             >
                                 Close
@@ -1682,7 +1684,7 @@ const WorkHours: React.FC = () => {
                         <Modal.Header
                             closeButton
                             onHide={() => {
-                                setHolidayErr(false)
+                                setHolidayErr(false);
                             }}
                         >
                             <Modal.Title id="contained-modal-title-vcenter">
@@ -1700,7 +1702,7 @@ const WorkHours: React.FC = () => {
                                                     {moment(slot.date).format('DD MMM, YYYY')}
                                                 </td>
                                             </tr>
-                                        )
+                                        );
                                     })}
                                 </table>
                             </Modal.Title>
@@ -1709,7 +1711,7 @@ const WorkHours: React.FC = () => {
                             <Button
                                 variant="success"
                                 onClick={() => {
-                                    setHolidayErr(false)
+                                    setHolidayErr(false);
                                 }}
                             >
                                 Close
@@ -1727,7 +1729,7 @@ const WorkHours: React.FC = () => {
                         <Modal.Header
                             closeButton
                             onHide={() => {
-                                setSlotErr(false)
+                                setSlotErr(false);
                             }}
                         >
                             <Modal.Title id="contained-modal-title-vcenter">
@@ -1758,7 +1760,7 @@ const WorkHours: React.FC = () => {
                                                 </td>
                                                 <td className="pl-3 pr-3">{slot.mode}</td>
                                             </tr>
-                                        )
+                                        );
                                     })}
                                 </table>
                             </Modal.Title>
@@ -1767,12 +1769,12 @@ const WorkHours: React.FC = () => {
                             <Button
                                 variant="success"
                                 onClick={() => {
-                                    setSlotErr(false)
-                                    setUserConfig(userConfig)
-                                    setConflictSlots([])
-                                    setFromTime('00:00')
-                                    setToTime('00:00')
-                                    setDayIndex(dayIndex)
+                                    setSlotErr(false);
+                                    setUserConfig(userConfig);
+                                    setConflictSlots([]);
+                                    setFromTime('00:00');
+                                    setToTime('00:00');
+                                    setDayIndex(dayIndex);
                                 }}
                             >
                                 Close
@@ -1790,7 +1792,7 @@ const WorkHours: React.FC = () => {
                         <Modal.Header
                             closeButton
                             onHide={() => {
-                                setSlotErr(false)
+                                setSlotErr(false);
                             }}
                         >
                             <Modal.Title id="contained-modal-title-vcenter">
@@ -1801,7 +1803,7 @@ const WorkHours: React.FC = () => {
                             <Button
                                 variant="danger"
                                 onClick={() => {
-                                    setConfirmModal(false)
+                                    setConfirmModal(false);
                                 }}
                             >
                                 No
@@ -1809,8 +1811,8 @@ const WorkHours: React.FC = () => {
                             <Button
                                 variant="success"
                                 onClick={() => {
-                                    setConfirmModal(false)
-                                    handleDeleteWorkHour(slotId)
+                                    setConfirmModal(false);
+                                    handleDeleteWorkHour(slotId);
                                 }}
                             >
                                 Yes
@@ -1828,7 +1830,7 @@ const WorkHours: React.FC = () => {
                         <Modal.Header
                             closeButton
                             onHide={() => {
-                                setShowDatesRangeModal(false)
+                                setShowDatesRangeModal(false);
                             }}
                         >
                             <Modal.Title id="contained-modal-title-vcenter">
@@ -1857,7 +1859,7 @@ const WorkHours: React.FC = () => {
                                         <FormControl
                                             placeholder="Type New Holiday"
                                             onChange={(e) => {
-                                                setDesc(e.target.value)
+                                                setDesc(e.target.value);
                                             }}
                                             value={desc}
                                         />
@@ -1869,7 +1871,7 @@ const WorkHours: React.FC = () => {
                             <Button
                                 variant="danger"
                                 onClick={() => {
-                                    setShowDatesRangeModal(false)
+                                    setShowDatesRangeModal(false);
                                 }}
                             >
                                 Close
@@ -1878,8 +1880,8 @@ const WorkHours: React.FC = () => {
                                 variant="success"
                                 disabled={desc === '' ? true : false}
                                 onClick={() => {
-                                    handleCustomDates(desc, rangeValue)
-                                    setShowDatesRangeModal(false)
+                                    handleCustomDates(desc, rangeValue);
+                                    setShowDatesRangeModal(false);
                                 }}
                             >
                                 Save
@@ -1888,7 +1890,7 @@ const WorkHours: React.FC = () => {
                     </Modal>
                 }
             </>
-        )
-}
+        );
+};
 
-export default WorkHours
+export default WorkHours;

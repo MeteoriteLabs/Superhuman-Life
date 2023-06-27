@@ -1,13 +1,13 @@
-import React, { Fragment, useState } from 'react'
-import TimeField from 'react-simple-timefield'
-import './bookingleadtime.css'
+import React, { Fragment, useState } from 'react';
+import TimeField from 'react-simple-timefield';
+import './bookingleadtime.css';
 
 const BookingLeadTime: React.FC<{ widgetProps: any; actionType: any; userData: any }> = (props) => {
-    const [time] = useState()
+    const [time] = useState();
 
     const handleChange = (e, widgetProps) => {
-        widgetProps.onChange(e.target.value)
-    }
+        widgetProps.onChange(e.target.value);
+    };
 
     return (
         <Fragment>
@@ -39,7 +39,7 @@ const BookingLeadTime: React.FC<{ widgetProps: any; actionType: any; userData: a
                 ''
             )}
         </Fragment>
-    )
-}
+    );
+};
 
-export default BookingLeadTime
+export default BookingLeadTime;

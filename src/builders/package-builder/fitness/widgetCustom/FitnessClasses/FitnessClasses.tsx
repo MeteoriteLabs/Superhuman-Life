@@ -1,18 +1,18 @@
-import React from 'react'
-import ClassicClasses from './ClassicClasses'
-import CustomClasses from './CustomClasses'
-import GroupClasses from './GroupClasses'
-import PTClasses from './PTClasses'
+import React from 'react';
+import ClassicClasses from './ClassicClasses';
+import CustomClasses from './CustomClasses';
+import GroupClasses from './GroupClasses';
+import PTClasses from './PTClasses';
 
 const FitnessClasses: React.FC<{
-    PTProps: any
-    widgetProps: any
-    actionType: string
-    packageTypeName: string | null
-    classicProps: any
-    groupProps: any
-    customProps: any
-    userData: any
+    PTProps: any;
+    widgetProps: any;
+    actionType: string;
+    packageTypeName: string | null;
+    classicProps: any;
+    groupProps: any;
+    customProps: any;
+    userData: any;
 }> = (props) => {
     return (
         <div className="text-center text-black py-3 w-50 d-flex justify-content-start align-items-center">
@@ -59,7 +59,7 @@ const FitnessClasses: React.FC<{
                 </div>
             )}
         </div>
-    )
-}
+    );
+};
 
-export default FitnessClasses
+export default FitnessClasses;

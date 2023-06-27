@@ -1,7 +1,7 @@
-import { Container, Row } from 'react-bootstrap'
+import { Container, Row } from 'react-bootstrap';
 
-const email = process.env.REACT_APP_SUPPORT_EMAIL
-const phone = process.env.REACT_APP_SUPPORT_CONTACT_NUMBER
+const email = process.env.REACT_APP_SUPPORT_EMAIL;
+const phone = process.env.REACT_APP_SUPPORT_CONTACT_NUMBER;
 
 function DeactiveAccount() {
     return (
@@ -37,7 +37,7 @@ function DeactiveAccount() {
                 </h5>
             </Row>
         </Container>
-    )
+    );
 }
 
-export default DeactiveAccount
+export default DeactiveAccount;

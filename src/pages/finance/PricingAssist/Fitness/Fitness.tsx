@@ -1,22 +1,22 @@
-import React from 'react'
-import ActionButton, { ArrayAction } from '../../../../components/actionbutton'
-import { Row, Col } from 'react-bootstrap'
-import { useContext, useMemo, useRef, useState } from 'react'
-import Table from '../../../../components/table/index'
-import { useQuery, useLazyQuery } from '@apollo/client'
-import { GET_ALL_SUGGESTED_PRICING } from '../../graphQL/queries'
-import authContext from '../../../../context/auth-context'
-import moment from 'moment'
-import PricingAssistAction from '../PricingAssistAction'
-import { GET_FITNESS_PACKAGE_TYPES } from '../../../../builders/package-builder/fitness/graphQL/queries'
-import OfferingsDisplayImage from '../../../../components/customWidgets/offeringsDisplayImage'
+import React from 'react';
+import ActionButton, { ArrayAction } from '../../../../components/actionbutton';
+import { Row, Col } from 'react-bootstrap';
+import { useContext, useMemo, useRef, useState } from 'react';
+import Table from '../../../../components/table/index';
+import { useQuery, useLazyQuery } from '@apollo/client';
+import { GET_ALL_SUGGESTED_PRICING } from '../../graphQL/queries';
+import authContext from '../../../../context/auth-context';
+import moment from 'moment';
+import PricingAssistAction from '../PricingAssistAction';
+import { GET_FITNESS_PACKAGE_TYPES } from '../../../../builders/package-builder/fitness/graphQL/queries';
+import OfferingsDisplayImage from '../../../../components/customWidgets/offeringsDisplayImage';
 
-import { flattenObj } from '../../../../components/utils/responseFlatten'
+import { flattenObj } from '../../../../components/utils/responseFlatten';
 
 export default function Fitness() {
-    const auth = useContext(authContext)
-    const [dataTable, setDataTable] = useState<any[]>([])
-    const pricingAssistAction = useRef<any>(null)
+    const auth = useContext(authContext);
+    const [dataTable, setDataTable] = useState<any[]>([]);
+    const pricingAssistAction = useRef<any>(null);
 
     // get fitness package type
     const { data: fitness_package } = useQuery(GET_FITNESS_PACKAGE_TYPES, {
@@ -24,20 +24,20 @@ export default function Fitness() {
 
         onCompleted: (data) => {
             //called suggested pricing useLazyquery function
-            getPackagePrice({ variables: { id: auth.userid } })
+            getPackagePrice({ variables: { id: auth.userid } });
         }
-    })
+    });
 
     // eslint-disable-next-line
     const [getPackagePrice, { data }] = useLazyQuery(GET_ALL_SUGGESTED_PRICING, {
         onCompleted: (data) => loadData(data)
-    })
+    });
 
     // load function for suggested price query
     const loadData = (data: any) => {
-        const flattenSuggestedPricing = flattenObj({ ...data })
+        const flattenSuggestedPricing = flattenObj({ ...data });
 
-        const flattenFitnessPackages = flattenObj({ ...fitness_package })
+        const flattenFitnessPackages = flattenObj({ ...fitness_package });
 
         const fitnessPackageObject =
             flattenFitnessPackages &&
@@ -45,7 +45,7 @@ export default function Fitness() {
             flattenFitnessPackages.fitnessPackageTypes.length &&
             flattenFitnessPackages.fitnessPackageTypes
                 .filter((currentValue: any) => {
-                    return currentValue.PricingRequired === true
+                    return currentValue.PricingRequired === true;
                 })
                 .map((currValue: any) => {
                     return currValue.Modes.Channel.map((channelMode: string[]) => {
@@ -53,7 +53,7 @@ export default function Fitness() {
                             (element: any) =>
                                 element.Mode === channelMode &&
                                 element.fitness_package_type.type === currValue.type
-                        )
+                        );
 
                         return {
                             id:
@@ -75,15 +75,15 @@ export default function Fitness() {
                                       ).format('MMMM DD,YYYY')
                                     : '',
                             duration: currValue.Unit_Pricing_Calculation
-                        }
-                    })
-                })
+                        };
+                    });
+                });
 
         const flattenPackage =
-            fitnessPackageObject && fitnessPackageObject?.length && fitnessPackageObject.flat(1)
+            fitnessPackageObject && fitnessPackageObject?.length && fitnessPackageObject.flat(1);
 
-        setDataTable(flattenPackage)
-    }
+        setDataTable(flattenPackage);
+    };
 
     const columns = useMemo(
         () => [
@@ -101,21 +101,21 @@ export default function Fitness() {
                                 <p className="mb-0">{row.original?.type}</p>
                             </div>
                         </div>
-                    )
+                    );
                 }
             },
             {
                 accessor: 'duration',
                 Header: 'Duration',
                 Cell: ({ row }: any) => {
-                    return <p className="mb-0">{row.values.duration} </p>
+                    return <p className="mb-0">{row.values.duration} </p>;
                 }
             },
             {
                 accessor: 'mrp',
                 Header: 'MRP',
                 Cell: ({ row }: any) => {
-                    return <p className="mb-0">Rs {row.values.mrp}</p>
+                    return <p className="mb-0">Rs {row.values.mrp}</p>;
                 }
             },
             { accessor: 'updatedAt', Header: 'Updated' },
@@ -128,18 +128,18 @@ export default function Fitness() {
                             id: row.original.id,
                             actionType: 'edit',
                             rowData: row.original
-                        })
-                    }
+                        });
+                    };
                     const arrayAction: ArrayAction[] = [
                         { actionName: 'Edit', actionClick: editPackagePricing }
-                    ]
+                    ];
 
-                    return <ActionButton arrayAction={arrayAction}></ActionButton>
+                    return <ActionButton arrayAction={arrayAction}></ActionButton>;
                 }
             }
         ],
         []
-    )
+    );
 
     return (
         <div className="mt-5">
@@ -154,5 +154,5 @@ export default function Fitness() {
                 </Col>
             </Row>
         </div>
-    )
+    );
 }

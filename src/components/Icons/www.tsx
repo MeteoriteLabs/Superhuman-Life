@@ -2,8 +2,8 @@ const WWWIcon = ({
     width,
     height
 }: {
-    width: string | number
-    height: string | number
+    width: string | number;
+    height: string | number;
 }): JSX.Element => {
     return (
         <svg
@@ -20,7 +20,7 @@ const WWWIcon = ({
                 fill="black"
             />
         </svg>
-    )
-}
+    );
+};
 
-export default WWWIcon
+export default WWWIcon;

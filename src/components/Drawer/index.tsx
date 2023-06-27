@@ -1,34 +1,34 @@
-import React from 'react'
-import './style.css'
-import { Row, Col, Card } from 'react-bootstrap'
-import DisplayImage from '../DisplayImage'
-import Icons from '../Icons'
+import React from 'react';
+import './style.css';
+import { Row, Col, Card } from 'react-bootstrap';
+import DisplayImage from '../DisplayImage';
+import Icons from '../Icons';
 
 interface Details {
-    type: string
-    name: string
-    level: string
-    thumbnailId: string
+    type: string;
+    name: string;
+    level: string;
+    thumbnailId: string;
     // eslint-disable-next-line
-    pricing?: any
+    pricing?: any;
     address: {
-        address1: string
-        city: string
-        id: string
-        state: string
-        __typename: string
-    }
-    ptonline: string
-    ptoffline: string
-    grouponline: string
-    groupoffline: string
-    recordedclasses: string
+        address1: string;
+        city: string;
+        id: string;
+        state: string;
+        __typename: string;
+    };
+    ptonline: string;
+    ptoffline: string;
+    grouponline: string;
+    groupoffline: string;
+    recordedclasses: string;
 }
 
 const Drawer: React.FC<{
-    show: boolean
-    close: () => void
-    details: Details
+    show: boolean;
+    close: () => void;
+    details: Details;
 }> = (props) => {
     return (
         <>
@@ -282,7 +282,7 @@ const Drawer: React.FC<{
                 </div>
             ) : null}
         </>
-    )
-}
+    );
+};
 
-export default Drawer
+export default Drawer;

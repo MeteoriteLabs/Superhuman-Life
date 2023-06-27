@@ -1,9 +1,9 @@
-import { Card, Tab, Tabs, TabContent } from 'react-bootstrap'
-import BasicScreen from './basicScreen'
-import HealthScreen from './healthScreen'
-import DocumentsScreen from './documentsScreen'
-import NutritionScreen from './nutritionScreen'
-import PhysicalHealthScreen from './physicalFitnessScreen'
+import { Card, Tab, Tabs, TabContent } from 'react-bootstrap';
+import BasicScreen from './basicScreen';
+import HealthScreen from './healthScreen';
+import DocumentsScreen from './documentsScreen';
+import NutritionScreen from './nutritionScreen';
+import PhysicalHealthScreen from './physicalFitnessScreen';
 
 function Data() {
     return (
@@ -45,7 +45,7 @@ function Data() {
                 </Card.Body>
             </Card>
         </div>
-    )
+    );
 }
 
-export default Data
+export default Data;

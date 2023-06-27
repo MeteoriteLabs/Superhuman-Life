@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const FETCH_CONTACT_DETAILS = gql`
     query contactDetail($id: ID!) {
@@ -17,4 +17,4 @@ export const FETCH_CONTACT_DETAILS = gql`
             }
         }
     }
-`
+`;

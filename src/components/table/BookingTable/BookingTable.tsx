@@ -1,11 +1,11 @@
-import moment from 'moment'
-import { Fragment } from 'react'
-import { Badge, Button } from 'react-bootstrap'
-import { useTable } from 'react-table'
-import { useSortBy, usePagination } from 'react-table'
-import './bookingTable.css'
-import * as Icon from 'react-bootstrap-icons'
-import NoDataInCard from '../../NoDataInCard'
+import moment from 'moment';
+import { Fragment } from 'react';
+import { Badge, Button } from 'react-bootstrap';
+import { useTable } from 'react-table';
+import { useSortBy, usePagination } from 'react-table';
+import './bookingTable.css';
+import * as Icon from 'react-bootstrap-icons';
+import NoDataInCard from '../../NoDataInCard';
 
 function Table({ data, columns, newPackageCount, loading, pageCount: controlledPageCount }: any) {
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
@@ -17,12 +17,12 @@ function Table({ data, columns, newPackageCount, loading, pageCount: controlledP
             },
 
             isMultiSortEvent: (e) => {
-                return true
+                return true;
             }
         },
         useSortBy,
         usePagination
-    )
+    );
 
     // const [isSort, setIsSort] = useState(false);
 
@@ -85,7 +85,7 @@ function Table({ data, columns, newPackageCount, loading, pageCount: controlledP
                                     </th>
                                 ))}
                             </tr>
-                        )
+                        );
                     })}
                     {!rows.length && (
                         <tr className="rowCard text-center">
@@ -101,13 +101,13 @@ function Table({ data, columns, newPackageCount, loading, pageCount: controlledP
                     {rows.map((row, index) => {
                         const bookingDate: Date = new Date(
                             moment(row.values.booking_date).format('MM/DD/YYYY')
-                        )
-                        const currentDate: Date = new Date(moment().format('MM/DD/YYYY'))
-                        const diffTime = Math.abs(Number(bookingDate) - Number(currentDate))
-                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+                        );
+                        const currentDate: Date = new Date(moment().format('MM/DD/YYYY'));
+                        const diffTime = Math.abs(Number(bookingDate) - Number(currentDate));
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-                        prepareRow(row)
-                        const rowProps = row.getRowProps()
+                        prepareRow(row);
+                        const rowProps = row.getRowProps();
                         return (
                             <Fragment key={rowProps.key}>
                                 {diffDays <= 5 ? (
@@ -128,7 +128,7 @@ function Table({ data, columns, newPackageCount, loading, pageCount: controlledP
                                                 >
                                                     {cell.render('Cell')}
                                                 </td>
-                                            )
+                                            );
                                         })}
                                     </tr>
                                 ) : (
@@ -142,12 +142,12 @@ function Table({ data, columns, newPackageCount, loading, pageCount: controlledP
                                                 >
                                                     {cell.render('Cell')}
                                                 </td>
-                                            )
+                                            );
                                         })}
                                     </tr>
                                 )}
                             </Fragment>
-                        )
+                        );
                     })}
 
                     {/* <tr>
@@ -235,7 +235,7 @@ function Table({ data, columns, newPackageCount, loading, pageCount: controlledP
                 </div>
             </div> */}
         </div>
-    )
+    );
 }
 
-export default Table
+export default Table;

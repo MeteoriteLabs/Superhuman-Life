@@ -1,27 +1,27 @@
-import { useMutation } from '@apollo/client'
-import React, { useContext, useEffect, useImperativeHandle, useState } from 'react'
-import { Subject } from 'rxjs'
-import PricingAssistEditIcon from '../../../components/customWidget/PricingAssistEditIcon'
-import FinanceModal from '../../../components/financeModal/FinanceModal'
-import authContext from '../../../context/auth-context'
-import { CREATE_FITNESS_PRICING_ASSIT, UPDATE_FITNESS_PRICING_ASSITS } from '../graphQL/mutations'
-import { GET_ALL_SUGGESTED_PRICING } from '../graphQL/queries'
-import Toaster from '../../../components/Toaster'
+import { useMutation } from '@apollo/client';
+import React, { useContext, useEffect, useImperativeHandle, useState } from 'react';
+import { Subject } from 'rxjs';
+import PricingAssistEditIcon from '../../../components/customWidget/PricingAssistEditIcon';
+import FinanceModal from '../../../components/financeModal/FinanceModal';
+import authContext from '../../../context/auth-context';
+import { CREATE_FITNESS_PRICING_ASSIT, UPDATE_FITNESS_PRICING_ASSITS } from '../graphQL/mutations';
+import { GET_ALL_SUGGESTED_PRICING } from '../graphQL/queries';
+import Toaster from '../../../components/Toaster';
 
 interface Operation {
-    id: string
-    actionType: 'edit'
-    rowData: any
+    id: string;
+    actionType: 'edit';
+    rowData: any;
 }
 
 function PricingAssistAction(props, ref) {
-    const auth = useContext(authContext)
-    const [operation, setOperation] = useState<Operation>({} as Operation)
-    const modalTrigger = new Subject()
-    const [formData, setFormData] = useState<any>()
-    const formSchema = require('../PricingAssist/Fitness/fitness.json')
-    const [isBasepriceUpdated, setIsBasePriceUpdated] = useState<boolean>(false)
-    const [isBasepriceCreated, setIsBasePriceCreated] = useState<boolean>(false)
+    const auth = useContext(authContext);
+    const [operation, setOperation] = useState<Operation>({} as Operation);
+    const modalTrigger = new Subject();
+    const [formData, setFormData] = useState<any>();
+    const formSchema = require('../PricingAssist/Fitness/fitness.json');
+    const [isBasepriceUpdated, setIsBasePriceUpdated] = useState<boolean>(false);
+    const [isBasepriceCreated, setIsBasePriceCreated] = useState<boolean>(false);
 
     enum ENUM_SUGGESTEDPRICING_MODE {
         Online,
@@ -32,33 +32,33 @@ function PricingAssistAction(props, ref) {
         type: {
             'ui:widget': () => <PricingAssistEditIcon rowData={operation.rowData} />
         }
-    }
+    };
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
-            setOperation(msg)
-            modalTrigger.next(true)
+            setOperation(msg);
+            modalTrigger.next(true);
         }
-    }))
+    }));
 
     useEffect(() => {
-        const updateFormData: any = {}
-        updateFormData.mrp = operation?.rowData?.mrp
+        const updateFormData: any = {};
+        updateFormData.mrp = operation?.rowData?.mrp;
         if (operation?.rowData?.id === '') {
-            setFormData({})
+            setFormData({});
         } else {
-            setFormData(updateFormData)
+            setFormData(updateFormData);
         }
-    }, [operation])
+    }, [operation]);
 
     // create price
     const [createFitnessPricingAssist] = useMutation(CREATE_FITNESS_PRICING_ASSIT, {
         onCompleted: (r: any) => {
-            modalTrigger.next(false)
-            setIsBasePriceCreated(!isBasepriceCreated)
+            modalTrigger.next(false);
+            setIsBasePriceCreated(!isBasepriceCreated);
         },
         refetchQueries: [GET_ALL_SUGGESTED_PRICING]
-    })
+    });
 
     const CreateFitnessPricingAssist = (form: any) => {
         createFitnessPricingAssist({
@@ -73,17 +73,17 @@ function PricingAssistAction(props, ref) {
                     mrp: form.mrp
                 }
             }
-        })
-    }
+        });
+    };
 
     // update price
     const [updateFitnessPricingAssist] = useMutation(UPDATE_FITNESS_PRICING_ASSITS, {
         onCompleted: (r: any) => {
-            modalTrigger.next(false)
-            setIsBasePriceUpdated(!isBasepriceUpdated)
+            modalTrigger.next(false);
+            setIsBasePriceUpdated(!isBasepriceUpdated);
         },
         refetchQueries: [GET_ALL_SUGGESTED_PRICING]
-    })
+    });
 
     const UpdateFitnessPricingAssist = (form: any) => {
         updateFitnessPricingAssist({
@@ -93,26 +93,26 @@ function PricingAssistAction(props, ref) {
                 Duration: operation.rowData.duration,
                 fitness_package_type: operation.rowData.packageTypeID
             }
-        })
-    }
+        });
+    };
 
     const OnSubmit = (frm: any) => {
         //bind user id
         if (frm) {
-            frm.id = operation.id
-            frm.users_permissions_users = auth.userid
+            frm.id = operation.id;
+            frm.users_permissions_users = auth.userid;
         }
 
         switch (operation.actionType) {
             case 'edit':
                 if (operation.id === '') {
-                    CreateFitnessPricingAssist(frm)
+                    CreateFitnessPricingAssist(frm);
                 } else {
-                    UpdateFitnessPricingAssist(frm)
+                    UpdateFitnessPricingAssist(frm);
                 }
-                break
+                break;
         }
-    }
+    };
 
     return (
         <div>
@@ -142,7 +142,7 @@ function PricingAssistAction(props, ref) {
                 />
             ) : null}
         </div>
-    )
+    );
 }
 
-export default React.forwardRef(PricingAssistAction)
+export default React.forwardRef(PricingAssistAction);

@@ -1,20 +1,20 @@
-import { useEffect, useState } from 'react'
-import { Form } from 'react-bootstrap'
+import { useEffect, useState } from 'react';
+import { Form } from 'react-bootstrap';
 
 const BookingConfig = (props: any) => {
-    const inputDisabled = props.uiSchema.readonly
+    const inputDisabled = props.uiSchema.readonly;
 
     // const [fillSchedule, setFillSchedule] = useState(props.value !== undefined ? JSON.parse(props.value).fillSchedule : false);
-    const [config, setConfig] = useState(props.value ? JSON.parse(props.value).config : 'Manual')
-    const [bookings, setBookings] = useState(props.value ? JSON.parse(props.value).bookings : 0)
+    const [config, setConfig] = useState(props.value ? JSON.parse(props.value).config : 'Manual');
+    const [bookings, setBookings] = useState(props.value ? JSON.parse(props.value).bookings : 0);
 
     function handleValidation() {
         if (config !== '' && config === 'Manual') {
-            return true
+            return true;
         } else if (config === 'Auto' && bookings !== 0) {
-            return true
+            return true;
         } else {
-            return false
+            return false;
         }
         // if(fillSchedule && config !== "" && config !== "Auto"){
         //      return true;
@@ -29,12 +29,12 @@ const BookingConfig = (props: any) => {
 
     useEffect(() => {
         if (handleValidation()) {
-            props.onChange(JSON.stringify({ config: config, bookings: bookings }))
+            props.onChange(JSON.stringify({ config: config, bookings: bookings }));
         } else {
-            props.onChange(undefined)
+            props.onChange(undefined);
         }
         //eslint-disable-next-line
-    }, [config, bookings])
+    }, [config, bookings]);
 
     return (
         <>
@@ -93,7 +93,7 @@ const BookingConfig = (props: any) => {
                 </div>
             )}
         </>
-    )
-}
+    );
+};
 
-export default BookingConfig
+export default BookingConfig;

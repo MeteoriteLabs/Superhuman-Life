@@ -1,5 +1,5 @@
-import { useMemo, useState, useContext, useRef } from 'react'
-import { useQuery, useLazyQuery } from '@apollo/client'
+import { useMemo, useState, useContext, useRef } from 'react';
+import { useQuery, useLazyQuery } from '@apollo/client';
 import {
     Badge,
     Button,
@@ -12,44 +12,44 @@ import {
     DropdownButton,
     Dropdown,
     ProgressBar
-} from 'react-bootstrap'
-import Table from '../../../components/table'
-import AuthContext from '../../../context/auth-context'
-import './fitness.css'
-import ActionButton from '../../../components/actionbutton'
-import CreateEditViewPersonalTraining from './personal-training/CreateEditView'
-import CreateEditViewOnDemandPt from './onDemand-PT/CreateEditView'
-import CreateEditViewGroupClass from './group/CreateEditView'
-import CreateEditViewClassicClass from './classic/CreateOrEdit'
-import CreateEditViewCustomFitness from './custom/CreateOrEdit'
-import CreateEditViewChannel from './live-stream/CreateEditView-Channel'
-import CreateEditViewCohort from './cohort/CreateEditView-Cohort'
-import CreateEditViewEvent from './event/CreateEditViewEvent'
-import { GET_FITNESS, GET_TAGS } from './graphQL/queries'
-import { flattenObj } from '../../../components/utils/responseFlatten'
-import moment from 'moment'
-import Drawer from '../../../components/Drawer'
-import DrawerTrigger from '../../../components/Drawer/DrawerTrigger'
-import Backdrop from '../../../components/Drawer/Backdrop'
-import Icon from '../../../components/Icons'
-import Loader from '../../../components/Loader/Loader'
+} from 'react-bootstrap';
+import Table from '../../../components/table';
+import AuthContext from '../../../context/auth-context';
+import './fitness.css';
+import ActionButton from '../../../components/actionbutton';
+import CreateEditViewPersonalTraining from './personal-training/CreateEditView';
+import CreateEditViewOnDemandPt from './onDemand-PT/CreateEditView';
+import CreateEditViewGroupClass from './group/CreateEditView';
+import CreateEditViewClassicClass from './classic/CreateOrEdit';
+import CreateEditViewCustomFitness from './custom/CreateOrEdit';
+import CreateEditViewChannel from './live-stream/CreateEditView-Channel';
+import CreateEditViewCohort from './cohort/CreateEditView-Cohort';
+import CreateEditViewEvent from './event/CreateEditViewEvent';
+import { GET_FITNESS, GET_TAGS } from './graphQL/queries';
+import { flattenObj } from '../../../components/utils/responseFlatten';
+import moment from 'moment';
+import Drawer from '../../../components/Drawer';
+import DrawerTrigger from '../../../components/Drawer/DrawerTrigger';
+import Backdrop from '../../../components/Drawer/Backdrop';
+import Icon from '../../../components/Icons';
+import Loader from '../../../components/Loader/Loader';
 
 export default function FitnessTab() {
-    const auth = useContext(AuthContext)
-    const createEditViewPersonalTrainingRef = useRef<any>(null)
-    const CreateEditViewOnDemandPtRef = useRef<any>(null)
-    const CreateEditViewGroupClassRef = useRef<any>(null)
-    const CreateEditViewClassicClassRef = useRef<any>(null)
-    const CreateEditViewCustomFitnessRef = useRef<any>(null)
-    const createEditViewChannelRef = useRef<any>(null)
-    const createEditViewCohortRef = useRef<any>(null)
-    const createEditViewEventRef = useRef<any>(null)
-    const [selectedDuration, setSelectedDuration] = useState<any>('')
-    const [currentIndex, setCurrentIndex] = useState<any>('')
-    const [showDrawer, setShowDrawer] = useState<boolean>(false)
-    const [triggeredDetails, setTriggeredDetails] = useState<any>({})
-    const [page, setPage] = useState<number>(1)
-    const [totalRecords, setTotalRecords] = useState<number>(0)
+    const auth = useContext(AuthContext);
+    const createEditViewPersonalTrainingRef = useRef<any>(null);
+    const CreateEditViewOnDemandPtRef = useRef<any>(null);
+    const CreateEditViewGroupClassRef = useRef<any>(null);
+    const CreateEditViewClassicClassRef = useRef<any>(null);
+    const CreateEditViewCustomFitnessRef = useRef<any>(null);
+    const createEditViewChannelRef = useRef<any>(null);
+    const createEditViewCohortRef = useRef<any>(null);
+    const createEditViewEventRef = useRef<any>(null);
+    const [selectedDuration, setSelectedDuration] = useState<any>('');
+    const [currentIndex, setCurrentIndex] = useState<any>('');
+    const [showDrawer, setShowDrawer] = useState<boolean>(false);
+    const [triggeredDetails, setTriggeredDetails] = useState<any>({});
+    const [page, setPage] = useState<number>(1);
+    const [totalRecords, setTotalRecords] = useState<number>(0);
 
     function handleModalRender(
         id: string | null,
@@ -64,64 +64,64 @@ export default function FitnessTab() {
                     type: actionType,
                     actionType: type,
                     current_status: current_status
-                })
-                break
+                });
+                break;
             case 'On-Demand PT':
                 CreateEditViewOnDemandPtRef.current.TriggerForm({
                     id: id,
                     type: actionType,
                     actionType: type,
                     current_status: current_status
-                })
-                break
+                });
+                break;
             case 'Group Class':
                 CreateEditViewGroupClassRef.current.TriggerForm({
                     id: id,
                     type: actionType,
                     actionType: type,
                     current_status: current_status
-                })
-                break
+                });
+                break;
             case 'Classic Class':
                 CreateEditViewClassicClassRef.current.TriggerForm({
                     id: id,
                     type: actionType,
                     actionType: type,
                     current_status: current_status
-                })
-                break
+                });
+                break;
             case 'Custom Fitness':
                 CreateEditViewCustomFitnessRef.current.TriggerForm({
                     id: id,
                     type: actionType,
                     actionType: type,
                     current_status: current_status
-                })
-                break
+                });
+                break;
             case 'Live Stream Channel':
                 createEditViewChannelRef.current.TriggerForm({
                     id: id,
                     type: actionType,
                     packageType: type,
                     current_status: current_status
-                })
-                break
+                });
+                break;
             case 'Cohort':
                 createEditViewCohortRef.current.TriggerForm({
                     id: id,
                     type: actionType,
                     packageType: type,
                     current_status: current_status
-                })
-                break
+                });
+                break;
             case 'Event':
                 createEditViewEventRef.current.TriggerForm({
                     id: id,
                     type: actionType,
                     packageType: type,
                     current_status: current_status
-                })
-                break
+                });
+                break;
         }
     }
 
@@ -219,29 +219,32 @@ export default function FitnessTab() {
                                 ''
                             )}
                         </div>
-                    )
+                    );
                 }
             },
             {
                 accessor: 'details',
                 Header: 'No. of sessions',
                 Cell: ({ row }: any) => {
-                    const sessionsObj = {}
-                    const startMoment = moment(row.original.startDate)
-                    const endMoment = moment(row.original.endDate).add(1, 'days')
+                    const sessionsObj = {};
+                    const startMoment = moment(row.original.startDate);
+                    const endMoment = moment(row.original.endDate).add(1, 'days');
 
                     row.original.sessions.map((curr) => {
                         return curr.sessions.map((item) => {
                             sessionsObj[item.session_date] =
-                                (sessionsObj[item.session_date] || 0) + 1
+                                (sessionsObj[item.session_date] || 0) + 1;
 
-                            return sessionsObj
-                        })
-                    })
+                            return sessionsObj;
+                        });
+                    });
 
-                    const lengthOfobject = Object.keys(sessionsObj).length
+                    const lengthOfobject = Object.keys(sessionsObj).length;
 
-                    const differenceBetweenStartDateandEndDate = endMoment.diff(startMoment, 'days')
+                    const differenceBetweenStartDateandEndDate = endMoment.diff(
+                        startMoment,
+                        'days'
+                    );
 
                     return (
                         <div className="d-flex justify-content-center align-items-center">
@@ -645,7 +648,7 @@ export default function FitnessTab() {
                                 )
                             ) : null}
                         </div>
-                    )
+                    );
                 }
             },
             {
@@ -663,24 +666,24 @@ export default function FitnessTab() {
                                         value={selectedDuration[row.index]}
                                         as="select"
                                         onChange={(e) => {
-                                            const updateSelectedDuration = [...selectedDuration]
-                                            const updateCurrentindex = [...currentIndex]
+                                            const updateSelectedDuration = [...selectedDuration];
+                                            const updateCurrentindex = [...currentIndex];
 
-                                            let value = 1
+                                            let value = 1;
                                             if (e.target.value === '1') {
-                                                value *= 3
+                                                value *= 3;
                                             } else if (e.target.value === '2') {
-                                                value *= 6
+                                                value *= 6;
                                             } else if (e.target.value === '3') {
-                                                value *= 12
+                                                value *= 12;
                                             }
                                             updateSelectedDuration[row.index] = Number(
                                                 e.target.value
-                                            )
-                                            updateCurrentindex[row.index] = value
+                                            );
+                                            updateCurrentindex[row.index] = value;
 
-                                            setSelectedDuration(updateSelectedDuration)
-                                            setCurrentIndex(updateCurrentindex)
+                                            setSelectedDuration(updateSelectedDuration);
+                                            setCurrentIndex(updateCurrentindex);
                                         }}
                                     >
                                         {row.values.duration.map((item: number, index: number) => {
@@ -689,20 +692,20 @@ export default function FitnessTab() {
                                                     {item !== 0 && item}{' '}
                                                     {item === 1 ? 'day' : 'days'}
                                                 </option>
-                                            )
+                                            );
                                         })}
                                     </Form.Control>
                                 </Form.Group>
                             )}
                         </>
-                    )
+                    );
                 }
             },
             {
                 accessor: 'mrp',
                 Header: 'MRP',
                 Cell: ({ row }: any) => {
-                    const pricing = row.values.mrp[selectedDuration[row.index]]
+                    const pricing = row.values.mrp[selectedDuration[row.index]];
 
                     return (
                         <>
@@ -714,7 +717,7 @@ export default function FitnessTab() {
                                 {pricing === 'free' ? '' : '\u20B9'} {pricing}
                             </p>
                         </>
-                    )
+                    );
                 }
             },
 
@@ -722,40 +725,43 @@ export default function FitnessTab() {
                 accessor: 'sessions',
                 Header: 'Status',
                 Cell: (value: any) => {
-                    const sessionsObj = {}
-                    const startMoment = moment(value.row.original.startDate)
-                    const endMoment = moment(value.row.original.endDate).add(1, 'days')
+                    const sessionsObj = {};
+                    const startMoment = moment(value.row.original.startDate);
+                    const endMoment = moment(value.row.original.endDate).add(1, 'days');
 
                     value.row.original.sessions.map((curr) => {
                         return curr.sessions.map((item) => {
                             sessionsObj[item.session_date] =
-                                (sessionsObj[item.session_date] || 0) + 1
+                                (sessionsObj[item.session_date] || 0) + 1;
 
-                            return sessionsObj
-                        })
-                    })
+                            return sessionsObj;
+                        });
+                    });
 
-                    const lengthOfobject = Object.keys(sessionsObj).length
+                    const lengthOfobject = Object.keys(sessionsObj).length;
 
-                    const differenceBetweenStartDateandEndDate = endMoment.diff(startMoment, 'days')
+                    const differenceBetweenStartDateandEndDate = endMoment.diff(
+                        startMoment,
+                        'days'
+                    );
 
                     const manageHandler = (id: number, length: number, type: string) => {
-                        let name = ''
+                        let name = '';
                         if (type === 'Classic Class') {
-                            name = 'classic'
+                            name = 'classic';
                         } else if (type === 'Live Stream Channel') {
-                            name = 'channel'
+                            name = 'channel';
                         } else if (type === 'Cohort' || type === 'Event') {
-                            name = 'cohort'
+                            name = 'cohort';
                         } else if (type === 'Group Class') {
-                            name = 'group'
+                            name = 'group';
                         }
                         if (length > 1) {
-                            window.open(`${name}/session/scheduler/${id}`, '_self')
+                            window.open(`${name}/session/scheduler/${id}`, '_self');
                         } else {
-                            window.open(`${name}/session/scheduler/${id}`, '_self')
+                            window.open(`${name}/session/scheduler/${id}`, '_self');
                         }
-                    }
+                    };
 
                     return value.row.original.type === 'Group Class' ||
                         value.row.original.type === 'Live Stream Channel' ? (
@@ -854,7 +860,7 @@ export default function FitnessTab() {
                                 </Badge>
                             )}
                         </div>
-                    )
+                    );
                 }
             },
             {
@@ -864,7 +870,7 @@ export default function FitnessTab() {
                     return (
                         <DrawerTrigger
                             toggle={() => {
-                                setShowDrawer(!showDrawer)
+                                setShowDrawer(!showDrawer);
                                 setTriggeredDetails({
                                     type: row.original.type,
                                     name: row.original.packagename,
@@ -877,10 +883,10 @@ export default function FitnessTab() {
                                     grouponline: row.original.grouponline,
                                     groupoffline: row.original.groupoffline,
                                     recordedclasses: row.original.recordedclasses
-                                })
+                                });
                             }}
                         />
-                    )
+                    );
                 }
             },
             {
@@ -888,8 +894,8 @@ export default function FitnessTab() {
                 Header: 'Actions',
                 Cell: ({ row }: any) => {
                     const editHandler = () => {
-                        handleModalRender(row.original.id, 'edit', row.original.type)
-                    }
+                        handleModalRender(row.original.id, 'edit', row.original.type);
+                    };
 
                     const statusChangeHandler = () => {
                         handleModalRender(
@@ -897,40 +903,40 @@ export default function FitnessTab() {
                             'toggle-status',
                             row.original.type,
                             row.original.status
-                        )
-                    }
+                        );
+                    };
 
                     const viewHandler = () => {
-                        handleModalRender(row.original.id, 'view', row.original.type)
-                    }
+                        handleModalRender(row.original.id, 'view', row.original.type);
+                    };
 
                     const deleteHandler = () => {
-                        handleModalRender(row.original.id, 'delete', row.original.type)
-                    }
+                        handleModalRender(row.original.id, 'delete', row.original.type);
+                    };
 
                     const manageHandler = (id: number, length: number, type: string) => {
-                        let name = ''
+                        let name = '';
                         if (type === 'Classic Class') {
-                            name = 'classic'
+                            name = 'classic';
                         } else if (type === 'Live Stream Channel') {
-                            name = 'channel'
+                            name = 'channel';
                         } else if (type === 'Cohort' || type === 'Event') {
-                            name = 'cohort'
+                            name = 'cohort';
                         } else if (type === 'Group Class') {
-                            name = 'group'
+                            name = 'group';
                         }
                         if (length > 1) {
-                            window.open(`${name}/session/scheduler/${id}`, '_self')
+                            window.open(`${name}/session/scheduler/${id}`, '_self');
                         } else {
-                            window.open(`${name}/session/scheduler/${id}`, '_self')
+                            window.open(`${name}/session/scheduler/${id}`, '_self');
                         }
-                    }
+                    };
 
                     const arrayAction = [
                         { actionName: 'Edit', actionClick: editHandler },
                         { actionName: 'View', actionClick: viewHandler },
                         { actionName: 'Delete', actionClick: deleteHandler }
-                    ]
+                    ];
 
                     if (
                         row.original.tagId.length >= 1 &&
@@ -949,7 +955,7 @@ export default function FitnessTab() {
                                         row.original.tagId.length,
                                         row.original.type
                                     )
-                            })
+                            });
                         }
                     } else if (
                         row.original.type === 'One-On-One' ||
@@ -959,18 +965,18 @@ export default function FitnessTab() {
                         arrayAction.push({
                             actionName: 'Status Change',
                             actionClick: statusChangeHandler
-                        })
+                        });
                     }
 
-                    return <ActionButton arrayAction={arrayAction}></ActionButton>
+                    return <ActionButton arrayAction={arrayAction}></ActionButton>;
                 }
             }
         ],
         // eslint-disable-next-line
         [selectedDuration, currentIndex]
-    )
+    );
 
-    const [dataTable, setDataTable] = useState<any>([])
+    const [dataTable, setDataTable] = useState<any>([]);
 
     // eslint-disable-next-line
     const [tags, { data: get_tags, refetch: refetch_tags, loading: tagsLoading }] = useLazyQuery(
@@ -978,8 +984,8 @@ export default function FitnessTab() {
         {
             fetchPolicy: 'cache-and-network',
             onCompleted: () => {
-                const tagsFlattenData = flattenObj({ ...get_tags })
-                const fitnessFlattenData = flattenObj({ ...get_fitness })
+                const tagsFlattenData = flattenObj({ ...get_tags });
+                const fitnessFlattenData = flattenObj({ ...get_fitness });
 
                 setDataTable(
                     [...fitnessFlattenData.fitnesspackages].map((item) => {
@@ -1031,15 +1037,15 @@ export default function FitnessTab() {
                             freeClass: item.groupinstantbooking,
                             startDate: item.Start_date,
                             endDate: item.End_date
-                        }
+                        };
                     })
-                )
+                );
 
-                setSelectedDuration(new Array(fitnessFlattenData.fitnesspackages.length).fill(0))
-                setCurrentIndex(new Array(fitnessFlattenData.fitnesspackages.length).fill(1))
+                setSelectedDuration(new Array(fitnessFlattenData.fitnesspackages.length).fill(0));
+                setCurrentIndex(new Array(fitnessFlattenData.fitnesspackages.length).fill(1));
             }
         }
-    )
+    );
 
     const {
         data: get_fitness,
@@ -1048,16 +1054,16 @@ export default function FitnessTab() {
     } = useQuery(GET_FITNESS, {
         variables: { id: auth.userid, start: page * 10 - 10, limit: 10 },
         onCompleted: (data) => {
-            setTotalRecords(data.fitnesspackages.meta.pagination.total)
+            setTotalRecords(data.fitnesspackages.meta.pagination.total);
             tags({
                 variables: { id: auth.userid, pageSize: data.fitnesspackages.meta.pagination.total }
-            })
+            });
         }
-    })
+    });
 
     const pageHandler = (selectedPageNumber: number) => {
-        setPage(selectedPageNumber)
-    }
+        setPage(selectedPageNumber);
+    };
 
     return (
         <>
@@ -1082,14 +1088,14 @@ export default function FitnessTab() {
                     >
                         <Dropdown.Item
                             onClick={() => {
-                                handleModalRender(null, 'create', 'One-On-One')
+                                handleModalRender(null, 'create', 'One-On-One');
                             }}
                         >
                             Package subscription
                         </Dropdown.Item>
                         <Dropdown.Item
                             onClick={() => {
-                                handleModalRender(null, 'create', 'On-Demand PT')
+                                handleModalRender(null, 'create', 'On-Demand PT');
                             }}
                         >
                             On-Demand
@@ -1101,7 +1107,7 @@ export default function FitnessTab() {
                         variant="outline-secondary"
                         size="sm"
                         onClick={() => {
-                            handleModalRender(null, 'create', 'Group Class')
+                            handleModalRender(null, 'create', 'Group Class');
                         }}
                     >
                         <i className="fas fa-plus-circle"></i> Group
@@ -1112,7 +1118,7 @@ export default function FitnessTab() {
                         variant="outline-secondary"
                         size="sm"
                         onClick={() => {
-                            handleModalRender(null, 'create', 'Classic Class')
+                            handleModalRender(null, 'create', 'Classic Class');
                         }}
                     >
                         <i className="fas fa-plus-circle"></i> Recorded
@@ -1123,7 +1129,7 @@ export default function FitnessTab() {
                         variant="outline-secondary"
                         size="sm"
                         onClick={() => {
-                            handleModalRender(null, 'create', 'Custom Fitness')
+                            handleModalRender(null, 'create', 'Custom Fitness');
                         }}
                     >
                         <i className="fas fa-plus-circle"></i> Custom
@@ -1134,7 +1140,7 @@ export default function FitnessTab() {
                         variant="outline-secondary"
                         size="sm"
                         onClick={() => {
-                            handleModalRender(null, 'create', 'Live Stream Channel')
+                            handleModalRender(null, 'create', 'Live Stream Channel');
                         }}
                     >
                         <i className="fas fa-plus-circle"></i> Live Stream
@@ -1145,7 +1151,7 @@ export default function FitnessTab() {
                         variant="outline-secondary"
                         size="sm"
                         onClick={() => {
-                            handleModalRender(null, 'create', 'Cohort')
+                            handleModalRender(null, 'create', 'Cohort');
                         }}
                     >
                         <i className="fas fa-plus-circle"></i> Cohort
@@ -1156,7 +1162,7 @@ export default function FitnessTab() {
                         variant="outline-secondary"
                         size="sm"
                         onClick={() => {
-                            handleModalRender(null, 'create', 'Event')
+                            handleModalRender(null, 'create', 'Event');
                         }}
                     >
                         <i className="fas fa-plus-circle"></i> Event
@@ -1256,5 +1262,5 @@ export default function FitnessTab() {
                 </Row>
             ) : null}
         </>
-    )
+    );
 }

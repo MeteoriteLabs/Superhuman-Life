@@ -1,9 +1,9 @@
-import { useState } from 'react'
-import { Form } from 'react-bootstrap'
-import OrganizationSelect from '../../components/customWidgets/organizationTypeList'
+import { useState } from 'react';
+import { Form } from 'react-bootstrap';
+import OrganizationSelect from '../../components/customWidgets/organizationTypeList';
 
 const Organization = (props: any) => {
-    const [haveOrganization, setHaveOrganization] = useState(props.value)
+    const [haveOrganization, setHaveOrganization] = useState(props.value);
 
     return (
         <div>
@@ -15,7 +15,7 @@ const Organization = (props: any) => {
                 name="group1"
                 type={'radio'}
                 onChange={(e) => {
-                    setHaveOrganization('yes')
+                    setHaveOrganization('yes');
                 }}
                 id={`inline-${'radio'}-1`}
             />
@@ -25,7 +25,7 @@ const Organization = (props: any) => {
                 name="group1"
                 type={'radio'}
                 onChange={(e) => {
-                    setHaveOrganization('no')
+                    setHaveOrganization('no');
                 }}
                 id={`inline-${'radio'}-2`}
             />
@@ -46,7 +46,7 @@ const Organization = (props: any) => {
                 </div>
             )}
         </div>
-    )
-}
+    );
+};
 
-export default Organization
+export default Organization;

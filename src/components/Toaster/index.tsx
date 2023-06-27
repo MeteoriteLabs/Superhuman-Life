@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
-import { Row, Col, Toast } from 'react-bootstrap'
-import Icon from '../Icons'
+import React, { useState } from 'react';
+import { Row, Col, Toast } from 'react-bootstrap';
+import Icon from '../Icons';
 
 const Toaster: React.FC<{ type: string; msg: string; handleCallback: () => void }> = (props) => {
-    const [showToaster, setShowToaster] = useState<boolean>(true)
+    const [showToaster, setShowToaster] = useState<boolean>(true);
 
-    const toggleShowToaster = () => setShowToaster(!showToaster)
+    const toggleShowToaster = () => setShowToaster(!showToaster);
 
     return (
         <div aria-live="polite" aria-atomic="true" className="fixed-bottom float-right ml-auto">
@@ -14,8 +14,8 @@ const Toaster: React.FC<{ type: string; msg: string; handleCallback: () => void 
                     <Toast
                         className="ml-auto"
                         onClose={() => {
-                            toggleShowToaster()
-                            props.handleCallback()
+                            toggleShowToaster();
+                            props.handleCallback();
                         }}
                         show={showToaster}
                         animation={false}
@@ -48,7 +48,7 @@ const Toaster: React.FC<{ type: string; msg: string; handleCallback: () => void 
                 </Col>
             </Row>
         </div>
-    )
-}
+    );
+};
 
-export default Toaster
+export default Toaster;

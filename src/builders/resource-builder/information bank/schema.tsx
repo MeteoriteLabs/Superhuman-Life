@@ -1,8 +1,8 @@
-import Upload from '../../../components/upload/upload'
+import Upload from '../../../components/upload/upload';
 
 export const widgets = {
     upload: Upload
-}
+};
 export const schema: any = {
     description: {
         'ui:widget': 'textarea',
@@ -25,7 +25,7 @@ export const schema: any = {
                     onChange={props.onChange}
                     value={props.value}
                 />
-            )
+            );
         }
     }
-}
+};

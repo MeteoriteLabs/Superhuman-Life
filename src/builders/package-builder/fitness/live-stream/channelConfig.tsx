@@ -1,14 +1,16 @@
-import { useState } from 'react'
-import { Form, Row, Col } from 'react-bootstrap'
+import { useState } from 'react';
+import { Form, Row, Col } from 'react-bootstrap';
 
 const PackageDateConfig = (props: any) => {
-    const inputDisable = props.readonly
+    const inputDisable = props.readonly;
     const [instantBooking, setInstantBooking] = useState(
         props.value !== undefined ? JSON.parse(props.value).instantBooking : true
-    )
-    const [freeDemo, setFreeDemo] = useState(props.value ? JSON.parse(props.value).freeDemo : false)
+    );
+    const [freeDemo, setFreeDemo] = useState(
+        props.value ? JSON.parse(props.value).freeDemo : false
+    );
 
-    props.onChange(JSON.stringify({ instantBooking: instantBooking, freeDemo: freeDemo }))
+    props.onChange(JSON.stringify({ instantBooking: instantBooking, freeDemo: freeDemo }));
 
     return (
         <>
@@ -75,7 +77,7 @@ const PackageDateConfig = (props: any) => {
                 </div>
             )}
         </>
-    )
-}
+    );
+};
 
-export default PackageDateConfig
+export default PackageDateConfig;

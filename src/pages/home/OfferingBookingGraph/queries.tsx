@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const GET_BOOKINGS = gql`
     query Sessions($id: ID, $startDateTime: DateTime, $endDateTime: DateTime) {
@@ -17,4 +17,4 @@ export const GET_BOOKINGS = gql`
             }
         }
     }
-`
+`;

@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const UPDATE_BOOKING_CONFIG = gql`
     mutation updateBookingConfig(
@@ -25,7 +25,7 @@ export const UPDATE_BOOKING_CONFIG = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_BOOKING_STATUS = gql`
     mutation updateClientBookingQuery(
@@ -58,7 +58,7 @@ export const UPDATE_BOOKING_STATUS = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_TAG = gql`
     mutation createTag($name: String!, $fitnessPackageID: ID!) {
@@ -68,7 +68,7 @@ export const CREATE_TAG = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_USER_PACKAGE = gql`
     mutation createUserPackage($data: ClientPackageInput!) {
@@ -104,7 +104,7 @@ export const CREATE_USER_PACKAGE = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_TAG = gql`
     mutation updateTag($id: ID!, $data: TagInput!) {
@@ -117,4 +117,4 @@ export const UPDATE_TAG = gql`
             }
         }
     }
-`
+`;

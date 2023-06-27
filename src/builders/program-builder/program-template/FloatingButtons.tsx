@@ -1,29 +1,29 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useRef, useState } from 'react'
-import { Row, Col, Dropdown, DropdownButton } from 'react-bootstrap'
-import CreateEditProgramManager from './create-edit/createoredit-workoutTemplate'
-import CreateEditNewWorkout from './create-edit/createoredit-newWorkout'
-import CreateEditNewActivity from './create-edit/createoredit-newActivity'
-import CreateEditRestDay from './create-edit/createoredit-restDay'
-import FitnessSvg from './assets/fitness.svg'
-import NutritionSvg from './assets/nutrition.svg'
-import ResourceSvg from './assets/resources.svg'
-import UpdateSvg from './assets/update.svg'
-import SettingSvg from './assets/settings.svg'
-import { GET_SCHEDULEREVENTS } from './queries'
-import { useQuery } from '@apollo/client'
-import { flattenObj } from '../../../components/utils/responseFlatten'
-import './styles.css'
+import React, { useRef, useState } from 'react';
+import { Row, Col, Dropdown, DropdownButton } from 'react-bootstrap';
+import CreateEditProgramManager from './create-edit/createoredit-workoutTemplate';
+import CreateEditNewWorkout from './create-edit/createoredit-newWorkout';
+import CreateEditNewActivity from './create-edit/createoredit-newActivity';
+import CreateEditRestDay from './create-edit/createoredit-restDay';
+import FitnessSvg from './assets/fitness.svg';
+import NutritionSvg from './assets/nutrition.svg';
+import ResourceSvg from './assets/resources.svg';
+import UpdateSvg from './assets/update.svg';
+import SettingSvg from './assets/settings.svg';
+import { GET_SCHEDULEREVENTS } from './queries';
+import { useQuery } from '@apollo/client';
+import { flattenObj } from '../../../components/utils/responseFlatten';
+import './styles.css';
 
 const FloatingButton = (props: any) => {
-    const createEditWorkoutTemplateComponent = useRef<any>(null)
-    const createEditNewWorkoutComponent = useRef<any>(null)
-    const createEditNewActivityComponent = useRef<any>(null)
-    const createEditRestDayComponent = useRef<any>(null)
-    const [existingEvents, setExistingEvents] = useState<any[]>([])
-    const [restDays, setRestDays] = useState<any[]>([])
-    const [renewalDate, setRenewalDate] = useState('')
-    const program_id = window.location.pathname.split('/').pop()
+    const createEditWorkoutTemplateComponent = useRef<any>(null);
+    const createEditNewWorkoutComponent = useRef<any>(null);
+    const createEditNewActivityComponent = useRef<any>(null);
+    const createEditRestDayComponent = useRef<any>(null);
+    const [existingEvents, setExistingEvents] = useState<any[]>([]);
+    const [restDays, setRestDays] = useState<any[]>([]);
+    const [renewalDate, setRenewalDate] = useState('');
+    const program_id = window.location.pathname.split('/').pop();
 
     return (
         <>
@@ -68,7 +68,7 @@ const FloatingButton = (props: any) => {
                                 <Dropdown.Item
                                     eventKey="2"
                                     onClick={(e) => {
-                                        props.callback2('block')
+                                        props.callback2('block');
                                     }}
                                 >
                                     Sessions
@@ -78,7 +78,7 @@ const FloatingButton = (props: any) => {
                                 className="text-wrap"
                                 eventKey="1"
                                 onClick={(e) => {
-                                    props.callback('block')
+                                    props.callback('block');
                                 }}
                             >
                                 Import Program Template
@@ -89,7 +89,7 @@ const FloatingButton = (props: any) => {
                                     createEditWorkoutTemplateComponent.current.TriggerForm({
                                         id: null,
                                         type: 'create'
-                                    })
+                                    });
                                 }}
                             >
                                 Import Workout
@@ -100,7 +100,7 @@ const FloatingButton = (props: any) => {
                                     createEditNewWorkoutComponent.current.TriggerForm({
                                         id: null,
                                         type: 'create'
-                                    })
+                                    });
                                 }}
                             >
                                 New Workout
@@ -111,7 +111,7 @@ const FloatingButton = (props: any) => {
                                     createEditNewActivityComponent.current.TriggerForm({
                                         id: null,
                                         type: 'create'
-                                    })
+                                    });
                                 }}
                             >
                                 New Activity
@@ -119,7 +119,7 @@ const FloatingButton = (props: any) => {
                             <Dropdown.Item
                                 eventKey="6"
                                 onClick={() => {
-                                    props.restDayCallback()
+                                    props.restDayCallback();
                                 }}
                             >
                                 <i
@@ -171,7 +171,7 @@ const FloatingButton = (props: any) => {
                 ></CreateEditRestDay>
             </div>
         </>
-    )
-}
+    );
+};
 
-export default FloatingButton
+export default FloatingButton;

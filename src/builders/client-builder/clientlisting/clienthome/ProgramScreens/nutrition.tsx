@@ -1,7 +1,7 @@
-import ActionButton from '../../../../../components/actionbutton/index'
-import { useMemo } from 'react'
-import { Badge } from 'react-bootstrap'
-import Table from '../../../../../components/table'
+import ActionButton from '../../../../../components/actionbutton/index';
+import { useMemo } from 'react';
+import { Badge } from 'react-bootstrap';
+import Table from '../../../../../components/table';
 
 function Nutrition() {
     //  function getDate(time: any) {
@@ -58,16 +58,16 @@ function Nutrition() {
                 Cell: ({ row }: any) => {
                     const actionClick1 = () => {
                         //handleRedirect(row.original.id);
-                    }
+                    };
 
-                    const arrayAction = [{ actionName: 'Edit', actionClick: actionClick1 }]
+                    const arrayAction = [{ actionName: 'Edit', actionClick: actionClick1 }];
 
-                    return <ActionButton arrayAction={arrayAction}></ActionButton>
+                    return <ActionButton arrayAction={arrayAction}></ActionButton>;
                 }
             }
         ],
         []
-    )
+    );
 
     const data = [
         {
@@ -80,7 +80,7 @@ function Nutrition() {
             renewal: '25/07/20',
             status: 'Assigned'
         }
-    ]
+    ];
     return (
         <div>
             <div>
@@ -96,7 +96,7 @@ function Nutrition() {
                 <Table columns={columns} data={data} />
             </div>
         </div>
-    )
+    );
 }
 
-export default Nutrition
+export default Nutrition;

@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
-import { Form } from 'react-bootstrap'
-import { gql, useQuery } from '@apollo/client'
-import { flattenObj } from '../../components/utils/responseFlatten'
+import React, { useState } from 'react';
+import { Form } from 'react-bootstrap';
+import { gql, useQuery } from '@apollo/client';
+import { flattenObj } from '../../components/utils/responseFlatten';
 
 const Email: React.FC<{ value: string; onChange: (args: string) => void }> = (props) => {
-    const [userName, setUserName] = useState<string>(props.value)
-    const [user, setUser] = useState<{ id: string; userName: string }[]>([])
+    const [userName, setUserName] = useState<string>(props.value);
+    const [user, setUser] = useState<{ id: string; userName: string }[]>([]);
 
     const FETCH_USER = gql`
         query fetchUsers($uname: String) {
@@ -18,27 +18,27 @@ const Email: React.FC<{ value: string; onChange: (args: string) => void }> = (pr
                 }
             }
         }
-    `
+    `;
 
     useQuery(FETCH_USER, {
         variables: { uname: userName },
         skip: userName === undefined,
         onCompleted: loadData
-    })
+    });
 
     function loadData(data) {
-        const flattenedData = flattenObj({ ...data })
+        const flattenedData = flattenObj({ ...data });
         setUser(
             [...flattenedData.usersPermissionsUsers].map((user) => {
                 return {
                     id: user.id,
                     userName: user.username
-                }
+                };
             })
-        )
+        );
     }
 
-    props.onChange(userName)
+    props.onChange(userName);
 
     return (
         <div>
@@ -53,7 +53,7 @@ const Email: React.FC<{ value: string; onChange: (args: string) => void }> = (pr
                     type="text"
                     value={userName}
                     onChange={(e) => {
-                        setUserName(e.target.value)
+                        setUserName(e.target.value);
                     }}
                     placeholder=""
                 />
@@ -66,7 +66,7 @@ const Email: React.FC<{ value: string; onChange: (args: string) => void }> = (pr
                 )}
             </Form.Group>
         </div>
-    )
-}
+    );
+};
 
-export default Email
+export default Email;

@@ -1,35 +1,35 @@
-import { useForm, Controller, useFieldArray } from 'react-hook-form'
-import style from '../style.module.css'
-import { Accordion, Button, Card, Form } from 'react-bootstrap'
-import { UPDATE_WEBSITE_SECTION } from './queries/features'
-import { GET_WEBSITE_SECTION } from './queries'
-import { useContext, useEffect, useState } from 'react'
-import authContext from '../../../../../context/auth-context'
-import { ChangeMakerWebsiteContext } from '../../../../../context/changemakerWebsite-context'
-import { useMutation, useQuery } from '@apollo/client'
-import { ArrowDownShort } from 'react-bootstrap-icons'
-import Toaster from '../../../../../components/Toaster'
+import { useForm, Controller, useFieldArray } from 'react-hook-form';
+import style from '../style.module.css';
+import { Accordion, Button, Card, Form } from 'react-bootstrap';
+import { UPDATE_WEBSITE_SECTION } from './queries/features';
+import { GET_WEBSITE_SECTION } from './queries';
+import { useContext, useEffect, useState } from 'react';
+import authContext from '../../../../../context/auth-context';
+import { ChangeMakerWebsiteContext } from '../../../../../context/changemakerWebsite-context';
+import { useMutation, useQuery } from '@apollo/client';
+import { ArrowDownShort } from 'react-bootstrap-icons';
+import Toaster from '../../../../../components/Toaster';
 
 // * --------------------- Types ---------------------
 
 type FormData = {
-    sectionId: number
-    title: string
+    sectionId: number;
+    title: string;
     features: {
-        title: string
-        text: string
-        icons: string
-    }[]
-}
+        title: string;
+        text: string;
+        icons: string;
+    }[];
+};
 
 function Hero(): JSX.Element {
-    const auth = useContext(authContext)
-    const [errorMsg, setErrorMsg] = useState<string>('')
-    const [activeKey, setActiveKey] = useState('')
+    const auth = useContext(authContext);
+    const [errorMsg, setErrorMsg] = useState<string>('');
+    const [activeKey, setActiveKey] = useState('');
 
     const handleToggle = (val: string) => {
-        setActiveKey((prev) => (prev === val ? '' : val))
-    }
+        setActiveKey((prev) => (prev === val ? '' : val));
+    };
 
     // * --------------------- Initial Values ---------------------
 
@@ -37,10 +37,10 @@ function Hero(): JSX.Element {
         title: '',
         sectionId: 0,
         features: []
-    })
+    });
 
     const { setChangemakerWebsiteState, changemakerWebsiteState } =
-        useContext(ChangeMakerWebsiteContext)
+        useContext(ChangeMakerWebsiteContext);
 
     // * --------------------- Form Configuration ---------------------
 
@@ -54,12 +54,12 @@ function Hero(): JSX.Element {
             title: '',
             features: [{}]
         }
-    })
+    });
 
     const { fields } = useFieldArray<FormData>({
         control,
         name: 'features'
-    })
+    });
 
     // * --------------------- Get the Website Section Data ---------------------
 
@@ -77,23 +77,23 @@ function Hero(): JSX.Element {
                     sectionId: data.websiteSections.data[0].id,
                     title: data.websiteSections.data[0].attributes.sectionData.titile,
                     features: data.websiteSections.data[0].attributes.sectionData.features
-                })
+                });
 
                 reset({
                     title: data.websiteSections.data[0].attributes.sectionData.titile,
                     features: data.websiteSections.data[0].attributes.sectionData.features
-                })
+                });
             }
         }
-    })
+    });
 
     // * --------------------- Form Submission ---------------------
 
-    const [mutateFunction, { loading, error }] = useMutation(UPDATE_WEBSITE_SECTION)
+    const [mutateFunction, { loading, error }] = useMutation(UPDATE_WEBSITE_SECTION);
 
     const onSubmit = handleSubmit(async (formData) => {
         // ! Need to add image upload
-        const { title, features } = formData
+        const { title, features } = formData;
 
         await mutateFunction({
             variables: {
@@ -103,15 +103,15 @@ function Hero(): JSX.Element {
                     features: features.length > 0 ? features : initialValues.features
                 })
             }
-        })
-    })
+        });
+    });
 
     useEffect(() => {
         loading
             ? setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: true })
-            : setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: false })
-        error ? setErrorMsg(`${error.name}: ${error.message}`) : setErrorMsg('')
-    }, [loading, error])
+            : setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: false });
+        error ? setErrorMsg(`${error.name}: ${error.message}`) : setErrorMsg('');
+    }, [loading, error]);
 
     return (
         <div className={style.form_container}>
@@ -226,7 +226,7 @@ function Hero(): JSX.Element {
                 </Button>
             </Form>
         </div>
-    )
+    );
 }
 
-export default Hero
+export default Hero;

@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
-import { withTheme, utils } from '@rjsf/core'
-import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4'
-import { Button, Col, Modal, ProgressBar, Row } from 'react-bootstrap'
-import './modal.css'
+import { useEffect, useRef, useState } from 'react';
+import { withTheme, utils } from '@rjsf/core';
+import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
+import { Button, Col, Modal, ProgressBar, Row } from 'react-bootstrap';
+import './modal.css';
 
 export default function ModalView({
     name,
@@ -19,37 +19,37 @@ export default function ModalView({
     transformErrors,
     actionType
 }: any) {
-    const registry = utils.getDefaultRegistry()
-    const defaultFileWidget = registry.widgets['FileWidget']
-    ;(Bootstrap4Theme as any).widgets['FileWidget'] = defaultFileWidget
+    const registry = utils.getDefaultRegistry();
+    const defaultFileWidget = registry.widgets['FileWidget'];
+    (Bootstrap4Theme as any).widgets['FileWidget'] = defaultFileWidget;
 
-    const Form: any = withTheme(Bootstrap4Theme)
-    const formRef = useRef<any>(null)
-    const [step, setStep] = useState<number>(1)
-    const [show, setShow] = useState<boolean>(false)
-    const [formValues, setFormValues] = useState<any>(formData)
-    const stepper: string[] = stepperValues
+    const Form: any = withTheme(Bootstrap4Theme);
+    const formRef = useRef<any>(null);
+    const [step, setStep] = useState<number>(1);
+    const [show, setShow] = useState<boolean>(false);
+    const [formValues, setFormValues] = useState<any>(formData);
+    const stepper: string[] = stepperValues;
 
     modalTrigger.subscribe((res: boolean) => {
-        setShow(res)
-    })
+        setShow(res);
+    });
 
     useEffect(() => {
-        setStep(1)
-    }, [show === false])
+        setStep(1);
+    }, [show === false]);
 
     useEffect(() => {
-        setFormValues(formData)
-    }, [formData])
+        setFormValues(formData);
+    }, [formData]);
 
     function submitHandler(data: any) {
-        formData = { ...formData, ...data }
+        formData = { ...formData, ...data };
 
         if (isStepper && step < stepper.length) {
-            setStep(step + 1)
-            setFormValues({ ...formValues, ...data })
+            setStep(step + 1);
+            setFormValues({ ...formValues, ...data });
         } else {
-            formSubmit({ ...formValues, ...data })
+            formSubmit({ ...formValues, ...data });
         }
     }
 
@@ -133,7 +133,7 @@ export default function ModalView({
                             variant="danger"
                             size="sm"
                             onClick={() => {
-                                setShow(false)
+                                setShow(false);
                             }}
                             className={actionType === 'view' ? 'd-none' : ''}
                         >
@@ -143,7 +143,7 @@ export default function ModalView({
                             variant="success"
                             size="sm"
                             onClick={(event) => {
-                                formRef.current.onSubmit(event)
+                                formRef.current.onSubmit(event);
                             }}
                             className={actionType === 'view' ? 'd-none' : ''}
                         >
@@ -156,7 +156,7 @@ export default function ModalView({
                                     variant="success"
                                     size="sm"
                                     onClick={(event) => {
-                                        formRef.current.onSubmit(event)
+                                        formRef.current.onSubmit(event);
                                     }}
                                 >
                                     {' '}
@@ -169,7 +169,7 @@ export default function ModalView({
                                     variant="success"
                                     size="sm"
                                     onClick={() => {
-                                        setShow(false)
+                                        setShow(false);
                                     }}
                                     className={actionType !== 'view' ? 'd-none' : ''}
                                 >
@@ -182,5 +182,5 @@ export default function ModalView({
                 )}
             </Modal.Footer>
         </Modal>
-    )
+    );
 }

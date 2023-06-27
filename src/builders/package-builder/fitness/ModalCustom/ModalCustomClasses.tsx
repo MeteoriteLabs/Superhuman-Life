@@ -1,17 +1,17 @@
 export default function ModalCustomClasses(PTProps) {
-    const { props } = PTProps
-    const duration = PTProps.PTProps.properties.title_package.duration
-    const offlineClasses = PTProps.PTProps.properties.offlineClasses.value
-    const onlineClasses = PTProps.PTProps.properties.onlineClasses.value
-    const restDay = PTProps.PTProps.properties.restDay.value
+    const { props } = PTProps;
+    const duration = PTProps.PTProps.properties.title_package.duration;
+    const offlineClasses = PTProps.PTProps.properties.offlineClasses.value;
+    const onlineClasses = PTProps.PTProps.properties.onlineClasses.value;
+    const restDay = PTProps.PTProps.properties.restDay.value;
 
     PTProps.PTProps.properties.dayAvailable.value =
-        duration - offlineClasses - onlineClasses - restDay
+        duration - offlineClasses - onlineClasses - restDay;
 
     if (PTProps.PTProps.properties.dayAvailable.value === 0) {
-        props.schema.maximum = 30
+        props.schema.maximum = 30;
     } else if (PTProps.PTProps.properties.dayAvailable.value < 0) {
-        props.schema.maximum = 0
+        props.schema.maximum = 0;
     }
 
     return (
@@ -30,14 +30,14 @@ export default function ModalCustomClasses(PTProps) {
                         if (props.label === 'Offline') {
                             PTProps.PTProps.properties.offlineClasses.value = parseInt(
                                 event.target.value
-                            )
+                            );
                         } else if (props.label === 'Online') {
                             PTProps.PTProps.properties.onlineClasses.value = parseInt(
                                 event.target.value
-                            )
+                            );
                         }
 
-                        props.onChange(parseInt(event.target.value))
+                        props.onChange(parseInt(event.target.value));
                     }}
                     type="number"
                     min="0"
@@ -45,5 +45,5 @@ export default function ModalCustomClasses(PTProps) {
                 />
             </div>
         </div>
-    )
+    );
 }

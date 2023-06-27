@@ -1,9 +1,9 @@
-import { useState } from 'react'
-import { Button } from 'react-bootstrap'
-import { InputGroup, FormControl, Form } from 'react-bootstrap'
+import { useState } from 'react';
+import { Button } from 'react-bootstrap';
+import { InputGroup, FormControl, Form } from 'react-bootstrap';
 
 function Additionalinfo() {
-    const [show, setShow] = useState<any>(false)
+    const [show, setShow] = useState<any>(false);
     return (
         <>
             <div className="container">
@@ -108,7 +108,7 @@ function Additionalinfo() {
                 </>
             )}
         </>
-    )
+    );
 }
 
-export default Additionalinfo
+export default Additionalinfo;

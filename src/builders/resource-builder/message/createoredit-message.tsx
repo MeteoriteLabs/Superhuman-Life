@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useImperativeHandle, useState } from 'react'
-import { useQuery, useMutation } from '@apollo/client'
-import ModalView from '../../../components/modal'
+import React, { useContext, useEffect, useImperativeHandle, useState } from 'react';
+import { useQuery, useMutation } from '@apollo/client';
+import ModalView from '../../../components/modal';
 import {
     GET_TRIGGERS,
     ADD_MESSAGE,
@@ -8,209 +8,209 @@ import {
     GET_MESSAGE,
     DELETE_MESSAGE,
     UPDATE_STATUS
-} from './queries'
-import AuthContext from '../../../context/auth-context'
-import StatusModal from '../../../components/StatusModal/StatusModal'
-import { Subject } from 'rxjs'
-import { schema, widgets } from './schema'
-import { schemaView } from './messageViewSchema'
-import Toaster from '../../../components/Toaster'
-import { flattenObj } from '../../../components/utils/responseFlatten'
+} from './queries';
+import AuthContext from '../../../context/auth-context';
+import StatusModal from '../../../components/StatusModal/StatusModal';
+import { Subject } from 'rxjs';
+import { schema, widgets } from './schema';
+import { schemaView } from './messageViewSchema';
+import Toaster from '../../../components/Toaster';
+import { flattenObj } from '../../../components/utils/responseFlatten';
 
 interface Operation {
-    id: string
-    modal_status: boolean
-    type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete'
-    current_status: boolean
+    id: string;
+    modal_status: boolean;
+    type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
+    current_status: boolean;
 }
 
 interface ResponseType {
-    Description: string
-    Image_URL: string
-    Status: boolean
-    Title: string
-    id: string
-    minidescription: string
-    resourcetype: { id: string; __typename: string }
-    tags: string
-    updatedAt: string
-    uploadID?: string
-    users_permissions_user: { id: string; __typename: string }
-    __typename: string
+    Description: string;
+    Image_URL: string;
+    Status: boolean;
+    Title: string;
+    id: string;
+    minidescription: string;
+    resourcetype: { id: string; __typename: string };
+    tags: string;
+    updatedAt: string;
+    uploadID?: string;
+    users_permissions_user: { id: string; __typename: string };
+    __typename: string;
 }
 
 interface MessageDetails {
-    addMedia: unknown
-    description: string
-    messageid: string
-    mindsetmessagetype: string
-    minidesc: string
-    name: string
-    tags: string
-    title: string
+    addMedia: unknown;
+    description: string;
+    messageid: string;
+    mindsetmessagetype: string;
+    minidesc: string;
+    name: string;
+    tags: string;
+    title: string;
 }
 
 interface Form {
-    addMedia: { AddMedia: string; mediaurl?: string; upload?: string }
-    description: string
-    messageid: string
-    mindsetmessagetype: string
-    minidesc: string
-    name: string
-    tags: string
-    title: string
-    user_permissions_user: string
+    addMedia: { AddMedia: string; mediaurl?: string; upload?: string };
+    description: string;
+    messageid: string;
+    mindsetmessagetype: string;
+    minidesc: string;
+    name: string;
+    tags: string;
+    title: string;
+    user_permissions_user: string;
 }
 
 interface Prerecordedtype {
-    id: string
+    id: string;
     attributes: {
-        name: string
-        __typename: string
-    }
-    __typename: string
+        name: string;
+        __typename: string;
+    };
+    __typename: string;
 }
 
 interface PrerecordedMessage {
-    id: string
+    id: string;
     attributes: {
-        Description: string
-        Image_URL: string
-        Status: boolean
-        Title: string
-        minidescription: string
+        Description: string;
+        Image_URL: string;
+        Status: boolean;
+        Title: string;
+        minidescription: string;
         resourcetype: {
             data: {
-                id: string
-                __typename: string
-            }
-            __typename: string
-        }
-        tags: string
-        updatedAt: string
-        uploadID: null
+                id: string;
+                __typename: string;
+            };
+            __typename: string;
+        };
+        tags: string;
+        updatedAt: string;
+        uploadID: null;
         users_permissions_user: {
             data: {
-                id: string
-                __typename: string
-            }
-            __typename: string
-        }
-        __typename: string
-    }
-    __typename: string
+                id: string;
+                __typename: string;
+            };
+            __typename: string;
+        };
+        __typename: string;
+    };
+    __typename: string;
 }
 
 function CreateEditMessage(props: any, ref: any): JSX.Element {
-    const auth = useContext(AuthContext)
-    const messageSchema: { [name: string]: any } = require('./mindset.json')
-    const [messageDetails, setMessageDetails] = useState<MessageDetails>({} as MessageDetails)
-    const [operation, setOperation] = useState<Operation>({} as Operation)
-    const [name, setName] = useState<string>('')
-    const [showStatusModal, setShowStatusModal] = useState<boolean>(false)
-    const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false)
-    const [isMessageCreated, setIsMessageCreated] = useState<boolean>(false)
-    const [isMessageDeleted, setIsMessageDeleted] = useState<boolean>(false)
-    const [isMessageUpdated, setIsMessageUpdated] = useState<boolean>(false)
+    const auth = useContext(AuthContext);
+    const messageSchema: { [name: string]: any } = require('./mindset.json');
+    const [messageDetails, setMessageDetails] = useState<MessageDetails>({} as MessageDetails);
+    const [operation, setOperation] = useState<Operation>({} as Operation);
+    const [name, setName] = useState<string>('');
+    const [showStatusModal, setShowStatusModal] = useState<boolean>(false);
+    const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+    const [isMessageCreated, setIsMessageCreated] = useState<boolean>(false);
+    const [isMessageDeleted, setIsMessageDeleted] = useState<boolean>(false);
+    const [isMessageUpdated, setIsMessageUpdated] = useState<boolean>(false);
 
-    const modalTrigger = new Subject()
+    const modalTrigger = new Subject();
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
-            setOperation(msg)
+            setOperation(msg);
 
             // render status modal for toggle-status operation
             if (msg.type === 'toggle-status') {
-                setShowStatusModal(true)
+                setShowStatusModal(true);
             }
 
             // render delete modal for delete operation
             if (msg.type === 'delete') {
-                setShowDeleteModal(true)
+                setShowDeleteModal(true);
             }
 
             // restrict modal to render for delete and toggle-status operation
             if (msg.type !== 'delete' && msg.type !== 'toggle-status') {
-                modalTrigger.next(true)
+                modalTrigger.next(true);
             }
         }
-    }))
+    }));
 
-    const [createMessage] = useMutation(ADD_MESSAGE)
+    const [createMessage] = useMutation(ADD_MESSAGE);
 
     const [editMessage] = useMutation(UPDATE_MESSAGE, {
         onCompleted: () => {
-            modalTrigger.next(false)
-            props.callback()
-            setIsMessageUpdated(true)
+            modalTrigger.next(false);
+            props.callback();
+            setIsMessageUpdated(true);
         }
-    })
+    });
 
     const [deleteMessage] = useMutation(DELETE_MESSAGE, {
         onCompleted: () => {
-            props.callback()
-            setIsMessageDeleted(true)
+            props.callback();
+            setIsMessageDeleted(true);
         }
-    })
+    });
 
     const [updateStatus] = useMutation(UPDATE_STATUS, {
         onCompleted: () => {
-            props.callback()
+            props.callback();
         }
-    })
+    });
 
     function loadData(data: Prerecordedtype[]) {
-        const flattenData = flattenObj({ ...data })
+        const flattenData = flattenObj({ ...data });
 
         messageSchema['1'].properties.mindsetmessagetype.enum = [
             ...flattenData.prerecordedtypes
-        ].map((n) => n.id)
+        ].map((n) => n.id);
         messageSchema['1'].properties.mindsetmessagetype.enumNames = [
             ...flattenData.prerecordedtypes
-        ].map((n) => n.name)
+        ].map((n) => n.name);
     }
 
     function FillDetails(data: PrerecordedMessage) {
-        const flattenData = flattenObj({ ...data })
+        const flattenData = flattenObj({ ...data });
 
-        const details: MessageDetails = {} as MessageDetails
-        const msg: ResponseType = flattenData.prerecordedMessage
+        const details: MessageDetails = {} as MessageDetails;
+        const msg: ResponseType = flattenData.prerecordedMessage;
 
         function handleAddMediaShowUp(msg: ResponseType) {
             if (msg.Image_URL !== null) {
-                return { AddMedia: 'Add URL', mediaurl: msg.Image_URL }
+                return { AddMedia: 'Add URL', mediaurl: msg.Image_URL };
             } else if (msg?.uploadID !== null) {
-                return { AddMedia: 'Upload', upload: msg.uploadID }
+                return { AddMedia: 'Upload', upload: msg.uploadID };
             }
         }
 
-        const operationTrigger = { ...operation }
+        const operationTrigger = { ...operation };
 
-        details.name = operationTrigger.type.toLowerCase()
-        details.title = msg.Title
-        details.mindsetmessagetype = msg.resourcetype?.id
-        details.description = msg.Description ? msg.Description : ' '
-        details.minidesc = msg.minidescription
-        details.tags = msg.tags
-        details.addMedia = handleAddMediaShowUp(msg)
-        details.messageid = msg.id
+        details.name = operationTrigger.type.toLowerCase();
+        details.title = msg.Title;
+        details.mindsetmessagetype = msg.resourcetype?.id;
+        details.description = msg.Description ? msg.Description : ' ';
+        details.minidesc = msg.minidescription;
+        details.tags = msg.tags;
+        details.addMedia = handleAddMediaShowUp(msg);
+        details.messageid = msg.id;
 
-        setMessageDetails(details)
-        setOperation({} as Operation)
+        setMessageDetails(details);
+        setOperation({} as Operation);
 
-        if (['edit', 'view'].indexOf(operation.type) > -1) modalTrigger.next(true)
-        else OnSubmit({} as Form)
+        if (['edit', 'view'].indexOf(operation.type) > -1) modalTrigger.next(true);
+        else OnSubmit({} as Form);
     }
 
-    useQuery<Prerecordedtype[]>(GET_TRIGGERS, { onCompleted: loadData })
+    useQuery<Prerecordedtype[]>(GET_TRIGGERS, { onCompleted: loadData });
 
     useQuery<PrerecordedMessage>(GET_MESSAGE, {
         variables: { id: operation.id },
         skip: !operation.id || operation.type === 'toggle-status' || operation.type === 'delete',
         onCompleted: (response) => {
-            FillDetails(response)
+            FillDetails(response);
         }
-    })
+    });
 
     function CreateMessage(frm: Form) {
         createMessage({
@@ -227,12 +227,12 @@ function CreateEditMessage(props: any, ref: any): JSX.Element {
                 }
             },
             onCompleted: () => {
-                setIsMessageCreated(!isMessageCreated)
+                setIsMessageCreated(!isMessageCreated);
 
-                modalTrigger.next(false)
-                props.callback()
+                modalTrigger.next(false);
+                props.callback();
             }
-        })
+        });
     }
 
     function EditMessage(frm: Form) {
@@ -250,41 +250,41 @@ function CreateEditMessage(props: any, ref: any): JSX.Element {
                     uploadID: frm.addMedia.upload
                 }
             }
-        })
+        });
     }
 
     function ToggleMessageStatus(id: string, current_status: boolean) {
-        updateStatus({ variables: { status: !current_status, messageid: id } })
+        updateStatus({ variables: { status: !current_status, messageid: id } });
     }
 
     function DeleteMessage(id: string) {
-        deleteMessage({ variables: { id: id } })
+        deleteMessage({ variables: { id: id } });
     }
 
     function OnSubmit(form: Form) {
-        if (form) form.user_permissions_user = auth.userid
+        if (form) form.user_permissions_user = auth.userid;
         if (form.name === 'edit' || form.name === 'view') {
             if (form.name === 'edit') {
-                EditMessage(form)
+                EditMessage(form);
             }
             if (form.name === 'view') {
-                modalTrigger.next(false)
+                modalTrigger.next(false);
             }
         } else {
-            CreateMessage(form)
+            CreateMessage(form);
         }
     }
 
     useEffect(() => {
         if (operation.type === 'create') {
-            setMessageDetails({} as MessageDetails)
-            setName('Create New Message')
+            setMessageDetails({} as MessageDetails);
+            setName('Create New Message');
         } else if (operation.type === 'edit') {
-            setName('Edit')
+            setName('Edit');
         } else if (operation.type === 'view') {
-            setName('View')
+            setName('View');
         }
-    }, [operation.type])
+    }, [operation.type]);
 
     return (
         <>
@@ -299,10 +299,10 @@ function CreateEditMessage(props: any, ref: any): JSX.Element {
                 formSubmit={
                     name === 'View'
                         ? () => {
-                              modalTrigger.next(false)
+                              modalTrigger.next(false);
                           }
                         : (form: Form) => {
-                              OnSubmit(form)
+                              OnSubmit(form);
                           }
                 }
                 formData={messageDetails}
@@ -320,7 +320,7 @@ function CreateEditMessage(props: any, ref: any): JSX.Element {
                     buttonLeft="Cancel"
                     buttonRight="Yes"
                     onClick={() => {
-                        ToggleMessageStatus(operation.id, operation.current_status)
+                        ToggleMessageStatus(operation.id, operation.current_status);
                     }}
                 />
             )}
@@ -335,7 +335,7 @@ function CreateEditMessage(props: any, ref: any): JSX.Element {
                     buttonLeft="Cancel"
                     buttonRight="Yes"
                     onClick={() => {
-                        DeleteMessage(operation.id)
+                        DeleteMessage(operation.id);
                     }}
                 />
             )}
@@ -365,7 +365,7 @@ function CreateEditMessage(props: any, ref: any): JSX.Element {
                 />
             ) : null}
         </>
-    )
+    );
 }
 
-export default React.forwardRef(CreateEditMessage)
+export default React.forwardRef(CreateEditMessage);

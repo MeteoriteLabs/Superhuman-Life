@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const CREATE_VOUCHER = gql`
     mutation createVoucher($data: VoucherInput!) {
@@ -16,7 +16,7 @@ export const CREATE_VOUCHER = gql`
             }
         }
     }
-`
+`;
 
 export const EDIT_VOUCHER = gql`
     mutation updateVoucher(
@@ -51,7 +51,7 @@ export const EDIT_VOUCHER = gql`
             }
         }
     }
-`
+`;
 
 export const DELETE_VOUCHER = gql`
     mutation deleteVoucher($id: ID!) {
@@ -61,7 +61,7 @@ export const DELETE_VOUCHER = gql`
             }
         }
     }
-`
+`;
 
 export const TOGGLE_STATUS = gql`
     mutation updateVoucher($id: ID!, $data: VoucherInput!) {
@@ -75,7 +75,7 @@ export const TOGGLE_STATUS = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_FITNESS_PRICING_ASSIT = gql`
     mutation createSuggestedPricing($data: SuggestedPricingInput!) {
@@ -85,7 +85,7 @@ export const CREATE_FITNESS_PRICING_ASSIT = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_FITNESS_PRICING_ASSITS = gql`
     mutation updateSuggestedPricing($id: ID!, $mrp: Float) {
@@ -98,7 +98,7 @@ export const UPDATE_FITNESS_PRICING_ASSITS = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_UPI = gql`
     mutation createUpiDetailsChangemaker(
@@ -130,7 +130,7 @@ export const CREATE_UPI = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_BANK_DETAIL = gql`
     mutation createBankDetail(
@@ -175,4 +175,4 @@ export const CREATE_BANK_DETAIL = gql`
             }
         }
     }
-`
+`;

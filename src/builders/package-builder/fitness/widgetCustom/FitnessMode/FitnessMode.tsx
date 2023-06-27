@@ -1,13 +1,13 @@
-import React from 'react'
-import PersonaTrainingMode from './PersonaTrainingMode'
+import React from 'react';
+import PersonaTrainingMode from './PersonaTrainingMode';
 
 const FitnessMode: React.FC<{
-    widgetProps: any
-    PTProps: any
-    type: string
-    userData: any
-    actionType: string
-    groupProps: string
+    widgetProps: any;
+    PTProps: any;
+    type: string;
+    userData: any;
+    actionType: string;
+    groupProps: string;
 }> = (props) => {
     return (
         <div>
@@ -29,7 +29,7 @@ const FitnessMode: React.FC<{
                 <p className="m-0">Set for {props.PTProps.properties.duration.default} days</p>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default FitnessMode
+export default FitnessMode;

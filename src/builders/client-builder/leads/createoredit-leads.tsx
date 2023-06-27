@@ -1,42 +1,42 @@
-import React, { useContext, useImperativeHandle, useState, useEffect } from 'react'
-import { useMutation, useQuery } from '@apollo/client'
-import ModalView from '../../../components/modal'
+import React, { useContext, useImperativeHandle, useState, useEffect } from 'react';
+import { useMutation, useQuery } from '@apollo/client';
+import ModalView from '../../../components/modal';
 import {
     ADD_LEADS_NEW,
     DELETE_LEAD_NEW,
     GET_LEADS_ID_NEW,
     UPDATE_LEADS_NEW,
     CREATE_NOTIFICATION
-} from './queries'
-import AuthContext from '../../../context/auth-context'
-import StatusModal from '../../../components/StatusModal/StatusModal'
-import { Subject } from 'rxjs'
-import { schema } from './schema'
-import { flattenObj } from '../../../components/utils/responseFlatten'
-import Toaster from '../../../components/Toaster'
-import moment from 'moment'
+} from './queries';
+import AuthContext from '../../../context/auth-context';
+import StatusModal from '../../../components/StatusModal/StatusModal';
+import { Subject } from 'rxjs';
+import { schema } from './schema';
+import { flattenObj } from '../../../components/utils/responseFlatten';
+import Toaster from '../../../components/Toaster';
+import moment from 'moment';
 
 interface Operation {
-    id: string
-    modal_status: boolean
-    type: 'create' | 'edit' | 'view' | 'delete'
-    current_status: boolean
+    id: string;
+    modal_status: boolean;
+    type: 'create' | 'edit' | 'view' | 'delete';
+    current_status: boolean;
 }
 
 function CreateEditMessage(props: any, ref: any) {
-    const auth = useContext(AuthContext)
-    const messageSchema: { [name: string]: any } = require('./leads.json')
-    const [messageDetails, setMessageDetails] = useState<any>({})
-    const [operation, setOperation] = useState<Operation>({} as Operation)
-    const [showDeleteModal, setShowDeleteModal] = useState(false)
-    const [isLeadUpdated, setIsLeadUpdated] = useState<boolean>(false)
-    const [isLeadCreated, setIsLeadCreated] = useState<boolean>(false)
-    const [isLeadDeleted, setIsLeadDeleted] = useState<boolean>(false)
-    const [name, setName] = useState<string>('')
+    const auth = useContext(AuthContext);
+    const messageSchema: { [name: string]: any } = require('./leads.json');
+    const [messageDetails, setMessageDetails] = useState<any>({});
+    const [operation, setOperation] = useState<Operation>({} as Operation);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [isLeadUpdated, setIsLeadUpdated] = useState<boolean>(false);
+    const [isLeadCreated, setIsLeadCreated] = useState<boolean>(false);
+    const [isLeadDeleted, setIsLeadDeleted] = useState<boolean>(false);
+    const [name, setName] = useState<string>('');
 
     const [createLeads] = useMutation(ADD_LEADS_NEW, {
         onCompleted: (data: any) => {
-            const flattenData = flattenObj({ ...data })
+            const flattenData = flattenObj({ ...data });
 
             createLeadNotification({
                 variables: {
@@ -51,116 +51,116 @@ function CreateEditMessage(props: any, ref: any) {
                         ContactID: flattenData.createWebsiteContactForm.id
                     }
                 }
-            })
-            modalTrigger.next(false)
-            props.callback()
-            setIsLeadCreated(!isLeadCreated)
+            });
+            modalTrigger.next(false);
+            props.callback();
+            setIsLeadCreated(!isLeadCreated);
         }
-    })
+    });
 
     const [editMessage]: any = useMutation(UPDATE_LEADS_NEW, {
         onCompleted: (r: any) => {
-            modalTrigger.next(false)
-            props.callback()
-            setIsLeadUpdated(!isLeadUpdated)
+            modalTrigger.next(false);
+            props.callback();
+            setIsLeadUpdated(!isLeadUpdated);
         }
-    })
+    });
 
     const [deleteLeads] = useMutation(DELETE_LEAD_NEW, {
         onCompleted: (e: any) => {
-            modalTrigger.next(false)
-            props.callback()
-            setIsLeadDeleted(!isLeadDeleted)
+            modalTrigger.next(false);
+            props.callback();
+            setIsLeadDeleted(!isLeadDeleted);
         }
-    })
+    });
 
-    const [createLeadNotification] = useMutation(CREATE_NOTIFICATION)
+    const [createLeadNotification] = useMutation(CREATE_NOTIFICATION);
 
-    const modalTrigger = new Subject()
+    const modalTrigger = new Subject();
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
-            setOperation(msg)
+            setOperation(msg);
 
             // set show delete modal to render for delete operation
             if (msg.type === 'delete') {
-                setShowDeleteModal(true)
+                setShowDeleteModal(true);
             }
 
             // restrict create modal to render for delete operation
             if (msg.type !== 'delete') {
-                modalTrigger.next(true)
+                modalTrigger.next(true);
             }
         }
-    }))
+    }));
 
     useQuery(GET_LEADS_ID_NEW, {
         variables: { id: operation.id },
         skip: !operation.id || operation.type === 'delete',
         onCompleted: (e: any) => {
-            FillDetails(e)
+            FillDetails(e);
         }
-    })
+    });
 
     function FillDetails(data: any) {
-        const flattenData = flattenObj({ ...data })
-        const detail: any = { leadsdetails: {} }
-        const msg: any = flattenData.websiteContactForms[0]
+        const flattenData = flattenObj({ ...data });
+        const detail: any = { leadsdetails: {} };
+        const msg: any = flattenData.websiteContactForms[0];
 
-        const o = { ...operation }
-        detail.name = o.type.toLowerCase()
-        detail.status = msg.Details.status
-        detail.source = msg.Details.source
-        detail.notes = msg.Details.notes
-        detail.leadsdetails.email = msg.Details?.leadsdetails.email
-        detail.leadsdetails.name = msg.Details?.leadsdetails.name
-        detail.leadsdetails.phonenumber = msg.Details?.leadsdetails.phonenumber
-        detail.leadsdetails.leadsmesssage = msg.Details?.leadsdetails.leadsmesssage
-        detail.messageid = msg.id
+        const o = { ...operation };
+        detail.name = o.type.toLowerCase();
+        detail.status = msg.Details.status;
+        detail.source = msg.Details.source;
+        detail.notes = msg.Details.notes;
+        detail.leadsdetails.email = msg.Details?.leadsdetails.email;
+        detail.leadsdetails.name = msg.Details?.leadsdetails.name;
+        detail.leadsdetails.phonenumber = msg.Details?.leadsdetails.phonenumber;
+        detail.leadsdetails.leadsmesssage = msg.Details?.leadsdetails.leadsmesssage;
+        detail.messageid = msg.id;
 
-        setMessageDetails(detail)
-        setOperation({} as Operation)
+        setMessageDetails(detail);
+        setOperation({} as Operation);
 
-        if (['edit', 'view'].indexOf(operation.type) > -1) modalTrigger.next(true)
-        else OnSubmit(null)
+        if (['edit', 'view'].indexOf(operation.type) > -1) modalTrigger.next(true);
+        else OnSubmit(null);
     }
 
     function CreateMessage(frm: any) {
         createLeads({
             variables: { id: auth.userid, details: frm }
-        })
+        });
     }
 
     function EditMessage(frm: any) {
         editMessage({
             variables: { id: auth.userid, details: frm, messageid: frm.messageid }
-        })
+        });
     }
 
     function DeleteMessage(id: any) {
-        deleteLeads({ variables: { id: id } })
+        deleteLeads({ variables: { id: id } });
     }
 
     function OnSubmit(frm: any) {
-        if (frm) frm.user_permissions_user = auth.userid
+        if (frm) frm.user_permissions_user = auth.userid;
         if (frm.name === 'edit' || frm.name === 'view') {
             if (frm.name === 'edit') {
-                EditMessage(frm)
+                EditMessage(frm);
             }
         } else {
-            CreateMessage(frm)
+            CreateMessage(frm);
         }
     }
 
     useEffect(() => {
         if (operation.type === 'create') {
-            setName('Create New Lead')
+            setName('Create New Lead');
         } else if (operation.type === 'edit') {
-            setName('Edit lead')
+            setName('Edit lead');
         } else if (operation.type === 'view') {
-            setName('View Lead')
+            setName('View Lead');
         }
-    }, [operation.type])
+    }, [operation.type]);
 
     return (
         <>
@@ -172,7 +172,7 @@ function CreateEditMessage(props: any, ref: any) {
                 formSchema={messageSchema}
                 showing={operation.modal_status}
                 formSubmit={(frm: any) => {
-                    OnSubmit(frm)
+                    OnSubmit(frm);
                 }}
                 formData={operation.type === 'create' ? {} : messageDetails}
                 modalTrigger={modalTrigger}
@@ -188,7 +188,7 @@ function CreateEditMessage(props: any, ref: any) {
                     buttonLeft="Cancel"
                     buttonRight="Yes"
                     onClick={() => {
-                        DeleteMessage(operation.id)
+                        DeleteMessage(operation.id);
                     }}
                 />
             )}
@@ -217,7 +217,7 @@ function CreateEditMessage(props: any, ref: any) {
                 />
             ) : null}
         </>
-    )
+    );
 }
 
-export default React.forwardRef(CreateEditMessage)
+export default React.forwardRef(CreateEditMessage);

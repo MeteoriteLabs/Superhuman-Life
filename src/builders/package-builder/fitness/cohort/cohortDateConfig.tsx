@@ -1,24 +1,24 @@
-import { useState } from 'react'
-import { InputGroup, FormControl } from 'react-bootstrap'
-import moment from 'moment'
+import { useState } from 'react';
+import { InputGroup, FormControl } from 'react-bootstrap';
+import moment from 'moment';
 
 const PackageDateConfig = (props: any) => {
-    const inputDisabled = props.readonly
-    const cohortStartDate = JSON.parse(props.formContext.dates).startDate
+    const inputDisabled = props.readonly;
+    const cohortStartDate = JSON.parse(props.formContext.dates).startDate;
 
     const [publishingDate, setPublishingDate] = useState(
         props.value === undefined
             ? ''
             : moment(JSON.parse(props.value).publishingDate).format('YYYY-MM-DDTHH:mm')
-    )
+    );
     const [expiryDate, setExpiryDate] = useState(
         props.value === undefined
             ? moment(cohortStartDate).format('YYYY-MM-DDTHH:mm')
             : moment(JSON.parse(props.value).expiryDate).format('YYYY-MM-DDTHH:mm')
-    )
+    );
 
     if (publishingDate && expiryDate) {
-        props.onChange(JSON.stringify({ publishingDate, expiryDate }))
+        props.onChange(JSON.stringify({ publishingDate, expiryDate }));
     }
 
     return (
@@ -33,7 +33,7 @@ const PackageDateConfig = (props: any) => {
                     max={moment(cohortStartDate).format('YYYY-MM-DDTHH:mm')}
                     value={publishingDate}
                     onChange={(e) => {
-                        setPublishingDate(e.target.value)
+                        setPublishingDate(e.target.value);
                     }}
                     disabled={inputDisabled}
                 />
@@ -52,7 +52,7 @@ const PackageDateConfig = (props: any) => {
                     value={expiryDate}
                     disabled={inputDisabled}
                     onChange={(e) => {
-                        setExpiryDate(e.target.value)
+                        setExpiryDate(e.target.value);
                     }}
                     max={moment(cohortStartDate).subtract(1, 'days').format('YYYY-MM-DDTHH:mm')}
                 />
@@ -63,7 +63,7 @@ const PackageDateConfig = (props: any) => {
                 </span>
             )}
         </div>
-    )
-}
+    );
+};
 
-export default PackageDateConfig
+export default PackageDateConfig;

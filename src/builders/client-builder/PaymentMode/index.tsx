@@ -1,44 +1,44 @@
-import React, { useState, useRef } from 'react'
-import { schema } from './paymentModeSchema'
-import { GET_CONTACT, UPDATE_CONTACT } from '../contacts/queries'
-import { useMutation, useQuery } from '@apollo/client'
-import { withTheme, utils } from '@rjsf/core'
-import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4'
-import { flattenObj } from '../../../components/utils/responseFlatten'
-import { Col } from 'react-bootstrap'
-import Toaster from '../../../components/Toaster'
+import React, { useState, useRef } from 'react';
+import { schema } from './paymentModeSchema';
+import { GET_CONTACT, UPDATE_CONTACT } from '../contacts/queries';
+import { useMutation, useQuery } from '@apollo/client';
+import { withTheme, utils } from '@rjsf/core';
+import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
+import { flattenObj } from '../../../components/utils/responseFlatten';
+import { Col } from 'react-bootstrap';
+import Toaster from '../../../components/Toaster';
 import {
     phoneCustomFormats,
     phoneTransformErrors
-} from '../../../components/utils/ValidationPatterns'
+} from '../../../components/utils/ValidationPatterns';
 
 const PaymentMode: React.FC = () => {
-    const registry = utils.getDefaultRegistry()
-    const defaultFileWidget = registry.widgets['FileWidget']
-    ;(Bootstrap4Theme as any).widgets['FileWidget'] = defaultFileWidget
-    const Form: any = withTheme(Bootstrap4Theme)
-    const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false)
-    const formRef = useRef<any>(null)
-    const paymentModeJson: Record<string, unknown> = require('./paymentmode.json')
-    const [paymentModeDetails, setPaymentModeDetails] = useState<any>({})
-    const query = window.location.search
-    const params = new URLSearchParams(query)
-    const id = params.get('id')
+    const registry = utils.getDefaultRegistry();
+    const defaultFileWidget = registry.widgets['FileWidget'];
+    (Bootstrap4Theme as any).widgets['FileWidget'] = defaultFileWidget;
+    const Form: any = withTheme(Bootstrap4Theme);
+    const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+    const formRef = useRef<any>(null);
+    const paymentModeJson: Record<string, unknown> = require('./paymentmode.json');
+    const [paymentModeDetails, setPaymentModeDetails] = useState<any>({});
+    const query = window.location.search;
+    const params = new URLSearchParams(query);
+    const id = params.get('id');
 
     useQuery(GET_CONTACT, {
         variables: { id: id },
         onCompleted: (response) => {
-            const flattenData = flattenObj(response)
-            FillDetails(flattenData)
+            const flattenData = flattenObj(response);
+            FillDetails(flattenData);
         }
-    })
+    });
 
     const [updateContact] = useMutation(UPDATE_CONTACT, {
         onCompleted: () => {
-            setIsFormSubmitted(!isFormSubmitted)
+            setIsFormSubmitted(!isFormSubmitted);
         },
         refetchQueries: [GET_CONTACT]
-    })
+    });
 
     function EditPaymentModeDetails(frm: any) {
         updateContact({
@@ -56,11 +56,11 @@ const PaymentMode: React.FC = () => {
                     }
                 }
             }
-        })
+        });
     }
 
     function OnSubmit(frm: any) {
-        EditPaymentModeDetails(frm.formData)
+        EditPaymentModeDetails(frm.formData);
     }
 
     //fillDetails
@@ -75,7 +75,7 @@ const PaymentMode: React.FC = () => {
                 accountType: data.contact.paymentDetails.accountType,
                 AccountNumber: data.contact.paymentDetails.accountNumber,
                 bankAccount: data.contact.paymentDetails.accountNumber ? true : false
-            })
+            });
         }
     }
 
@@ -88,7 +88,7 @@ const PaymentMode: React.FC = () => {
                     schema={paymentModeJson}
                     ref={formRef}
                     onSubmit={(frm: any) => {
-                        OnSubmit(frm)
+                        OnSubmit(frm);
                     }}
                     formData={paymentModeDetails}
                     showErrorList={false}
@@ -106,7 +106,7 @@ const PaymentMode: React.FC = () => {
                 />
             ) : null}
         </>
-    )
-}
+    );
+};
 
-export default PaymentMode
+export default PaymentMode;

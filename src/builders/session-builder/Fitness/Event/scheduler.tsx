@@ -1,85 +1,85 @@
-import { useState, useEffect, useRef } from 'react'
-import { GET_TAG_BY_ID } from '../../graphQL/queries'
-import { useQuery } from '@apollo/client'
-import { Row, Col, Dropdown } from 'react-bootstrap'
-import SchedulerPage from '../../../program-builder/program-template/scheduler'
-import moment from 'moment'
-import FitnessAction from '../FitnessAction'
-import { Link } from 'react-router-dom'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
-import '../Group/actionButton.css'
-import Loader from '../../../../components/Loader/Loader'
+import { useState, useEffect, useRef } from 'react';
+import { GET_TAG_BY_ID } from '../../graphQL/queries';
+import { useQuery } from '@apollo/client';
+import { Row, Col, Dropdown } from 'react-bootstrap';
+import SchedulerPage from '../../../program-builder/program-template/scheduler';
+import moment from 'moment';
+import FitnessAction from '../FitnessAction';
+import { Link } from 'react-router-dom';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import '../Group/actionButton.css';
+import Loader from '../../../../components/Loader/Loader';
 
 const Scheduler = () => {
-    const last = window.location.pathname.split('/').reverse()
-    const tagId = window.location.pathname.split('/').pop()
-    const [show, setShow] = useState<boolean>(false)
-    const [sessionIds, setSessionIds] = useState<any>([])
-    const [clientIds, setClientIds] = useState<any>([])
+    const last = window.location.pathname.split('/').reverse();
+    const tagId = window.location.pathname.split('/').pop();
+    const [show, setShow] = useState<boolean>(false);
+    const [sessionIds, setSessionIds] = useState<any>([]);
+    const [clientIds, setClientIds] = useState<any>([]);
     // these are the sessions that will passed onto the scheduler
-    const [schedulerSessions, setSchedulerSessions] = useState<any>([])
-    const [tag, setTag] = useState<any>()
+    const [schedulerSessions, setSchedulerSessions] = useState<any>([]);
+    const [tag, setTag] = useState<any>();
 
-    const fitnessActionRef = useRef<any>(null)
+    const fitnessActionRef = useRef<any>(null);
 
     useEffect(() => {
         setTimeout(() => {
-            setShow(true)
-        }, 1500)
-    }, [show])
+            setShow(true);
+        }, 1500);
+    }, [show]);
 
     const mainQuery = useQuery(GET_TAG_BY_ID, {
         variables: { id: tagId },
         onCompleted: (data) => loadTagData(data)
-    })
+    });
 
     function loadTagData(data: any) {
-        setSchedulerSessions(data)
-        const flattenData = flattenObj({ ...data })
-        const total = [0]
-        const clientValues = [...clientIds]
-        const values = [...flattenData.tags[0]?.sessions]
-        const ids = [...sessionIds]
+        setSchedulerSessions(data);
+        const flattenData = flattenObj({ ...data });
+        const total = [0];
+        const clientValues = [...clientIds];
+        const values = [...flattenData.tags[0]?.sessions];
+        const ids = [...sessionIds];
         for (let i = 0; i < values.length; i++) {
-            ids.push(values[i].id)
+            ids.push(values[i].id);
             if (values[i].tag === 'Classic') {
-                total[0] += 1
+                total[0] += 1;
             }
         }
-        setClientIds(clientValues)
-        setSessionIds(ids)
-        setTag(flattenData.tags[0])
+        setClientIds(clientValues);
+        setSessionIds(ids);
+        setTag(flattenData.tags[0]);
     }
 
     function calculateLastSession(sessions) {
         if (sessions.length === 0) {
-            return 'N/A'
+            return 'N/A';
         }
 
         const moments = sessions.map((d) => moment(d.session_date)),
-            maxDate = moment.max(moments)
+            maxDate = moment.max(moments);
 
-        return maxDate.format('MMM Do,YYYY')
+        return maxDate.format('MMM Do,YYYY');
     }
 
     function calculateDuration(sd: any, ed: any) {
-        const start = moment(sd)
-        const end = moment(ed)
-        return end.diff(start, 'days') + 1
+        const start = moment(sd);
+        const end = moment(ed);
+        return end.diff(start, 'days') + 1;
     }
 
     function calculateDailySessions(sessions) {
         const dailySessions = sessions.filter(
             (ses: any) => ses.session_date === moment().format('YYYY-MM-DD')
-        )
-        return dailySessions.length ? dailySessions.length : 'N/A'
+        );
+        return dailySessions.length ? dailySessions.length : 'N/A';
     }
 
     function handleCallback() {
-        mainQuery.refetch()
+        mainQuery.refetch();
     }
 
-    if (!show) return <Loader />
+    if (!show) return <Loader />;
     else
         return (
             <div className="col-lg-12">
@@ -139,7 +139,7 @@ const Scheduler = () => {
                                                     tag.client_packages
                                                         .slice(0, 4)
                                                         .map((item, index: number) => {
-                                                            const postionLeft = 8
+                                                            const postionLeft = 8;
                                                             return (
                                                                 <img
                                                                     key={index}
@@ -154,7 +154,7 @@ const Scheduler = () => {
                                                                         }%`
                                                                     }}
                                                                 />
-                                                            )
+                                                            );
                                                         })
                                                 ) : (
                                                     <span>N/A</span>
@@ -177,7 +177,7 @@ const Scheduler = () => {
                                                         id: last[0],
                                                         actionType: 'allClients',
                                                         type: 'Cohort'
-                                                    })
+                                                    });
                                                 }}
                                             >
                                                 View all
@@ -264,7 +264,7 @@ const Scheduler = () => {
                     <FitnessAction ref={fitnessActionRef} callback={() => mainQuery} />
                 </Row>
             </div>
-        )
-}
+        );
+};
 
-export default Scheduler
+export default Scheduler;

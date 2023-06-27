@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const CREATE_PACKAGE = gql`
     mutation createFitnesspackage(
@@ -102,7 +102,7 @@ export const CREATE_PACKAGE = gql`
             }
         }
     }
-`
+`;
 
 export const DELETE_PACKAGE = gql`
     mutation deleteFitnesspackage($id: ID!) {
@@ -112,7 +112,7 @@ export const DELETE_PACKAGE = gql`
             }
         }
     }
-`
+`;
 
 export const DELETE_OFFERING_INVENTORY = gql`
     mutation deleteOfferingInventory($id: ID!) {
@@ -122,7 +122,7 @@ export const DELETE_OFFERING_INVENTORY = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_PACKAGE_PRIVATE = gql`
     mutation updateFitnesspackage($id: ID!, $is_private: Boolean) {
@@ -132,7 +132,7 @@ export const UPDATE_PACKAGE_PRIVATE = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_OFFERING_INVENTORY = gql`
     mutation updateOfferingInventory($id: ID!, $data: OfferingInventoryInput!) {
@@ -152,7 +152,7 @@ export const UPDATE_OFFERING_INVENTORY = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_NOTIFICATION = gql`
     mutation createChangemakerNotification($data: ChangemakerNotificationInput!) {
@@ -175,7 +175,7 @@ export const CREATE_NOTIFICATION = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_OFFERING_INVENTORY = gql`
     mutation createOfferingInventory($data: OfferingInventoryInput!) {
@@ -185,7 +185,7 @@ export const CREATE_OFFERING_INVENTORY = gql`
             }
         }
     }
-`
+`;
 
 export const EDIT_PACKAGE = gql`
     mutation fitnesspackages(
@@ -280,7 +280,7 @@ export const EDIT_PACKAGE = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_BOOKING_CONFIG_AND_TAG_CHANNEL = gql`
     mutation createBookingconfig(
@@ -307,7 +307,7 @@ export const CREATE_BOOKING_CONFIG_AND_TAG_CHANNEL = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_TAG = gql`
     mutation createTag($id: ID!, $tagName: String) {
@@ -317,7 +317,7 @@ export const CREATE_TAG = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_PACKAGE_STATUS = gql`
     mutation updateFitnesspackageStatus($id: ID!, $Status: Boolean) {
@@ -327,7 +327,7 @@ export const UPDATE_PACKAGE_STATUS = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_CHANNEL_COHORT_PACKAGE = gql`
     mutation updateChannelCohortPackage(
@@ -408,7 +408,7 @@ export const UPDATE_CHANNEL_COHORT_PACKAGE = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_ADDRESS = gql`
     mutation createAddress(
@@ -440,7 +440,7 @@ export const CREATE_ADDRESS = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_CHANNEL_PACKAGE = gql`
     mutation createChannelPackage(
@@ -526,7 +526,7 @@ export const CREATE_CHANNEL_PACKAGE = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_EVENT = gql`
     mutation createEventPackage($data: FitnesspackageInput!) {
@@ -550,4 +550,4 @@ export const CREATE_EVENT = gql`
             }
         }
     }
-`
+`;

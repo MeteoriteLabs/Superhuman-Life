@@ -1,34 +1,34 @@
-import { useEffect, useState } from 'react'
-import { Form, Row, Col } from 'react-bootstrap'
+import { useEffect, useState } from 'react';
+import { Form, Row, Col } from 'react-bootstrap';
 
 const BookingConfig = (props: any) => {
-    const inputDisabled = props.uiSchema.readonly
+    const inputDisabled = props.uiSchema.readonly;
 
     const [fillSchedule, setFillSchedule] = useState(
         props.value !== undefined ? JSON.parse(props.value).fillSchedule : false
-    )
+    );
     const [config, setConfig] = useState(
         props.value !== undefined ? JSON.parse(props.value).config : ''
-    )
+    );
 
     function handleValidation() {
         if (config !== '' && config === 'Manual') {
-            return true
+            return true;
         } else if (config === 'Auto') {
-            return true
+            return true;
         } else {
-            return false
+            return false;
         }
     }
 
     useEffect(() => {
         if (handleValidation()) {
-            props.onChange(JSON.stringify({ config: config, fillSchedule: fillSchedule }))
+            props.onChange(JSON.stringify({ config: config, fillSchedule: fillSchedule }));
         } else {
-            props.onChange(undefined)
+            props.onChange(undefined);
         }
         //eslint-disable-next-line
-    }, [config, fillSchedule])
+    }, [config, fillSchedule]);
 
     return (
         <>
@@ -85,7 +85,7 @@ const BookingConfig = (props: any) => {
                 </div>
             )}
         </>
-    )
-}
+    );
+};
 
-export default BookingConfig
+export default BookingConfig;

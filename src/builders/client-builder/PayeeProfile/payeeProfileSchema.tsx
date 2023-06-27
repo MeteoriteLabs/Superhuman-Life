@@ -72,4 +72,4 @@ export const schema: any = {
             inline: true
         }
     }
-}
+};

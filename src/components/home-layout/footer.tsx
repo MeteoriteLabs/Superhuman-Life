@@ -1,4 +1,4 @@
-import { Row, Container, Col, ListGroup } from 'react-bootstrap'
+import { Row, Container, Col, ListGroup } from 'react-bootstrap';
 
 export default function HomeFooter() {
     return (
@@ -35,5 +35,5 @@ export default function HomeFooter() {
                 </Row>
             </Container>
         </footer>
-    )
+    );
 }

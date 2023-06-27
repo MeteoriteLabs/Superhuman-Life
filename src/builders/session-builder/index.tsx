@@ -1,6 +1,6 @@
-import React from 'react'
-import { Card, Tab, Tabs } from 'react-bootstrap'
-import Fitness from './Fitness/Fitness'
+import React from 'react';
+import { Card, Tab, Tabs } from 'react-bootstrap';
+import Fitness from './Fitness/Fitness';
 
 const SessionPage: React.FC = () => {
     return (
@@ -22,7 +22,7 @@ const SessionPage: React.FC = () => {
                 </Card.Body>
             </Card>
         </div>
-    )
-}
+    );
+};
 
-export default SessionPage
+export default SessionPage;

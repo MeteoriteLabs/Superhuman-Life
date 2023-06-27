@@ -1,50 +1,50 @@
-import React, { useContext, useImperativeHandle, useState } from 'react'
-import ModalView from '../../../components/modal/index'
-import { ADD_PAYMENT_SCHEDULE, UPDATE_CONTACT } from './queries'
-import { useMutation } from '@apollo/client'
-import AuthContext from '../../../context/auth-context'
-import { schema, widgets } from './PayeeSchema'
-import { Subject } from 'rxjs'
-import Toaster from '../../../components/Toaster'
+import React, { useContext, useImperativeHandle, useState } from 'react';
+import ModalView from '../../../components/modal/index';
+import { ADD_PAYMENT_SCHEDULE, UPDATE_CONTACT } from './queries';
+import { useMutation } from '@apollo/client';
+import AuthContext from '../../../context/auth-context';
+import { schema, widgets } from './PayeeSchema';
+import { Subject } from 'rxjs';
+import Toaster from '../../../components/Toaster';
 import {
     phoneCustomFormats,
     phoneTransformErrors
-} from '../../../components/utils/ValidationPatterns'
+} from '../../../components/utils/ValidationPatterns';
 
 interface Operation {
-    id: string
-    modal_status: boolean
-    type: 'create'
-    current_status: boolean
+    id: string;
+    modal_status: boolean;
+    type: 'create';
+    current_status: boolean;
 }
 
 function CreateContactAsPayee(props: any, ref: any) {
-    const [operation, setOperation] = useState<Operation>({} as Operation)
-    const auth = useContext(AuthContext)
-    const payeeJson: Record<string, unknown> = require('./ContactPayee.json')
-    const [isCreated, setIsCreated] = useState<boolean>(false)
+    const [operation, setOperation] = useState<Operation>({} as Operation);
+    const auth = useContext(AuthContext);
+    const payeeJson: Record<string, unknown> = require('./ContactPayee.json');
+    const [isCreated, setIsCreated] = useState<boolean>(false);
 
-    const modalTrigger = new Subject()
+    const modalTrigger = new Subject();
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
-            setOperation(msg)
-            modalTrigger.next(true)
+            setOperation(msg);
+            modalTrigger.next(true);
         }
-    }))
+    }));
 
-    const [updateContact] = useMutation(UPDATE_CONTACT)
+    const [updateContact] = useMutation(UPDATE_CONTACT);
 
-    const [createPaymentSchedule] = useMutation(ADD_PAYMENT_SCHEDULE)
+    const [createPaymentSchedule] = useMutation(ADD_PAYMENT_SCHEDULE);
 
     function CreateContact(frm: any) {
-        frm.searchContact = frm.searchContact ? JSON.parse(frm.searchContact) : null //existing contact id
+        frm.searchContact = frm.searchContact ? JSON.parse(frm.searchContact) : null; //existing contact id
 
         updateContact({
             variables: {
                 id: Number(
                     frm.searchContact
                         .map((item: any) => {
-                            return item.id
+                            return item.id;
                         })
                         .toString()
                 ),
@@ -68,7 +68,7 @@ function CreateContactAsPayee(props: any, ref: any) {
                             Destination_Contacts_ID: Number(
                                 frm.searchContact
                                     .map((item: any) => {
-                                        return item.id
+                                        return item.id;
                                     })
                                     .toString()
                             ),
@@ -101,19 +101,19 @@ function CreateContactAsPayee(props: any, ref: any) {
                         }
                     },
                     onCompleted: (data) => {
-                        props.refetchContacts()
-                        props.refetchChangemakersPaymentSchedules()
-                        modalTrigger.next(false)
-                        setIsCreated(!isCreated)
+                        props.refetchContacts();
+                        props.refetchChangemakersPaymentSchedules();
+                        modalTrigger.next(false);
+                        setIsCreated(!isCreated);
                     }
-                })
+                });
             }
-        })
+        });
     }
 
     const onSubmit = (frm: any) => {
-        CreateContact(frm)
-    }
+        CreateContact(frm);
+    };
 
     return (
         <>
@@ -125,7 +125,7 @@ function CreateContactAsPayee(props: any, ref: any) {
                 formUISchema={schema}
                 formSchema={payeeJson}
                 formSubmit={(frm: any) => {
-                    onSubmit(frm)
+                    onSubmit(frm);
                 }}
                 formData={
                     operation.type === 'create'
@@ -154,7 +154,7 @@ function CreateContactAsPayee(props: any, ref: any) {
                 />
             )}
         </>
-    )
+    );
 }
 
-export default React.forwardRef(CreateContactAsPayee)
+export default React.forwardRef(CreateContactAsPayee);

@@ -1,17 +1,17 @@
-import { useState, useRef, useContext } from 'react'
-import { InputGroup, FormControl, Container } from 'react-bootstrap'
-import { gql, useQuery } from '@apollo/client'
-import AuthContext from '../../../../context/auth-context'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
+import { useState, useRef, useContext } from 'react';
+import { InputGroup, FormControl, Container } from 'react-bootstrap';
+import { gql, useQuery } from '@apollo/client';
+import AuthContext from '../../../../context/auth-context';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
 
 const PackageSearch = (props: any) => {
     //const last = window.location.pathname.split("/").pop();
-    const auth = useContext(AuthContext)
-    const [packageLists, setPackageLists] = useState<any[]>([])
-    const [searchInput, setSearchInput] = useState(null)
-    const [selected, setSelected] = useState<any[]>([])
-    const inputField = useRef<any>()
-    let skipval = true
+    const auth = useContext(AuthContext);
+    const [packageLists, setPackageLists] = useState<any[]>([]);
+    const [searchInput, setSearchInput] = useState(null);
+    const [selected, setSelected] = useState<any[]>([]);
+    const inputField = useRef<any>();
+    let skipval = true;
 
     const GET_PACKAGELIST = gql`
         query packageListQuery($filter: String!, $id: ID) {
@@ -29,7 +29,7 @@ const PackageSearch = (props: any) => {
                 }
             }
         }
-    `
+    `;
 
     function FetchPackageList(
         _variable: Record<string, unknown> = { filter: ' ', id: auth.userid }
@@ -38,63 +38,63 @@ const PackageSearch = (props: any) => {
             variables: _variable,
             onCompleted: loadPackageList,
             skip: !searchInput
-        })
+        });
     }
 
     function loadPackageList(data: any) {
-        const flattenData = flattenObj({ ...data })
+        const flattenData = flattenObj({ ...data });
         setPackageLists(
             [...flattenData.fitnesspackages].map((p) => {
                 return {
                     id: p.id,
                     name: p.packagename
-                }
+                };
             })
-        )
+        );
     }
 
     function Search(data: any) {
         if (data.length > 0) {
-            setSearchInput(data)
-            skipval = false
+            setSearchInput(data);
+            skipval = false;
         } else {
-            setPackageLists([])
+            setPackageLists([]);
         }
     }
 
     function handleSelectedPackageAdd(name: any, id: any) {
-        const values = [...selected]
-        const a = values.find((e) => e.id === id)
+        const values = [...selected];
+        const a = values.find((e) => e.id === id);
         if (!a) {
-            values.push({ value: name, id: id })
-            setSelected(values)
+            values.push({ value: name, id: id });
+            setSelected(values);
         }
         props.onChange(
             values
                 .map((e) => {
-                    return e.id
+                    return e.id;
                 })
                 .join(',')
-        )
-        inputField.current.value = ''
-        setPackageLists([])
-        skipval = true
+        );
+        inputField.current.value = '';
+        setPackageLists([]);
+        skipval = true;
     }
 
     function handleSelectedPackageRemove(name: any) {
-        const values = [...selected]
-        values.splice(name, 1)
-        setSelected(values)
+        const values = [...selected];
+        values.splice(name, 1);
+        setSelected(values);
         props.onChange(
             values
                 .map((e) => {
-                    return e.id
+                    return e.id;
                 })
                 .join(',')
-        )
+        );
     }
 
-    FetchPackageList({ filter: searchInput, skip: skipval })
+    FetchPackageList({ filter: searchInput, skip: skipval });
 
     return (
         <>
@@ -106,8 +106,8 @@ const PackageSearch = (props: any) => {
                     id="package"
                     ref={inputField}
                     onChange={(e) => {
-                        e.preventDefault()
-                        Search(e.target.value)
+                        e.preventDefault();
+                        Search(e.target.value);
                     }}
                     autoComplete="off"
                 />
@@ -121,14 +121,14 @@ const PackageSearch = (props: any) => {
                                 className="m-2 p-1 shadow-sm rounded bg-white"
                                 value={p.id}
                                 onClick={(e) => {
-                                    e.preventDefault()
-                                    handleSelectedPackageAdd(p.name, p.id)
+                                    e.preventDefault();
+                                    handleSelectedPackageAdd(p.name, p.id);
                                 }}
                             >
                                 {p.name}
                             </option>
                         </Container>
-                    )
+                    );
                 })}
             </>
             <>
@@ -162,11 +162,11 @@ const PackageSearch = (props: any) => {
                                 onClick={() => handleSelectedPackageRemove(val.value)}
                             ></i>
                         </div>
-                    )
+                    );
                 })}
             </>
         </>
-    )
-}
+    );
+};
 
-export default PackageSearch
+export default PackageSearch;

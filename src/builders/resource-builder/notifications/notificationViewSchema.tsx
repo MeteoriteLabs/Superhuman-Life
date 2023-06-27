@@ -26,4 +26,4 @@ export const schemaView: any = {
     prerecordedtrigger: {
         'ui:disabled': true
     }
-}
+};

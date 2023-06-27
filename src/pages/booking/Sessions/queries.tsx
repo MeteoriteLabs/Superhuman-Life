@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const GET_TAGS = gql`
     query getTags(
@@ -72,7 +72,7 @@ export const GET_TAGS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_SESSIONS = gql`
     query getSessions(
@@ -122,7 +122,7 @@ export const GET_SESSIONS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_SESSION_BOOKINGS = gql`
     query getSessionBookings($id: ID) {
@@ -157,7 +157,7 @@ export const GET_SESSION_BOOKINGS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_SESSION_BOOKINGS_FOR_CLIENTS = gql`
     query getSessionBookings(
@@ -227,7 +227,7 @@ export const GET_SESSION_BOOKINGS_FOR_CLIENTS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_ALL_CLIENTS = gql`
     query clientPackages($id: ID, $filter: String) {
@@ -271,7 +271,7 @@ export const GET_ALL_CLIENTS = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_STATUS = gql`
     mutation updateStatus($id: ID!, $data: SessionsBookingInput!) {
@@ -281,7 +281,7 @@ export const UPDATE_STATUS = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_SCHEDULE = gql`
     mutation updateSchedule($id: ID!, $data: SessionInput!) {
@@ -291,7 +291,7 @@ export const UPDATE_SCHEDULE = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_SCHEDULE = gql`
     mutation createSchedule($data: SessionInput!) {
@@ -301,7 +301,7 @@ export const CREATE_SCHEDULE = gql`
             }
         }
     }
-`
+`;
 
 export const GET_FUTURE_SESSIONS = gql`
     query getSessions($id: ID, $session_date: Date, $tag: String) {
@@ -363,7 +363,7 @@ export const GET_FUTURE_SESSIONS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_SESSION = gql`
     query getSession($id: ID) {
@@ -417,4 +417,4 @@ export const GET_SESSION = gql`
             }
         }
     }
-`
+`;

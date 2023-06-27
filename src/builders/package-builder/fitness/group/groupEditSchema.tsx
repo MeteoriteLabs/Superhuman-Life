@@ -1,13 +1,13 @@
-import Upload from '../../../../components/upload/upload'
-import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect'
-import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect'
-import LanguageList from '../../../../components/customWidgets/languageSelect'
-import GroupProgramDetails from './groupProgramDetails'
-import GroupConfig from './groupConfig'
-import GroupPricingTable from './groupPricingTable'
-import GroupBookingConfig from './bookingConfig'
-import GroupPrimaryDateConfig from './primaryDatesConfig'
-import DatesConfig from './groupDateConfig'
+import Upload from '../../../../components/upload/upload';
+import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect';
+import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect';
+import LanguageList from '../../../../components/customWidgets/languageSelect';
+import GroupProgramDetails from './groupProgramDetails';
+import GroupConfig from './groupConfig';
+import GroupPricingTable from './groupPricingTable';
+import GroupBookingConfig from './bookingConfig';
+import GroupPrimaryDateConfig from './primaryDatesConfig';
+import DatesConfig from './groupDateConfig';
 
 export const widgets = {
     datesConfig: DatesConfig,
@@ -18,7 +18,7 @@ export const widgets = {
     groupPricingTable: GroupPricingTable,
     groupBookingConfig: GroupBookingConfig,
     languageList: LanguageList
-}
+};
 
 export const EditSchema: any = {
     disciplines: {
@@ -70,7 +70,7 @@ export const EditSchema: any = {
                     value={props.value}
                     title={'Thumbnail'}
                 />
-            )
+            );
         }
     },
     Upload: {
@@ -83,7 +83,7 @@ export const EditSchema: any = {
                         onChange={props.onChange}
                         value={props.value}
                     />
-                )
+                );
             }
         },
         VideoUrl: {
@@ -133,7 +133,7 @@ export const EditSchema: any = {
                     type={'Cohort'}
                     readonly={true}
                 />
-            )
+            );
         }
     }
-}
+};

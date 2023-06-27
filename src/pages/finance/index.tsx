@@ -1,16 +1,16 @@
-import { Card, Tab, Tabs } from 'react-bootstrap'
+import { Card, Tab, Tabs } from 'react-bootstrap';
 // import General from "./General/General";
-import Summary from './Summary/Summary'
-import Earnings from './Earnings/Earnings'
-import Expenses from './Outflow'
+import Summary from './Summary/Summary';
+import Earnings from './Earnings/Earnings';
+import Expenses from './Outflow';
 // import Invoices from "./Invoices/Invoices";
-import Vouchers from './Vouchers/Vouchers'
+import Vouchers from './Vouchers/Vouchers';
 // import PaymentMethods from './PaymentMethods/PaymentMethods';
 // import Platform from "./Platform/Platform";
 // import PricingAssist from './PricingAssist/PricingAssist';
-import AllTransactions from './Transactions'
-import Payee from './Payee/Payee'
-import './finance.css'
+import AllTransactions from './Transactions';
+import Payee from './Payee/Payee';
+import './finance.css';
 
 export default function index(): JSX.Element {
     return (
@@ -66,5 +66,5 @@ export default function index(): JSX.Element {
                 </Card.Body>
             </Card>
         </div>
-    )
+    );
 }

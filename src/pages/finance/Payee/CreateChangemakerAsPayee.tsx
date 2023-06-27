@@ -1,47 +1,47 @@
-import React, { useContext, useImperativeHandle, useState } from 'react'
-import ModalView from '../../../components/modal/index'
-import { ADD_PAYMENT_SCHEDULE } from './queries'
-import { useMutation } from '@apollo/client'
-import AuthContext from '../../../context/auth-context'
-import { schema, widgets } from './PayeeSchema'
-import { Subject } from 'rxjs'
-import Toaster from '../../../components/Toaster'
+import React, { useContext, useImperativeHandle, useState } from 'react';
+import ModalView from '../../../components/modal/index';
+import { ADD_PAYMENT_SCHEDULE } from './queries';
+import { useMutation } from '@apollo/client';
+import AuthContext from '../../../context/auth-context';
+import { schema, widgets } from './PayeeSchema';
+import { Subject } from 'rxjs';
+import Toaster from '../../../components/Toaster';
 import {
     phoneCustomFormats,
     phoneTransformErrors
-} from '../../../components/utils/ValidationPatterns'
+} from '../../../components/utils/ValidationPatterns';
 
 interface Operation {
-    id: string
-    modal_status: boolean
-    type: 'create'
-    current_status: boolean
+    id: string;
+    modal_status: boolean;
+    type: 'create';
+    current_status: boolean;
 }
 
 function CreateChangemakerAsPayee(props: any, ref: any): JSX.Element {
-    const [operation, setOperation] = useState<Operation>({} as Operation)
-    const auth = useContext(AuthContext)
-    const payeeJson: Record<string, unknown> = require('./ChangemakerPayee.json')
-    const [isCreated, setIsCreated] = useState<boolean>(false)
+    const [operation, setOperation] = useState<Operation>({} as Operation);
+    const auth = useContext(AuthContext);
+    const payeeJson: Record<string, unknown> = require('./ChangemakerPayee.json');
+    const [isCreated, setIsCreated] = useState<boolean>(false);
 
-    const modalTrigger = new Subject()
+    const modalTrigger = new Subject();
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
-            setOperation(msg)
-            modalTrigger.next(true)
+            setOperation(msg);
+            modalTrigger.next(true);
         }
-    }))
+    }));
 
     const [createPaymentSchedule] = useMutation(ADD_PAYMENT_SCHEDULE, {
         onCompleted: () => {
-            modalTrigger.next(false)
-            props.refetchContacts()
-            props.refetchChangemakersPaymentSchedules()
+            modalTrigger.next(false);
+            props.refetchContacts();
+            props.refetchChangemakersPaymentSchedules();
         }
-    })
+    });
 
     function CreateContact(frm: any) {
-        frm.searchChangemaker = frm.searchChangemaker ? JSON.parse(frm.searchChangemaker) : null //existing user
+        frm.searchChangemaker = frm.searchChangemaker ? JSON.parse(frm.searchChangemaker) : null; //existing user
 
         createPaymentSchedule({
             variables: {
@@ -49,7 +49,7 @@ function CreateChangemakerAsPayee(props: any, ref: any): JSX.Element {
                     Destination_User_ID: Number(
                         frm.searchChangemaker
                             .map((item: any) => {
-                                return item.id
+                                return item.id;
                             })
                             .toString()
                     ),
@@ -79,15 +79,15 @@ function CreateChangemakerAsPayee(props: any, ref: any): JSX.Element {
                     }
                 }
             }
-        })
+        });
 
-        modalTrigger.next(false)
-        setIsCreated(!isCreated)
+        modalTrigger.next(false);
+        setIsCreated(!isCreated);
     }
 
     const onSubmit = (frm: any) => {
-        CreateContact(frm)
-    }
+        CreateContact(frm);
+    };
 
     return (
         <>
@@ -99,7 +99,7 @@ function CreateChangemakerAsPayee(props: any, ref: any): JSX.Element {
                 formUISchema={schema}
                 formSchema={payeeJson}
                 formSubmit={(frm: any) => {
-                    onSubmit(frm)
+                    onSubmit(frm);
                 }}
                 formData={
                     operation.type === 'create'
@@ -128,7 +128,7 @@ function CreateChangemakerAsPayee(props: any, ref: any): JSX.Element {
                 />
             )}
         </>
-    )
+    );
 }
 
-export default React.forwardRef(CreateChangemakerAsPayee)
+export default React.forwardRef(CreateChangemakerAsPayee);

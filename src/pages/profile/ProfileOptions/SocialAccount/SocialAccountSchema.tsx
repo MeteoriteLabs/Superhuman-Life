@@ -18,4 +18,4 @@ export const schema: any = {
     Twitter_URL: {
         'ui:placeholder': 'https://twitter.com/username'
     }
-}
+};

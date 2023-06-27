@@ -1,4 +1,4 @@
-import { useMemo, useState, useRef, useContext, useEffect } from 'react'
+import { useMemo, useState, useRef, useContext, useEffect } from 'react';
 import {
     Badge,
     Button,
@@ -9,24 +9,24 @@ import {
     Container,
     Row,
     Col
-} from 'react-bootstrap'
-import Table from '../../../components/table/leads-table'
-import { useQuery } from '@apollo/client'
-import ActionButton from '../../../components/actionbutton/index'
-import CreateEditContact from './createEditContact'
-import { GET_CONTACTS } from './queries'
-import { flattenObj } from '../../../components/utils/responseFlatten'
-import { useHistory } from 'react-router-dom'
-import AuthContext from '../../../context/auth-context'
+} from 'react-bootstrap';
+import Table from '../../../components/table/leads-table';
+import { useQuery } from '@apollo/client';
+import ActionButton from '../../../components/actionbutton/index';
+import CreateEditContact from './createEditContact';
+import { GET_CONTACTS } from './queries';
+import { flattenObj } from '../../../components/utils/responseFlatten';
+import { useHistory } from 'react-router-dom';
+import AuthContext from '../../../context/auth-context';
 
 export default function Contacts() {
-    const [searchFilter, setSearchFilter] = useState<string>('')
-    const [page, setPage] = useState<number>(1)
-    const [totalRecords, setTotalRecords] = useState<number>(0)
+    const [searchFilter, setSearchFilter] = useState<string>('');
+    const [page, setPage] = useState<number>(1);
+    const [totalRecords, setTotalRecords] = useState<number>(0);
 
-    const auth = useContext(AuthContext)
-    const searchInput = useRef<any>()
-    const createEditContactComponent = useRef<any>(null)
+    const auth = useContext(AuthContext);
+    const searchInput = useRef<any>();
+    const createEditContactComponent = useRef<any>(null);
 
     const columns = useMemo<any>(
         () => [
@@ -39,15 +39,15 @@ export default function Contacts() {
                 accessor: 'appStatus',
                 Header: 'App Status',
                 Cell: ({ row }: any) => {
-                    let statusColor = ''
+                    let statusColor = '';
                     switch (row.values.appStatus) {
                         case 'Invited':
-                            statusColor = 'success'
-                            break
+                            statusColor = 'success';
+                            break;
 
                         case 'NotInvited':
-                            statusColor = 'danger'
-                            break
+                            statusColor = 'danger';
+                            break;
                     }
                     return (
                         <>
@@ -59,7 +59,7 @@ export default function Contacts() {
                                 {row.values.appStatus === 'NotInvited' ? 'Not Invited' : 'Invited'}
                             </Badge>
                         </>
-                    )
+                    );
                 }
             },
             {
@@ -70,65 +70,65 @@ export default function Contacts() {
                         createEditContactComponent.current.TriggerForm({
                             id: row.original.id,
                             type: 'edit'
-                        })
-                    }
+                        });
+                    };
                     const viewHandler = () => {
                         createEditContactComponent.current.TriggerForm({
                             id: row.original.id,
                             type: 'view'
-                        })
-                    }
+                        });
+                    };
                     const deleteHandler = () => {
                         createEditContactComponent.current.TriggerForm({
                             id: row.original.id,
                             type: 'delete'
-                        })
-                    }
+                        });
+                    };
 
-                    const history = useHistory()
+                    const history = useHistory();
                     const routeChange = () => {
-                        const path = `payment_settings/?id=${row.original.id}&isChangemaker=false`
-                        history.push(path)
-                    }
+                        const path = `payment_settings/?id=${row.original.id}&isChangemaker=false`;
+                        history.push(path);
+                    };
 
                     const arrayAction = [
                         { actionName: 'Edit', actionClick: editHandler },
                         { actionName: 'View', actionClick: viewHandler },
                         { actionName: 'Delete', actionClick: deleteHandler },
                         { actionName: 'Payment Settings', actionClick: routeChange }
-                    ]
+                    ];
 
-                    return <ActionButton arrayAction={arrayAction}></ActionButton>
+                    return <ActionButton arrayAction={arrayAction}></ActionButton>;
                 }
             }
         ],
         []
-    )
+    );
 
     function getDate(time: any) {
-        const dateObj = new Date(time)
-        const month = dateObj.getMonth() + 1
-        const year = dateObj.getFullYear()
-        const date = dateObj.getDate()
+        const dateObj = new Date(time);
+        const month = dateObj.getMonth() + 1;
+        const year = dateObj.getFullYear();
+        const date = dateObj.getDate();
 
-        return `${date}/${month}/${year}`
+        return `${date}/${month}/${year}`;
     }
 
-    const [datatable, setDataTable] = useState<Record<string, unknown>[]>([])
+    const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
 
     const fetch = useQuery(GET_CONTACTS, {
         variables: { id: auth.userid, filter: searchFilter, start: page * 10 - 10, limit: 10 },
         onCompleted: (data) => {
-            setTotalRecords(data.contacts.meta.pagination.total)
-            loadData(data)
+            setTotalRecords(data.contacts.meta.pagination.total);
+            loadData(data);
         }
-    })
+    });
 
     function refetchQueryCallback() {
-        fetch.refetch()
+        fetch.refetch();
     }
     function loadData(data: any) {
-        const flattenData = flattenObj({ ...data })
+        const flattenData = flattenObj({ ...data });
         setDataTable(
             [...flattenData.contacts].flatMap((Detail) => {
                 return {
@@ -139,14 +139,14 @@ export default function Contacts() {
                     email: Detail.email,
                     type: Detail.type,
                     appStatus: Detail.appDownloadStatus
-                }
+                };
             })
-        )
+        );
     }
 
     const pageHandler = (selectedPageNumber: number) => {
-        setPage(selectedPageNumber)
-    }
+        setPage(selectedPageNumber);
+    };
 
     return (
         <TabContent>
@@ -163,8 +163,8 @@ export default function Contacts() {
                                 <Button
                                     variant="outline-secondary"
                                     onClick={(e: any) => {
-                                        e.preventDefault()
-                                        setSearchFilter(searchInput.current.value)
+                                        e.preventDefault();
+                                        setSearchFilter(searchInput.current.value);
                                     }}
                                 >
                                     <i className="fas fa-search"></i>
@@ -182,7 +182,7 @@ export default function Contacts() {
                                         id: null,
                                         type: 'create',
                                         modal_status: true
-                                    })
+                                    });
                                 }}
                             >
                                 <i className="fas fa-plus-circle"></i> Add Contact
@@ -222,5 +222,5 @@ export default function Contacts() {
                 </Row>
             ) : null}
         </TabContent>
-    )
+    );
 }

@@ -1,12 +1,12 @@
-import Upload from '../../../../components/upload/upload'
-import DatesConfig from '../../../../components/customWidgets/datesConfig'
-import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect'
-import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect'
-import LanguageList from '../../../../components/customWidgets/languageSelect'
-import GroupProgramDetails from './groupProgramDetails'
-import GroupConfig from './groupConfig'
-import GroupPricingTable from './groupPricingTable'
-import GroupBookingConfig from './bookingConfig'
+import Upload from '../../../../components/upload/upload';
+import DatesConfig from '../../../../components/customWidgets/datesConfig';
+import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect';
+import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect';
+import LanguageList from '../../../../components/customWidgets/languageSelect';
+import GroupProgramDetails from './groupProgramDetails';
+import GroupConfig from './groupConfig';
+import GroupPricingTable from './groupPricingTable';
+import GroupBookingConfig from './bookingConfig';
 
 export const widgets = {
     datesConfig: DatesConfig,
@@ -17,7 +17,7 @@ export const widgets = {
     groupPricingTable: GroupPricingTable,
     groupBookingConfig: GroupBookingConfig,
     languageList: LanguageList
-}
+};
 
 export const schemaView: any = {
     packagename: {
@@ -79,7 +79,7 @@ export const schemaView: any = {
                     title={'Thumbnail'}
                     readonly={true}
                 />
-            )
+            );
         }
     },
     VideoUrl: {
@@ -126,4 +126,4 @@ export const schemaView: any = {
             inline: true
         }
     }
-}
+};

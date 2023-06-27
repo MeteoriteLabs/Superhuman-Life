@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const FETCH_TEMPLATES = gql`
     query WebsiteTemplates {
@@ -19,7 +19,7 @@ export const FETCH_TEMPLATES = gql`
             }
         }
     }
-`
+`;
 
 export const FETECH_SELECTED_TEMPLATE = gql`
     query WebsiteTemplates($templateName: String) {
@@ -40,4 +40,4 @@ export const FETECH_SELECTED_TEMPLATE = gql`
             }
         }
     }
-`
+`;

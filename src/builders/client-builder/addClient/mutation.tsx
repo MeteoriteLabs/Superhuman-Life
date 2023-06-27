@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const CREATE_CLIENT = gql`
     mutation createClient($data: UsersPermissionsUserInput!) {
@@ -14,7 +14,7 @@ export const CREATE_CLIENT = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_CLIENT_BOOKING = gql`
     mutation createClientBooking($data: ClientBookingInput!) {
@@ -46,4 +46,4 @@ export const CREATE_CLIENT_BOOKING = gql`
             }
         }
     }
-`
+`;

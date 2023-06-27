@@ -1,9 +1,9 @@
-import { useContext } from 'react'
-import { ChangeMakerWebsiteContext } from '../../../../context/changemakerWebsite-context'
-import Loader from '../../../../components/Loader/Loader'
+import { useContext } from 'react';
+import { ChangeMakerWebsiteContext } from '../../../../context/changemakerWebsite-context';
+import Loader from '../../../../components/Loader/Loader';
 
 function Index(): JSX.Element {
-    const { changemakerWebsiteState } = useContext(ChangeMakerWebsiteContext)
+    const { changemakerWebsiteState } = useContext(ChangeMakerWebsiteContext);
 
     return (
         <div
@@ -44,7 +44,7 @@ function Index(): JSX.Element {
                 )}
             </div>
         </div>
-    )
+    );
 }
 
-export default Index
+export default Index;

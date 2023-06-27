@@ -1,8 +1,8 @@
-import React from 'react'
-import _ from 'lodash'
+import React from 'react';
+import _ from 'lodash';
 
 export default function InvoiceModal(props) {
-    const { rowData } = props
+    const { rowData } = props;
 
     const packageClasses = [
         {
@@ -25,9 +25,9 @@ export default function InvoiceModal(props) {
             imgName: 'customclassic.svg',
             numberOfClasses: rowData.package.recordedclasses
         }
-    ]
+    ];
 
-    const availablePackageClasses = _.reject(packageClasses, ['numberOfClasses', null])
+    const availablePackageClasses = _.reject(packageClasses, ['numberOfClasses', null]);
 
     const renderNumberClasses = () => {
         return availablePackageClasses.map((item, index) => {
@@ -36,22 +36,22 @@ export default function InvoiceModal(props) {
                     <img src={`./assets/${item.imgName}`} alt={item.imgName} />
                     <p>{item.numberOfClasses}</p>
                 </div>
-            )
-        })
-    }
+            );
+        });
+    };
 
     const renderPrices = () => {
         const totalNumberOfClasses = availablePackageClasses.reduce(
             (acc, item) => acc + item.numberOfClasses,
             0
-        )
-        const price = totalNumberOfClasses * rowData.package.fitnesspackagepricing[0].mrp
+        );
+        const price = totalNumberOfClasses * rowData.package.fitnesspackagepricing[0].mrp;
         return (
             <>
                 <p>{price.toLocaleString()}</p>
             </>
-        )
-    }
+        );
+    };
 
     return (
         <div className=" container">
@@ -100,7 +100,7 @@ export default function InvoiceModal(props) {
                                       {item.address1} {item.city},{item.state} {item.zipcode},{' '}
                                       {item.country}
                                   </p>
-                              )
+                              );
                           })
                         : 'No Address'}
 
@@ -164,5 +164,5 @@ export default function InvoiceModal(props) {
                 <p>{rowData.userInfo.Phone || 'Missing Phone'}</p>
             </div>
         </div>
-    )
+    );
 }

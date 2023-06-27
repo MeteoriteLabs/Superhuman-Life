@@ -1,5 +1,5 @@
-import React from 'react'
-import { Col, Row } from 'react-bootstrap'
+import React from 'react';
+import { Col, Row } from 'react-bootstrap';
 
 const NoDataInCard: React.FC<{ msg: string }> = (props) => {
     return (
@@ -15,7 +15,7 @@ const NoDataInCard: React.FC<{ msg: string }> = (props) => {
                 <h6 className="text-center pt-3">{props.msg}</h6>
             </Col>
         </Row>
-    )
-}
+    );
+};
 
-export default NoDataInCard
+export default NoDataInCard;

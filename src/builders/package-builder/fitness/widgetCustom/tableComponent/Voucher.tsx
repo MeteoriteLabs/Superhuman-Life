@@ -1,10 +1,10 @@
-import React, { useState, useContext } from 'react'
-import * as _ from 'lodash'
-import { Form } from 'react-bootstrap'
-import { gql, useLazyQuery } from '@apollo/client'
-import AuthContext from '../../../../../context/auth-context'
-import { flattenObj } from '../../../../../components/utils/responseFlatten'
-import moment from 'moment'
+import React, { useState, useContext } from 'react';
+import * as _ from 'lodash';
+import { Form } from 'react-bootstrap';
+import { gql, useLazyQuery } from '@apollo/client';
+import AuthContext from '../../../../../context/auth-context';
+import { flattenObj } from '../../../../../components/utils/responseFlatten';
+import moment from 'moment';
 
 export default function Voucher({
     actionType,
@@ -17,8 +17,8 @@ export default function Voucher({
     arrSapientPrice,
     setIndex
 }: any) {
-    const auth = useContext(AuthContext)
-    const [vouchers, setVouchers] = useState<any>([])
+    const auth = useContext(AuthContext);
+    const [vouchers, setVouchers] = useState<any>([]);
     const GET_VOUCHERS = gql`
         query fetchVouchers($expiry: DateTime!, $id: ID!, $start: DateTime!, $status: String!) {
             vouchers(
@@ -41,14 +41,14 @@ export default function Voucher({
                 }
             }
         }
-    `
+    `;
 
     const [getVouchers] = useLazyQuery(GET_VOUCHERS, {
         onCompleted: (data) => {
-            const flattenData = flattenObj({ ...data })
-            setVouchers(flattenData.vouchers)
+            const flattenData = flattenObj({ ...data });
+            setVouchers(flattenData.vouchers);
         }
-    })
+    });
     React.useEffect(() => {
         getVouchers({
             variables: {
@@ -57,30 +57,30 @@ export default function Voucher({
                 start: moment().toISOString(),
                 status: 'Active'
             }
-        })
-    }, [])
+        });
+    }, []);
 
     const numEle =
-        type === 'Classic Class' || mode === 'Online Workout' || mode === 'Offline Workout' ? 1 : 4
+        type === 'Classic Class' || mode === 'Online Workout' || mode === 'Offline Workout' ? 1 : 4;
 
     const handleOnChange = (e, index: number) => {
-        let updateVoucher: any = ''
-        updateVoucher = _.cloneDeep(fitnesspackagepricing)
-        updateVoucher[index].voucher = e.target.value
+        let updateVoucher: any = '';
+        updateVoucher = _.cloneDeep(fitnesspackagepricing);
+        updateVoucher[index].voucher = e.target.value;
 
-        const updateValue = [...minPrice]
+        const updateValue = [...minPrice];
         if (e.target.value === '0%') {
-            updateValue[index] = Number(arrSapientPrice[index])
+            updateValue[index] = Number(arrSapientPrice[index]);
         } else {
             updateValue[index] = Number(
                 ((arrSapientPrice[index] * 100) / (100 - e.target.value)).toFixed(2)
-            )
+            );
         }
 
-        setIndex(index)
-        setMinPrice(updateValue)
-        setFitnesspackagepricing(updateVoucher)
-    }
+        setIndex(index);
+        setMinPrice(updateValue);
+        setFitnesspackagepricing(updateVoucher);
+    };
 
     return (
         <>
@@ -102,13 +102,13 @@ export default function Voucher({
                                         <option key={index} value={voucher.discount_percentage}>
                                             {voucher.voucher_name}
                                         </option>
-                                    )
+                                    );
                                 })}
                             </Form.Control>
                         </Form.Group>
                     </td>
-                )
+                );
             })}
         </>
-    )
+    );
 }

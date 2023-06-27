@@ -1,42 +1,42 @@
-import React, { useEffect, useState } from 'react'
-import moment from 'moment'
-import { Badge } from 'react-bootstrap'
-import './styles.css'
+import React, { useEffect, useState } from 'react';
+import moment from 'moment';
+import { Badge } from 'react-bootstrap';
+import './styles.css';
 
 const WeekScheduler: React.FC<{ days: number; startDate: any; assignedEvents: any }> = (props) => {
-    const arr: any = []
-    const [show, setShow] = useState<boolean>(false)
-    const schedulerDay: any = require('./table.json')
+    const arr: any = [];
+    const [show, setShow] = useState<boolean>(false);
+    const schedulerDay: any = require('./table.json');
 
     const hours: number[] = [
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23
-    ]
-    const days: number[] = []
-    const dates: string[] = []
-    const min: number[] = [0, 15, 30, 45]
+    ];
+    const days: number[] = [];
+    const dates: string[] = [];
+    const min: number[] = [0, 15, 30, 45];
 
     function handleDays() {
         for (let l = 1; l <= props.days; l++) {
-            days.push(l)
+            days.push(l);
         }
         for (let j = 0; j < props.days; j++) {
-            const t = moment(props.startDate).add(j, 'days').format('DD MMM YY')
-            dates.push(t)
+            const t = moment(props.startDate).add(j, 'days').format('DD MMM YY');
+            dates.push(t);
         }
     }
 
-    handleDays()
+    handleDays();
 
     function handleHeight(val: any) {
-        const starth = parseInt(val.hour)
-        const startm = parseInt(val.min)
-        const endh = parseInt(val.endHour)
-        const endm = parseInt(val.endMin)
+        const starth = parseInt(val.hour);
+        const startm = parseInt(val.min);
+        const endh = parseInt(val.endHour);
+        const endm = parseInt(val.endMin);
 
-        const calculatedH = endh - starth
-        const calculatedM = endm - startm
-        const height = calculatedH * 4 * 15 + calculatedM
-        return height
+        const calculatedH = endh - starth;
+        const calculatedM = endm - startm;
+        const height = calculatedH * 4 * 15 + calculatedM;
+        return height;
     }
 
     function handleDaysRowRender() {
@@ -70,14 +70,14 @@ const WeekScheduler: React.FC<{ days: number; startDate: any; assignedEvents: an
                         </div>
                     </div>
                 </div>
-            )
-        })
+            );
+        });
     }
 
     function handleTableRender() {
-        const values = props.assignedEvents === null ? [] : [...props.assignedEvents]
+        const values = props.assignedEvents === null ? [] : [...props.assignedEvents];
         for (let d = 1; d <= props.days; d++) {
-            arr[d] = JSON.parse(JSON.stringify(schedulerDay))
+            arr[d] = JSON.parse(JSON.stringify(schedulerDay));
         }
         values.forEach((val) => {
             const startTimeHour: any = `${
@@ -86,30 +86,30 @@ const WeekScheduler: React.FC<{ days: number; startDate: any; assignedEvents: an
                         ? `${Number(val.start_time.split(':')[0])}`
                         : val.start_time.split(':')[0]
                     : '0'
-            }`
+            }`;
             const startTimeMinute: any = `${
                 val.start_time
                     ? Number(val.start_time.split(':')[0]) < 10
                         ? `${Number(val.start_time.split(':')[1])}`
                         : val.start_time.split(':')[1]
                     : '0'
-            }`
+            }`;
             const endTimeHour: any = `${
                 val.end_time
                     ? Number(val.end_time.split(':')[0]) < 10
                         ? `${Number(val.end_time.split(':')[0])}`
                         : val.end_time.split(':')[0]
                     : '0'
-            }`
+            }`;
             const endTimeMin: any = `${
                 val.end_time
                     ? Number(val.end_time.split(':')[1]) < 10
                         ? `${Number(val.end_time.split(':')[1])}`
                         : val.end_time.split(':')[1]
                     : '0'
-            }`
+            }`;
             if (!arr[moment(val.session_date).weekday() + 1][startTimeHour][startTimeMinute]) {
-                arr[moment(val.session_date).weekday() + 1][startTimeHour][startTimeMinute] = []
+                arr[moment(val.session_date).weekday() + 1][startTimeHour][startTimeMinute] = [];
             }
             arr[moment(val.session_date).weekday() + 1][startTimeHour][startTimeMinute].push({
                 title: val.activity === null ? val.workout.workouttitle : val.activity.title,
@@ -126,19 +126,19 @@ const WeekScheduler: React.FC<{ days: number; startDate: any; assignedEvents: an
                 sessionId: val.id,
                 activityTarget: val.activity === null ? null : val.activity_target,
                 sessionDate: val.session_date
-            })
-        })
+            });
+        });
     }
 
-    handleTableRender()
+    handleTableRender();
 
     useEffect(() => {
         setTimeout(() => {
-            setShow(true)
-        }, 500)
-    }, [show])
+            setShow(true);
+        }, 500);
+    }, [show]);
 
-    if (!show) return <div style={{ color: 'red' }}>Loading...</div>
+    if (!show) return <div style={{ color: 'red' }}>Loading...</div>;
     else
         return (
             <>
@@ -187,7 +187,7 @@ const WeekScheduler: React.FC<{ days: number; startDate: any; assignedEvents: an
                                                             {arr[d][h][m] &&
                                                                 arr[d][h][m].map(
                                                                     (val, index: number) => {
-                                                                        val.index = index
+                                                                        val.index = index;
                                                                         return (
                                                                             <div
                                                                                 key={index}
@@ -207,7 +207,7 @@ const WeekScheduler: React.FC<{ days: number; startDate: any; assignedEvents: an
                                                                                         JSON.stringify(
                                                                                             val
                                                                                         )
-                                                                                    )
+                                                                                    );
                                                                                 }}
                                                                                 style={{
                                                                                     borderRadius:
@@ -301,22 +301,22 @@ const WeekScheduler: React.FC<{ days: number; startDate: any; assignedEvents: an
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
-                                                                        )
+                                                                        );
                                                                     }
                                                                 )}
                                                         </div>
-                                                    )
+                                                    );
                                                 })}
                                             </div>
-                                        )
+                                        );
                                     })}
                                 </div>
-                            )
+                            );
                         })}
                     </div>
                 </div>
             </>
-        )
-}
+        );
+};
 
-export default WeekScheduler
+export default WeekScheduler;

@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react'
-import { Button, Modal, Row } from 'react-bootstrap'
-import { useMutation, gql } from '@apollo/client'
-import { useLocation } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import { Button, Modal, Row } from 'react-bootstrap';
+import { useMutation, gql } from '@apollo/client';
+import { useLocation } from 'react-router-dom';
 
 export default function ForgotPassword() {
-    const query = new URLSearchParams(useLocation().search)
-    const confirmation = query.get('confirmation')
-    const [emailSent, setEmailSent] = useState(false)
-    const [errorVerification, setErrorVerification] = useState(false)
+    const query = new URLSearchParams(useLocation().search);
+    const confirmation = query.get('confirmation');
+    const [emailSent, setEmailSent] = useState(false);
+    const [errorVerification, setErrorVerification] = useState(false);
 
     const CONFIRM_ACCOUNT = gql`
         mutation accountConfirmation($confirmation: String!) {
@@ -15,24 +15,24 @@ export default function ForgotPassword() {
                 jwt
             }
         }
-    `
+    `;
 
     const [confirmAccount] = useMutation(CONFIRM_ACCOUNT, {
         onCompleted: () => {
-            setEmailSent(true)
+            setEmailSent(true);
         },
         onError: () => {
-            setErrorVerification(true)
+            setErrorVerification(true);
         }
-    })
+    });
 
     useEffect(() => {
         confirmAccount({
             variables: {
                 confirmation: confirmation
             }
-        })
-    }, [])
+        });
+    }, []);
 
     return (
         <>
@@ -89,5 +89,5 @@ export default function ForgotPassword() {
                 </Modal.Dialog>
             )}
         </>
-    )
+    );
 }

@@ -1,48 +1,48 @@
-import { useQuery, useMutation } from '@apollo/client'
-import React, { useContext, useMemo, useRef, useState } from 'react'
-import { Badge, Row, Col, Form, Button, Modal } from 'react-bootstrap'
-import AuthContext from '../../../../context/auth-context'
-import GroupTable from '../../../../components/table/GroupTable/GroupTable'
-import { GET_TAGS_FOR_GROUP } from '../../graphQL/queries'
-import { DELETE_TAG_BATCH } from '../../graphQL/mutation'
-import moment from 'moment'
-import ActionButton from '../../../../components/actionbutton'
-import FitnessAction from '../FitnessAction'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
+import { useQuery, useMutation } from '@apollo/client';
+import React, { useContext, useMemo, useRef, useState } from 'react';
+import { Badge, Row, Col, Form, Button, Modal } from 'react-bootstrap';
+import AuthContext from '../../../../context/auth-context';
+import GroupTable from '../../../../components/table/GroupTable/GroupTable';
+import { GET_TAGS_FOR_GROUP } from '../../graphQL/queries';
+import { DELETE_TAG_BATCH } from '../../graphQL/mutation';
+import moment from 'moment';
+import ActionButton from '../../../../components/actionbutton';
+import FitnessAction from '../FitnessAction';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
 
 const Group: React.FC = () => {
-    const auth = useContext(AuthContext)
-    const [userPackage, setUserPackage] = useState<unknown[]>([])
-    const [showHistory, setShowHistory] = useState<boolean>(false)
-    const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false)
-    const [tagId, setTagId] = useState<string>('')
-    const fitnessActionRef = useRef<any>(null)
+    const auth = useContext(AuthContext);
+    const [userPackage, setUserPackage] = useState<unknown[]>([]);
+    const [showHistory, setShowHistory] = useState<boolean>(false);
+    const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+    const [tagId, setTagId] = useState<string>('');
+    const fitnessActionRef = useRef<any>(null);
 
     const [deleteBatch] = useMutation(DELETE_TAG_BATCH, {
         onCompleted: () => {
-            mainQuery.refetch()
+            mainQuery.refetch();
         }
-    })
+    });
 
     const mainQuery = useQuery(GET_TAGS_FOR_GROUP, {
         variables: {
             id: auth.userid
         },
         onCompleted: (response) => loadData(response)
-    })
+    });
 
     const loadData = (data: any) => {
-        const flattenData = flattenObj({ ...data })
+        const flattenData = flattenObj({ ...data });
 
         setUserPackage([
             ...flattenData.tags.map((packageItem, index) => {
-                let renewDay: any = ''
+                let renewDay: any = '';
                 if (packageItem.client_packages[index]?.fitnesspackages[0].length !== 0) {
-                    renewDay = new Date(packageItem.client_packages[index]?.effective_date)
+                    renewDay = new Date(packageItem.client_packages[index]?.effective_date);
                     renewDay.setDate(
                         renewDay.getDate() +
                             packageItem.client_packages[index]?.fitnesspackages[0].duration
-                    )
+                    );
                 }
                 return {
                     tagId: packageItem.id,
@@ -69,70 +69,70 @@ const Group: React.FC = () => {
                               packageItem.sessions
                           )
                         : 'N/A'
-                }
+                };
             })
-        ])
-    }
+        ]);
+    };
 
     function handleStatus(sessions: any, effective_date: any, renewDay) {
-        let effectiveDate: any
+        let effectiveDate: any;
         if (sessions.length === 0) {
-            return 'Not_Assigned'
+            return 'Not_Assigned';
         } else if (sessions.length > 0) {
-            let max = 0
+            let max = 0;
             for (let i = 0; i < sessions.length; i++) {
                 if (sessions[i].day_of_program > max) {
-                    max = sessions[i].day_of_program
+                    max = sessions[i].day_of_program;
                 }
             }
-            effectiveDate = moment(effective_date).add(max, 'days').format('MMMM DD,YYYY')
+            effectiveDate = moment(effective_date).add(max, 'days').format('MMMM DD,YYYY');
             if (moment(effectiveDate).isBetween(moment(), moment().subtract(5, 'months'))) {
-                return 'Almost Ending'
+                return 'Almost Ending';
             } else {
-                return 'Assigned'
+                return 'Assigned';
             }
         } else {
             if (moment(effectiveDate) === moment(renewDay)) {
-                return 'Completed'
+                return 'Completed';
             }
         }
     }
 
     function calculateProgramRenewal(effective_date, sessions) {
-        let max = 0
+        let max = 0;
 
         for (let i = 0; i < sessions?.length; i++) {
             if (sessions[i].day_of_program > max) {
-                max = sessions[i].day_of_program
+                max = sessions[i].day_of_program;
             }
         }
 
-        return moment(effective_date).add(max, 'days').format('MMMM DD,YYYY')
+        return moment(effective_date).add(max, 'days').format('MMMM DD,YYYY');
     }
 
     function handleRedirect(id: any) {
-        window.location.href = `/group/session/scheduler/${id}`
+        window.location.href = `/group/session/scheduler/${id}`;
     }
 
     function handleHistoryPackage(data: any) {
-        const flattenData = flattenObj({ ...data })
+        const flattenData = flattenObj({ ...data });
         function handleUsers(data: any) {
-            const clients: any = []
+            const clients: any = [];
             for (let i = 0; i < data.length; i++) {
-                clients.push(data[i].users_permissions_user.username)
+                clients.push(data[i].users_permissions_user.username);
             }
-            return clients
+            return clients;
         }
 
         setUserPackage([
             ...flattenData.tags.map((packageItem, index) => {
-                let renewDay: any = ''
+                let renewDay: any = '';
                 if (packageItem.client_packages[index]?.fitnesspackages[0].length !== 0) {
-                    renewDay = new Date(packageItem.client_packages[index]?.effective_date)
+                    renewDay = new Date(packageItem.client_packages[index]?.effective_date);
                     renewDay.setDate(
                         renewDay.getDate() +
                             packageItem.client_packages[index]?.fitnesspackages[0].duration
-                    )
+                    );
                 }
                 return {
                     tagId: packageItem.id,
@@ -161,9 +161,9 @@ const Group: React.FC = () => {
                               packageItem.sessions
                           )
                         : 'N/A'
-                }
+                };
             })
-        ])
+        ]);
     }
 
     function handleDeleteBatch(tagId: string) {
@@ -171,7 +171,7 @@ const Group: React.FC = () => {
             variables: {
                 id: tagId
             }
-        })
+        });
     }
 
     const columns = useMemo(
@@ -205,7 +205,7 @@ const Group: React.FC = () => {
                                         </Badge>
                                     )}
                                 </>
-                            )
+                            );
                         },
                         enableRowSpan: true
                     },
@@ -226,13 +226,13 @@ const Group: React.FC = () => {
                                                 actionType: 'create',
                                                 type: 'Group Class',
                                                 duration: row.row.original.duration
-                                            })
+                                            });
                                         }}
                                     >
                                         Add new
                                     </Button>
                                 </>
-                            )
+                            );
                         }
                     }
                 ]
@@ -270,7 +270,7 @@ const Group: React.FC = () => {
                                         </Badge>
                                     )}
                                 </>
-                            )
+                            );
                         }
                     },
                     { accessor: 'renewal', Header: 'Last Session Date' },
@@ -279,16 +279,16 @@ const Group: React.FC = () => {
                         Header: 'Actions',
                         Cell: ({ row }: any) => {
                             const manageHandler = () => {
-                                handleRedirect(row.original.tagId)
-                            }
+                                handleRedirect(row.original.tagId);
+                            };
                             const detailsHandler = () => {
                                 fitnessActionRef.current.TriggerForm({
                                     id: row.original.id,
                                     actionType: 'details',
                                     type: 'Group Class',
                                     rowData: row.original
-                                })
-                            }
+                                });
+                            };
 
                             const allClientHandler = () => {
                                 fitnessActionRef.current.TriggerForm({
@@ -296,31 +296,31 @@ const Group: React.FC = () => {
                                     actionType: 'allClients',
                                     type: 'Group Class',
                                     rowData: row.original
-                                })
-                            }
+                                });
+                            };
 
                             const deleteBatchHandler = () => {
                                 if (row.original.client === 'N/A') {
-                                    setTagId(row.original.tagId)
-                                    setShowDeleteModal(true)
+                                    setTagId(row.original.tagId);
+                                    setShowDeleteModal(true);
                                 }
-                            }
+                            };
 
                             const arrayAction = [
                                 { actionName: 'Manage', actionClick: manageHandler },
                                 { actionName: 'Details', actionClick: detailsHandler },
                                 { actionName: 'All Clients', actionClick: allClientHandler },
                                 { actionName: 'Delete Batch', actionClick: deleteBatchHandler }
-                            ]
+                            ];
 
-                            return <ActionButton arrayAction={arrayAction} />
+                            return <ActionButton arrayAction={arrayAction} />;
                         }
                     }
                 ]
             }
         ],
         []
-    )
+    );
 
     if (!showHistory) {
         if (userPackage.length > 0) {
@@ -328,12 +328,12 @@ const Group: React.FC = () => {
                 moment(item.endDate).isBefore(moment()) === true
                     ? userPackage.splice(index, 1)
                     : null
-            )
+            );
         }
     }
 
     function refetchQueryCallback() {
-        mainQuery.refetch()
+        mainQuery.refetch();
     }
 
     return (
@@ -348,10 +348,10 @@ const Group: React.FC = () => {
                                 label="Show History"
                                 defaultChecked={showHistory}
                                 onClick={() => {
-                                    setShowHistory(!showHistory)
+                                    setShowHistory(!showHistory);
                                     mainQuery.refetch().then((res: any) => {
-                                        handleHistoryPackage(res.data)
-                                    })
+                                        handleHistoryPackage(res.data);
+                                    });
                                 }}
                             />
                         </Form>
@@ -378,7 +378,7 @@ const Group: React.FC = () => {
                     <Modal.Footer>
                         <Button
                             onClick={() => {
-                                setShowDeleteModal(false)
+                                setShowDeleteModal(false);
                             }}
                             variant="danger"
                         >
@@ -386,8 +386,8 @@ const Group: React.FC = () => {
                         </Button>
                         <Button
                             onClick={() => {
-                                handleDeleteBatch(tagId)
-                                setShowDeleteModal(false)
+                                handleDeleteBatch(tagId);
+                                setShowDeleteModal(false);
                             }}
                             variant="success"
                         >
@@ -397,7 +397,7 @@ const Group: React.FC = () => {
                 </Modal>
             }
         </>
-    )
-}
+    );
+};
 
-export default Group
+export default Group;

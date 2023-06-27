@@ -1,5 +1,5 @@
-import React from 'react'
-import { Button } from 'react-bootstrap'
+import React from 'react';
+import { Button } from 'react-bootstrap';
 
 const SocialMediaComponent: React.FC<{ url: string }> = (props) => {
     return (
@@ -49,7 +49,7 @@ const SocialMediaComponent: React.FC<{ url: string }> = (props) => {
                 </span>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default SocialMediaComponent
+export default SocialMediaComponent;

@@ -1,8 +1,8 @@
-import { Button, Col, Row } from 'react-bootstrap'
+import { Button, Col, Row } from 'react-bootstrap';
 
-import style from './style.module.css'
-import ArrowDown from '../../../../../components/Icons/componentIcons/arrowDown'
-import ArrowRight from '../../../../../components/Icons/componentIcons/arrowRight'
+import style from './style.module.css';
+import ArrowDown from '../../../../../components/Icons/componentIcons/arrowDown';
+import ArrowRight from '../../../../../components/Icons/componentIcons/arrowRight';
 
 function TopNav(): JSX.Element {
     return (
@@ -30,7 +30,7 @@ function TopNav(): JSX.Element {
                 </Col>
             </Row>
         </div>
-    )
+    );
 }
 
-export default TopNav
+export default TopNav;

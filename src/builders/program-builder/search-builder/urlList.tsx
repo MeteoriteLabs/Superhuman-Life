@@ -1,28 +1,28 @@
-import React, { useState } from 'react'
-import { InputGroup, FormControl, Form } from 'react-bootstrap'
+import React, { useState } from 'react';
+import { InputGroup, FormControl, Form } from 'react-bootstrap';
 
 // eslint-disable-next-line
 const regularExpForUrl =
-    /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/
+    /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/;
 
 const UrlList = (props: any) => {
     const [selected, setSelected] = useState<any[]>(
         props?.field[0]?.type === 'url' ? props?.field : []
-    )
-    const [isUrlValid, setIsUrlValid] = useState<boolean>(false)
+    );
+    const [isUrlValid, setIsUrlValid] = useState<boolean>(false);
 
     function handleUrlChange(i, e, field) {
-        const values = [...field]
-        values[i].type = 'url'
+        const values = [...field];
+        values[i].type = 'url';
         if (regularExpForUrl.test(e)) {
-            values[i].value = e
-            setIsUrlValid(false)
+            values[i].value = e;
+            setIsUrlValid(false);
         } else {
-            setIsUrlValid(true)
+            setIsUrlValid(true);
         }
-        setSelected(values)
+        setSelected(values);
     }
-    props.onChange(selected)
+    props.onChange(selected);
 
     return (
         <div>
@@ -32,7 +32,7 @@ const UrlList = (props: any) => {
                     placeholder="Add URL"
                     value={selected[props.id]?.value}
                     onChange={(e) => {
-                        handleUrlChange(props.id, e.target.value, props.field)
+                        handleUrlChange(props.id, e.target.value, props.field);
                     }}
                     isInvalid={isUrlValid}
                 />
@@ -41,7 +41,7 @@ const UrlList = (props: any) => {
                 </Form.Control.Feedback>
             </InputGroup>
         </div>
-    )
-}
+    );
+};
 
-export default UrlList
+export default UrlList;

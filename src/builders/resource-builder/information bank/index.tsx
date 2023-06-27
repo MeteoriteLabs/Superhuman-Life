@@ -1,4 +1,4 @@
-import { useMemo, useState, useRef, useContext } from 'react'
+import { useMemo, useState, useRef, useContext } from 'react';
 import {
     Badge,
     Button,
@@ -9,21 +9,21 @@ import {
     Container,
     Row,
     Col
-} from 'react-bootstrap'
-import Table from '../../../components/table'
-import { useQuery } from '@apollo/client'
-import AuthContext from '../../../context/auth-context'
-import CreateEditMessage from './createoredit-message'
-import ActionButton from '../../../components/actionbutton/index'
-import { GET_MESSAGES } from './queries'
+} from 'react-bootstrap';
+import Table from '../../../components/table';
+import { useQuery } from '@apollo/client';
+import AuthContext from '../../../context/auth-context';
+import CreateEditMessage from './createoredit-message';
+import ActionButton from '../../../components/actionbutton/index';
+import { GET_MESSAGES } from './queries';
 
-import { flattenObj } from '../../../components/utils/responseFlatten'
+import { flattenObj } from '../../../components/utils/responseFlatten';
 
 export default function InformationPage() {
-    const [searchFilter, setSearchFilter] = useState('')
-    const searchInput = useRef<any>()
-    const auth = useContext(AuthContext)
-    const createEditMessageComponent = useRef<any>(null)
+    const [searchFilter, setSearchFilter] = useState('');
+    const searchInput = useRef<any>();
+    const auth = useContext(AuthContext);
+    const createEditMessageComponent = useRef<any>(null);
 
     const columns = useMemo<any>(
         () => [
@@ -50,59 +50,59 @@ export default function InformationPage() {
                         createEditMessageComponent.current.TriggerForm({
                             id: row.original.id,
                             type: 'edit'
-                        })
-                    }
+                        });
+                    };
                     const actionClick2 = () => {
                         createEditMessageComponent.current.TriggerForm({
                             id: row.original.id,
                             type: 'view'
-                        })
-                    }
+                        });
+                    };
                     const actionClick3 = () => {
                         createEditMessageComponent.current.TriggerForm({
                             id: row.original.id,
                             type: 'toggle-status',
                             current_status: row.original.status === 'Active'
-                        })
-                    }
+                        });
+                    };
                     const actionClick4 = () => {
                         createEditMessageComponent.current.TriggerForm({
                             id: row.original.id,
                             type: 'delete'
-                        })
-                    }
+                        });
+                    };
 
                     const arrayAction = [
                         { actionName: 'Edit', actionClick: actionClick1 },
                         { actionName: 'View', actionClick: actionClick2 },
                         { actionName: 'Status', actionClick: actionClick3 },
                         { actionName: 'Delete', actionClick: actionClick4 }
-                    ]
+                    ];
 
-                    return <ActionButton arrayAction={arrayAction}></ActionButton>
+                    return <ActionButton arrayAction={arrayAction}></ActionButton>;
                 }
             }
         ],
         []
-    )
+    );
 
     function getDate(time: any) {
-        let dateObj = new Date(time)
-        let month = dateObj.getMonth() + 1
-        let year = dateObj.getFullYear()
-        let date = dateObj.getDate()
+        let dateObj = new Date(time);
+        let month = dateObj.getMonth() + 1;
+        let year = dateObj.getFullYear();
+        let date = dateObj.getDate();
 
-        return `${date}/${month}/${year}`
+        return `${date}/${month}/${year}`;
     }
 
-    const [datatable, setDataTable] = useState<{}[]>([])
+    const [datatable, setDataTable] = useState<{}[]>([]);
 
     function FetchData(_variables: {} = { filter: ' ', id: auth.userid }) {
-        useQuery(GET_MESSAGES, { variables: _variables, onCompleted: loadData })
+        useQuery(GET_MESSAGES, { variables: _variables, onCompleted: loadData });
     }
 
     function loadData(data: any) {
-        const flattenData = flattenObj({ ...data })
+        const flattenData = flattenObj({ ...data });
         setDataTable(
             [...flattenData.informationbankmessages].map((Detail) => {
                 return {
@@ -112,12 +112,12 @@ export default function InformationPage() {
                     desc: Detail.description,
                     status: Detail.status ? 'Active' : 'Inactive',
                     updatedon: getDate(Date.parse(Detail.updatedAt))
-                }
+                };
             })
-        )
+        );
     }
 
-    FetchData({ filter: searchFilter, id: auth.userid })
+    FetchData({ filter: searchFilter, id: auth.userid });
     return (
         <TabContent>
             <Container>
@@ -133,8 +133,8 @@ export default function InformationPage() {
                                 <Button
                                     variant="outline-secondary"
                                     onClick={(e: any) => {
-                                        e.preventDefault()
-                                        setSearchFilter(searchInput.current.value)
+                                        e.preventDefault();
+                                        setSearchFilter(searchInput.current.value);
                                     }}
                                 >
                                     <i className="fas fa-search"></i>
@@ -152,7 +152,7 @@ export default function InformationPage() {
                                         id: null,
                                         type: 'create',
                                         modal_status: true
-                                    })
+                                    });
                                 }}
                             >
                                 <i className="fas fa-plus-circle"></i> Create New
@@ -164,5 +164,5 @@ export default function InformationPage() {
             </Container>
             <Table columns={columns} data={datatable} />
         </TabContent>
-    )
+    );
 }

@@ -1,14 +1,14 @@
-import React, { useState, useContext } from 'react'
-import Form from '@rjsf/bootstrap-4'
-import { Button, Modal, Row } from 'react-bootstrap'
-import { useMutation, gql } from '@apollo/client'
-import AuthContext from '../../context/auth-context'
+import React, { useState, useContext } from 'react';
+import Form from '@rjsf/bootstrap-4';
+import { Button, Modal, Row } from 'react-bootstrap';
+import { useMutation, gql } from '@apollo/client';
+import AuthContext from '../../context/auth-context';
 
 export default function ChangePassword(props: any) {
-    const auth = useContext(AuthContext)
-    const [emailSent, setEmailSent] = useState(false)
+    const auth = useContext(AuthContext);
+    const [emailSent, setEmailSent] = useState(false);
 
-    const loginSchema: any = require('./changePassword.json')
+    const loginSchema: any = require('./changePassword.json');
     const uiSchema: any = {
         oldPassword: {
             'ui:widget': 'password',
@@ -21,7 +21,7 @@ export default function ChangePassword(props: any) {
         confirm: {
             'ui:widget': 'password'
         }
-    }
+    };
 
     const UPDATE_PASSWORD = gql`
         mutation updatePassword($userid: ID!, $password: String!) {
@@ -31,23 +31,23 @@ export default function ChangePassword(props: any) {
                 }
             }
         }
-    `
+    `;
 
     const [updatePassword] = useMutation(UPDATE_PASSWORD, {
         onCompleted: () => {
-            setEmailSent(true)
+            setEmailSent(true);
         }
-    })
+    });
 
     function onSubmit(formData: any) {
-        updatePassword({ variables: { password: formData.confirm, userid: auth.userid } })
+        updatePassword({ variables: { password: formData.confirm, userid: auth.userid } });
     }
 
     function Validate(formData, errors) {
         if (formData.password !== formData.confirm) {
-            errors.confirm.addError("Passwords don't match")
+            errors.confirm.addError("Passwords don't match");
         }
-        return errors
+        return errors;
     }
 
     return (
@@ -100,5 +100,5 @@ export default function ChangePassword(props: any) {
                 )}
             </Modal.Body>
         </Modal>
-    )
+    );
 }

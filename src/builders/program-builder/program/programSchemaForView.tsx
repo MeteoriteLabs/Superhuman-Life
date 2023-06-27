@@ -1,8 +1,8 @@
-import FitnessMultiSelect from '../../../components/customWidgets/fitnessMultiSelect'
+import FitnessMultiSelect from '../../../components/customWidgets/fitnessMultiSelect';
 
 export const widgetsView = {
     fitnessSelect: FitnessMultiSelect
-}
+};
 
 export const schemaView: any = {
     programName: {
@@ -29,4 +29,4 @@ export const schemaView: any = {
         'ui:widget': 'fitnessSelect',
         readonly: true
     }
-}
+};

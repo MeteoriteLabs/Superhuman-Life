@@ -1,33 +1,33 @@
-import { useState } from 'react'
-import { Accordion, Card } from 'react-bootstrap'
-import Chevron from '../search-builder/Chevron'
-import Build from './build'
+import { useState } from 'react';
+import { Accordion, Card } from 'react-bootstrap';
+import Chevron from '../search-builder/Chevron';
+import Build from './build';
 
 const BuildWorkout = (props: any) => {
-    const [active, setActive] = useState(null)
+    const [active, setActive] = useState(null);
 
     function toggleAccodian(id) {
-        setActive(id)
+        setActive(id);
     }
 
-    const build: any = {}
+    const build: any = {};
 
     function OnChangeWarmUp(e: any) {
-        build.warmup = e
-        const objectToString = JSON.stringify(build)
-        props.onChange(objectToString)
+        build.warmup = e;
+        const objectToString = JSON.stringify(build);
+        props.onChange(objectToString);
     }
 
     function OnChangeMainMovement(e: any) {
-        build.mainMovement = e
-        const objectToString = JSON.stringify(build)
-        props.onChange(objectToString)
+        build.mainMovement = e;
+        const objectToString = JSON.stringify(build);
+        props.onChange(objectToString);
     }
 
     function OnChangeCoolDown(e: any) {
-        build.coolDown = e
-        const objectToString = JSON.stringify(build)
-        props.onChange(objectToString)
+        build.coolDown = e;
+        const objectToString = JSON.stringify(build);
+        props.onChange(objectToString);
     }
 
     return (
@@ -101,7 +101,7 @@ const BuildWorkout = (props: any) => {
                 </Accordion.Collapse>
             </Card>
         </Accordion>
-    )
-}
+    );
+};
 
-export default BuildWorkout
+export default BuildWorkout;

@@ -1,33 +1,33 @@
-import React, { useEffect, useState } from 'react'
-import { Row, Col, Form, InputGroup, FormControl } from 'react-bootstrap'
-import 'react-bootstrap-typeahead/css/Typeahead.css'
+import React, { useEffect, useState } from 'react';
+import { Row, Col, Form, InputGroup, FormControl } from 'react-bootstrap';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
 
 const ClassicProgramDetails: React.FC<{
-    readonly: boolean
-    value: string
-    onChange: (args: string | null) => void
+    readonly: boolean;
+    value: string;
+    onChange: (args: string | null) => void;
 }> = (props) => {
-    const inputDisabled = props.readonly
-    const existingData = props.value ? JSON.parse(props.value) : null
+    const inputDisabled = props.readonly;
+    const existingData = props.value ? JSON.parse(props.value) : null;
     if (existingData && existingData.length > 0) {
         existingData.address = {
             id: JSON.parse(existingData?.address)[0].id,
             title: JSON.parse(existingData?.address)[0].title
-        }
+        };
     }
-    const [duration, setDuration] = useState(existingData?.duration ? existingData?.duration : 1)
+    const [duration, setDuration] = useState(existingData?.duration ? existingData?.duration : 1);
     const [onlineClasses, setOnlineClasses] = useState<number>(
         existingData?.online ? existingData.online : 0
-    )
-    const [restDays, setRestDays] = useState<number>(existingData?.rest ? existingData.rest : 0)
+    );
+    const [restDays, setRestDays] = useState<number>(existingData?.rest ? existingData.rest : 0);
 
     function handleValidation() {
         if (onlineClasses === 0) {
-            return false
+            return false;
         }
 
         if (onlineClasses + restDays === duration) {
-            return true
+            return true;
         }
     }
 
@@ -38,19 +38,19 @@ const ClassicProgramDetails: React.FC<{
                 online: onlineClasses,
                 rest: restDays
             })
-        )
+        );
     } else {
-        props.onChange(null)
+        props.onChange(null);
     }
 
     useEffect(() => {
         if (duration - onlineClasses > 0) {
-            setRestDays(duration - onlineClasses)
+            setRestDays(duration - onlineClasses);
         }
         if (duration === 1) {
-            setRestDays(0)
+            setRestDays(0);
         }
-    }, [duration, onlineClasses])
+    }, [duration, onlineClasses]);
 
     return (
         <>
@@ -66,7 +66,7 @@ const ClassicProgramDetails: React.FC<{
                         max={365}
                         value={duration}
                         onChange={(e: any) => {
-                            setDuration(parseInt(e.target.value))
+                            setDuration(parseInt(e.target.value));
                         }}
                     />
                 </Form.Group>
@@ -124,7 +124,7 @@ const ClassicProgramDetails: React.FC<{
                 </Col>
             </Row>
         </>
-    )
-}
+    );
+};
 
-export default ClassicProgramDetails
+export default ClassicProgramDetails;

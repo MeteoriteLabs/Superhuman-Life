@@ -1,107 +1,107 @@
-import React, { useContext, useImperativeHandle, useState, useEffect } from 'react'
-import { useQuery, useMutation } from '@apollo/client'
-import ModalView from '../../../components/modal'
+import React, { useContext, useImperativeHandle, useState, useEffect } from 'react';
+import { useQuery, useMutation } from '@apollo/client';
+import ModalView from '../../../components/modal';
 import {
     FETCH_DATA,
     CREATE_WORKOUT,
     UPDATE_WORKOUT,
     DELETE_WORKOUT,
     FETCH_FITNESS_PROGRAMS
-} from './queries'
-import AuthContext from '../../../context/auth-context'
-import StatusModal from '../../../components/StatusModal/workoutStatusModal'
-import { schema, widgets } from './workoutSchema'
-import { schemaView } from './workoutSchemaView'
-import { Subject } from 'rxjs'
-import { flattenObj } from '../../../components/utils/responseFlatten'
-import Toaster from '../../../components/Toaster'
+} from './queries';
+import AuthContext from '../../../context/auth-context';
+import StatusModal from '../../../components/StatusModal/workoutStatusModal';
+import { schema, widgets } from './workoutSchema';
+import { schemaView } from './workoutSchemaView';
+import { Subject } from 'rxjs';
+import { flattenObj } from '../../../components/utils/responseFlatten';
+import Toaster from '../../../components/Toaster';
 
 interface Operation {
-    id: string
-    type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete'
-    current_status: boolean
+    id: string;
+    type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
+    current_status: boolean;
 }
 
 function CreateEditWorkout(props: any, ref: any) {
-    const auth = useContext(AuthContext)
-    const workoutSchema: { [name: string]: any } = require('./workout.json')
-    const [workoutDetails, setWorkoutDetails] = useState<any>({})
-    const [programDetails, setProgramDetails] = useState<any>({})
-    const [operation, setOperation] = useState<Operation>({} as Operation)
-    const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false)
-    const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false)
-    const [toastType, setToastType] = useState<string>('')
-    const [toastMessage, setToastMessage] = useState<string>('')
+    const auth = useContext(AuthContext);
+    const workoutSchema: { [name: string]: any } = require('./workout.json');
+    const [workoutDetails, setWorkoutDetails] = useState<any>({});
+    const [programDetails, setProgramDetails] = useState<any>({});
+    const [operation, setOperation] = useState<Operation>({} as Operation);
+    const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+    const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+    const [toastType, setToastType] = useState<string>('');
+    const [toastMessage, setToastMessage] = useState<string>('');
 
     useQuery(FETCH_FITNESS_PROGRAMS, {
         variables: { id: operation.id?.toString() },
         skip: operation.type !== 'delete',
         onCompleted: (r: any) => {
-            const flattenData = flattenObj({ ...r })
-            setProgramDetails(flattenData)
+            const flattenData = flattenObj({ ...r });
+            setProgramDetails(flattenData);
         }
-    })
+    });
 
     const [createWorkout] = useMutation(CREATE_WORKOUT, {
         onCompleted: (r: any) => {
-            modalTrigger.next(false)
-            props.callback()
-            setIsFormSubmitted(!isFormSubmitted)
-            setToastType('success')
-            setToastMessage('Workout details created successfully')
+            modalTrigger.next(false);
+            props.callback();
+            setIsFormSubmitted(!isFormSubmitted);
+            setToastType('success');
+            setToastMessage('Workout details created successfully');
         },
         onError: (e: any) => {
-            setToastType('error')
-            setIsFormSubmitted(!isFormSubmitted)
-            setToastMessage('Workout details has not been created')
+            setToastType('error');
+            setIsFormSubmitted(!isFormSubmitted);
+            setToastMessage('Workout details has not been created');
         }
-    })
+    });
     const [editWorkout] = useMutation(UPDATE_WORKOUT, {
         onCompleted: (r: any) => {
-            modalTrigger.next(false)
-            props.callback()
-            setIsFormSubmitted(!isFormSubmitted)
-            setToastType('success')
-            setToastMessage('Workout details has been updated successfully')
+            modalTrigger.next(false);
+            props.callback();
+            setIsFormSubmitted(!isFormSubmitted);
+            setToastType('success');
+            setToastMessage('Workout details has been updated successfully');
         },
         onError: (e: any) => {
-            setToastType('error')
-            setIsFormSubmitted(!isFormSubmitted)
-            setToastMessage('Workout details has not been updated')
+            setToastType('error');
+            setIsFormSubmitted(!isFormSubmitted);
+            setToastMessage('Workout details has not been updated');
         }
-    })
+    });
     const [deleteWorkout] = useMutation(DELETE_WORKOUT, {
         onCompleted: (r: any) => {
-            modalTrigger.next(false)
-            props.callback()
-            setIsFormSubmitted(!isFormSubmitted)
-            setToastType('success')
-            setToastMessage('Workout details has been deleted successfully')
+            modalTrigger.next(false);
+            props.callback();
+            setIsFormSubmitted(!isFormSubmitted);
+            setToastType('success');
+            setToastMessage('Workout details has been deleted successfully');
         },
         onError: (e: any) => {
-            setToastType('error')
-            setIsFormSubmitted(!isFormSubmitted)
-            setToastMessage('Workout details has not been deleted')
+            setToastType('error');
+            setIsFormSubmitted(!isFormSubmitted);
+            setToastMessage('Workout details has not been deleted');
         }
-    })
+    });
 
-    const modalTrigger = new Subject()
+    const modalTrigger = new Subject();
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
-            setOperation(msg)
+            setOperation(msg);
 
             // render delete modal for delete operation
             if (msg.type === 'delete') {
-                setShowDeleteModal(true)
+                setShowDeleteModal(true);
             }
 
             //restrict form to render on delete operation
             if (msg.type !== 'delete') {
-                modalTrigger.next(true)
+                modalTrigger.next(true);
             }
         }
-    }))
+    }));
 
     enum ENUM_EXERCISES_EXERCISELEVEL {
         Beginner,
@@ -118,27 +118,27 @@ function CreateEditWorkout(props: any, ref: any) {
 
     useEffect(() => {
         if (operation.type === 'create') {
-            setWorkoutDetails({})
+            setWorkoutDetails({});
         }
-    }, [operation.type])
+    }, [operation.type]);
 
     function FillDetails(data: any) {
-        const flattenData = flattenObj({ ...data })
+        const flattenData = flattenObj({ ...data });
 
         function handleOtherType(data: any) {
-            const tempObj: any = {}
-            tempObj[data[0]?.type] = data[0].value
-            tempObj.type = data[0].type
-            return tempObj
+            const tempObj: any = {};
+            tempObj[data[0]?.type] = data[0].value;
+            tempObj.type = data[0].type;
+            return tempObj;
         }
 
         function handleAddWorkout(data: any) {
             if (data.workout_URL !== null) {
-                return { AddWorkout: 'Add URL', AddURL: data.workout_URL }
+                return { AddWorkout: 'Add URL', AddURL: data.workout_URL };
             } else if (data.workout_text !== null) {
-                return { AddWorkout: 'Text', AddText: data.workout_text }
+                return { AddWorkout: 'Text', AddText: data.workout_text };
             } else if (data.Workout_Video_ID !== null) {
-                return { AddWorkout: 'Upload', Upload: data.Workout_Video_ID }
+                return { AddWorkout: 'Upload', Upload: data.Workout_Video_ID };
             } else {
                 return {
                     AddWorkout: 'Build',
@@ -154,34 +154,34 @@ function CreateEditWorkout(props: any, ref: any) {
                         data.mainmovement[0]?.type === 'exercise'
                             ? { exercise: JSON.stringify(data.mainmovement.exercise) }
                             : handleOtherType(data.mainmovement)
-                }
+                };
             }
         }
 
-        const details: any = {}
-        const msg = flattenData.workouts
+        const details: any = {};
+        const msg = flattenData.workouts;
 
-        details.workout = msg[0].workouttitle
-        details.benefits = msg[0].Benifits
-        details.about = msg[0].About
+        details.workout = msg[0].workouttitle;
+        details.benefits = msg[0].Benifits;
+        details.about = msg[0].About;
         details.equipment = msg[0].equipment_lists.map((val: any) => {
-            return val
-        })
+            return val;
+        });
         details.discipline = msg[0].fitnessdisciplines.map((val: any) => {
-            return val
-        })
+            return val;
+        });
         details.muscleGroup = msg[0].muscle_groups.map((val: any) => {
-            return val
-        })
-        details.intensity = ENUM_WORKOUTS_INTENSITY[msg[0].intensity]
-        details.level = ENUM_EXERCISES_EXERCISELEVEL[msg[0].level]
-        details.calories = msg[0].calories
-        details.addWorkout = handleAddWorkout(msg[0])
-        setWorkoutDetails(details)
+            return val;
+        });
+        details.intensity = ENUM_WORKOUTS_INTENSITY[msg[0].intensity];
+        details.level = ENUM_EXERCISES_EXERCISELEVEL[msg[0].level];
+        details.calories = msg[0].calories;
+        details.addWorkout = handleAddWorkout(msg[0]);
+        setWorkoutDetails(details);
 
         //if message exists - show form only for edit and view
-        if (['edit', 'view'].indexOf(operation.type) > -1) modalTrigger.next(true)
-        else OnSubmit(null)
+        if (['edit', 'view'].indexOf(operation.type) > -1) modalTrigger.next(true);
+        else OnSubmit(null);
     }
 
     function FetchData() {
@@ -189,42 +189,42 @@ function CreateEditWorkout(props: any, ref: any) {
             variables: { id: operation.id },
             skip: operation.type === 'create' || operation.type === 'delete' || !operation.id,
             onCompleted: (e: any) => {
-                FillDetails(e)
+                FillDetails(e);
             }
-        })
+        });
     }
 
     function CreateWorkout(frm: any) {
-        frm.discipline = JSON.parse(frm.discipline)
-        frm.equipment = JSON.parse(frm.equipment)
-        frm.muscleGroup = JSON.parse(frm.muscleGroup)
+        frm.discipline = JSON.parse(frm.discipline);
+        frm.equipment = JSON.parse(frm.equipment);
+        frm.muscleGroup = JSON.parse(frm.muscleGroup);
         if (frm.addWorkout.AddWorkout === 'Build') {
             if (Object.keys(frm.addWorkout.warmup)[0] === 'exercise') {
-                frm.addWorkout.warmup = JSON.parse(frm.addWorkout.warmup.exercise)
+                frm.addWorkout.warmup = JSON.parse(frm.addWorkout.warmup.exercise);
             } else {
-                frm.addWorkout.warmup.type = Object.keys(frm.addWorkout.warmup)[0]
+                frm.addWorkout.warmup.type = Object.keys(frm.addWorkout.warmup)[0];
                 frm.addWorkout.warmup.value =
-                    frm.addWorkout.warmup[Object.keys(frm.addWorkout.warmup)[0]]
-                delete frm.addWorkout.warmup[Object.keys(frm.addWorkout.warmup)[0]]
-                frm.addWorkout.warmup = [frm.addWorkout.warmup]
+                    frm.addWorkout.warmup[Object.keys(frm.addWorkout.warmup)[0]];
+                delete frm.addWorkout.warmup[Object.keys(frm.addWorkout.warmup)[0]];
+                frm.addWorkout.warmup = [frm.addWorkout.warmup];
             }
             if (Object.keys(frm.addWorkout.mainmovement)[0] === 'exercise') {
-                frm.addWorkout.mainmovement = JSON.parse(frm.addWorkout.mainmovement.exercise)
+                frm.addWorkout.mainmovement = JSON.parse(frm.addWorkout.mainmovement.exercise);
             } else {
-                frm.addWorkout.mainmovement.type = Object.keys(frm.addWorkout.mainmovement)[0]
+                frm.addWorkout.mainmovement.type = Object.keys(frm.addWorkout.mainmovement)[0];
                 frm.addWorkout.mainmovement.value =
-                    frm.addWorkout.mainmovement[Object.keys(frm.addWorkout.mainmovement)[0]]
-                delete frm.addWorkout.mainmovement[Object.keys(frm.addWorkout.mainmovement)[0]]
-                frm.addWorkout.mainmovement = [frm.addWorkout.mainmovement]
+                    frm.addWorkout.mainmovement[Object.keys(frm.addWorkout.mainmovement)[0]];
+                delete frm.addWorkout.mainmovement[Object.keys(frm.addWorkout.mainmovement)[0]];
+                frm.addWorkout.mainmovement = [frm.addWorkout.mainmovement];
             }
             if (Object.keys(frm.addWorkout.cooldown)[0] === 'exercise') {
-                frm.addWorkout.cooldown = JSON.parse(frm.addWorkout.cooldown.exercise)
+                frm.addWorkout.cooldown = JSON.parse(frm.addWorkout.cooldown.exercise);
             } else {
-                frm.addWorkout.cooldown.type = Object.keys(frm.addWorkout.cooldown)[0]
+                frm.addWorkout.cooldown.type = Object.keys(frm.addWorkout.cooldown)[0];
                 frm.addWorkout.cooldown.value =
-                    frm.addWorkout.cooldown[Object.keys(frm.addWorkout.cooldown)[0]]
-                delete frm.addWorkout.cooldown[Object.keys(frm.addWorkout.cooldown)[0]]
-                frm.addWorkout.cooldown = [frm.addWorkout.cooldown]
+                    frm.addWorkout.cooldown[Object.keys(frm.addWorkout.cooldown)[0]];
+                delete frm.addWorkout.cooldown[Object.keys(frm.addWorkout.cooldown)[0]];
+                frm.addWorkout.cooldown = [frm.addWorkout.cooldown];
             }
         }
 
@@ -235,7 +235,7 @@ function CreateEditWorkout(props: any, ref: any) {
                 level: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
                 fitnessdisciplines: frm.discipline
                     .map((item: any) => {
-                        return item.id
+                        return item.id;
                     })
                     .join(',')
                     .split(','),
@@ -252,52 +252,52 @@ function CreateEditWorkout(props: any, ref: any) {
                 calories: frm.calories,
                 equipment_lists: frm.equipment
                     .map((item: any) => {
-                        return item.id
+                        return item.id;
                     })
                     .join(',')
                     .split(','),
                 muscle_groups: frm.muscleGroup
                     .map((item: any) => {
-                        return item.id
+                        return item.id;
                     })
                     .join(',')
                     .split(','),
                 users_permissions_user: frm.user_permissions_user
             }
-        })
+        });
     }
 
     function EditWorkout(frm: any) {
-        frm.discipline = JSON.parse(frm.discipline)
-        frm.equipment = JSON.parse(frm.equipment)
-        frm.muscleGroup = JSON.parse(frm.muscleGroup)
+        frm.discipline = JSON.parse(frm.discipline);
+        frm.equipment = JSON.parse(frm.equipment);
+        frm.muscleGroup = JSON.parse(frm.muscleGroup);
         if (frm.addWorkout.AddWorkout === 'Build') {
             if (Object.keys(frm.addWorkout.warmup)[0] === 'exercise') {
-                frm.addWorkout.warmup = JSON.parse(frm.addWorkout.warmup.exercise)
+                frm.addWorkout.warmup = JSON.parse(frm.addWorkout.warmup.exercise);
             } else {
-                frm.addWorkout.warmup.type = Object.keys(frm.addWorkout.warmup)[0]
+                frm.addWorkout.warmup.type = Object.keys(frm.addWorkout.warmup)[0];
                 frm.addWorkout.warmup.value =
-                    frm.addWorkout.warmup[Object.keys(frm.addWorkout.warmup)[0]]
-                delete frm.addWorkout.warmup[Object.keys(frm.addWorkout.warmup)[0]]
-                frm.addWorkout.warmup = [frm.addWorkout.warmup]
+                    frm.addWorkout.warmup[Object.keys(frm.addWorkout.warmup)[0]];
+                delete frm.addWorkout.warmup[Object.keys(frm.addWorkout.warmup)[0]];
+                frm.addWorkout.warmup = [frm.addWorkout.warmup];
             }
             if (Object.keys(frm.addWorkout.mainmovement)[0] === 'exercise') {
-                frm.addWorkout.mainmovement = JSON.parse(frm.addWorkout.mainmovement.exercise)
+                frm.addWorkout.mainmovement = JSON.parse(frm.addWorkout.mainmovement.exercise);
             } else {
-                frm.addWorkout.mainmovement.type = Object.keys(frm.addWorkout.mainmovement)[0]
+                frm.addWorkout.mainmovement.type = Object.keys(frm.addWorkout.mainmovement)[0];
                 frm.addWorkout.mainmovement.value =
-                    frm.addWorkout.mainmovement[Object.keys(frm.addWorkout.mainmovement)[0]]
-                delete frm.addWorkout.mainmovement[Object.keys(frm.addWorkout.mainmovement)[0]]
-                frm.addWorkout.mainmovement = [frm.addWorkout.mainmovement]
+                    frm.addWorkout.mainmovement[Object.keys(frm.addWorkout.mainmovement)[0]];
+                delete frm.addWorkout.mainmovement[Object.keys(frm.addWorkout.mainmovement)[0]];
+                frm.addWorkout.mainmovement = [frm.addWorkout.mainmovement];
             }
             if (Object.keys(frm.addWorkout.cooldown)[0] === 'exercise') {
-                frm.addWorkout.cooldown = JSON.parse(frm.addWorkout.cooldown.exercise)
+                frm.addWorkout.cooldown = JSON.parse(frm.addWorkout.cooldown.exercise);
             } else {
-                frm.addWorkout.cooldown.type = Object.keys(frm.addWorkout.cooldown)[0]
+                frm.addWorkout.cooldown.type = Object.keys(frm.addWorkout.cooldown)[0];
                 frm.addWorkout.cooldown.value =
-                    frm.addWorkout.cooldown[Object.keys(frm.addWorkout.cooldown)[0]]
-                delete frm.addWorkout.cooldown[Object.keys(frm.addWorkout.cooldown)[0]]
-                frm.addWorkout.cooldown = [frm.addWorkout.cooldown]
+                    frm.addWorkout.cooldown[Object.keys(frm.addWorkout.cooldown)[0]];
+                delete frm.addWorkout.cooldown[Object.keys(frm.addWorkout.cooldown)[0]];
+                frm.addWorkout.cooldown = [frm.addWorkout.cooldown];
             }
         }
 
@@ -309,7 +309,7 @@ function CreateEditWorkout(props: any, ref: any) {
                 level: ENUM_EXERCISES_EXERCISELEVEL[frm.level],
                 fitnessdisciplines: frm.discipline
                     .map((item: any) => {
-                        return item.id
+                        return item.id;
                     })
                     .join(',')
                     .split(','),
@@ -326,52 +326,52 @@ function CreateEditWorkout(props: any, ref: any) {
                 calories: frm.calories,
                 equipment_lists: frm.equipment
                     .map((item: any) => {
-                        return item.id
+                        return item.id;
                     })
                     .join(',')
                     .split(','),
                 muscle_groups: frm.muscleGroup
                     .map((item: any) => {
-                        return item.id
+                        return item.id;
                     })
                     .join(',')
                     .split(','),
                 users_permissions_user: frm.user_permissions_user
             }
-        })
+        });
     }
 
     function DeleteWorkout(id: any) {
-        deleteWorkout({ variables: { id: id } })
+        deleteWorkout({ variables: { id: id } });
     }
 
     function OnSubmit(frm: any) {
         //bind user id
-        if (frm) frm.user_permissions_user = auth.userid
+        if (frm) frm.user_permissions_user = auth.userid;
 
         switch (operation.type) {
             case 'create':
-                CreateWorkout(frm)
-                break
+                CreateWorkout(frm);
+                break;
             case 'edit':
-                EditWorkout(frm)
-                break
+                EditWorkout(frm);
+                break;
         }
     }
 
-    FetchData()
+    FetchData();
 
-    let name = ''
+    let name = '';
     if (operation.type === 'create') {
-        name = 'Create New Workout'
+        name = 'Create New Workout';
     } else if (operation.type === 'edit') {
-        name = 'Edit'
+        name = 'Edit';
     } else if (operation.type === 'view') {
-        name = 'View'
+        name = 'View';
     }
 
     function handleToasCallback() {
-        setIsFormSubmitted(false)
+        setIsFormSubmitted(false);
     }
 
     return (
@@ -386,10 +386,10 @@ function CreateEditWorkout(props: any, ref: any) {
                 formSubmit={
                     name === 'View'
                         ? () => {
-                              modalTrigger.next(false)
+                              modalTrigger.next(false);
                           }
                         : (frm: any) => {
-                              OnSubmit(frm)
+                              OnSubmit(frm);
                           }
                 }
                 formData={workoutDetails}
@@ -410,7 +410,7 @@ function CreateEditWorkout(props: any, ref: any) {
                     buttonLeft="Cancel"
                     buttonRight="Yes"
                     onClick={() => {
-                        DeleteWorkout(operation.id)
+                        DeleteWorkout(operation.id);
                     }}
                 />
             )}
@@ -418,7 +418,7 @@ function CreateEditWorkout(props: any, ref: any) {
                 <Toaster handleCallback={handleToasCallback} type={toastType} msg={toastMessage} />
             ) : null}
         </>
-    )
+    );
 }
 
-export default React.forwardRef(CreateEditWorkout)
+export default React.forwardRef(CreateEditWorkout);

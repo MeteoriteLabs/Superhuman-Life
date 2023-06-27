@@ -1,44 +1,44 @@
-import { useState, useRef } from 'react'
-import { withTheme, utils } from '@rjsf/core'
-import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4'
-import { schema } from './payeeProfileSchema'
-import { GET_CONTACT, UPDATE_CONTACT } from '../contacts/queries'
-import { useMutation, useQuery } from '@apollo/client'
-import { flattenObj } from '../../../components/utils/responseFlatten'
-import { Col } from 'react-bootstrap'
-import Toaster from '../../../components/Toaster'
+import { useState, useRef } from 'react';
+import { withTheme, utils } from '@rjsf/core';
+import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
+import { schema } from './payeeProfileSchema';
+import { GET_CONTACT, UPDATE_CONTACT } from '../contacts/queries';
+import { useMutation, useQuery } from '@apollo/client';
+import { flattenObj } from '../../../components/utils/responseFlatten';
+import { Col } from 'react-bootstrap';
+import Toaster from '../../../components/Toaster';
 import {
     phoneCustomFormats,
     phoneTransformErrors
-} from '../../../components/utils/ValidationPatterns'
-import { PaymentDetails } from '../contacts/PaymentDetailsInterface'
+} from '../../../components/utils/ValidationPatterns';
+import { PaymentDetails } from '../contacts/PaymentDetailsInterface';
 
 function PayeeProfile() {
-    const registry = utils.getDefaultRegistry()
-    const defaultFileWidget = registry.widgets['FileWidget']
-    ;(Bootstrap4Theme as any).widgets['FileWidget'] = defaultFileWidget
-    const Form: any = withTheme(Bootstrap4Theme)
-    const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false)
-    const formRef = useRef<any>(null)
-    const payeeProfileJson: Record<string, unknown> = require('./payeeProfile.json')
-    const [paymentModeDetails, setPaymentModeDetails] = useState<PaymentDetails>()
-    const query = window.location.search
-    const params = new URLSearchParams(query)
-    const id = params.get('id')
+    const registry = utils.getDefaultRegistry();
+    const defaultFileWidget = registry.widgets['FileWidget'];
+    (Bootstrap4Theme as any).widgets['FileWidget'] = defaultFileWidget;
+    const Form: any = withTheme(Bootstrap4Theme);
+    const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+    const formRef = useRef<any>(null);
+    const payeeProfileJson: Record<string, unknown> = require('./payeeProfile.json');
+    const [paymentModeDetails, setPaymentModeDetails] = useState<PaymentDetails>();
+    const query = window.location.search;
+    const params = new URLSearchParams(query);
+    const id = params.get('id');
 
     useQuery(GET_CONTACT, {
         variables: { id: id },
         onCompleted: (e: any) => {
-            FillDetails(e.contact)
+            FillDetails(e.contact);
         }
-    })
+    });
 
     const [updateContact] = useMutation(UPDATE_CONTACT, {
         onCompleted: (e: any) => {
-            setIsFormSubmitted(!isFormSubmitted)
+            setIsFormSubmitted(!isFormSubmitted);
         },
         refetchQueries: [GET_CONTACT]
-    })
+    });
 
     function EditPaymentModeDetails(frm: any) {
         updateContact({
@@ -67,43 +67,43 @@ function PayeeProfile() {
                         : null
                 }
             }
-        })
+        });
     }
 
     function OnSubmit(frm: any) {
-        EditPaymentModeDetails(frm.formData)
+        EditPaymentModeDetails(frm.formData);
     }
 
     //fillDetails
     function FillDetails(contactDetail: any) {
-        const data = flattenObj({ ...contactDetail })
+        const data = flattenObj({ ...contactDetail });
 
-        const detail = {} as PaymentDetails
+        const detail = {} as PaymentDetails;
 
         if (data) {
-            detail.id = data.id
-            detail.firstname = data.firstname
-            detail.lastname = data.lastname
-            detail.email = data.email
-            detail.phone = data.phone
-            detail.appDownloadStatus = data.appDownloadStatus === 'Invited' ? true : false
-            detail.type = data.type
-            detail.isPayee = data.isPayee
+            detail.id = data.id;
+            detail.firstname = data.firstname;
+            detail.lastname = data.lastname;
+            detail.email = data.email;
+            detail.phone = data.phone;
+            detail.appDownloadStatus = data.appDownloadStatus === 'Invited' ? true : false;
+            detail.type = data.type;
+            detail.isPayee = data.isPayee;
             if (data.organisationDetails) {
-                detail.organisationDetails = data.organisationDetails ? true : false
-                detail.organisationName = data.organisationDetails.organisationName
-                detail.gst = data.organisationDetails.gst
-                detail.address1 = data.organisationDetails.address1
-                detail.address2 = data.organisationDetails.address2
-                detail.city = data.organisationDetails.city
-                detail.state = data.organisationDetails.state
-                detail.country = data.organisationDetails.country
-                detail.zipcode = data.organisationDetails.zipcode
-                detail.organisationEmail = data.organisationDetails.organisationEmail
+                detail.organisationDetails = data.organisationDetails ? true : false;
+                detail.organisationName = data.organisationDetails.organisationName;
+                detail.gst = data.organisationDetails.gst;
+                detail.address1 = data.organisationDetails.address1;
+                detail.address2 = data.organisationDetails.address2;
+                detail.city = data.organisationDetails.city;
+                detail.state = data.organisationDetails.state;
+                detail.country = data.organisationDetails.country;
+                detail.zipcode = data.organisationDetails.zipcode;
+                detail.organisationEmail = data.organisationDetails.organisationEmail;
             }
         }
 
-        setPaymentModeDetails(detail)
+        setPaymentModeDetails(detail);
     }
 
     return (
@@ -115,7 +115,7 @@ function PayeeProfile() {
                     schema={payeeProfileJson}
                     ref={formRef}
                     onSubmit={(frm: any) => {
-                        OnSubmit(frm)
+                        OnSubmit(frm);
                     }}
                     formData={paymentModeDetails}
                     showErrorList={false}
@@ -133,7 +133,7 @@ function PayeeProfile() {
                 />
             ) : null}
         </>
-    )
+    );
 }
 
-export default PayeeProfile
+export default PayeeProfile;

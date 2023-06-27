@@ -1,24 +1,24 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { useLazyQuery } from '@apollo/client'
+import React, { useContext, useEffect, useState } from 'react';
+import { useLazyQuery } from '@apollo/client';
 import {
     GET_EARNINGS_TRANSACTIONS,
     GET_EXPENSES_TRANSACTIONS,
     GET_USERS_JOINED_DATE
-} from './Queries'
-import { Row, Col, Card } from 'react-bootstrap'
-import { flattenObj } from '../../../components/utils/responseFlatten'
-import AuthContext from '../../../context/auth-context'
-import FinanceGraph from './FinanceGraph'
-import moment from 'moment'
-import './Summary.css'
+} from './Queries';
+import { Row, Col, Card } from 'react-bootstrap';
+import { flattenObj } from '../../../components/utils/responseFlatten';
+import AuthContext from '../../../context/auth-context';
+import FinanceGraph from './FinanceGraph';
+import moment from 'moment';
+import './Summary.css';
 
 const Summary: React.FC = () => {
-    const auth = useContext(AuthContext)
-    const [totalRevenue, setTotalRevenue] = useState<number>(0)
-    const [totalEarning, setTotalEarning] = useState<number>(0)
-    const [totalExpenses, setTotalExpenses] = useState<number>(0)
-    const [joinedYear, setJoinedYear] = useState<string>('')
-    const [selectedMonthYear, setSelectedMonthYear] = useState<string>(moment().format('YYYY-MM'))
+    const auth = useContext(AuthContext);
+    const [totalRevenue, setTotalRevenue] = useState<number>(0);
+    const [totalEarning, setTotalEarning] = useState<number>(0);
+    const [totalExpenses, setTotalExpenses] = useState<number>(0);
+    const [joinedYear, setJoinedYear] = useState<string>('');
+    const [selectedMonthYear, setSelectedMonthYear] = useState<string>(moment().format('YYYY-MM'));
 
     const [
         getEarnings,
@@ -30,12 +30,12 @@ const Summary: React.FC = () => {
         fetchPolicy: 'cache-and-network',
 
         onCompleted: (data) => {
-            const initialEarningsValue = 0
-            const initialRevenueValue = 0
+            const initialEarningsValue = 0;
+            const initialRevenueValue = 0;
 
             const flattenEarningsTransactionsData = flattenObj({
                 ...data.transactions
-            })
+            });
 
             // Earnings
             const selectedMonthsEarnings = flattenEarningsTransactionsData
@@ -47,7 +47,7 @@ const Summary: React.FC = () => {
                 .reduce(
                     (accumulator, currentValue) => accumulator + currentValue.ChangemakerAmount,
                     initialEarningsValue
-                )
+                );
 
             // Revenue
             const selectedMonthsRevenue = flattenEarningsTransactionsData
@@ -59,12 +59,12 @@ const Summary: React.FC = () => {
                 .reduce(
                     (accumulator, currentValue) => accumulator + currentValue.TransactionAmount,
                     initialRevenueValue
-                )
+                );
 
-            setTotalRevenue(selectedMonthsRevenue)
-            setTotalEarning(selectedMonthsEarnings)
+            setTotalRevenue(selectedMonthsRevenue);
+            setTotalEarning(selectedMonthsEarnings);
         }
-    })
+    });
 
     const [
         getExpenses,
@@ -79,9 +79,9 @@ const Summary: React.FC = () => {
         onCompleted: () => {
             const flattenExpensesTransactionsData = flattenObj({
                 ...get_expenses_transaction?.transactions
-            })
+            });
 
-            const initialExpensesValue = 0
+            const initialExpensesValue = 0;
 
             const selectedMonthsExpenses =
                 flattenExpensesTransactionsData &&
@@ -95,12 +95,12 @@ const Summary: React.FC = () => {
                     .reduce(
                         (accumulator, currentValue) => accumulator + currentValue.TransactionAmount,
                         initialExpensesValue
-                    )
+                    );
 
-            setTotalExpenses(selectedMonthsExpenses)
-            getUsersJoinedDate({ variables: { id: auth.userid } })
+            setTotalExpenses(selectedMonthsExpenses);
+            getUsersJoinedDate({ variables: { id: auth.userid } });
         }
-    })
+    });
 
     const [
         getUsersJoinedDate,
@@ -112,29 +112,29 @@ const Summary: React.FC = () => {
         onCompleted: (data) => {
             const flattenUsersData = flattenObj({
                 ...data.usersPermissionsUser
-            })
-            const accountCreatedAt = moment(flattenUsersData.createdAt).format('YYYY')
-            setJoinedYear(accountCreatedAt)
+            });
+            const accountCreatedAt = moment(flattenUsersData.createdAt).format('YYYY');
+            setJoinedYear(accountCreatedAt);
         }
-    })
+    });
 
     useEffect(() => {
         getEarnings({
             variables: {
                 receiverId: auth.userid
             }
-        })
+        });
 
         getExpenses({
             variables: {
                 senderId: auth.userid
             }
-        })
+        });
 
-        getUsersJoinedDate({ variables: { id: auth.userid } })
+        getUsersJoinedDate({ variables: { id: auth.userid } });
 
         // eslint-disable-next-line
-    }, [selectedMonthYear])
+    }, [selectedMonthYear]);
 
     return (
         <>
@@ -156,19 +156,19 @@ const Summary: React.FC = () => {
                             onChange={(e) => {
                                 setSelectedMonthYear(
                                     moment(`${e.target.value}-01`).format('YYYY-MM')
-                                )
+                                );
 
                                 getEarnings({
                                     variables: {
                                         receiverId: auth.userid
                                     }
-                                })
+                                });
 
                                 getExpenses({
                                     variables: {
                                         senderId: auth.userid
                                     }
-                                })
+                                });
                             }}
                             defaultValue={moment().format('YYYY-MM')}
                         />
@@ -229,7 +229,7 @@ const Summary: React.FC = () => {
             </div>
             <FinanceGraph />
         </>
-    )
-}
+    );
+};
 
-export default Summary
+export default Summary;

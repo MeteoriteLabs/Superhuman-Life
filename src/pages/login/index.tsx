@@ -1,14 +1,14 @@
-import React, { useContext } from 'react'
-import Form from '@rjsf/bootstrap-4'
-import { Link } from 'react-router-dom'
-import { Button, Modal, Row, Col } from 'react-bootstrap'
-import authContext from '../../context/auth-context'
-import { useMutation, gql } from '@apollo/client'
-import { Schema, LoginData, FormData, LoginJSON } from './interface'
+import React, { useContext } from 'react';
+import Form from '@rjsf/bootstrap-4';
+import { Link } from 'react-router-dom';
+import { Button, Modal, Row, Col } from 'react-bootstrap';
+import authContext from '../../context/auth-context';
+import { useMutation, gql } from '@apollo/client';
+import { Schema, LoginData, FormData, LoginJSON } from './interface';
 
 const Login: React.FC = () => {
-    const auth = useContext(authContext)
-    const loginSchema: LoginJSON = require('./login.json')
+    const auth = useContext(authContext);
+    const loginSchema: LoginJSON = require('./login.json');
 
     const uiSchema: Schema = {
         password: {
@@ -16,7 +16,7 @@ const Login: React.FC = () => {
             'ui:help': 'Hint: Make it strong!',
             classNames: 'test'
         }
-    }
+    };
 
     const LOGIN = gql`
         mutation UserAuth($identifier: String!, $password: String!) {
@@ -29,9 +29,9 @@ const Login: React.FC = () => {
                 }
             }
         }
-    `
+    `;
 
-    const [login, { error }] = useMutation(LOGIN, { onCompleted: loginSuccess })
+    const [login, { error }] = useMutation(LOGIN, { onCompleted: loginSuccess });
 
     function onSubmit(formData: FormData) {
         login({
@@ -39,11 +39,11 @@ const Login: React.FC = () => {
                 identifier: formData.email,
                 password: formData.password
             }
-        })
+        });
     }
 
     function loginSuccess(data: LoginData) {
-        auth.login(data.login.jwt, data.login.user.username, data.login.user.id)
+        auth.login(data.login.jwt, data.login.user.username, data.login.user.id);
     }
 
     return (
@@ -82,7 +82,7 @@ const Login: React.FC = () => {
                 </Form>
             </Modal.Body>
         </Modal.Dialog>
-    )
-}
+    );
+};
 
-export default Login
+export default Login;

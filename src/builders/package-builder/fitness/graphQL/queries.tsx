@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const GET_ADDRESS = gql`
     query fitnessdisciplines($userId: ID) {
@@ -16,7 +16,7 @@ export const GET_ADDRESS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_FITNESS_DISCIPLINES = gql`
     query fitnessdisciplines {
@@ -29,7 +29,7 @@ export const GET_FITNESS_DISCIPLINES = gql`
             }
         }
     }
-`
+`;
 
 export const GET_FITNESS_PACKAGE_TYPES = gql`
     query fitnessPackageTypes($type: String) {
@@ -53,7 +53,7 @@ export const GET_FITNESS_PACKAGE_TYPES = gql`
             }
         }
     }
-`
+`;
 
 export const GET_TAGS = gql`
     query getTags($id: ID!, $pageSize: Int) {
@@ -137,7 +137,7 @@ export const GET_TAGS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_FITNESS = gql`
     query fitnesspackages($id: ID, $start: Int, $limit: Int) {
@@ -219,7 +219,7 @@ export const GET_FITNESS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_INVENTORY = gql`
     query offeringInventories($changemaker_id: String, $fitnesspackageid: ID, $pageSize: Int) {
@@ -248,7 +248,7 @@ export const GET_INVENTORY = gql`
             }
         }
     }
-`
+`;
 
 export const GET_OFFERING_INVENTORY = gql`
     query offeringInventories($id: String) {
@@ -261,7 +261,7 @@ export const GET_OFFERING_INVENTORY = gql`
             }
         }
     }
-`
+`;
 
 export const GET_SINGLE_PACKAGE_BY_ID = gql`
     query fitnesspackage($id: ID) {
@@ -383,7 +383,7 @@ export const GET_SINGLE_PACKAGE_BY_ID = gql`
             }
         }
     }
-`
+`;
 
 export const GET_SUGGESTIONS_PRICES = gql`
     query suggestedPricings($id: ID) {
@@ -409,7 +409,7 @@ export const GET_SUGGESTIONS_PRICES = gql`
             }
         }
     }
-`
+`;
 
 export const GET_SAPIENT_PRICES = gql`
     query sapienPricings {
@@ -431,7 +431,7 @@ export const GET_SAPIENT_PRICES = gql`
             }
         }
     }
-`
+`;
 
 export const GET_FITNESS_PACKAGE_TYPE = gql`
     query fitnessPackageType {
@@ -444,7 +444,7 @@ export const GET_FITNESS_PACKAGE_TYPE = gql`
             }
         }
     }
-`
+`;
 
 export const LANGUAGES = gql`
     query fetchLanguages {
@@ -457,4 +457,4 @@ export const LANGUAGES = gql`
             }
         }
     }
-`
+`;

@@ -1,6 +1,6 @@
-import React, { useContext, useImperativeHandle, useState, useEffect } from 'react'
-import { useQuery, useMutation } from '@apollo/client'
-import ModalView from '../../../../components/modal'
+import React, { useContext, useImperativeHandle, useState, useEffect } from 'react';
+import { useQuery, useMutation } from '@apollo/client';
+import ModalView from '../../../../components/modal';
 import {
     CREATE_CHANNEL_PACKAGE,
     DELETE_PACKAGE,
@@ -11,50 +11,50 @@ import {
     UPDATE_OFFERING_INVENTORY,
     CREATE_TAG,
     DELETE_OFFERING_INVENTORY
-} from '../graphQL/mutations'
+} from '../graphQL/mutations';
 import {
     youtubeUrlCustomFormats,
     youtubeUrlTransformErrors
-} from '../../../../components/utils/ValidationPatterns'
+} from '../../../../components/utils/ValidationPatterns';
 import {
     GET_FITNESS_PACKAGE_TYPE,
     GET_SINGLE_PACKAGE_BY_ID,
     GET_INVENTORY
-} from '../graphQL/queries'
-import AuthContext from '../../../../context/auth-context'
-import { schema, widgets } from './eventSchema'
-import { schemaView } from './schemaView'
-import { Subject } from 'rxjs'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
-import moment from 'moment'
-import { Modal, Button } from 'react-bootstrap'
-import Toaster from '../../../../components/Toaster'
-import { OfferingInventory } from '../../interface/offeringInventory'
+} from '../graphQL/queries';
+import AuthContext from '../../../../context/auth-context';
+import { schema, widgets } from './eventSchema';
+import { schemaView } from './schemaView';
+import { Subject } from 'rxjs';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import moment from 'moment';
+import { Modal, Button } from 'react-bootstrap';
+import Toaster from '../../../../components/Toaster';
+import { OfferingInventory } from '../../interface/offeringInventory';
 
 interface Operation {
-    id: string
-    packageType: 'Cohort' | 'Live Stream Channel'
-    type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete'
-    current_status: boolean
+    id: string;
+    packageType: 'Cohort' | 'Live Stream Channel';
+    type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
+    current_status: boolean;
 }
 
 function CreateEditEvent(props: any, ref: any) {
-    const auth = useContext(AuthContext)
-    const programSchema: { [name: string]: any } = require('./event.json')
-    const [programDetails, setProgramDetails] = useState<any>({})
-    const [operation, setOperation] = useState<Operation>({} as Operation)
-    const [fitnessPackageTypes, setFitnessPackageTypes] = useState<any>([])
-    const [deleteModalShow, setDeleteModalShow] = useState<boolean>(false)
-    const [deleteValidationModalShow, setDeleteValidationModalShow] = useState<boolean>(false)
-    const [statusModalShow, setStatusModalShow] = useState<boolean>(false)
-    const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false)
-    const [isOffeeringDeleted, setisOffeeringDeleted] = useState<boolean>(false)
-    const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false)
+    const auth = useContext(AuthContext);
+    const programSchema: { [name: string]: any } = require('./event.json');
+    const [programDetails, setProgramDetails] = useState<any>({});
+    const [operation, setOperation] = useState<Operation>({} as Operation);
+    const [fitnessPackageTypes, setFitnessPackageTypes] = useState<any>([]);
+    const [deleteModalShow, setDeleteModalShow] = useState<boolean>(false);
+    const [deleteValidationModalShow, setDeleteValidationModalShow] = useState<boolean>(false);
+    const [statusModalShow, setStatusModalShow] = useState<boolean>(false);
+    const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+    const [isOffeeringDeleted, setisOffeeringDeleted] = useState<boolean>(false);
+    const [isOfferingUpdated, setisOfferingUpdated] = useState<boolean>(false);
     const [offeringInventoryDetails, setOfferingInventoryDetails] = useState<OfferingInventory>(
         {} as OfferingInventory
-    )
+    );
 
-    let frmDetails: any = {}
+    let frmDetails: any = {};
 
     // eslint-disable-next-line
     const { data: inventories, refetch: refetch_inventories } = useQuery(
@@ -68,10 +68,10 @@ function CreateEditEvent(props: any, ref: any) {
             },
             skip: !operation.id,
             onCompleted: (response) => {
-                const flattenInventoryData = flattenObj({ ...response.offeringInventories })
+                const flattenInventoryData = flattenObj({ ...response.offeringInventories });
 
                 if (flattenInventoryData && flattenInventoryData.length)
-                    setOfferingInventoryDetails(flattenInventoryData[0])
+                    setOfferingInventoryDetails(flattenInventoryData[0]);
 
                 if (
                     operation.type === 'delete' &&
@@ -80,16 +80,16 @@ function CreateEditEvent(props: any, ref: any) {
                     flattenInventoryData[0] &&
                     flattenInventoryData[0].ActiveBookings === 0
                 )
-                    setDeleteModalShow(true)
-                else setDeleteValidationModalShow(true)
+                    setDeleteModalShow(true);
+                else setDeleteValidationModalShow(true);
             }
         }
-    )
+    );
 
     const [editPackageDetails] = useMutation(UPDATE_CHANNEL_COHORT_PACKAGE, {
         onCompleted: (data) => {
-            modalTrigger.next(false)
-            const flattenData = flattenObj({ ...data })
+            modalTrigger.next(false);
+            const flattenData = flattenObj({ ...data });
 
             updateOfferingInventory({
                 variables: {
@@ -99,53 +99,53 @@ function CreateEditEvent(props: any, ref: any) {
                         InstantBooking: flattenData.updateFitnesspackage.groupinstantbooking
                     }
                 }
-            })
+            });
         }
-    })
+    });
 
     const [updatePackageStatus] = useMutation(UPDATE_PACKAGE_STATUS, {
         onCompleted: () => {
-            setStatusModalShow(false)
+            setStatusModalShow(false);
 
-            props.refetchTags()
-            props.refetchOfferings()
-            setisOfferingUpdated(!isOfferingUpdated)
+            props.refetchTags();
+            props.refetchOfferings();
+            setisOfferingUpdated(!isOfferingUpdated);
         }
-    })
+    });
 
-    const [createOfferingInventory] = useMutation(CREATE_OFFERING_INVENTORY)
-    const [updateOfferingInventory] = useMutation(UPDATE_OFFERING_INVENTORY)
-    const [deleteOfferingInventory] = useMutation(DELETE_OFFERING_INVENTORY)
+    const [createOfferingInventory] = useMutation(CREATE_OFFERING_INVENTORY);
+    const [updateOfferingInventory] = useMutation(UPDATE_OFFERING_INVENTORY);
+    const [deleteOfferingInventory] = useMutation(DELETE_OFFERING_INVENTORY);
 
     const [deletePackage] = useMutation(DELETE_PACKAGE, {
         onCompleted: () => {
             //delete offering inventory
             deleteOfferingInventory({
                 variables: { id: offeringInventoryDetails.id }
-            })
+            });
 
-            props.refetchTags()
-            props.refetchOfferings()
-            setisOffeeringDeleted(!isOffeeringDeleted)
+            props.refetchTags();
+            props.refetchOfferings();
+            setisOffeeringDeleted(!isOffeeringDeleted);
         }
-    })
+    });
 
     const [createTag] = useMutation(CREATE_TAG, {
         onCompleted: (response) => {
-            modalTrigger.next(false)
+            modalTrigger.next(false);
 
-            props.refetchTags()
-            props.refetchOfferings()
-            setIsFormSubmitted(!isFormSubmitted)
-            window.open(`cohort/session/scheduler/${response.createTag.data.id}`, '_self')
+            props.refetchTags();
+            props.refetchOfferings();
+            setIsFormSubmitted(!isFormSubmitted);
+            window.open(`cohort/session/scheduler/${response.createTag.data.id}`, '_self');
         }
-    })
+    });
 
-    const [createCohortNotification] = useMutation(CREATE_NOTIFICATION)
+    const [createCohortNotification] = useMutation(CREATE_NOTIFICATION);
 
     const [CreateCohortPackage] = useMutation(CREATE_CHANNEL_PACKAGE, {
         onCompleted: (response) => {
-            const flattenData = flattenObj({ ...response })
+            const flattenData = flattenObj({ ...response });
 
             createCohortNotification({
                 variables: {
@@ -159,7 +159,7 @@ function CreateEditEvent(props: any, ref: any) {
                         IsRead: false
                     }
                 }
-            })
+            });
 
             createOfferingInventory({
                 variables: {
@@ -172,46 +172,46 @@ function CreateEditEvent(props: any, ref: any) {
                         ClientBookingDetails: []
                     }
                 }
-            })
+            });
 
             createTag({
                 variables: {
                     id: response.createFitnesspackage.data.id,
                     tagName: frmDetails.packageName
                 }
-            })
+            });
         }
-    })
+    });
 
     useQuery(GET_FITNESS_PACKAGE_TYPE, {
         onCompleted: (data) => {
-            const flattenData = flattenObj({ ...data })
-            setFitnessPackageTypes(flattenData.fitnessPackageTypes)
+            const flattenData = flattenObj({ ...data });
+            setFitnessPackageTypes(flattenData.fitnessPackageTypes);
         }
-    })
+    });
 
-    const modalTrigger = new Subject()
+    const modalTrigger = new Subject();
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
-            setOperation(msg)
-            schema.startDate = props.startDate
-            schema.duration = props.duration
+            setOperation(msg);
+            schema.startDate = props.startDate;
+            schema.duration = props.duration;
 
             if (msg.type === 'toggle-status') {
-                setStatusModalShow(true)
+                setStatusModalShow(true);
             }
 
             if (msg.type === 'delete' && offeringInventoryDetails.ActiveBookings !== null) {
-                if (offeringInventoryDetails.ActiveBookings === 0) setDeleteModalShow(true)
-                else setDeleteValidationModalShow(true)
+                if (offeringInventoryDetails.ActiveBookings === 0) setDeleteModalShow(true);
+                else setDeleteValidationModalShow(true);
             }
 
             // restrict to render when type is delete or toggle status
             if (msg.type !== 'delete' && msg.type !== 'toggle-status') {
-                modalTrigger.next(true)
+                modalTrigger.next(true);
             }
         }
-    }))
+    }));
 
     enum ENUM_FITNESSPACKAGE_LEVEL {
         Beginner,
@@ -238,35 +238,35 @@ function CreateEditEvent(props: any, ref: any) {
     }
 
     function FillDetails(data) {
-        const flattenData = flattenObj({ ...data })
-        const msg: any = flattenData.fitnesspackages[0]
-        const details: any = {}
-        const courseDetails = { details: JSON.stringify(msg.Course_details[0]) }
-        details.packageType = msg.fitness_package_type.type
-        details.About = msg.aboutpackage
-        details.Benifits = msg.benefits
-        details.packageName = msg.packagename
-        details.channelinstantBooking = msg.groupinstantbooking
-        details.expiryDate = moment(msg.expirydate).format('YYYY-MM-DD')
+        const flattenData = flattenObj({ ...data });
+        const msg: any = flattenData.fitnesspackages[0];
+        const details: any = {};
+        const courseDetails = { details: JSON.stringify(msg.Course_details[0]) };
+        details.packageType = msg.fitness_package_type.type;
+        details.About = msg.aboutpackage;
+        details.Benifits = msg.benefits;
+        details.packageName = msg.packagename;
+        details.channelinstantBooking = msg.groupinstantbooking;
+        details.expiryDate = moment(msg.expirydate).format('YYYY-MM-DD');
         // details.level = ENUM_FITNESSPACKAGE_LEVEL[msg.level];
         // details.intensity = ENUM_FITNESSPACKAGE_INTENSITY[msg.Intensity];
-        details.equipment = msg.equipment_lists
+        details.equipment = msg.equipment_lists;
         // details.discpline = msg.fitnessdisciplines;
         details.pricing =
             msg.fitnesspackagepricing[0]?.mrp === 'free'
                 ? 'free'
-                : JSON.stringify(msg.fitnesspackagepricing)
-        details.publishingDate = moment(msg.publishing_date).format('YYYY-MM-DD')
-        details.tag = msg?.tags === null ? '' : msg.tags
-        details.user_permissions_user = msg.users_permissions_user.id
-        details.visibility = msg.is_private ? 1 : 0
-        details.classSize = msg.classsize
-        details.mode = ENUM_FITNESSPACKAGE_MODE[msg.mode]
+                : JSON.stringify(msg.fitnesspackagepricing);
+        details.publishingDate = moment(msg.publishing_date).format('YYYY-MM-DD');
+        details.tag = msg?.tags === null ? '' : msg.tags;
+        details.user_permissions_user = msg.users_permissions_user.id;
+        details.visibility = msg.is_private ? 1 : 0;
+        details.classSize = msg.classsize;
+        details.mode = ENUM_FITNESSPACKAGE_MODE[msg.mode];
         details.residential = msg.residential_type
             ? ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE[msg.residential_type]
-            : null
-        details.languages = JSON.stringify(msg.languages)
-        details.courseDetails = courseDetails
+            : null;
+        details.languages = JSON.stringify(msg.languages);
+        details.courseDetails = courseDetails;
         details.programDetails = JSON.stringify({
             addressTag: msg.address === null ? 'At Client Address' : 'At My Address',
             address: [msg.address],
@@ -275,68 +275,68 @@ function CreateEditEvent(props: any, ref: any) {
                 ? ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE[msg.residential_type]
                 : null,
             accomodationDetails: msg.Accomdation_details
-        })
-        details.thumbnail = msg.Thumbnail_ID
-        details.VideoUrl = msg?.video_URL
+        });
+        details.thumbnail = msg.Thumbnail_ID;
+        details.VideoUrl = msg?.video_URL;
         details.datesConfig = JSON.stringify({
             expiryDate: msg.expiry_date,
             publishingDate: msg.publishing_date
-        })
+        });
         details.dates = JSON.stringify({
             endDate: msg.End_date,
             startDate: msg.Start_date,
             oneDay:
                 moment(msg.End_date).format('YYYY-MM-DD') ===
                 moment(msg.Start_date).format('YYYY-MM-DD')
-        })
+        });
 
-        setProgramDetails(details)
+        setProgramDetails(details);
 
         //if message exists - show form only for edit and view
-        if (['edit', 'view'].indexOf(operation.type) > -1) modalTrigger.next(true)
-        else OnSubmit(null)
+        if (['edit', 'view'].indexOf(operation.type) > -1) modalTrigger.next(true);
+        else OnSubmit(null);
     }
 
     useEffect(() => {
         if (operation.type === 'create') {
-            setProgramDetails({})
+            setProgramDetails({});
         }
-    }, [operation.type])
+    }, [operation.type]);
 
     function FetchData() {
         useQuery(GET_SINGLE_PACKAGE_BY_ID, {
             variables: { id: operation.id },
             skip: operation.type === 'create' || !operation.id,
             onCompleted: (e: any) => {
-                FillDetails(e)
+                FillDetails(e);
             }
-        })
+        });
     }
 
     function findPackageType(creationType: any) {
-        const foundType = fitnessPackageTypes.find((item) => item.type === creationType)
-        return foundType.id
+        const foundType = fitnessPackageTypes.find((item) => item.type === creationType);
+        return foundType.id;
     }
 
     function calculateDuration(sd, ed) {
-        const start = moment(sd)
-        const end = moment(ed)
-        const duration: number = end.diff(start, 'days')
-        return duration
+        const start = moment(sd);
+        const end = moment(ed);
+        const duration: number = end.diff(start, 'days');
+        return duration;
     }
 
     function createCohort(frm: any) {
-        frmDetails = frm
-        frm.programDetails = JSON.parse(frm.programDetails)
-        frm.languages = JSON.parse(frm.languages)
-        frm.courseDetails.details = JSON.parse(frm.courseDetails.details)
-        frm.dates = JSON.parse(frm.dates)
-        frm.datesConfig = JSON.parse(frm.datesConfig)
+        frmDetails = frm;
+        frm.programDetails = JSON.parse(frm.programDetails);
+        frm.languages = JSON.parse(frm.languages);
+        frm.courseDetails.details = JSON.parse(frm.courseDetails.details);
+        frm.dates = JSON.parse(frm.dates);
+        frm.datesConfig = JSON.parse(frm.datesConfig);
         if (frm.equipment) {
-            frm.equipment = JSON.parse(frm?.equipment)
+            frm.equipment = JSON.parse(frm?.equipment);
         }
         if (frm.discpline) {
-            frm.discpline = JSON.parse(frm?.discpline)
+            frm.discpline = JSON.parse(frm?.discpline);
         }
         CreateCohortPackage({
             variables: {
@@ -401,21 +401,21 @@ function CreateEditEvent(props: any, ref: any) {
                 videoUrl: frm.VideoUrl,
                 Accomdation_details: frm.programDetails.accomodationDetails
             }
-        })
+        });
     }
 
     function editCohort(frm) {
-        frmDetails = frm
-        frm.programDetails = JSON.parse(frm.programDetails)
-        frm.languages = JSON.parse(frm.languages)
-        frm.courseDetails.details = JSON.parse(frm.courseDetails.details)
-        frm.dates = JSON.parse(frm.dates)
-        frm.datesConfig = JSON.parse(frm.datesConfig)
+        frmDetails = frm;
+        frm.programDetails = JSON.parse(frm.programDetails);
+        frm.languages = JSON.parse(frm.languages);
+        frm.courseDetails.details = JSON.parse(frm.courseDetails.details);
+        frm.dates = JSON.parse(frm.dates);
+        frm.datesConfig = JSON.parse(frm.datesConfig);
         if (frm.equipment) {
-            frm.equipment = JSON.parse(frm?.equipment)
+            frm.equipment = JSON.parse(frm?.equipment);
         }
         if (frm.discpline) {
-            frm.discpline = JSON.parse(frm?.discpline)
+            frm.discpline = JSON.parse(frm?.discpline);
         }
         editPackageDetails({
             variables: {
@@ -473,51 +473,51 @@ function CreateEditEvent(props: any, ref: any) {
                 videoUrl: frm.VideoUrl,
                 Accomdation_details: frm.programDetails.accomodationDetails
             }
-        })
+        });
     }
 
     function deleteChannelPackage(id: any) {
-        deletePackage({ variables: { id } })
-        setDeleteModalShow(false)
+        deletePackage({ variables: { id } });
+        setDeleteModalShow(false);
     }
 
     function updateChannelPackageStatus(id: any, status: any) {
-        updatePackageStatus({ variables: { id: id, Status: status } })
-        setStatusModalShow(false)
-        operation.type = 'create'
+        updatePackageStatus({ variables: { id: id, Status: status } });
+        setStatusModalShow(false);
+        operation.type = 'create';
     }
 
     function OnSubmit(frm: any) {
         //bind user id
-        if (frm) frm.user_permissions_user = auth.userid
+        if (frm) frm.user_permissions_user = auth.userid;
 
         switch (operation.type) {
             case 'create':
-                createCohort(frm)
-                break
+                createCohort(frm);
+                break;
             case 'edit':
-                editCohort(frm)
-                break
+                editCohort(frm);
+                break;
             case 'delete':
-                if (offeringInventoryDetails.ActiveBookings === 0) setDeleteModalShow(true)
-                else setDeleteValidationModalShow(true)
-                break
+                if (offeringInventoryDetails.ActiveBookings === 0) setDeleteModalShow(true);
+                else setDeleteValidationModalShow(true);
+                break;
             case 'toggle-status':
-                setStatusModalShow(true)
-                break
+                setStatusModalShow(true);
+                break;
         }
     }
 
-    let name = ''
+    let name = '';
     if (operation.type === 'create') {
-        name = 'Event Offering'
+        name = 'Event Offering';
     } else if (operation.type === 'edit') {
-        name = `Edit ${programDetails.packageName}`
+        name = `Edit ${programDetails.packageName}`;
     } else if (operation.type === 'view') {
-        name = `Viewing ${programDetails.packageName}`
+        name = `Viewing ${programDetails.packageName}`;
     }
 
-    FetchData()
+    FetchData();
 
     return (
         <>
@@ -532,10 +532,10 @@ function CreateEditEvent(props: any, ref: any) {
                 formSubmit={
                     name === 'View'
                         ? () => {
-                              modalTrigger.next(false)
+                              modalTrigger.next(false);
                           }
                         : (frm: any) => {
-                              OnSubmit(frm)
+                              OnSubmit(frm);
                           }
                 }
                 formData={programDetails}
@@ -554,7 +554,7 @@ function CreateEditEvent(props: any, ref: any) {
                 <Modal.Header
                     closeButton
                     onHide={() => {
-                        setDeleteModalShow(false)
+                        setDeleteModalShow(false);
                     }}
                 >
                     <Modal.Title id="contained-modal-title-vcenter">Delete Package</Modal.Title>
@@ -566,7 +566,7 @@ function CreateEditEvent(props: any, ref: any) {
                     <Button
                         variant="danger"
                         onClick={() => {
-                            setDeleteModalShow(false)
+                            setDeleteModalShow(false);
                         }}
                     >
                         No
@@ -574,7 +574,7 @@ function CreateEditEvent(props: any, ref: any) {
                     <Button
                         variant="success"
                         onClick={() => {
-                            deleteChannelPackage(operation.id)
+                            deleteChannelPackage(operation.id);
                         }}
                     >
                         Yes
@@ -593,7 +593,7 @@ function CreateEditEvent(props: any, ref: any) {
                     <Modal.Header
                         closeButton
                         onHide={() => {
-                            setDeleteValidationModalShow(false)
+                            setDeleteValidationModalShow(false);
                         }}
                     >
                         <Modal.Title id="contained-modal-title-vcenter">
@@ -610,7 +610,7 @@ function CreateEditEvent(props: any, ref: any) {
                         <Button
                             variant="success"
                             onClick={() => {
-                                setDeleteValidationModalShow(false)
+                                setDeleteValidationModalShow(false);
                             }}
                         >
                             Close
@@ -630,7 +630,7 @@ function CreateEditEvent(props: any, ref: any) {
                     <Modal.Header
                         closeButton
                         onHide={() => {
-                            setStatusModalShow(false)
+                            setStatusModalShow(false);
                         }}
                     >
                         <Modal.Title id="contained-modal-title-vcenter">Update Status</Modal.Title>
@@ -642,7 +642,7 @@ function CreateEditEvent(props: any, ref: any) {
                         <Button
                             variant="danger"
                             onClick={() => {
-                                setStatusModalShow(false)
+                                setStatusModalShow(false);
                             }}
                         >
                             No
@@ -650,7 +650,7 @@ function CreateEditEvent(props: any, ref: any) {
                         <Button
                             variant="success"
                             onClick={() => {
-                                updateChannelPackageStatus(operation.id, operation.current_status)
+                                updateChannelPackageStatus(operation.id, operation.current_status);
                             }}
                         >
                             Yes
@@ -683,7 +683,7 @@ function CreateEditEvent(props: any, ref: any) {
                 />
             ) : null}
         </>
-    )
+    );
 }
 
-export default React.forwardRef(CreateEditEvent)
+export default React.forwardRef(CreateEditEvent);

@@ -1,33 +1,33 @@
-import React, { useContext, useState } from 'react'
-import { Row, NavDropdown, Image } from 'react-bootstrap'
-import { GET_USER_ORGANIZATIONS } from '../queries'
-import { flattenObj } from '../../../components/utils/responseFlatten'
-import { useQuery } from '@apollo/client'
-import { LobbyData } from './LobbyData'
-import AuthContext from '../../../context/auth-context'
-import { LobbyColors } from '../dashboard-data/colors'
-import './miniLobby.css'
-import { NavLink, useHistory } from 'react-router-dom'
+import React, { useContext, useState } from 'react';
+import { Row, NavDropdown, Image } from 'react-bootstrap';
+import { GET_USER_ORGANIZATIONS } from '../queries';
+import { flattenObj } from '../../../components/utils/responseFlatten';
+import { useQuery } from '@apollo/client';
+import { LobbyData } from './LobbyData';
+import AuthContext from '../../../context/auth-context';
+import { LobbyColors } from '../dashboard-data/colors';
+import './miniLobby.css';
+import { NavLink, useHistory } from 'react-router-dom';
 
 export const MiniLobbyComponent = () => {
-    const history = useHistory()
-    const auth = useContext(AuthContext)
-    const [organizations, setOrganizations] = useState([])
+    const history = useHistory();
+    const auth = useContext(AuthContext);
+    const [organizations, setOrganizations] = useState([]);
 
     useQuery(GET_USER_ORGANIZATIONS, {
         variables: { id: auth.userid },
         onCompleted: (data: any) => {
-            const flattendData = flattenObj({ ...data })
-            setOrganizations(flattendData.usersPermissionsUsers[0].organizations)
+            const flattendData = flattenObj({ ...data });
+            setOrganizations(flattendData.usersPermissionsUsers[0].organizations);
         }
-    })
+    });
 
-    const totalNumberOfColors = LobbyColors.length
-    const randomColorInArray = Math.floor(Math.random() * LobbyColors.length)
+    const totalNumberOfColors = LobbyColors.length;
+    const randomColorInArray = Math.floor(Math.random() * LobbyColors.length);
 
     const handleLobbyClick = () => {
-        history.push('/lobby')
-    }
+        history.push('/lobby');
+    };
 
     return (
         <NavDropdown
@@ -107,8 +107,8 @@ export const MiniLobbyComponent = () => {
                                 <div className="text-white ml-1">{data.Organization_Name}</div>
                             </Row>
                         </NavDropdown.Item>
-                    )
+                    );
                 })}
         </NavDropdown>
-    )
-}
+    );
+};

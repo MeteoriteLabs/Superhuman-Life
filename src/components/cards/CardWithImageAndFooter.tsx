@@ -1,16 +1,16 @@
-import Button from 'react-bootstrap/Button'
-import Card from 'react-bootstrap/Card'
-import style from './cardStyles.module.css'
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
+import style from './cardStyles.module.css';
 
-import { Col, Row } from 'react-bootstrap'
-import { Template } from '../../pages/website-builder/@types/websiteTemplates'
+import { Col, Row } from 'react-bootstrap';
+import { Template } from '../../pages/website-builder/@types/websiteTemplates';
 
 function CardWithImageAndFooter({
     infoHandler,
     data
 }: {
-    infoHandler: (data: Template) => void
-    data: Template
+    infoHandler: (data: Template) => void;
+    data: Template;
 }): JSX.Element {
     const renderOverlay = () => {
         return (
@@ -28,8 +28,8 @@ function CardWithImageAndFooter({
                     Details
                 </Button>
             </div>
-        )
-    }
+        );
+    };
 
     return (
         <Card className={style.card}>
@@ -47,7 +47,7 @@ function CardWithImageAndFooter({
                 </Row>
             </Card.Body>
         </Card>
-    )
+    );
 }
 
-export default CardWithImageAndFooter
+export default CardWithImageAndFooter;

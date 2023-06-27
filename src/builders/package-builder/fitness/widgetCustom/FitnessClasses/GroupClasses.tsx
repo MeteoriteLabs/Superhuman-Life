@@ -1,50 +1,50 @@
-import React, { useRef, useEffect } from 'react'
-import { Form } from 'react-bootstrap'
+import React, { useRef, useEffect } from 'react';
+import { Form } from 'react-bootstrap';
 
 interface Properties {
-    grouponlineClasses: any
-    groupofflineClasses: any
-    restDay: any
-    duration: any
+    grouponlineClasses: any;
+    groupofflineClasses: any;
+    restDay: any;
+    duration: any;
 }
 
 const GroupClasses: React.FC<{
-    widgetProps: any
-    packageTypeName: string | null
-    groupProps: Properties
-    actionType: string
-    userData: any
+    widgetProps: any;
+    packageTypeName: string | null;
+    groupProps: Properties;
+    actionType: string;
+    userData: any;
 }> = (props) => {
-    const dayAvailableRef = useRef<any>(null)
+    const dayAvailableRef = useRef<any>(null);
 
     useEffect(() => {
         if (props.userData.grouponline) {
-            props.groupProps.grouponlineClasses.value = props.userData.grouponline
+            props.groupProps.grouponlineClasses.value = props.userData.grouponline;
         }
 
         if (props.userData.groupoffline) {
-            props.groupProps.groupofflineClasses.value = props.userData.groupoffline
+            props.groupProps.groupofflineClasses.value = props.userData.groupoffline;
         }
         if (props.userData.restDay) {
-            props.groupProps.restDay.value = props.userData.restdays
+            props.groupProps.restDay.value = props.userData.restdays;
         }
-    })
+    });
 
     const showErrorMessage = (e: { target: any }) => {
         if (dayAvailableRef.current < 0) {
-            props.widgetProps.schema.maximum = 0
+            props.widgetProps.schema.maximum = 0;
             if (props.widgetProps.rawErrors) {
                 props.widgetProps.rawErrors[0] = `should be <= ${
                     parseInt(e.target.value) - dayAvailableRef.current * -1
-                }`
+                }`;
             }
         } else if (dayAvailableRef.current >= 0) {
-            props.widgetProps.schema.maximum = 30
+            props.widgetProps.schema.maximum = 30;
             if (props.widgetProps.rawErrors) {
-                props.widgetProps.rawErrors[0] = ''
+                props.widgetProps.rawErrors[0] = '';
             }
         }
-    }
+    };
 
     const handleValidationFor30Day = (
         e: { target: any },
@@ -52,45 +52,45 @@ const GroupClasses: React.FC<{
     ) => {
         // online
         if (widgetProps.label === 'Online') {
-            props.groupProps.grouponlineClasses.value = parseInt(e.target.value)
+            props.groupProps.grouponlineClasses.value = parseInt(e.target.value);
 
             dayAvailableRef.current -=
                 parseInt(e.target.value) +
                 props.groupProps.groupofflineClasses.value +
-                props.groupProps.restDay.value
+                props.groupProps.restDay.value;
 
             // error message
-            showErrorMessage(e)
+            showErrorMessage(e);
 
             // offline
         } else if (widgetProps.label === 'Offline') {
-            props.groupProps.groupofflineClasses.value = parseInt(e.target.value)
+            props.groupProps.groupofflineClasses.value = parseInt(e.target.value);
 
             dayAvailableRef.current -=
                 parseInt(e.target.value) +
                 props.groupProps.grouponlineClasses.value +
-                props.groupProps.restDay.value
+                props.groupProps.restDay.value;
 
             // error message
-            showErrorMessage(e)
+            showErrorMessage(e);
         }
-    }
+    };
 
     const handleValidation = (
         e: { target: any },
         widgetProps: { onChange: (arg0: number) => void }
     ) => {
-        dayAvailableRef.current = props.groupProps.duration.value
-        handleValidationFor30Day(e, widgetProps)
-    }
+        dayAvailableRef.current = props.groupProps.duration.value;
+        handleValidationFor30Day(e, widgetProps);
+    };
 
     const handleChange = (
         e: { target: any },
         widgetProps: { onChange: (arg0: number) => void }
     ) => {
-        handleValidation(e, widgetProps)
-        widgetProps.onChange(parseInt(e.target.value))
-    }
+        handleValidation(e, widgetProps);
+        widgetProps.onChange(parseInt(e.target.value));
+    };
 
     return (
         <div className="d-flex justify-content-center aligns-items-center">
@@ -120,7 +120,7 @@ const GroupClasses: React.FC<{
                 max="30"
             />
         </div>
-    )
-}
+    );
+};
 
-export default GroupClasses
+export default GroupClasses;

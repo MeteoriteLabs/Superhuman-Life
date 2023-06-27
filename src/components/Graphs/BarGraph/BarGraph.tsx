@@ -1,5 +1,5 @@
-import React from 'react'
-import { ResponsiveBar } from '@nivo/bar'
+import React from 'react';
+import { ResponsiveBar } from '@nivo/bar';
 
 const Wrapper = (props) => (
     <div
@@ -10,12 +10,12 @@ const Wrapper = (props) => (
             minWidth: '900px'
         }}
     />
-)
+);
 
 const BarGraph: React.FC<{
-    data: { index: string; Clients?: number; Leads?: number }[]
-    yAxis: string
-    keyName: string[]
+    data: { index: string; Clients?: number; Leads?: number }[];
+    yAxis: string;
+    keyName: string[];
 }> = (props) => {
     return (
         <>
@@ -51,7 +51,7 @@ const BarGraph: React.FC<{
                 />
             </Wrapper>
         </>
-    )
-}
+    );
+};
 
-export default BarGraph
+export default BarGraph;

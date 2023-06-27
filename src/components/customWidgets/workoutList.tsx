@@ -1,16 +1,16 @@
-import { useState, useRef, useContext } from 'react'
-import { InputGroup, FormControl, Container, Col, Row, Button } from 'react-bootstrap'
-import { gql, useQuery } from '@apollo/client'
-import AuthContext from '../../context/auth-context'
-import { flattenObj } from '../utils/responseFlatten'
+import { useState, useRef, useContext } from 'react';
+import { InputGroup, FormControl, Container, Col, Row, Button } from 'react-bootstrap';
+import { gql, useQuery } from '@apollo/client';
+import AuthContext from '../../context/auth-context';
+import { flattenObj } from '../utils/responseFlatten';
 
 const ProgramList = (props: any) => {
-    const auth = useContext(AuthContext)
-    const [workoutList, setWokroutList] = useState<any[]>([])
-    const [searchInput, setSearchInput] = useState(null)
-    const [selected, setSelected] = useState<any[]>([])
-    const inputField = useRef<any>()
-    let skipval = true
+    const auth = useContext(AuthContext);
+    const [workoutList, setWokroutList] = useState<any[]>([]);
+    const [searchInput, setSearchInput] = useState(null);
+    const [selected, setSelected] = useState<any[]>([]);
+    const inputField = useRef<any>();
+    let skipval = true;
 
     const GET_WORKOUTLIST = gql`
         query workoutlistQuery($id: ID!, $filter: String!) {
@@ -50,7 +50,7 @@ const ProgramList = (props: any) => {
                 }
             }
         }
-    `
+    `;
 
     function FetchEquipmentList(
         _variable: Record<string, unknown> = { id: auth.userid, filter: ' ' }
@@ -59,11 +59,11 @@ const ProgramList = (props: any) => {
             variables: _variable,
             onCompleted: loadProgramList,
             skip: !searchInput
-        })
+        });
     }
 
     function loadProgramList(data: any) {
-        const flattenedData = flattenObj({ ...data })
+        const flattenedData = flattenObj({ ...data });
         setWokroutList(
             [...flattenedData.workouts].map((workout) => {
                 return {
@@ -74,17 +74,17 @@ const ProgramList = (props: any) => {
                     intensity: workout.intensity,
                     discipline: workout.fitnessdisciplines,
                     equipment: workout.equipment_lists
-                }
+                };
             })
-        )
+        );
     }
 
     function EquipmentSearch(data: any) {
         if (data.length) {
-            setSearchInput(data)
-            skipval = false
+            setSearchInput(data);
+            skipval = false;
         } else {
-            setWokroutList([])
+            setWokroutList([]);
         }
     }
 
@@ -97,9 +97,9 @@ const ProgramList = (props: any) => {
         equipment: any,
         discipline: any
     ) {
-        const values = [...selected]
-        const a = values.find((e) => e.id === id)
-        const b = values.length === 0
+        const values = [...selected];
+        const a = values.find((e) => e.id === id);
+        const b = values.length === 0;
         if (!a && b) {
             values.push({
                 name: name,
@@ -109,37 +109,37 @@ const ProgramList = (props: any) => {
                 intensity: intensity,
                 equipment: equipment,
                 discipline: discipline
-            })
-            setSelected(values)
+            });
+            setSelected(values);
         }
         props.onChange(
             values
                 .map((e) => {
-                    return e.id
+                    return e.id;
                 })
                 .join(',')
-        )
-        inputField.current.value = ''
-        setWokroutList([])
-        skipval = true
+        );
+        inputField.current.value = '';
+        setWokroutList([]);
+        skipval = true;
     }
 
     function handleSelectedEquipmentRemove(name: any) {
-        const values = [...selected]
-        values.splice(name, 1)
-        setSelected(values)
+        const values = [...selected];
+        values.splice(name, 1);
+        setSelected(values);
         props.onChange(
             values
                 .map((e) => {
-                    return e.id
+                    return e.id;
                 })
                 .join(',')
-        )
+        );
     }
 
-    FetchEquipmentList({ filter: searchInput, skip: skipval, id: auth.userid })
+    FetchEquipmentList({ filter: searchInput, skip: skipval, id: auth.userid });
     if (selected.length > 0) {
-        props.onChange(JSON.stringify(selected))
+        props.onChange(JSON.stringify(selected));
     }
 
     return (
@@ -152,8 +152,8 @@ const ProgramList = (props: any) => {
                     id="searchInput"
                     ref={inputField}
                     onChange={(e) => {
-                        e.preventDefault()
-                        EquipmentSearch(e.target.value)
+                        e.preventDefault();
+                        EquipmentSearch(e.target.value);
                     }}
                     autoComplete="off"
                     disabled={selected.length > 0 ? true : false}
@@ -169,7 +169,7 @@ const ProgramList = (props: any) => {
                                 className="m-2 ml-4 p-2 shadow-sm rounded bg-white "
                                 id={workout.id}
                                 onClick={(e) => {
-                                    e.preventDefault()
+                                    e.preventDefault();
                                     handleSelectedEquipmentAdd(
                                         workout.name,
                                         workout.id,
@@ -178,7 +178,7 @@ const ProgramList = (props: any) => {
                                         workout.intensity,
                                         workout.equipment,
                                         workout.discipline
-                                    )
+                                    );
                                 }}
                             >
                                 <div>
@@ -198,14 +198,14 @@ const ProgramList = (props: any) => {
                                         <Col style={{ textAlign: 'start' }}>
                                             {workout.equipment
                                                 .map((e) => {
-                                                    return e.name
+                                                    return e.name;
                                                 })
                                                 .join(', ')}
                                         </Col>
                                         <Col style={{ textAlign: 'end' }}>
                                             {workout.discipline
                                                 .map((e) => {
-                                                    return e.disciplinename
+                                                    return e.disciplinename;
                                                 })
                                                 .join(', ')}
                                         </Col>
@@ -213,7 +213,7 @@ const ProgramList = (props: any) => {
                                 </div>
                             </div>
                         </Container>
-                    )
+                    );
                 })}
             </>
             <>
@@ -252,14 +252,14 @@ const ProgramList = (props: any) => {
                                                 <Col style={{ textAlign: 'start' }}>
                                                     {val.equipment
                                                         .map((e) => {
-                                                            return e.name
+                                                            return e.name;
                                                         })
                                                         .join(', ')}
                                                 </Col>
                                                 <Col style={{ textAlign: 'end' }}>
                                                     {val.discipline
                                                         .map((e) => {
-                                                            return e.disciplinename
+                                                            return e.disciplinename;
                                                         })
                                                         .join(', ')}
                                                 </Col>
@@ -279,11 +279,11 @@ const ProgramList = (props: any) => {
                                 </Col>
                             </Row>
                         </div>
-                    )
+                    );
                 })}
             </>
         </>
-    )
-}
+    );
+};
 
-export default ProgramList
+export default ProgramList;

@@ -14,7 +14,7 @@ function ArrowDown({ width, height }: { width: number; height: number }): JSX.El
                 fill="white"
             />
         </svg>
-    )
+    );
 }
 
-export default ArrowDown
+export default ArrowDown;

@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const GET_CLIENT_NEW = gql`
     query getClients($filter: String!, $id: ID!, $start: Int, $limit: Int) {
@@ -71,7 +71,7 @@ export const GET_CLIENT_NEW = gql`
             }
         }
     }
-`
+`;
 
 // export const GET_CLIENTS = gql`
 //      query getmessage($filter: String!, $id: ID!) {
@@ -154,7 +154,7 @@ export const GET_CHANGEMAKERS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_CHANGEMAKERS_NEW = gql`
     query getclient($clientid: ID) {
@@ -188,7 +188,7 @@ export const GET_CHANGEMAKERS_NEW = gql`
             }
         }
     }
-`
+`;
 
 export const GET_CLIENT_DATA = gql`
     query getclient($id: ID!, $clientid: ID) {
@@ -257,7 +257,7 @@ export const GET_CLIENT_DATA = gql`
             }
         }
     }
-`
+`;
 
 export const GET_CLIENT_DATA_NEW = gql`
     query getclient($id: ID!, $clientid: ID) {
@@ -326,7 +326,7 @@ export const GET_CLIENT_DATA_NEW = gql`
             }
         }
     }
-`
+`;
 
 export const ADD_CLIENT = gql`
     mutation client(
@@ -358,7 +358,7 @@ export const ADD_CLIENT = gql`
             }
         }
     }
-`
+`;
 
 export const ADD_CLIENT_NEW = gql`
     mutation creatClient(
@@ -383,4 +383,4 @@ export const ADD_CLIENT_NEW = gql`
             }
         }
     }
-`
+`;

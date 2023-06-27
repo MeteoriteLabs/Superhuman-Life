@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
-import { Form } from 'react-bootstrap'
-import { gql, useQuery } from '@apollo/client'
-import { flattenObj } from '../../components/utils/responseFlatten'
+import React, { useState } from 'react';
+import { Form } from 'react-bootstrap';
+import { gql, useQuery } from '@apollo/client';
+import { flattenObj } from '../../components/utils/responseFlatten';
 
 const Email = (props: any) => {
-    const [userEmail, setUserEmail] = useState(props.value)
-    const [user, setUser] = useState<any>([])
+    const [userEmail, setUserEmail] = useState(props.value);
+    const [user, setUser] = useState<any>([]);
 
     const FETCH_USER = gql`
         query fetchUsers($email: String!) {
@@ -18,27 +18,27 @@ const Email = (props: any) => {
                 }
             }
         }
-    `
+    `;
 
     useQuery(FETCH_USER, {
         variables: { email: userEmail },
         skip: userEmail === '',
         onCompleted: loadData
-    })
+    });
 
     function loadData(data: any) {
-        const flattenedData = flattenObj({ ...data })
+        const flattenedData = flattenObj({ ...data });
         setUser(
             [...flattenedData.usersPermissionsUsers].map((user) => {
                 return {
                     id: user.id,
                     email: user.email
-                }
+                };
             })
-        )
+        );
     }
 
-    props.onChange(userEmail)
+    props.onChange(userEmail);
 
     return (
         <div>
@@ -57,14 +57,14 @@ const Email = (props: any) => {
                     type="email"
                     value={userEmail}
                     onChange={(e) => {
-                        setUserEmail(e.target.value)
+                        setUserEmail(e.target.value);
                     }}
                     placeholder=""
                 />
                 {/* {user.length ===0 && <span style={{fontSize: '13px', color: 'red'}}>This is not a valid email.</span>} */}
             </Form.Group>
         </div>
-    )
-}
+    );
+};
 
-export default Email
+export default Email;

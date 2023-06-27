@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const REGISTER_USER = gql`
     mutation registerUser($email: String!, $password: String!, $name: String!) {
@@ -8,7 +8,7 @@ export const REGISTER_USER = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_USER = gql`
     mutation updateUser(
@@ -48,7 +48,7 @@ export const UPDATE_USER = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_USER = gql`
     mutation createUsersPermissionsUser(
@@ -87,7 +87,7 @@ export const CREATE_USER = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_ADDRESS = gql`
     mutation createAddress(
@@ -121,7 +121,7 @@ export const CREATE_ADDRESS = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_ORGANIZATION = gql`
     mutation createOrganization(
@@ -143,7 +143,7 @@ export const CREATE_ORGANIZATION = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_EDUCATION_DETAIL = gql`
     mutation createEducationalDetail(
@@ -167,4 +167,4 @@ export const CREATE_EDUCATION_DETAIL = gql`
             }
         }
     }
-`
+`;

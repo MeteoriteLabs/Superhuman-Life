@@ -1,19 +1,19 @@
-import { useQuery } from '@apollo/client'
-import { useContext, useMemo, useRef, useState } from 'react'
-import { Badge, Row, Col, Form } from 'react-bootstrap'
-import AuthContext from '../../../../context/auth-context'
-import PTTable from '../../../../components/table/PtTable/PTTable'
-import { GET_SESSIONS_FROM_TAGS_FOR_ONE_ON_ONE_OR_ON_DEMAND } from '../../graphQL/queries'
-import moment from 'moment'
-import ActionButton from '../../../../components/actionbutton'
-import FitnessAction from '../FitnessAction'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
+import { useQuery } from '@apollo/client';
+import { useContext, useMemo, useRef, useState } from 'react';
+import { Badge, Row, Col, Form } from 'react-bootstrap';
+import AuthContext from '../../../../context/auth-context';
+import PTTable from '../../../../components/table/PtTable/PTTable';
+import { GET_SESSIONS_FROM_TAGS_FOR_ONE_ON_ONE_OR_ON_DEMAND } from '../../graphQL/queries';
+import moment from 'moment';
+import ActionButton from '../../../../components/actionbutton';
+import FitnessAction from '../FitnessAction';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
 
 export default function PT() {
-    const auth = useContext(AuthContext)
-    const [userPackage, setUserPackage] = useState<any>([])
-    const [showHistory, setShowHistory] = useState<boolean>(false)
-    const fitnessActionRef = useRef<any>(null)
+    const auth = useContext(AuthContext);
+    const [userPackage, setUserPackage] = useState<any>([]);
+    const [showHistory, setShowHistory] = useState<boolean>(false);
+    const fitnessActionRef = useRef<any>(null);
 
     const { data: get_tags, refetch: refetch_tags } = useQuery(
         GET_SESSIONS_FROM_TAGS_FOR_ONE_ON_ONE_OR_ON_DEMAND,
@@ -22,18 +22,18 @@ export default function PT() {
                 id: auth.userid
             },
             onCompleted: (data) => {
-                loadData(data)
+                loadData(data);
             },
             fetchPolicy: 'no-cache'
         }
-    )
+    );
 
     const loadData = (data) => {
-        const flattenData = flattenObj({ ...data })
+        const flattenData = flattenObj({ ...data });
 
         setUserPackage(
             [...flattenData.tags].map((packageItem) => {
-                let renewDay: any = ''
+                let renewDay: any = '';
                 if (
                     packageItem.client_packages &&
                     packageItem.client_packages.length &&
@@ -41,11 +41,11 @@ export default function PT() {
                     packageItem.client_packages[0].fitnesspackages.length &&
                     packageItem.client_packages[0].fitnesspackages[0].length !== 0
                 ) {
-                    renewDay = new Date(packageItem.client_packages[0].effective_date)
+                    renewDay = new Date(packageItem.client_packages[0].effective_date);
                     renewDay.setDate(
                         renewDay.getDate() +
                             packageItem.client_packages[0].fitnesspackages[0].duration
-                    )
+                    );
                 }
                 return {
                     tagId: packageItem.id,
@@ -111,52 +111,52 @@ export default function PT() {
                             ? packageItem.client_packages[0].effective_date
                             : null
                     )
-                }
+                };
             })
-        )
-    }
+        );
+    };
 
     function handleStatus(sessions: any, effective_date: any, renewDay) {
-        let effectiveDate: any
+        let effectiveDate: any;
         if (sessions.length === 0) {
-            return 'Not_Assigned'
+            return 'Not_Assigned';
         } else if (sessions.length > 0) {
-            let max = 0
+            let max = 0;
             for (let i = 0; i < sessions.length; i++) {
                 if (sessions[i].day_of_program > max) {
-                    max = sessions[i].day_of_program
+                    max = sessions[i].day_of_program;
                 }
             }
-            effectiveDate = moment(effective_date).add(max, 'days').format('MMMM DD,YYYY')
+            effectiveDate = moment(effective_date).add(max, 'days').format('MMMM DD,YYYY');
             if (moment(effectiveDate).isBetween(moment(), moment().subtract(5, 'months'))) {
-                return 'Almost Ending'
+                return 'Almost Ending';
             } else {
-                return 'Assigned'
+                return 'Assigned';
             }
         } else {
             if (moment(effectiveDate) === moment(renewDay)) {
-                return 'Completed'
+                return 'Completed';
             }
         }
     }
 
     function calculateProgramRenewal(sessions: any, effectiveDate: any) {
-        let max = 0
+        let max = 0;
         for (let i = 0; i < sessions.length; i++) {
             if (sessions[i].day_of_program > max) {
-                max = sessions[i].day_of_program
+                max = sessions[i].day_of_program;
             }
         }
 
-        return moment(effectiveDate).add(max, 'days').format('MMMM DD,YYYY')
+        return moment(effectiveDate).add(max, 'days').format('MMMM DD,YYYY');
     }
 
     function handleRedirect(id: any) {
         if (id === null) {
-            alert('Please assign a program to this client first')
-            return
+            alert('Please assign a program to this client first');
+            return;
         }
-        window.location.href = `/pt/session/scheduler/${id}`
+        window.location.href = `/pt/session/scheduler/${id}`;
     }
 
     function handleBadgeRender(val: any) {
@@ -169,7 +169,7 @@ export default function PT() {
                 >
                     {val}
                 </Badge>
-            )
+            );
         } else if (val === 'Almost Ending') {
             return (
                 <Badge
@@ -179,7 +179,7 @@ export default function PT() {
                 >
                     {val}
                 </Badge>
-            )
+            );
         } else if (val === 'Assigned') {
             return (
                 <Badge
@@ -189,7 +189,7 @@ export default function PT() {
                 >
                     {val}
                 </Badge>
-            )
+            );
         } else if (val === 'Completed') {
             return (
                 <Badge
@@ -202,7 +202,7 @@ export default function PT() {
                 >
                     {val}
                 </Badge>
-            )
+            );
         }
     }
 
@@ -237,7 +237,7 @@ export default function PT() {
                         accessor: 'programStatus',
                         Header: 'Status',
                         Cell: (row: any) => {
-                            return <>{handleBadgeRender(row.value)}</>
+                            return <>{handleBadgeRender(row.value)}</>;
                         }
                     },
                     { accessor: 'programRenewal', Header: 'Last Session Date' },
@@ -246,8 +246,8 @@ export default function PT() {
                         Header: 'Actions',
                         Cell: ({ row }: any) => {
                             const manageHandler = () => {
-                                handleRedirect(row.original.tagId)
-                            }
+                                handleRedirect(row.original.tagId);
+                            };
 
                             const detailsHandler = () => {
                                 fitnessActionRef.current.TriggerForm({
@@ -255,35 +255,35 @@ export default function PT() {
                                     actionType: 'details',
                                     type: 'One-On-One',
                                     rowData: row.original
-                                })
-                            }
+                                });
+                            };
 
                             const arrayAction = [
                                 { actionName: 'Manage', actionClick: manageHandler },
                                 { actionName: 'Details', actionClick: detailsHandler }
-                            ]
+                            ];
 
-                            return <ActionButton arrayAction={arrayAction}></ActionButton>
+                            return <ActionButton arrayAction={arrayAction}></ActionButton>;
                         }
                     }
                 ]
             }
         ],
         []
-    )
+    );
 
     function handleHistoryPackage(data: any) {
-        const flattenData = flattenObj({ ...data })
+        const flattenData = flattenObj({ ...data });
 
         setUserPackage(
             [...flattenData.tags].map((packageItem) => {
-                let renewDay: any = ''
+                let renewDay: any = '';
                 if (packageItem.client_packages[0].fitnesspackages[0].length !== 0) {
-                    renewDay = new Date(packageItem.client_packages[0].effective_date)
+                    renewDay = new Date(packageItem.client_packages[0].effective_date);
                     renewDay.setDate(
                         renewDay.getDate() +
                             packageItem.client_packages[0].fitnesspackages[0].duration
-                    )
+                    );
                 }
                 return {
                     tagId: packageItem.id,
@@ -310,9 +310,9 @@ export default function PT() {
                         packageItem.sessions,
                         packageItem.client_packages[0].effective_date
                     )
-                }
+                };
             })
-        )
+        );
     }
 
     if (!showHistory) {
@@ -321,7 +321,7 @@ export default function PT() {
                 moment(item.packageRenewal).isBefore(moment()) === true
                     ? userPackage.splice(index, 1)
                     : null
-            )
+            );
         }
     }
 
@@ -336,10 +336,10 @@ export default function PT() {
                             label="Show History"
                             defaultChecked={showHistory}
                             onClick={() => {
-                                setShowHistory(!showHistory)
+                                setShowHistory(!showHistory);
                                 refetch_tags().then((res: any) => {
-                                    handleHistoryPackage(res.data)
-                                })
+                                    handleHistoryPackage(res.data);
+                                });
                             }}
                         />
                     </Form>
@@ -352,5 +352,5 @@ export default function PT() {
                 </Col>
             </Row>
         </div>
-    )
+    );
 }

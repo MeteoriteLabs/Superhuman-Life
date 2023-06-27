@@ -1,46 +1,46 @@
-import React, { useState } from 'react'
-import { Button, Form } from 'react-bootstrap'
+import React, { useState } from 'react';
+import { Button, Form } from 'react-bootstrap';
 
 const CourseDetails: React.FC<{
-    readonly: boolean
-    value: string
-    onChange: (args: string) => void
+    readonly: boolean;
+    value: string;
+    onChange: (args: string) => void;
 }> = (props) => {
-    const inputDisabled = props.readonly
+    const inputDisabled = props.readonly;
     const [details, setDetails] = useState<any>(
         props.value
             ? [JSON.parse(props.value)]
             : [{ title: '', description: '', startTime: '', endTime: '' }]
-    )
+    );
 
     function handleAddCourseDetails(data: any) {
-        const newData = [...data]
-        newData.push({ title: '', description: '', startTime: '', endTime: '' })
-        setDetails(newData)
+        const newData = [...data];
+        newData.push({ title: '', description: '', startTime: '', endTime: '' });
+        setDetails(newData);
     }
 
     function handleCourseDetailsTitleUpdate(value, index) {
-        const newDetails = [...details]
-        newDetails[index].title = value
-        setDetails(newDetails)
+        const newDetails = [...details];
+        newDetails[index].title = value;
+        setDetails(newDetails);
     }
 
     function handleCourseDetailsStartTimeUpdate(value, index) {
-        const newDetails = [...details]
-        newDetails[index].startTime = value
-        setDetails(newDetails)
+        const newDetails = [...details];
+        newDetails[index].startTime = value;
+        setDetails(newDetails);
     }
 
     function handleCourseDetailsEndTimeUpdate(value, index) {
-        const newDetails = [...details]
-        newDetails[index].endTime = value
-        setDetails(newDetails)
+        const newDetails = [...details];
+        newDetails[index].endTime = value;
+        setDetails(newDetails);
     }
 
     function handleCourseDetailsDescriptionUpdate(value, index) {
-        const newDetails = [...details]
-        newDetails[index].description = value
-        setDetails(newDetails)
+        const newDetails = [...details];
+        newDetails[index].description = value;
+        setDetails(newDetails);
     }
 
     if (
@@ -49,7 +49,7 @@ const CourseDetails: React.FC<{
         details[0].startTime !== '' &&
         details[0].endTime !== ''
     ) {
-        props.onChange(JSON.stringify(details))
+        props.onChange(JSON.stringify(details));
     }
 
     return (
@@ -59,7 +59,7 @@ const CourseDetails: React.FC<{
                     variant="outline-info"
                     disabled={inputDisabled}
                     onClick={() => {
-                        handleAddCourseDetails(details)
+                        handleAddCourseDetails(details);
                     }}
                 >
                     <i className="fa fa-plus-circle"></i>&nbsp;Add
@@ -119,11 +119,11 @@ const CourseDetails: React.FC<{
                                 />
                             </Form.Group>
                         </div>
-                    )
+                    );
                 })}
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default CourseDetails
+export default CourseDetails;

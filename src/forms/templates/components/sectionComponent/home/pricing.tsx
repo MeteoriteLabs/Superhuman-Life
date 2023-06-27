@@ -1,22 +1,22 @@
-import { useForm, Controller, useFieldArray } from 'react-hook-form'
-import style from '../style.module.css'
-import { Accordion, Button, Card, Form } from 'react-bootstrap'
-import { UPDATE_WEBSITE_SECTION } from './queries/pricing'
-import { GET_WEBSITE_SECTION } from './queries'
-import { useContext, useEffect, useState } from 'react'
-import authContext from '../../../../../context/auth-context'
-import { ChangeMakerWebsiteContext } from '../../../../../context/changemakerWebsite-context'
-import { useMutation, useQuery } from '@apollo/client'
-import { ArrowDownShort } from 'react-bootstrap-icons'
-import { Data, FormData, InputProps } from './@types/pricingType'
-import { InputComponent } from './components/PricingComponents'
-import { FormatStateToServerData, SetReceivingDataAndReset } from './libs/pricing'
-import Toaster from '../../../../../components/Toaster'
+import { useForm, Controller, useFieldArray } from 'react-hook-form';
+import style from '../style.module.css';
+import { Accordion, Button, Card, Form } from 'react-bootstrap';
+import { UPDATE_WEBSITE_SECTION } from './queries/pricing';
+import { GET_WEBSITE_SECTION } from './queries';
+import { useContext, useEffect, useState } from 'react';
+import authContext from '../../../../../context/auth-context';
+import { ChangeMakerWebsiteContext } from '../../../../../context/changemakerWebsite-context';
+import { useMutation, useQuery } from '@apollo/client';
+import { ArrowDownShort } from 'react-bootstrap-icons';
+import { Data, FormData, InputProps } from './@types/pricingType';
+import { InputComponent } from './components/PricingComponents';
+import { FormatStateToServerData, SetReceivingDataAndReset } from './libs/pricing';
+import Toaster from '../../../../../components/Toaster';
 
 function Hero(): JSX.Element {
-    const auth = useContext(authContext)
-    const [errorMsg, setErrorMsg] = useState<string>('')
-    const [activeKey, setActiveKey] = useState('')
+    const auth = useContext(authContext);
+    const [errorMsg, setErrorMsg] = useState<string>('');
+    const [activeKey, setActiveKey] = useState('');
     const planData: InputProps[] = [
         'actual',
         'buttonLink',
@@ -26,11 +26,11 @@ function Hero(): JSX.Element {
         'price',
         'recurring',
         'title'
-    ]
+    ];
 
     const handleToggle = (val: string) => {
-        setActiveKey((prev) => (prev === val ? '' : val))
-    }
+        setActiveKey((prev) => (prev === val ? '' : val));
+    };
 
     // * --------------------- Initial Values ---------------------
 
@@ -39,10 +39,10 @@ function Hero(): JSX.Element {
         sectionId: 0,
         plans: [],
         currency: ''
-    })
+    });
 
     const { setChangemakerWebsiteState, changemakerWebsiteState } =
-        useContext(ChangeMakerWebsiteContext)
+        useContext(ChangeMakerWebsiteContext);
 
     // * --------------------- Form Configuration ---------------------
 
@@ -57,12 +57,12 @@ function Hero(): JSX.Element {
             plans: [],
             currency: '$'
         }
-    })
+    });
 
     const { fields } = useFieldArray<FormData>({
         control,
         name: 'plans'
-    })
+    });
 
     // * --------------------- Get the Website Section Data ---------------------
 
@@ -74,18 +74,18 @@ function Hero(): JSX.Element {
         },
 
         onCompleted: (data: Data) => {
-            const sectionData = data.websiteSections.data[0].attributes.sectionData
-            SetReceivingDataAndReset({ sectionData, reset, setInitialValues, data, initialValues })
+            const sectionData = data.websiteSections.data[0].attributes.sectionData;
+            SetReceivingDataAndReset({ sectionData, reset, setInitialValues, data, initialValues });
         }
-    })
+    });
 
     // * --------------------- Form Submission ---------------------
 
-    const [mutateFunction, { loading, error }] = useMutation(UPDATE_WEBSITE_SECTION)
+    const [mutateFunction, { loading, error }] = useMutation(UPDATE_WEBSITE_SECTION);
 
     const onSubmit = handleSubmit(async (formData) => {
         // ! Need to add image upload
-        const { title, plans, currency } = formData
+        const { title, plans, currency } = formData;
 
         await mutateFunction({
             variables: {
@@ -99,15 +99,15 @@ function Hero(): JSX.Element {
                     currency: currency ? currency : initialValues.currency
                 })
             }
-        })
-    })
+        });
+    });
 
     useEffect(() => {
         loading
             ? setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: true })
-            : setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: false })
-        error ? setErrorMsg(`${error.name}: ${error.message}`) : setErrorMsg('')
-    }, [loading, error])
+            : setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: false });
+        error ? setErrorMsg(`${error.name}: ${error.message}`) : setErrorMsg('');
+    }, [loading, error]);
 
     return (
         <div className={style.form_container}>
@@ -204,7 +204,7 @@ function Hero(): JSX.Element {
                 </Button>
             </Form>
         </div>
-    )
+    );
 }
 
-export default Hero
+export default Hero;

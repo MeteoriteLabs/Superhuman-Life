@@ -1,17 +1,17 @@
-import { useContext, useMemo, useRef, useState } from 'react'
-import { Row, Col, Badge } from 'react-bootstrap'
-import authContext from '../../../../context/auth-context'
-import Table from '../../../../components/table/index'
-import ActionButton from '../../../../components/actionbutton'
-import ConfirmRequestAction from './ConfirmRequestAction'
-import { BOOKING_CONFIG } from '../../GraphQL/queries'
-import { useQuery } from '@apollo/client'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
+import { useContext, useMemo, useRef, useState } from 'react';
+import { Row, Col, Badge } from 'react-bootstrap';
+import authContext from '../../../../context/auth-context';
+import Table from '../../../../components/table/index';
+import ActionButton from '../../../../components/actionbutton';
+import ConfirmRequestAction from './ConfirmRequestAction';
+import { BOOKING_CONFIG } from '../../GraphQL/queries';
+import { useQuery } from '@apollo/client';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
 
 export default function BookingFitness() {
-    const auth = useContext(authContext)
-    const [bookingPackage, setBookingPackage] = useState<any>([])
-    const bookingFitnessActionRef = useRef<any>(null)
+    const auth = useContext(authContext);
+    const [bookingPackage, setBookingPackage] = useState<any>([]);
+    const bookingFitnessActionRef = useRef<any>(null);
 
     const FetchData = () => {
         useQuery(BOOKING_CONFIG, {
@@ -19,11 +19,11 @@ export default function BookingFitness() {
                 id: auth.userid
             },
             onCompleted: (data) => loadData(data)
-        })
-    }
+        });
+    };
 
     const loadData = (data) => {
-        const flattenData = flattenObj({ ...data })
+        const flattenData = flattenObj({ ...data });
         setBookingPackage([
             ...flattenData.bookingConfigs.map((fitnessPackage) => {
                 return {
@@ -34,12 +34,12 @@ export default function BookingFitness() {
                     bookingPerDay: fitnessPackage.bookingsPerDay,
                     confirmations: fitnessPackage.isAuto ? 'Auto Accept' : 'Manual Accept',
                     requests: 'Configured'
-                }
+                };
             })
-        ])
-    }
+        ]);
+    };
 
-    FetchData()
+    FetchData();
 
     const columns = useMemo(
         () => [
@@ -71,7 +71,7 @@ export default function BookingFitness() {
                                 ''
                             )}
                         </>
-                    )
+                    );
                 }
             },
             {
@@ -98,7 +98,7 @@ export default function BookingFitness() {
                                 </Badge>
                             )}
                         </>
-                    )
+                    );
                 }
             },
             {
@@ -125,7 +125,7 @@ export default function BookingFitness() {
                                 </Badge>
                             )}
                         </>
-                    )
+                    );
                 }
             },
             {
@@ -136,15 +136,15 @@ export default function BookingFitness() {
                         bookingFitnessActionRef.current.TriggerForm({
                             actionType: 'confirmation',
                             formData: row.original
-                        })
-                    }
+                        });
+                    };
 
                     const dataRequestHandler = () => {
                         bookingFitnessActionRef.current.TriggerForm({
                             actionType: 'request'
-                        })
-                    }
-                    let arrayAction
+                        });
+                    };
+                    let arrayAction;
 
                     row.original.fitness_package_type !== 'Group Class' &&
                     row.original.fitness_package_type !== 'Cohort' &&
@@ -165,14 +165,14 @@ export default function BookingFitness() {
                                   actionName: 'Data requests',
                                   actionClick: dataRequestHandler
                               }
-                          ])
+                          ]);
 
-                    return <ActionButton arrayAction={arrayAction}></ActionButton>
+                    return <ActionButton arrayAction={arrayAction}></ActionButton>;
                 }
             }
         ],
         []
-    )
+    );
 
     return (
         <div className="mt-5">
@@ -183,5 +183,5 @@ export default function BookingFitness() {
                 </Col>
             </Row>
         </div>
-    )
+    );
 }

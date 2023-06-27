@@ -1,4 +1,4 @@
-import { Card, Row, Col } from 'react-bootstrap'
+import { Card, Row, Col } from 'react-bootstrap';
 
 const NutritionScreen = () => {
     const NutritionCard = (props: any) => {
@@ -50,8 +50,8 @@ const NutritionScreen = () => {
                     </Card.Footer>
                 </Card>
             </Col>
-        )
-    }
+        );
+    };
 
     return (
         <div>
@@ -62,7 +62,7 @@ const NutritionScreen = () => {
                 <NutritionCard title={'Nutritional Data'} />
             </Row>
         </div>
-    )
-}
+    );
+};
 
-export default NutritionScreen
+export default NutritionScreen;

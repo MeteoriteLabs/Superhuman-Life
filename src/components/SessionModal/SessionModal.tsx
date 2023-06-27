@@ -1,7 +1,7 @@
-import { useRef, useState } from 'react'
-import { withTheme, utils } from '@rjsf/core'
-import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4'
-import { Button, Col, Modal, ProgressBar, Row } from 'react-bootstrap'
+import { useRef, useState } from 'react';
+import { withTheme, utils } from '@rjsf/core';
+import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
+import { Button, Col, Modal, ProgressBar, Row } from 'react-bootstrap';
 
 export default function SessionModal({
     show,
@@ -16,23 +16,23 @@ export default function SessionModal({
     stepperValues,
     modalTrigger
 }: any) {
-    const registry = utils.getDefaultRegistry()
-    const defaultFileWidget = registry.widgets['FileWidget']
-    ;(Bootstrap4Theme as any).widgets['FileWidget'] = defaultFileWidget
+    const registry = utils.getDefaultRegistry();
+    const defaultFileWidget = registry.widgets['FileWidget'];
+    (Bootstrap4Theme as any).widgets['FileWidget'] = defaultFileWidget;
 
-    const Form: any = withTheme(Bootstrap4Theme)
-    const formRef = useRef<any>(null)
-    const [step, setStep] = useState<number>(1)
-    const [formValues, setFormValues] = useState<any>(formData)
-    const stepper: string[] = stepperValues
+    const Form: any = withTheme(Bootstrap4Theme);
+    const formRef = useRef<any>(null);
+    const [step, setStep] = useState<number>(1);
+    const [formValues, setFormValues] = useState<any>(formData);
+    const stepper: string[] = stepperValues;
 
     function submitHandler(formData: any) {
         if (isStepper && step < 2) {
-            setStep(step + 1)
-            setFormValues({ ...formValues, ...formData })
+            setStep(step + 1);
+            setFormValues({ ...formValues, ...formData });
         } else {
-            formSubmit(formData)
-            onHide()
+            formSubmit(formData);
+            onHide();
         }
     }
 
@@ -123,7 +123,7 @@ export default function SessionModal({
                                 variant="success"
                                 size="sm"
                                 onClick={(event) => {
-                                    formRef.current.onSubmit(event)
+                                    formRef.current.onSubmit(event);
                                 }}
                             >
                                 {name === 'View' ? 'Close' : 'Submit'}
@@ -133,5 +133,5 @@ export default function SessionModal({
                 </Modal.Footer>
             </Modal>
         </>
-    )
+    );
 }

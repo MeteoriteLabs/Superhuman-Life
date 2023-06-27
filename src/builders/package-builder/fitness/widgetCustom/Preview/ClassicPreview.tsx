@@ -1,24 +1,24 @@
-import { Card } from 'react-bootstrap'
-import PTGroupPreview from './PTGroupPreview'
-import RecordedPreview from './RecordedPreview'
+import { Card } from 'react-bootstrap';
+import PTGroupPreview from './PTGroupPreview';
+import RecordedPreview from './RecordedPreview';
 
 type Props = {
-    type: 'One-On-One' | 'Group Class' | 'Custom Fitness' | 'Classic Class'
-    disciplines: any
-    level: 'Beginner' | 'Intermediate' | 'Advanced'
-    packageType: 'personal-training' | 'group' | 'classic' | 'custom'
-    recordedclasses: number
-    ptonline: number
-    ptoffline: number
-    sizeType: any
-    ptclasssize: 'Solo' | 'Couple' | 'Family'
+    type: 'One-On-One' | 'Group Class' | 'Custom Fitness' | 'Classic Class';
+    disciplines: any;
+    level: 'Beginner' | 'Intermediate' | 'Advanced';
+    packageType: 'personal-training' | 'group' | 'classic' | 'custom';
+    recordedclasses: number;
+    ptonline: number;
+    ptoffline: number;
+    sizeType: any;
+    ptclasssize: 'Solo' | 'Couple' | 'Family';
     fitnesspackagepricing: {
-        duration: number
-        voucher: string
-        mrp: number | string
-    }
-    mode: 'Online' | 'Offline' | 'Hybird' | 'Online Workout' | 'Offline Workout'
-}
+        duration: number;
+        voucher: string;
+        mrp: number | string;
+    };
+    mode: 'Online' | 'Offline' | 'Hybird' | 'Online Workout' | 'Offline Workout';
+};
 
 export default function ClassicPreview({
     type,
@@ -33,16 +33,16 @@ export default function ClassicPreview({
     fitnesspackagepricing,
     mode
 }: Props) {
-    let beginnerTag = ''
-    let intermediateTag = ''
-    let advancedTag = ''
+    let beginnerTag = '';
+    let intermediateTag = '';
+    let advancedTag = '';
 
     if (level === 'Beginner') {
-        beginnerTag = 'beginnerTag'
+        beginnerTag = 'beginnerTag';
     } else if (level === 'Intermediate') {
-        intermediateTag = 'intermediateTag'
+        intermediateTag = 'intermediateTag';
     } else if (level === 'Advanced') {
-        advancedTag = 'advancedTag'
+        advancedTag = 'advancedTag';
     }
 
     return (
@@ -81,7 +81,7 @@ export default function ClassicPreview({
                                     >
                                         <p className="mb-0">{item.disciplinename}</p>
                                     </div>
-                                )
+                                );
                             })}
                         </div>
                     </div>
@@ -131,5 +131,5 @@ export default function ClassicPreview({
                 </div>
             </Card.Body>
         </Card>
-    )
+    );
 }

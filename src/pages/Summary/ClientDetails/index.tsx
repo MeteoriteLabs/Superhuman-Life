@@ -1,17 +1,17 @@
-import React, { useState } from 'react'
-import { Card, Row, Button } from 'react-bootstrap'
-import EditClient from './EditClient'
+import React, { useState } from 'react';
+import { Card, Row, Button } from 'react-bootstrap';
+import EditClient from './EditClient';
 
 const ClientDetailsCard: React.FC<{
     Client: {
-        First_Name: string
-        Last_Name: string
-        Phone_Number: string
-        email: string
-        id: string | number
-    }[]
+        First_Name: string;
+        Last_Name: string;
+        Phone_Number: string;
+        email: string;
+        id: string | number;
+    }[];
 }> = ({ Client }) => {
-    const [showClientModal, setShowClientModal] = useState(false)
+    const [showClientModal, setShowClientModal] = useState(false);
 
     return (
         <Card className="mb-2">
@@ -42,7 +42,7 @@ const ClientDetailsCard: React.FC<{
                 />
             ) : null}
         </Card>
-    )
-}
+    );
+};
 
-export default ClientDetailsCard
+export default ClientDetailsCard;

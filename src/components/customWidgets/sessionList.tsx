@@ -1,68 +1,68 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useState, useRef, useContext, useEffect } from 'react'
-import { FormControl, Row, Button } from 'react-bootstrap'
+import { useState, useRef, useContext, useEffect } from 'react';
+import { FormControl, Row, Button } from 'react-bootstrap';
 import {
     GET_PROGRAMLIST,
     GET_FITNESSPACKAGE_DETAILS,
     GET_TAGS_BY_TYPE,
     GET_SESSIONS_BY_TAG
-} from './queries'
-import { useQuery } from '@apollo/client'
-import AuthContext from '../../context/auth-context'
-import '../../builders/program-builder/program-template/styles.css'
-import SchedulerEvent from '../../builders/program-builder/program-template/scheduler-event'
-import { flattenObj } from '../utils/responseFlatten'
-import moment from 'moment'
+} from './queries';
+import { useQuery } from '@apollo/client';
+import AuthContext from '../../context/auth-context';
+import '../../builders/program-builder/program-template/styles.css';
+import SchedulerEvent from '../../builders/program-builder/program-template/scheduler-event';
+import { flattenObj } from '../utils/responseFlatten';
+import moment from 'moment';
 
 const ProgramList = (props: any) => {
-    const auth = useContext(AuthContext)
-    const [programList, setProgramList] = useState<any[]>([])
-    const [searchInput, setSearchInput] = useState(null)
-    const [selected, setSelected] = useState<any>({})
-    const [fitnessPackageTypes, setFitnessPackageTypes] = useState<any>([])
-    const [selectedFitnessPackage, setSelectedFitnessPackage] = useState('')
-    const [tagsList, setTagList] = useState<any>([])
-    const [selectedTag, setSelectedTag] = useState('')
-    const [packageDuration, setPackageDuration] = useState<any>()
-    const [displayDates, setDisplayDate] = useState<any>([])
-    const [startDate, setStartDate] = useState<any>()
-    const skipval = true
+    const auth = useContext(AuthContext);
+    const [programList, setProgramList] = useState<any[]>([]);
+    const [searchInput, setSearchInput] = useState(null);
+    const [selected, setSelected] = useState<any>({});
+    const [fitnessPackageTypes, setFitnessPackageTypes] = useState<any>([]);
+    const [selectedFitnessPackage, setSelectedFitnessPackage] = useState('');
+    const [tagsList, setTagList] = useState<any>([]);
+    const [selectedTag, setSelectedTag] = useState('');
+    const [packageDuration, setPackageDuration] = useState<any>();
+    const [displayDates, setDisplayDate] = useState<any>([]);
+    const [startDate, setStartDate] = useState<any>();
+    const skipval = true;
 
     useQuery(GET_FITNESSPACKAGE_DETAILS, {
         onCompleted: (data) => {
-            const flattenData = flattenObj({ ...data })
-            setFitnessPackageTypes(flattenData.fitnessPackageTypes)
+            const flattenData = flattenObj({ ...data });
+            setFitnessPackageTypes(flattenData.fitnessPackageTypes);
         }
-    })
+    });
 
     useQuery(GET_TAGS_BY_TYPE, {
         variables: { id: auth.userid, type: selectedFitnessPackage },
         skip: selectedFitnessPackage === '',
         onCompleted: (data) => {
-            const flattenData = flattenObj({ ...data })
-            setTagList(flattenData.tags)
+            const flattenData = flattenObj({ ...data });
+            setTagList(flattenData.tags);
         }
-    })
+    });
 
     function handleDatesRender(date: any, duration: any) {
-        const dates: any = []
+        const dates: any = [];
         for (let i = 0; i <= duration; i++) {
-            dates.push(moment(date).add(i, 'days').format('DD MMM YY'))
+            dates.push(moment(date).add(i, 'days').format('DD MMM YY'));
         }
-        setDisplayDate(dates)
+        setDisplayDate(dates);
     }
 
     useQuery(GET_SESSIONS_BY_TAG, {
         variables: { id: selectedTag },
         skip: selectedTag === '',
         onCompleted: (data) => {
-            const flattenData = flattenObj({ ...data })
-            setStartDate(props.startDate)
-            handleDatesRender(props.startDate, props.duration)
-            setPackageDuration(props.duration)
-            setProgramList(flattenData.tags[0].sessions)
+            const flattenData = flattenObj({ ...data });
+            setStartDate(props.startDate);
+            handleDatesRender(props.startDate, props.duration);
+            setPackageDuration(props.duration);
+            setProgramList(flattenData.tags[0].sessions);
         }
-    })
+    });
 
     function FetchEquipmentList(
         _variable: Record<string, unknown> = { id: auth.userid, filter: ' ' }
@@ -71,11 +71,11 @@ const ProgramList = (props: any) => {
             variables: _variable,
             onCompleted: loadProgramList,
             skip: !searchInput
-        })
+        });
     }
 
     function loadProgramList(data: any) {
-        const flattenedData = flattenObj({ ...data })
+        const flattenedData = flattenObj({ ...data });
         setProgramList(
             [...flattenedData.fitnessprograms].map((program) => {
                 return {
@@ -86,15 +86,15 @@ const ProgramList = (props: any) => {
                     description: program.description,
                     discpline: program.fitnessdisciplines,
                     events: program.sessions.filter((session: any) => session.Is_restday === false)
-                }
+                };
             })
-        )
+        );
     }
 
-    const days: any = []
+    const days: any = [];
 
     for (let i = 1; i <= packageDuration; i++) {
-        days.push(i)
+        days.push(i);
     }
 
     function renderEventsTable() {
@@ -109,11 +109,11 @@ const ProgramList = (props: any) => {
                     programEvents={programList}
                     type={'sessions'}
                 />
-            )
+            );
         }
     }
 
-    FetchEquipmentList({ filter: searchInput, skip: skipval, id: auth.userid })
+    FetchEquipmentList({ filter: searchInput, skip: skipval, id: auth.userid });
 
     return (
         <>
@@ -122,8 +122,8 @@ const ProgramList = (props: any) => {
                 variant="outline-danger"
                 className="float-right mb-3"
                 onClick={() => {
-                    props.callback2('none')
-                    setSelected({})
+                    props.callback2('none');
+                    setSelected({});
                 }}
             >
                 close
@@ -144,7 +144,7 @@ const ProgramList = (props: any) => {
                                 <option key={index} value={item.type}>
                                     {item.type}
                                 </option>
-                            )
+                            );
                         })}
                     </FormControl>
                 </div>
@@ -164,7 +164,7 @@ const ProgramList = (props: any) => {
                                         <option key={index} value={item.id}>
                                             {item.tag_name}
                                         </option>
-                                    )
+                                    );
                                 })}
                             </FormControl>
                         </>
@@ -175,7 +175,7 @@ const ProgramList = (props: any) => {
                 <div className="mt-5">{renderEventsTable()}</div>
             </>
         </>
-    )
-}
+    );
+};
 
-export default ProgramList
+export default ProgramList;

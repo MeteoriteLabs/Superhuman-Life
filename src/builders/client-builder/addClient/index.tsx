@@ -1,36 +1,36 @@
-import React, { useState, useRef, useContext } from 'react'
-import { schema, widgets } from './AddClientSchema'
-import { CREATE_CLIENT, CREATE_CLIENT_BOOKING } from './mutation'
-import { useMutation } from '@apollo/client'
-import { withTheme, utils } from '@rjsf/core'
-import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4'
-import { flattenObj } from '../../../components/utils/responseFlatten'
-import { Col } from 'react-bootstrap'
-import Toaster from '../../../components/Toaster'
+import React, { useState, useRef, useContext } from 'react';
+import { schema, widgets } from './AddClientSchema';
+import { CREATE_CLIENT, CREATE_CLIENT_BOOKING } from './mutation';
+import { useMutation } from '@apollo/client';
+import { withTheme, utils } from '@rjsf/core';
+import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
+import { flattenObj } from '../../../components/utils/responseFlatten';
+import { Col } from 'react-bootstrap';
+import Toaster from '../../../components/Toaster';
 import {
     phoneCustomFormats,
     phoneTransformErrors
-} from '../../../components/utils/ValidationPatterns'
-import AuthContext from '../../../context/auth-context'
-import moment from 'moment'
-import { useHistory } from 'react-router-dom'
-import { UPDATE_BOOKING_STATUS } from '../../../pages/booking/GraphQL/mutation'
+} from '../../../components/utils/ValidationPatterns';
+import AuthContext from '../../../context/auth-context';
+import moment from 'moment';
+import { useHistory } from 'react-router-dom';
+import { UPDATE_BOOKING_STATUS } from '../../../pages/booking/GraphQL/mutation';
 
 const AddClient: React.FC = () => {
-    const auth = useContext(AuthContext)
-    const registry = utils.getDefaultRegistry()
-    const defaultFileWidget = registry.widgets['FileWidget']
-    ;(Bootstrap4Theme as any).widgets['FileWidget'] = defaultFileWidget
-    const Form: any = withTheme(Bootstrap4Theme)
-    const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false)
-    const formRef = useRef<any>(null)
-    const addClientJson: Record<string, unknown> = require('./addClient.json')
-    const history = useHistory()
+    const auth = useContext(AuthContext);
+    const registry = utils.getDefaultRegistry();
+    const defaultFileWidget = registry.widgets['FileWidget'];
+    (Bootstrap4Theme as any).widgets['FileWidget'] = defaultFileWidget;
+    const Form: any = withTheme(Bootstrap4Theme);
+    const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+    const formRef = useRef<any>(null);
+    const addClientJson: Record<string, unknown> = require('./addClient.json');
+    const history = useHistory();
 
-    const [createClientBooking] = useMutation(CREATE_CLIENT_BOOKING)
+    const [createClientBooking] = useMutation(CREATE_CLIENT_BOOKING);
 
-    const [createClient] = useMutation(CREATE_CLIENT)
-    const [updateBookingStatus] = useMutation(UPDATE_BOOKING_STATUS)
+    const [createClient] = useMutation(CREATE_CLIENT);
+    const [updateBookingStatus] = useMutation(UPDATE_BOOKING_STATUS);
 
     function OnSubmit(frm: any) {
         createClient({
@@ -46,12 +46,12 @@ const AddClient: React.FC = () => {
                 }
             },
             onCompleted: (response) => {
-                const flattenReponse = flattenObj({ ...response.createUsersPermissionsUser })
+                const flattenReponse = flattenObj({ ...response.createUsersPermissionsUser });
                 const sessionDetails =
                     frm.formData.offeringFilter === 'Class'
                         ? JSON.parse(frm.formData.classBasedOfferings)
-                        : null
-                console.log(frm.formData.offerings, frm.formData)
+                        : null;
+                console.log(frm.formData.offerings, frm.formData);
                 createClientBooking({
                     variables: {
                         data: {
@@ -70,8 +70,8 @@ const AddClient: React.FC = () => {
                         }
                     },
                     onCompleted: (response) => {
-                        const flattenReponse = flattenObj({ ...response.createClientBooking })
-                        console.log(flattenReponse)
+                        const flattenReponse = flattenObj({ ...response.createClientBooking });
+                        console.log(flattenReponse);
                         if (
                             flattenReponse.fitnesspackages[0].fitness_package_type.type ===
                                 'Custom Fitness' ||
@@ -86,10 +86,10 @@ const AddClient: React.FC = () => {
                                     Booking_status: 'accepted'
                                 },
                                 onCompleted: () => {
-                                    history.push(`/summary/?id=${flattenReponse.id}`)
+                                    history.push(`/summary/?id=${flattenReponse.id}`);
                                 }
-                            })
-                        } else history.push(`/summary/?id=${flattenReponse.id}`)
+                            });
+                        } else history.push(`/summary/?id=${flattenReponse.id}`);
 
                         if (frm.formData.offeringFilter === 'Class') {
                             localStorage.setItem(
@@ -102,12 +102,12 @@ const AddClient: React.FC = () => {
                                     session_time: sessionDetails.sessionStartTime,
                                     session_end_time: sessionDetails.sessionEndTime
                                 })
-                            )
+                            );
                         }
                     }
-                })
+                });
             }
-        })
+        });
     }
 
     return (
@@ -122,7 +122,7 @@ const AddClient: React.FC = () => {
                         schema={addClientJson}
                         ref={formRef}
                         onSubmit={(frm: any) => {
-                            OnSubmit(frm)
+                            OnSubmit(frm);
                         }}
                         showErrorList={false}
                         customFormats={phoneCustomFormats}
@@ -139,7 +139,7 @@ const AddClient: React.FC = () => {
                 />
             ) : null}
         </div>
-    )
-}
+    );
+};
 
-export default AddClient
+export default AddClient;

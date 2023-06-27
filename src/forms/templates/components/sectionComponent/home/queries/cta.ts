@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const UPDATE_WEBSITE_SECTION = gql`
     mutation MutateWebsiteSections($id: ID!, $title: String, $buttonText: String, $link: String) {
@@ -11,4 +11,4 @@ export const UPDATE_WEBSITE_SECTION = gql`
             }
         }
     }
-`
+`;

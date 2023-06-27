@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
-import { Button, Form, Modal } from 'react-bootstrap'
+import React, { useState } from 'react';
+import { Button, Form, Modal } from 'react-bootstrap';
 
 const RequestModel: React.FC<{ render: boolean; setRender: (args: boolean) => void }> = (props) => {
-    const { render, setRender } = props
-    const [isSwitchOn, setIsSwitchOn] = useState<boolean>(false)
+    const { render, setRender } = props;
+    const [isSwitchOn, setIsSwitchOn] = useState<boolean>(false);
     const [state, setState] = useState<any>({
         people: [
             {
@@ -34,35 +34,35 @@ const RequestModel: React.FC<{ render: boolean; setRender: (args: boolean) => vo
             }
         ],
         selectPeopleId: []
-    })
+    });
 
     const onSwitchAction = () => {
-        setIsSwitchOn(!isSwitchOn)
-    }
+        setIsSwitchOn(!isSwitchOn);
+    };
 
     const HandleSubmit = (e) => {
-        e.preventDefault()
-    }
+        e.preventDefault();
+    };
 
     const handleSelect = (person) => {
         const found = state.peopleChecked.find((element) => {
-            return element.id === person.id
-        })
+            return element.id === person.id;
+        });
 
         if (found) {
             setState({
                 people: [...state.people],
                 peopleChecked: state.peopleChecked.filter((element) => element.id !== person.id),
                 selectPeopleId: state.selectPeopleId.filter((element) => element !== person.id)
-            })
+            });
         } else {
             setState({
                 people: [...state.people],
                 peopleChecked: [...state.peopleChecked, person],
                 selectPeopleId: [...state.selectPeopleId, person.id]
-            })
+            });
         }
-    }
+    };
 
     return (
         <Modal
@@ -114,7 +114,7 @@ const RequestModel: React.FC<{ render: boolean; setRender: (args: boolean) => vo
                                         onChange={(e) => handleSelect(person)}
                                     />
                                 </Form.Group>
-                            )
+                            );
                         })}
                     </Form.Group>
 
@@ -123,7 +123,7 @@ const RequestModel: React.FC<{ render: boolean; setRender: (args: boolean) => vo
                         <Button
                             className="btn btn-danger"
                             onClick={() => {
-                                setRender(false)
+                                setRender(false);
                             }}
                         >
                             Close
@@ -132,7 +132,7 @@ const RequestModel: React.FC<{ render: boolean; setRender: (args: boolean) => vo
                 </Form>
             </Modal.Body>
         </Modal>
-    )
-}
+    );
+};
 
-export default RequestModel
+export default RequestModel;

@@ -3,7 +3,7 @@ const DocumentsScreen = () => {
         <div>
             <h1>Documents Screen</h1>
         </div>
-    )
-}
+    );
+};
 
-export default DocumentsScreen
+export default DocumentsScreen;

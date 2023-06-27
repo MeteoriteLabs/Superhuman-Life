@@ -1,22 +1,22 @@
-import React, { useContext, useState } from 'react'
-import { Row, Button, Container, Card, Dropdown, Col } from 'react-bootstrap'
-import AuthContext from '../../../context/auth-context'
-import { GET_USER_ORGANIZATIONS } from './queries'
-import { flattenObj } from '../../../components/utils/responseFlatten'
-import { useQuery } from '@apollo/client'
-import './organisation.css'
+import React, { useContext, useState } from 'react';
+import { Row, Button, Container, Card, Dropdown, Col } from 'react-bootstrap';
+import AuthContext from '../../../context/auth-context';
+import { GET_USER_ORGANIZATIONS } from './queries';
+import { flattenObj } from '../../../components/utils/responseFlatten';
+import { useQuery } from '@apollo/client';
+import './organisation.css';
 
 function OrganisationsSettings() {
-    const auth = useContext(AuthContext)
-    const [organizations, setOrganizations] = useState([])
+    const auth = useContext(AuthContext);
+    const [organizations, setOrganizations] = useState([]);
 
     useQuery(GET_USER_ORGANIZATIONS, {
         variables: { id: auth.userid },
         onCompleted: (data: any) => {
-            const flattendData = flattenObj({ ...data })
-            setOrganizations(flattendData.usersPermissionsUsers[0].organizations)
+            const flattendData = flattenObj({ ...data });
+            setOrganizations(flattendData.usersPermissionsUsers[0].organizations);
         }
-    })
+    });
 
     return (
         <Container>
@@ -83,7 +83,7 @@ function OrganisationsSettings() {
                     </Row>
                 ))}
         </Container>
-    )
+    );
 }
 
-export default OrganisationsSettings
+export default OrganisationsSettings;

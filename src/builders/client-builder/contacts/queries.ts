@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const GET_CONTACTS = gql`
     query ContactsQuery($id: ID!, $filter: String!, $start: Int, $limit: Int) {
@@ -35,7 +35,7 @@ export const GET_CONTACTS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_CONTACT = gql`
     query ContactQuery($id: ID) {
@@ -62,7 +62,7 @@ export const GET_CONTACT = gql`
             }
         }
     }
-`
+`;
 
 export const GET_PAYMENT_SCHEDULES = gql`
     query PaymentSchedulesQuery {
@@ -84,7 +84,7 @@ export const GET_PAYMENT_SCHEDULES = gql`
             }
         }
     }
-`
+`;
 
 export const ADD_CONTACT = gql`
     mutation contact($data: ContactInput!) {
@@ -111,7 +111,7 @@ export const ADD_CONTACT = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_CONTACT = gql`
     mutation updateContact($id: ID!, $data: ContactInput!) {
@@ -121,7 +121,7 @@ export const UPDATE_CONTACT = gql`
             }
         }
     }
-`
+`;
 
 export const DELETE_CONTACT = gql`
     mutation deleteContact($id: ID!) {
@@ -131,7 +131,7 @@ export const DELETE_CONTACT = gql`
             }
         }
     }
-`
+`;
 
 export const ADD_PAYMENT_SCHEDULE = gql`
     mutation createPaymentSchedule($data: PaymentScheduleInput!) {
@@ -141,7 +141,7 @@ export const ADD_PAYMENT_SCHEDULE = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_NOTIFICATION = gql`
     mutation createChangemakerNotification($data: ChangemakerNotificationInput!) {
@@ -164,4 +164,4 @@ export const CREATE_NOTIFICATION = gql`
             }
         }
     }
-`
+`;

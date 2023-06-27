@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 const auth: any = {
     token: null,
@@ -6,6 +6,6 @@ const auth: any = {
     userid: null
     // login: (token: any, username: any,userid: any) => { },
     // logout: () => { }
-}
+};
 
-export default React.createContext(auth)
+export default React.createContext(auth);

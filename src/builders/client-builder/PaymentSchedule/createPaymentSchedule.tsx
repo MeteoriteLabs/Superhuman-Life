@@ -1,85 +1,85 @@
-import React, { useContext, useImperativeHandle, useState } from 'react'
-import { useMutation } from '@apollo/client'
-import ModalView from '../../../components/modal'
-import AuthContext from '../../../context/auth-context'
-import StatusModal from '../../../components/StatusModal/StatusModal'
-import { Subject } from 'rxjs'
-import { schema } from './PaymentScheduleSettingSchema'
-import Toaster from '../../../components/Toaster'
-import { ADD_PAYMENT_SCHEDULE, DELETE_PAYMENT_SCHEDULE, UPDATE_PAYMENT_SCHEDULE } from './queries'
+import React, { useContext, useImperativeHandle, useState } from 'react';
+import { useMutation } from '@apollo/client';
+import ModalView from '../../../components/modal';
+import AuthContext from '../../../context/auth-context';
+import StatusModal from '../../../components/StatusModal/StatusModal';
+import { Subject } from 'rxjs';
+import { schema } from './PaymentScheduleSettingSchema';
+import Toaster from '../../../components/Toaster';
+import { ADD_PAYMENT_SCHEDULE, DELETE_PAYMENT_SCHEDULE, UPDATE_PAYMENT_SCHEDULE } from './queries';
 
 interface Operation {
-    id: string
-    modal_status: boolean
-    type: 'create' | 'deactivate' | 'delete'
-    current_status: boolean
+    id: string;
+    modal_status: boolean;
+    type: 'create' | 'deactivate' | 'delete';
+    current_status: boolean;
 }
 
 function CreatePaymentSchedule(props: any, ref: any) {
-    const query = window.location.search
-    const params = new URLSearchParams(query)
-    const id: string | null = params.get('id')
-    const isChangemaker: boolean = params.get('isChangemaker') === 'false' ? false : true
+    const query = window.location.search;
+    const params = new URLSearchParams(query);
+    const id: string | null = params.get('id');
+    const isChangemaker: boolean = params.get('isChangemaker') === 'false' ? false : true;
 
-    const auth = useContext(AuthContext)
-    const paymentSchema: Record<string, unknown> = require('./paymentSettings.json')
-    const [operation, setOperation] = useState<Operation>({} as Operation)
-    const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false)
-    const [showDeactivateModal, setShowDeactivateModal] = useState<boolean>(false)
-    const [isDeleted, setIsDeleted] = useState<boolean>(false)
-    const [isDeactivated, setIsDeactivated] = useState<boolean>(false)
-    const [isCreated, setIsCreated] = useState<boolean>(false)
+    const auth = useContext(AuthContext);
+    const paymentSchema: Record<string, unknown> = require('./paymentSettings.json');
+    const [operation, setOperation] = useState<Operation>({} as Operation);
+    const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+    const [showDeactivateModal, setShowDeactivateModal] = useState<boolean>(false);
+    const [isDeleted, setIsDeleted] = useState<boolean>(false);
+    const [isDeactivated, setIsDeactivated] = useState<boolean>(false);
+    const [isCreated, setIsCreated] = useState<boolean>(false);
 
     const [createPaymentSchedule] = useMutation(ADD_PAYMENT_SCHEDULE, {
         onCompleted: (r: any) => {
-            modalTrigger.next(false)
-            props.callback()
-            setIsCreated(!isCreated)
+            modalTrigger.next(false);
+            props.callback();
+            setIsCreated(!isCreated);
         }
-    })
+    });
 
     const [updatePaymentSchedule] = useMutation(UPDATE_PAYMENT_SCHEDULE, {
         onCompleted: (r: any) => {
-            modalTrigger.next(false)
-            props.callback()
-            setIsDeactivated(!isDeactivated)
+            modalTrigger.next(false);
+            props.callback();
+            setIsDeactivated(!isDeactivated);
         }
-    })
+    });
 
     const [deletePayment] = useMutation(DELETE_PAYMENT_SCHEDULE, {
         onCompleted: (e: any) => {
-            modalTrigger.next(false)
-            props.callback()
-            setIsDeleted(!isDeleted)
+            modalTrigger.next(false);
+            props.callback();
+            setIsDeleted(!isDeleted);
         }
-    })
+    });
 
-    const modalTrigger = new Subject()
+    const modalTrigger = new Subject();
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
-            setOperation(msg)
+            setOperation(msg);
 
             // set show delete modal to render for delete operation
             if (msg.type === 'delete') {
-                setShowDeleteModal(true)
+                setShowDeleteModal(true);
             }
 
             // set show deactivate modal to render for deactivate operation
             if (msg.type === 'deactivate') {
-                setShowDeactivateModal(true)
+                setShowDeactivateModal(true);
             }
 
             // restrict create modal to render for deactivate operation and delete operation
             if (msg.type !== 'deactivate' && msg.type !== 'delete') {
-                modalTrigger.next(true)
+                modalTrigger.next(true);
             }
         }
-    }))
+    }));
 
     const toastMessage = `Payment Schedule has been ${
         operation.current_status === true ? 'Deactivated' : 'Reactivated'
-    } successfully`
+    } successfully`;
 
     function CreatePaymentSchedule(frm: any) {
         createPaymentSchedule({
@@ -114,7 +114,7 @@ function CreatePaymentSchedule(props: any, ref: any) {
                         : null
                 }
             }
-        })
+        });
     }
 
     function UpdatePaymentSchedule(id: string, status: boolean) {
@@ -125,7 +125,7 @@ function CreatePaymentSchedule(props: any, ref: any) {
                     isActive: status ? false : true
                 }
             }
-        })
+        });
     }
 
     function DeletePaymentSchedule(id: any) {
@@ -133,11 +133,11 @@ function CreatePaymentSchedule(props: any, ref: any) {
             variables: {
                 id
             }
-        })
+        });
     }
 
     function OnSubmit(frm: any) {
-        CreatePaymentSchedule(frm)
+        CreatePaymentSchedule(frm);
     }
 
     return (
@@ -151,7 +151,7 @@ function CreatePaymentSchedule(props: any, ref: any) {
                 formSchema={paymentSchema}
                 showing={operation.modal_status}
                 formSubmit={(frm: any) => {
-                    OnSubmit(frm)
+                    OnSubmit(frm);
                 }}
                 formData={{}}
                 modalTrigger={modalTrigger}
@@ -172,7 +172,7 @@ function CreatePaymentSchedule(props: any, ref: any) {
                     buttonLeft="Cancel"
                     buttonRight="Yes"
                     onClick={() => {
-                        UpdatePaymentSchedule(operation.id, operation.current_status)
+                        UpdatePaymentSchedule(operation.id, operation.current_status);
                     }}
                 />
             )}
@@ -187,7 +187,7 @@ function CreatePaymentSchedule(props: any, ref: any) {
                     buttonLeft="Cancel"
                     buttonRight="Yes"
                     onClick={() => {
-                        DeletePaymentSchedule(operation.id)
+                        DeletePaymentSchedule(operation.id);
                     }}
                 />
             )}
@@ -215,7 +215,7 @@ function CreatePaymentSchedule(props: any, ref: any) {
                 />
             )}
         </>
-    )
+    );
 }
 
-export default React.forwardRef(CreatePaymentSchedule)
+export default React.forwardRef(CreatePaymentSchedule);

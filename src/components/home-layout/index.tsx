@@ -1,6 +1,6 @@
-import { Container } from 'react-bootstrap'
-import HomeTopNav from './header'
-import HomeFooter from './footer'
+import { Container } from 'react-bootstrap';
+import HomeTopNav from './header';
+import HomeFooter from './footer';
 export default function HomeLayout(props: any) {
     return (
         <>
@@ -18,5 +18,5 @@ export default function HomeLayout(props: any) {
                 </Container>
             </footer>
         </>
-    )
+    );
 }

@@ -1,25 +1,34 @@
-import { useMemo, useState, useContext, useRef } from 'react'
-import { Badge, TabContent, Row, Col, Card, InputGroup, Button, FormControl } from 'react-bootstrap'
-import Table from '../../../components/table/leads-table'
-import ActionButton from '../../../components/actionbutton/index'
-import { useQuery, useLazyQuery } from '@apollo/client'
-import { GET_ALL_CLIENTS, GET_SESSION_BOOKINGS_FOR_CLIENTS } from './queries'
-import { flattenObj } from '../../../components/utils/responseFlatten'
-import AuthContext from '../../../context/auth-context'
-import moment from 'moment'
-import { useHistory } from 'react-router-dom'
-import CancelComponent from './CancelComponent'
-import OfferingsDisplayImage from '../../../components/customWidgets/offeringsDisplayImage'
-import './Client.css'
+import { useMemo, useState, useContext, useRef } from 'react';
+import {
+    Badge,
+    TabContent,
+    Row,
+    Col,
+    Card,
+    InputGroup,
+    Button,
+    FormControl
+} from 'react-bootstrap';
+import Table from '../../../components/table/leads-table';
+import ActionButton from '../../../components/actionbutton/index';
+import { useQuery, useLazyQuery } from '@apollo/client';
+import { GET_ALL_CLIENTS, GET_SESSION_BOOKINGS_FOR_CLIENTS } from './queries';
+import { flattenObj } from '../../../components/utils/responseFlatten';
+import AuthContext from '../../../context/auth-context';
+import moment from 'moment';
+import { useHistory } from 'react-router-dom';
+import CancelComponent from './CancelComponent';
+import OfferingsDisplayImage from '../../../components/customWidgets/offeringsDisplayImage';
+import './Client.css';
 
 export default function Clients() {
-    const [searchFilter, setSearchFilter] = useState('')
-    const searchInput = useRef<any>()
-    const auth = useContext(AuthContext)
-    const [clientsData, setClientsData] = useState<any>([])
-    const [activeCard, setActiveCard] = useState<number>(0)
-    const cancelComponent = useRef<any>(null)
-    const [selectedCardId, setSelectedCardId] = useState<number | null>(null)
+    const [searchFilter, setSearchFilter] = useState('');
+    const searchInput = useRef<any>();
+    const auth = useContext(AuthContext);
+    const [clientsData, setClientsData] = useState<any>([]);
+    const [activeCard, setActiveCard] = useState<number>(0);
+    const cancelComponent = useRef<any>(null);
+    const [selectedCardId, setSelectedCardId] = useState<number | null>(null);
 
     const columns = useMemo<any>(
         () => [
@@ -41,34 +50,34 @@ export default function Clients() {
                                 <p className="mb-0">{row.values?.tag}</p>
                             </div>
                         </div>
-                    )
+                    );
                 }
             },
             {
                 accessor: 'status',
                 Header: 'Status',
                 Cell: ({ row }: any) => {
-                    let statusColor = ''
+                    let statusColor = '';
                     switch (row.values.status) {
                         case 'Booked':
-                            statusColor = 'success'
-                            break
+                            statusColor = 'success';
+                            break;
 
                         case 'Attended':
-                            statusColor = 'primary'
-                            break
+                            statusColor = 'primary';
+                            break;
 
                         case 'Rescheduled':
-                            statusColor = 'info'
-                            break
+                            statusColor = 'info';
+                            break;
 
                         case 'Canceled':
-                            statusColor = 'secondary'
-                            break
+                            statusColor = 'secondary';
+                            break;
 
                         case 'Rejected':
-                            statusColor = 'danger'
-                            break
+                            statusColor = 'danger';
+                            break;
                     }
                     return (
                         <>
@@ -80,33 +89,33 @@ export default function Clients() {
                                 {row.values.status}
                             </Badge>
                         </>
-                    )
+                    );
                 }
             },
             {
                 id: 'edit',
                 Header: 'Actions',
                 Cell: ({ row }: any) => {
-                    const history = useHistory()
+                    const history = useHistory();
                     const routeChange = () => {
-                        const path = `clients`
-                        history.push(path)
-                    }
+                        const path = `clients`;
+                        history.push(path);
+                    };
 
                     const rescheduleHandler = () => {
                         cancelComponent.current.TriggerForm({
                             id: row.original.sessionId,
                             type: 'reschedule',
                             tag: row.original.tag
-                        })
-                    }
+                        });
+                    };
 
                     const cancelHandler = () => {
                         cancelComponent.current.TriggerForm({
                             id: row.original.id,
                             type: 'cancel'
-                        })
-                    }
+                        });
+                    };
 
                     const arrayAction = [
                         {
@@ -125,7 +134,7 @@ export default function Clients() {
                             actionName: 'Go to client',
                             actionClick: routeChange
                         }
-                    ]
+                    ];
 
                     const arrayActionForCancelledAndAttended = [
                         {
@@ -136,7 +145,7 @@ export default function Clients() {
                             actionName: 'Go to client',
                             actionClick: routeChange
                         }
-                    ]
+                    ];
 
                     const arrayActionForGroup = [
                         {
@@ -151,7 +160,7 @@ export default function Clients() {
                             actionName: 'Go to client',
                             actionClick: routeChange
                         }
-                    ]
+                    ];
 
                     return (
                         <ActionButton
@@ -166,29 +175,29 @@ export default function Clients() {
                                     : arrayAction
                             }
                         ></ActionButton>
-                    )
+                    );
                 }
             }
         ],
         []
-    )
+    );
 
-    const [datatable, setDataTable] = useState<Record<string, unknown>[]>([])
+    const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
 
     useQuery(GET_ALL_CLIENTS, {
         variables: { filter: searchFilter, id: Number(auth.userid) },
         onCompleted: (data) => {
-            const flattenClientsData = flattenObj({ ...data.clientPackages })
-            setClientsData(flattenClientsData)
+            const flattenClientsData = flattenObj({ ...data.clientPackages });
+            setClientsData(flattenClientsData);
             getSessionBookings({
                 variables: {
                     id: flattenClientsData[0]?.users_permissions_user?.id,
                     loginUserId: auth.userid,
                     status: ['Booked']
                 }
-            })
+            });
         }
-    })
+    });
 
     const [
         getSessionBookings,
@@ -196,22 +205,22 @@ export default function Clients() {
         { data: get_session_bookings, refetch: refetch_session_bookings }
     ] = useLazyQuery(GET_SESSION_BOOKINGS_FOR_CLIENTS, {
         onCompleted: (data) => {
-            loadData(data)
+            loadData(data);
         }
-    })
+    });
 
     function getTime(startTime: string): string {
-        const splitTime: string[] = startTime.split(':')
+        const splitTime: string[] = startTime.split(':');
         const date: moment.Moment = moment().set({
             hour: Number(splitTime[0]),
             minute: Number(splitTime[1])
-        })
-        const time: string = moment(date).format('h:mm A')
-        return time
+        });
+        const time: string = moment(date).format('h:mm A');
+        return time;
     }
 
     function loadData(data: any) {
-        const flattenBookingsData = flattenObj({ ...data })
+        const flattenBookingsData = flattenObj({ ...data });
 
         setDataTable(
             [...flattenBookingsData.sessionsBookings].flatMap((Detail) => {
@@ -234,9 +243,9 @@ export default function Clients() {
                           )}`
                         : null,
                     status: Detail.Session_booking_status
-                }
+                };
             })
-        )
+        );
     }
 
     return (
@@ -261,8 +270,8 @@ export default function Clients() {
                                             <Button
                                                 variant="outline-secondary"
                                                 onClick={(e: any) => {
-                                                    e.preventDefault()
-                                                    setSearchFilter(searchInput.current.value)
+                                                    e.preventDefault();
+                                                    setSearchFilter(searchInput.current.value);
                                                 }}
                                             >
                                                 <i className="fas fa-search"></i>
@@ -284,15 +293,15 @@ export default function Clients() {
                                     key={currentValue.id}
                                     border={activeCard === index ? 'success' : 'light'}
                                     onClick={() => {
-                                        setActiveCard(index)
-                                        setSelectedCardId(currentValue.id)
+                                        setActiveCard(index);
+                                        setSelectedCardId(currentValue.id);
                                         getSessionBookings({
                                             variables: {
                                                 id: currentValue.users_permissions_user.id,
                                                 loginUserId: auth.userid,
                                                 status: ['Booked']
                                             }
-                                        })
+                                        });
                                     }}
                                 >
                                     <Card.Body>
@@ -342,7 +351,7 @@ export default function Clients() {
                                                         'Rescheduled'
                                                     ]
                                                 }
-                                            })
+                                            });
                                         }}
                                         placeholder="Start Date"
                                         type="date"
@@ -373,7 +382,7 @@ export default function Clients() {
                                                         'Rescheduled'
                                                     ]
                                                 }
-                                            })
+                                            });
                                         }}
                                         placeholder="Start Date"
                                         type="date"
@@ -393,5 +402,5 @@ export default function Clients() {
                 callback={refetch_session_bookings}
             ></CancelComponent>
         </>
-    )
+    );
 }

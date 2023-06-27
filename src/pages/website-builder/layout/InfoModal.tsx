@@ -1,24 +1,24 @@
-import { Template } from '../@types/websiteTemplates'
-import { CheckCircle } from 'react-bootstrap-icons'
-import { Button, Col, ListGroup, Modal, Row } from 'react-bootstrap'
+import { Template } from '../@types/websiteTemplates';
+import { CheckCircle } from 'react-bootstrap-icons';
+import { Button, Col, ListGroup, Modal, Row } from 'react-bootstrap';
 
-import style from './info.module.css'
+import style from './info.module.css';
 
 function InfoModal({
     data,
     setInfoData
 }: {
-    data: Template
-    setInfoData: (data: Template | null) => void
+    data: Template;
+    setInfoData: (data: Template | null) => void;
 }): JSX.Element {
     const handleClose = () => {
-        setInfoData(null)
-    }
+        setInfoData(null);
+    };
 
     const setTemplateAsSelected = () => {
         // ! multiple templates
-        setInfoData(null)
-    }
+        setInfoData(null);
+    };
 
     return (
         <Modal show={!!data} onHide={handleClose} className={style.modal}>
@@ -78,7 +78,7 @@ function InfoModal({
                 </div>
             </Modal.Body>
         </Modal>
-    )
+    );
 }
 
-export default InfoModal
+export default InfoModal;

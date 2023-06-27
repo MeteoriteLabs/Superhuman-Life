@@ -1,14 +1,14 @@
-import React, { useState } from 'react'
-import Form from '@rjsf/bootstrap-4'
-import { Button, Modal, Row } from 'react-bootstrap'
-import { useMutation, gql } from '@apollo/client'
-import { useLocation } from 'react-router-dom'
+import React, { useState } from 'react';
+import Form from '@rjsf/bootstrap-4';
+import { Button, Modal, Row } from 'react-bootstrap';
+import { useMutation, gql } from '@apollo/client';
+import { useLocation } from 'react-router-dom';
 
 const ForgotPassword: React.FC = () => {
-    const query = new URLSearchParams(useLocation().search)
-    const code = query.get('code')
-    const [emailSent, setEmailSent] = useState<boolean>(false)
-    const loginSchema = require('./resetPassword.json')
+    const query = new URLSearchParams(useLocation().search);
+    const code = query.get('code');
+    const [emailSent, setEmailSent] = useState<boolean>(false);
+    const loginSchema = require('./resetPassword.json');
     const uiSchema = {
         password: {
             'ui:widget': 'password',
@@ -17,7 +17,7 @@ const ForgotPassword: React.FC = () => {
         confirm: {
             'ui:widget': 'password'
         }
-    }
+    };
 
     const RESET_PASSWORD = gql`
         mutation resetPasswordMutation($pass: String!, $confirmPass: String!, $code: String!) {
@@ -25,25 +25,25 @@ const ForgotPassword: React.FC = () => {
                 jwt
             }
         }
-    `
+    `;
 
     const [resetPassword] = useMutation(RESET_PASSWORD, {
         onCompleted: () => {
-            setEmailSent(true)
+            setEmailSent(true);
         }
-    })
+    });
 
     function onSubmit(formData) {
         resetPassword({
             variables: { pass: formData.password, confirmPass: formData.confirm, code: code }
-        })
+        });
     }
 
     function Validate(formData, errors) {
         if (formData.password !== formData.confirm) {
-            errors.confirm.addError("Passwords don't match")
+            errors.confirm.addError("Passwords don't match");
         }
-        return errors
+        return errors;
     }
 
     return (
@@ -94,7 +94,7 @@ const ForgotPassword: React.FC = () => {
                 )}
             </Modal.Body>
         </Modal.Dialog>
-    )
-}
+    );
+};
 
-export default ForgotPassword
+export default ForgotPassword;

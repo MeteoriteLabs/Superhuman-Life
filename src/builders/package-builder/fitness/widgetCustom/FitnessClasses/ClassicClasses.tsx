@@ -1,37 +1,37 @@
-import React, { useRef } from 'react'
-import { Form } from 'react-bootstrap'
+import React, { useRef } from 'react';
+import { Form } from 'react-bootstrap';
 
 interface Properties {
-    recordedclasses: any
-    duration: any
-    restdays: any
+    recordedclasses: any;
+    duration: any;
+    restdays: any;
 }
 
 interface Props {
-    widgetProps: any
-    classicProps: Properties
-    actionType: string
-    packageTypeName: string | null
+    widgetProps: any;
+    classicProps: Properties;
+    actionType: string;
+    packageTypeName: string | null;
 }
 
 const ClassicClasses: React.FC<Props> = (props) => {
-    const dayAvailableRef = useRef<any>(null)
+    const dayAvailableRef = useRef<any>(null);
 
     // classic
     const handleValidation = (e: { target: { value: string } }) => {
-        dayAvailableRef.current = props.classicProps.duration.value
-        props.classicProps.recordedclasses.value = parseInt(e.target.value)
-        dayAvailableRef.current -= props.classicProps.recordedclasses.value
-        props.classicProps.restdays.maximum = dayAvailableRef.current
-    }
+        dayAvailableRef.current = props.classicProps.duration.value;
+        props.classicProps.recordedclasses.value = parseInt(e.target.value);
+        dayAvailableRef.current -= props.classicProps.recordedclasses.value;
+        props.classicProps.restdays.maximum = dayAvailableRef.current;
+    };
 
     const handleChange = (
         e: { target: any },
         widgetProps: { onChange: (arg0: number) => void }
     ) => {
-        handleValidation(e)
-        widgetProps.onChange(parseInt(e.target.value))
-    }
+        handleValidation(e);
+        widgetProps.onChange(parseInt(e.target.value));
+    };
 
     return (
         <div className="d-flex justify-content-center aligns-items-center">
@@ -55,7 +55,7 @@ const ClassicClasses: React.FC<Props> = (props) => {
                 max="30"
             />
         </div>
-    )
-}
+    );
+};
 
-export default ClassicClasses
+export default ClassicClasses;

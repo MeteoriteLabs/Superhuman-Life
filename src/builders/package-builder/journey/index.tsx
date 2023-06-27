@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo } from 'react';
 import {
     Badge,
     Button,
@@ -8,9 +8,9 @@ import {
     OverlayTrigger,
     Popover,
     TabContent
-} from 'react-bootstrap'
-import CreateFitnessPackageModal from '../../../components/CreateFitnessPackageModal/CreateFitnessPackageModal'
-import Table from '../../../components/table'
+} from 'react-bootstrap';
+import CreateFitnessPackageModal from '../../../components/CreateFitnessPackageModal/CreateFitnessPackageModal';
+import Table from '../../../components/table';
 
 function PaymentWidget({ formData }: any) {
     return (
@@ -81,7 +81,7 @@ function PaymentWidget({ formData }: any) {
                 </table>
             </Card.Body>
         </Card>
-    )
+    );
 }
 
 export default function JourneyTab() {
@@ -129,7 +129,7 @@ export default function JourneyTab() {
             }
         ],
         []
-    )
+    );
     const data = useMemo<any>(
         () => [
             {
@@ -154,8 +154,8 @@ export default function JourneyTab() {
             }
         ],
         []
-    )
-    const journeySchema: any = require('./journey.json')
+    );
+    const journeySchema: any = require('./journey.json');
     const uiSchema: any = {
         '1': {
             level: {
@@ -196,11 +196,11 @@ export default function JourneyTab() {
         '5': {
             'ui:field': 'payment'
         }
-    }
-    const fields = { payment: PaymentWidget }
+    };
+    const fields = { payment: PaymentWidget };
 
     function onSubmit(formData: any) {
-        alert('Values submitted: ' + JSON.stringify(formData, null, 2))
+        alert('Values submitted: ' + JSON.stringify(formData, null, 2));
     }
 
     return (
@@ -222,5 +222,5 @@ export default function JourneyTab() {
             </Card.Title>
             <Table columns={columns} data={data} />
         </TabContent>
-    )
+    );
 }

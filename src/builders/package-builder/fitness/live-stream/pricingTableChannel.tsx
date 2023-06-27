@@ -1,52 +1,52 @@
-import React, { useState, useContext, useEffect } from 'react'
-import { Form, Table, FormControl, InputGroup, Row, Col } from 'react-bootstrap'
-import { gql, useQuery, useLazyQuery } from '@apollo/client'
-import AuthContext from '../../../../context/auth-context'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
-import moment from 'moment'
+import React, { useState, useContext, useEffect } from 'react';
+import { Form, Table, FormControl, InputGroup, Row, Col } from 'react-bootstrap';
+import { gql, useQuery, useLazyQuery } from '@apollo/client';
+import AuthContext from '../../../../context/auth-context';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import moment from 'moment';
 
 const PricingTable = (props: any) => {
-    const durationOfOffering = props.formContext.durationOfOffering
-    const inputDisabled = props.readonly
-    const bookingDetails = JSON.parse(props.formContext.channelinstantBooking)
-    const [show, setShow] = useState(props.value === 'free' ? true : false)
+    const durationOfOffering = props.formContext.durationOfOffering;
+    const inputDisabled = props.readonly;
+    const bookingDetails = JSON.parse(props.formContext.channelinstantBooking);
+    const [show, setShow] = useState(props.value === 'free' ? true : false);
 
     function handleReturnType(val: any) {
         if (typeof val === 'string') {
             if (bookingDetails.instantBooking && JSON.parse(val).length === 4) {
-                return handleDefaultPricing()
+                return handleDefaultPricing();
             } else {
                 if (!bookingDetails.instantBooking && JSON.parse(val).length === 5) {
-                    return handleDefaultPricing()
+                    return handleDefaultPricing();
                 } else {
-                    return JSON.parse(val)
+                    return JSON.parse(val);
                 }
             }
         } else {
             if (bookingDetails.instantBooking && val.length === 4) {
-                return handleDefaultPricing()
+                return handleDefaultPricing();
             } else {
                 if (!bookingDetails.instantBooking && val.length === 5) {
-                    return handleDefaultPricing()
+                    return handleDefaultPricing();
                 } else {
-                    return val
+                    return val;
                 }
             }
         }
     }
 
-    let day = 0
+    let day = 0;
     for (let i = 0; i < durationOfOffering.length; i++) {
         if (durationOfOffering[i] === '1 day') {
-            day = day > 1 ? day : 1
+            day = day > 1 ? day : 1;
         } else if (durationOfOffering[i] === '30 days') {
-            day = day > 30 ? day : 30
+            day = day > 30 ? day : 30;
         } else if (durationOfOffering[i] === '90 days') {
-            day = day > 90 ? day : 90
+            day = day > 90 ? day : 90;
         } else if (durationOfOffering[i] === '180 days') {
-            day = day > 180 ? day : 180
+            day = day > 180 ? day : 180;
         } else if (durationOfOffering[i] === '360 days') {
-            day = day >= 360 ? day : 360
+            day = day >= 360 ? day : 360;
         }
     }
 
@@ -94,7 +94,7 @@ const PricingTable = (props: any) => {
                         sapienPricing: null,
                         classes: null
                     }
-                ]
+                ];
             } else if (day === 180) {
                 return [
                     {
@@ -129,7 +129,7 @@ const PricingTable = (props: any) => {
                         sapienPricing: null,
                         classes: null
                     }
-                ]
+                ];
             } else if (day === 90) {
                 return [
                     {
@@ -156,7 +156,7 @@ const PricingTable = (props: any) => {
                         sapienPricing: null,
                         classes: null
                     }
-                ]
+                ];
             } else if (day === 30) {
                 return [
                     {
@@ -175,7 +175,7 @@ const PricingTable = (props: any) => {
                         sapienPricing: null,
                         classes: null
                     }
-                ]
+                ];
             } else {
                 return [
                     {
@@ -186,7 +186,7 @@ const PricingTable = (props: any) => {
                         sapienPricing: null,
                         classes: null
                     }
-                ]
+                ];
             }
         } else {
             return [
@@ -218,25 +218,25 @@ const PricingTable = (props: any) => {
                     duration: 360,
                     sapienPricing: null
                 }
-            ]
+            ];
         }
     }
 
-    const auth = useContext(AuthContext)
-    const [vouchers, setVouchers] = useState<any>([])
+    const auth = useContext(AuthContext);
+    const [vouchers, setVouchers] = useState<any>([]);
     const [pricing, setPricing] = useState<any>(
         props.value !== undefined && props.value !== 'free'
             ? handleReturnType(props.value)
             : handleDefaultPricing()
-    )
+    );
 
     useEffect(() => {
         if (bookingDetails.freeDemo) {
-            const values = [...pricing]
-            values[0].mrp = 'free'
-            setPricing(values)
+            const values = [...pricing];
+            values[0].mrp = 'free';
+            setPricing(values);
         }
-    }, [bookingDetails.freeDemo])
+    }, [bookingDetails.freeDemo]);
 
     const GET_VOUCHERS = gql`
         query fetchVouchers($expiry: DateTime!, $id: ID!, $start: DateTime!, $status: String!) {
@@ -260,14 +260,14 @@ const PricingTable = (props: any) => {
                 }
             }
         }
-    `
+    `;
 
     const [getVouchers] = useLazyQuery(GET_VOUCHERS, {
         onCompleted: (data) => {
-            const flattenData = flattenObj({ ...data })
-            setVouchers(flattenData.vouchers)
+            const flattenData = flattenObj({ ...data });
+            setVouchers(flattenData.vouchers);
         }
-    })
+    });
     React.useEffect(() => {
         getVouchers({
             variables: {
@@ -276,8 +276,8 @@ const PricingTable = (props: any) => {
                 start: moment().toISOString(),
                 status: 'Active'
             }
-        })
-    }, [])
+        });
+    }, []);
 
     const SUGGESTED_PRICING = gql`
         query fetchSapienPricing($id: ID!) {
@@ -305,87 +305,87 @@ const PricingTable = (props: any) => {
                 }
             }
         }
-    `
+    `;
 
     function FetchData() {
         useQuery(SUGGESTED_PRICING, {
             variables: { id: auth.userid },
             onCompleted: (data) => {
-                loadData(data)
+                loadData(data);
             }
-        })
+        });
     }
 
     function loadData(data) {
-        const flattenData = flattenObj({ ...data })
-        const newValue = [...pricing]
+        const flattenData = flattenObj({ ...data });
+        const newValue = [...pricing];
 
         newValue.forEach((item) => {
             if (item.voucher !== 0 && item.price !== null) {
                 item.suggestedPrice = parseInt(
                     ((item.sapienPricing * 100) / (100 - item.voucher)).toFixed(2)
-                )
+                );
             } else {
                 if (item.duration === 1) {
                     if (bookingDetails.freeDemo) {
-                        item.suggestedPrice = 'free'
+                        item.suggestedPrice = 'free';
                     } else {
-                        item.suggestedPrice = flattenData.suggestedPricings[0]?.mrp
+                        item.suggestedPrice = flattenData.suggestedPricings[0]?.mrp;
                     }
                 } else {
-                    item.suggestedPrice = flattenData.suggestedPricings[0]?.mrp * item.duration
+                    item.suggestedPrice = flattenData.suggestedPricings[0]?.mrp * item.duration;
                 }
             }
-            item.sapienPricing = flattenData.sapienPricings[0]?.mrp * item.duration
-        })
-        setPricing(newValue)
+            item.sapienPricing = flattenData.sapienPricings[0]?.mrp * item.duration;
+        });
+        setPricing(newValue);
     }
 
     function handlePricingUpdate(value: any, id: any) {
-        const newPricing = [...pricing]
-        newPricing[id].mrp = value
-        setPricing(newPricing)
+        const newPricing = [...pricing];
+        newPricing[id].mrp = value;
+        setPricing(newPricing);
     }
 
     function handleValidation() {
-        const values = [...pricing]
-        let res = false
+        const values = [...pricing];
+        let res = false;
         // eslint-disable-next-line
         values.map((item: any) => {
             if (item.mrp !== null && item.mrp >= parseInt(item.sapienPricing)) {
-                res = true
+                res = true;
             }
-        })
-        return res
+        });
+        return res;
     }
 
     useEffect(() => {
         if (show) {
-            props.onChange('free')
+            props.onChange('free');
         } else if (handleValidation()) {
-            props.onChange(JSON.stringify(pricing))
+            props.onChange(JSON.stringify(pricing));
         } else {
-            props.onChange(undefined)
+            props.onChange(undefined);
         }
-    }, [pricing, show])
+    }, [pricing, show]);
 
     function handleUpdatePricing(id: any, value: any) {
         if (parseInt(value) !== 0) {
-            const newValue = [...pricing]
-            newValue[id].voucher = parseInt(value)
+            const newValue = [...pricing];
+            newValue[id].voucher = parseInt(value);
             newValue[id].suggestedPrice = parseInt(
                 ((newValue[id].sapienPricing * 100) / (100 - value)).toFixed(0)
-            )
-            setPricing(newValue)
+            );
+            setPricing(newValue);
         } else {
-            const newValue = [...pricing]
-            newValue[id].voucher = parseInt(value)
-            newValue[id].suggestedPrice = newValue[id].sapienPricing
-            setPricing(newValue)
+            const newValue = [...pricing];
+            newValue[id].voucher = parseInt(value);
+            newValue[id].suggestedPrice = newValue[id].sapienPricing;
+            setPricing(newValue);
         }
     }
 
-    FetchData()
+    FetchData();
 
     return (
         <>
@@ -464,11 +464,11 @@ const PricingTable = (props: any) => {
                                                         >
                                                             {voucher.voucher_name}
                                                         </option>
-                                                    )
+                                                    );
                                                 })}
                                             </Form.Control>
                                         </td>
-                                    )
+                                    );
                                 })}
                             </tr>
                             <tr className="text-center">
@@ -480,7 +480,7 @@ const PricingTable = (props: any) => {
                                         <td key={index}>{`${item.duration} ${
                                             item.duration === 1 ? `day` : `days`
                                         }`}</td>
-                                    )
+                                    );
                                 })}
                             </tr>
                             {/* <tr className="text-center">
@@ -534,7 +534,7 @@ const PricingTable = (props: any) => {
                                                     aria-describedby="inputGroup-sizing-default"
                                                     value={pricing[index]?.mrp}
                                                     onChange={(e) => {
-                                                        handlePricingUpdate(e.target.value, index)
+                                                        handlePricingUpdate(e.target.value, index);
                                                     }}
                                                 />
                                             </InputGroup>
@@ -548,7 +548,7 @@ const PricingTable = (props: any) => {
                                                     </span>
                                                 )}
                                         </td>
-                                    )
+                                    );
                                 })}
                             </tr>
                         </tbody>
@@ -556,7 +556,7 @@ const PricingTable = (props: any) => {
                 </div>
             )}
         </>
-    )
-}
+    );
+};
 
-export default PricingTable
+export default PricingTable;

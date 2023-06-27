@@ -1,33 +1,33 @@
-import React, { useRef, useContext, useState } from 'react'
-import { Button, Row, Col, Card, Dropdown, Badge } from 'react-bootstrap'
-import PaymentMethodsAction from '../PaymentMethodsAction'
-import Loader from '../../../../components/Loader/Loader'
-import { useQuery } from '@apollo/client'
-import { GET_UPI_DETAILS } from '../queries'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
-import AuthContext from '../../../../context/auth-context'
+import React, { useRef, useContext, useState } from 'react';
+import { Button, Row, Col, Card, Dropdown, Badge } from 'react-bootstrap';
+import PaymentMethodsAction from '../PaymentMethodsAction';
+import Loader from '../../../../components/Loader/Loader';
+import { useQuery } from '@apollo/client';
+import { GET_UPI_DETAILS } from '../queries';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import AuthContext from '../../../../context/auth-context';
 
 const UPIDetails: React.FC = () => {
-    const paymentMethodActionRef = useRef<any>(null)
-    const auth = useContext(AuthContext)
-    const [upiDetails, setUpiDetails] = useState<Record<string, unknown>[]>([])
+    const paymentMethodActionRef = useRef<any>(null);
+    const auth = useContext(AuthContext);
+    const [upiDetails, setUpiDetails] = useState<Record<string, unknown>[]>([]);
 
     // eslint-disable-next-line
     const { data: get_upi_details, refetch: refetch_upi } = useQuery(GET_UPI_DETAILS, {
         variables: { id: auth.userid },
         onCompleted: (data) => {
-            const flattenUPIData = flattenObj({ ...data.upiDetailsChangemakers })
-            setUpiDetails(flattenUPIData)
+            const flattenUPIData = flattenObj({ ...data.upiDetailsChangemakers });
+            setUpiDetails(flattenUPIData);
         }
-    })
+    });
 
     //Delete User's Education Data function
     const deleteHandler = (data: any) => {
         paymentMethodActionRef.current.TriggerForm({
             id: data.id,
             actionType: 'deleteUPI'
-        })
-    }
+        });
+    };
 
     // calling modal for update option
     function updateUPI(data: any) {
@@ -35,7 +35,7 @@ const UPIDetails: React.FC = () => {
             id: data.id,
             actionType: 'editUPI',
             modal_status: true
-        })
+        });
     }
 
     return (
@@ -47,7 +47,7 @@ const UPIDetails: React.FC = () => {
                         variant="outline-secondary"
                         size="sm"
                         onClick={() => {
-                            paymentMethodActionRef.current.TriggerForm({ actionType: 'upi' })
+                            paymentMethodActionRef.current.TriggerForm({ actionType: 'upi' });
                         }}
                     >
                         <i className="fas fa-plus-circle"></i> Add UPI
@@ -106,7 +106,7 @@ const UPIDetails: React.FC = () => {
                                                                     id: currValue.id,
                                                                     actionType: 'viewUPIDetails'
                                                                 }
-                                                            )
+                                                            );
                                                         }}
                                                     >
                                                         View
@@ -139,7 +139,7 @@ const UPIDetails: React.FC = () => {
                 )}
             </Row>
         </div>
-    )
-}
+    );
+};
 
-export default UPIDetails
+export default UPIDetails;

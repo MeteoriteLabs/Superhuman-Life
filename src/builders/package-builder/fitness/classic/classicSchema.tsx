@@ -1,11 +1,11 @@
-import Upload from '../../../../components/upload/upload'
-import DatesConfig from '../../../../components/customWidgets/datesConfig'
-import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect'
-import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect'
-import LanguageSelect from '../../../../components/customWidgets/languageSelect'
-import ClassicProgramDetails from './classicProgramDetails'
-import ClassicBookingConfig from './bookingConfig'
-import ClassicPricingTable from './classicPricingTable'
+import Upload from '../../../../components/upload/upload';
+import DatesConfig from '../../../../components/customWidgets/datesConfig';
+import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect';
+import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect';
+import LanguageSelect from '../../../../components/customWidgets/languageSelect';
+import ClassicProgramDetails from './classicProgramDetails';
+import ClassicBookingConfig from './bookingConfig';
+import ClassicPricingTable from './classicPricingTable';
 
 export const widgets = {
     datesConfig: DatesConfig,
@@ -15,7 +15,7 @@ export const widgets = {
     classPricingTable: ClassicPricingTable,
     classicBookingConfig: ClassicBookingConfig,
     classicLanguageSelect: LanguageSelect
-}
+};
 
 export const schema: any = {
     tags: {
@@ -73,7 +73,7 @@ export const schema: any = {
                     value={props.value}
                     title={'Thumbnail'}
                 />
-            )
+            );
         }
     },
     VideoUrl: {
@@ -103,4 +103,4 @@ export const schema: any = {
             'ui:widget': 'classicBookingConfig'
         }
     }
-}
+};

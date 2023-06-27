@@ -1,35 +1,35 @@
-import { useEffect, useState } from 'react'
-import { Gear, WindowFullscreen } from 'react-bootstrap-icons'
-import clsx from 'clsx'
+import { useEffect, useState } from 'react';
+import { Gear, WindowFullscreen } from 'react-bootstrap-icons';
+import clsx from 'clsx';
 
-import WebsiteNav from './websiteNav'
-import ThemeSettings from './themeSettings'
-import GeneralSettings from './generalSettings'
+import WebsiteNav from './websiteNav';
+import ThemeSettings from './themeSettings';
+import GeneralSettings from './generalSettings';
 
-import style from './tabs.module.css'
+import style from './tabs.module.css';
 function CustomTabs({
     activeTab,
     setActiveTab
 }: {
-    activeTab: 'website' | 'theme' | 'settings'
-    setActiveTab: (arg: 'website' | 'theme' | 'settings') => void
+    activeTab: 'website' | 'theme' | 'settings';
+    setActiveTab: (arg: 'website' | 'theme' | 'settings') => void;
 }): JSX.Element {
-    const [renderActiveTab, setRenderActiveTab] = useState<JSX.Element>(<WebsiteNav />)
+    const [renderActiveTab, setRenderActiveTab] = useState<JSX.Element>(<WebsiteNav />);
     useEffect(() => {
         const renderActiveTab = (activeTab: string): JSX.Element => {
             switch (activeTab) {
                 case 'website':
-                    return <WebsiteNav />
+                    return <WebsiteNav />;
                 case 'theme':
-                    return <ThemeSettings />
+                    return <ThemeSettings />;
                 case 'settings':
-                    return <GeneralSettings />
+                    return <GeneralSettings />;
                 default:
-                    return <WebsiteNav />
+                    return <WebsiteNav />;
             }
-        }
-        setRenderActiveTab(renderActiveTab(activeTab))
-    }, [activeTab])
+        };
+        setRenderActiveTab(renderActiveTab(activeTab));
+    }, [activeTab]);
     return (
         <div>
             <div className={style.topTabs}>
@@ -58,7 +58,7 @@ function CustomTabs({
             </div>
             {renderActiveTab}
         </div>
-    )
+    );
 }
 
-export default CustomTabs
+export default CustomTabs;

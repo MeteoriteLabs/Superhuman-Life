@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const GET_CHANGEMAKER_NOTIFICATION = gql`
     query changemakerNotifications($id: ID) {
@@ -20,4 +20,4 @@ export const GET_CHANGEMAKER_NOTIFICATION = gql`
             }
         }
     }
-`
+`;

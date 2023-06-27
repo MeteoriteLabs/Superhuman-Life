@@ -1,13 +1,13 @@
 type Props = {
-    type: string
-    mode: string
-    classicClasses: number
-    ptonline: number
-    ptoffline: number
-    grouponline: number
-    groupoffline: number
-    recordedclasses: number
-}
+    type: string;
+    mode: string;
+    classicClasses: number;
+    ptonline: number;
+    ptoffline: number;
+    grouponline: number;
+    groupoffline: number;
+    recordedclasses: number;
+};
 
 export default function ClassesSessions({
     type,
@@ -19,23 +19,23 @@ export default function ClassesSessions({
     recordedclasses,
     mode
 }: Props) {
-    const arr = [ptonline, ptoffline, grouponline, groupoffline, recordedclasses]
-    let totalClasses = arr.filter((item) => item !== undefined).reduce((acc, cur) => acc + cur)
+    const arr = [ptonline, ptoffline, grouponline, groupoffline, recordedclasses];
+    let totalClasses = arr.filter((item) => item !== undefined).reduce((acc, cur) => acc + cur);
 
-    const arrNumberClass: number[] = []
+    const arrNumberClass: number[] = [];
     if (type === 'Classic Class') {
-        arrNumberClass.push(classicClasses)
+        arrNumberClass.push(classicClasses);
     } else if (mode === 'Online Workout' || mode === 'Offline Workout') {
         if (ptonline !== 0) {
-            arrNumberClass.push(ptonline)
+            arrNumberClass.push(ptonline);
         } else {
-            arrNumberClass.push(ptoffline)
+            arrNumberClass.push(ptoffline);
         }
     } else {
-        arrNumberClass[0] = totalClasses
+        arrNumberClass[0] = totalClasses;
         for (let i = 1; i < 4; i++) {
-            i === 1 ? (totalClasses *= 3) : (totalClasses *= 2)
-            arrNumberClass.push(totalClasses)
+            i === 1 ? (totalClasses *= 3) : (totalClasses *= 2);
+            arrNumberClass.push(totalClasses);
         }
     }
 
@@ -46,8 +46,8 @@ export default function ClassesSessions({
                     <td key={index} className="font-weight-bold">
                         {item} Class
                     </td>
-                )
+                );
             })}
         </>
-    )
+    );
 }

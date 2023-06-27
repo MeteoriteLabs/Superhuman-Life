@@ -1,39 +1,39 @@
-import NewCustomColorPicker from '../../components/customWidgets/newCustomColor'
-import UploadImageToS3WithNativeSdk from '../../components/upload/upload'
+import NewCustomColorPicker from '../../components/customWidgets/newCustomColor';
+import UploadImageToS3WithNativeSdk from '../../components/upload/upload';
 
 export const widgets = {
     newCustomColorPicker: NewCustomColorPicker,
     uploadImageToS3WithNativeSdk: UploadImageToS3WithNativeSdk,
     uploadVideoToS3WithNativeSdk: UploadImageToS3WithNativeSdk
-}
+};
 
 export const UploadImageToS3WithNativeSdkComponent = (props: {
-    value: string
-    onChange: (args: string) => void
+    value: string;
+    onChange: (args: string) => void;
 }): JSX.Element => {
     return (
         <UploadImageToS3WithNativeSdk
             value={props.value}
             onChange={(event: string) => {
-                props.onChange(event)
+                props.onChange(event);
             }}
             allowImage={true}
             allowVideo={false}
         />
-    )
-}
+    );
+};
 export const UploadVideoToS3WithNativeSdkComponent = (props: {
-    value: string
-    onChange: (args: string) => void
+    value: string;
+    onChange: (args: string) => void;
 }): unknown => {
     return (
         <UploadImageToS3WithNativeSdk
             value={props.value}
             onChange={(event: string) => {
-                props.onChange(event)
+                props.onChange(event);
             }}
             allowImage={false}
             allowVideo={true}
         />
-    )
-}
+    );
+};

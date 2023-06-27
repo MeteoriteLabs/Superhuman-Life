@@ -1,8 +1,8 @@
-import DaysInput from '../daysInput'
+import DaysInput from '../daysInput';
 
 export const widgets = {
     daysInput: DaysInput
-}
+};
 
 export const schema: any = {
     day: {
@@ -15,7 +15,7 @@ export const schema: any = {
                     onChange={props.onChange}
                     val={props.value}
                 />
-            )
+            );
         }
     }
-}
+};

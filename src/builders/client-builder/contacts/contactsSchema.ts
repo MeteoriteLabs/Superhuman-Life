@@ -1,77 +1,77 @@
 interface Schema {
     firstname: {
-        'ui:placeholder': string
-    }
+        'ui:placeholder': string;
+    };
     lastname: {
-        'ui:placeholder': string
-    }
+        'ui:placeholder': string;
+    };
     phone: {
-        'ui:placeholder': string
-    }
+        'ui:placeholder': string;
+    };
     email: {
-        'ui:placeholder': string
-    }
+        'ui:placeholder': string;
+    };
     nameOfPayee: {
-        'ui:placeholder': string
-    }
+        'ui:placeholder': string;
+    };
     gstNumber: {
-        'ui:placeholder': string
-    }
+        'ui:placeholder': string;
+    };
     houseNumber: {
-        'ui:placeholder': string
-    }
+        'ui:placeholder': string;
+    };
     address1: {
-        'ui:placeholder': string
-    }
+        'ui:placeholder': string;
+    };
     address2: {
-        'ui:placeholder': string
-    }
+        'ui:placeholder': string;
+    };
     city: {
-        'ui:placeholder': string
-    }
+        'ui:placeholder': string;
+    };
     state: {
-        'ui:placeholder': string
-    }
+        'ui:placeholder': string;
+    };
     country: {
-        'ui:placeholder': string
-    }
+        'ui:placeholder': string;
+    };
     zipcode: {
-        'ui:placeholder': string
-    }
+        'ui:placeholder': string;
+    };
     gst: {
-        'ui:placeholder': string
-    }
+        'ui:placeholder': string;
+    };
     organisationName: {
-        'ui:placeholder': string
-    }
+        'ui:placeholder': string;
+    };
     organisationEmail: {
-        'ui:placeholder': string
-    }
+        'ui:placeholder': string;
+    };
     typeOfPayee: {
-        'ui:widget': string
-        'ui:placeholder': string
+        'ui:widget': string;
+        'ui:placeholder': string;
         'ui:options': {
-            inline: boolean
-        }
-    }
+            inline: boolean;
+        };
+    };
     appDownloadStatus: {
-        'ui:widget': string
+        'ui:widget': string;
         'ui:options': {
-            inline: boolean
-        }
-    }
+            inline: boolean;
+        };
+    };
     organisationDetails: {
-        'ui:widget': string
+        'ui:widget': string;
         'ui:options': {
-            inline: boolean
-        }
-    }
+            inline: boolean;
+        };
+    };
     isPayee: {
-        'ui:widget': 'radio'
+        'ui:widget': 'radio';
         'ui:options': {
-            inline: boolean
-        }
-    }
+            inline: boolean;
+        };
+    };
 }
 export const schema: Schema = {
     firstname: {
@@ -147,4 +147,4 @@ export const schema: Schema = {
             inline: true
         }
     }
-}
+};

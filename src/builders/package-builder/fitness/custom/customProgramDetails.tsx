@@ -1,79 +1,79 @@
-import React, { useState, useContext, useEffect } from 'react'
-import { Row, Col, Form, InputGroup, FormControl, Button } from 'react-bootstrap'
-import { Typeahead } from 'react-bootstrap-typeahead'
-import 'react-bootstrap-typeahead/css/Typeahead.css'
-import { useQuery, gql } from '@apollo/client'
-import AuthContext from '../../../../context/auth-context'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
-import AddFitnessAddressModal from '../../../../components/customWidgets/AddFitnessAddressModal'
-import { ADDRESSES_IS_PRIMARY } from '../../../../pages/profile/queries/queries'
-import { BasicAddressDetails } from '../../../../pages/profile/ProfileOptions/AddressDetails/CreateAddress'
+import React, { useState, useContext, useEffect } from 'react';
+import { Row, Col, Form, InputGroup, FormControl, Button } from 'react-bootstrap';
+import { Typeahead } from 'react-bootstrap-typeahead';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
+import { useQuery, gql } from '@apollo/client';
+import AuthContext from '../../../../context/auth-context';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import AddFitnessAddressModal from '../../../../components/customWidgets/AddFitnessAddressModal';
+import { ADDRESSES_IS_PRIMARY } from '../../../../pages/profile/queries/queries';
+import { BasicAddressDetails } from '../../../../pages/profile/ProfileOptions/AddressDetails/CreateAddress';
 
 const CustomProgramDetails: React.FC<{
-    readonly: boolean
-    value: string
-    onChange: (args: string | null) => void
+    readonly: boolean;
+    value: string;
+    onChange: (args: string | null) => void;
 }> = (props) => {
-    const inputDisabled = props.readonly
+    const inputDisabled = props.readonly;
 
-    const existingData = props.value === undefined ? undefined : JSON.parse(props.value)
+    const existingData = props.value === undefined ? undefined : JSON.parse(props.value);
     if (existingData && existingData.length) {
         existingData.address = {
             id: JSON.parse(existingData?.address)[0].id,
             title: JSON.parse(existingData?.address)[0].title
-        }
+        };
     }
 
-    const [mode, setMode] = useState<string>(props.value ? existingData.mode.toString() : '0')
-    const [addressModal, setAddressModal] = useState<boolean>(false)
+    const [mode, setMode] = useState<string>(props.value ? existingData.mode.toString() : '0');
+    const [addressModal, setAddressModal] = useState<boolean>(false);
 
-    const auth = useContext(AuthContext)
+    const auth = useContext(AuthContext);
     const [singleSelections, setSingleSelections] = useState<any[]>(
         existingData?.address?.length && props.value ? existingData?.address : []
-    )
-    const [addresses, setAddresses] = useState<any[]>([])
+    );
+    const [addresses, setAddresses] = useState<any[]>([]);
     const [addressTitle, setAddressTitle] = useState(
         props.value ? existingData.addressTag : 'At My Address'
-    )
+    );
     const [ptOnlineClasses, setPtOnlineClasses] = useState<number>(
         existingData?.ptOnline ? existingData.ptOnline : 0
-    )
+    );
     const [groupOnlineClasses, setGroupOnlineClasses] = useState<number>(
         existingData?.groupOnline ? existingData.groupOnline : 0
-    )
+    );
     const [ptOfflineClasses, setPtOfflineClasses] = useState<number>(
         existingData?.ptOffline ? existingData.ptOffline : 0
-    )
+    );
     const [groupOfflineClasses, setGroupOfflineClasses] = useState<number>(
         existingData?.groupOffline ? existingData.groupOffline : 0
-    )
+    );
     const [recordedClasses, setRecordedClasses] = useState<number>(
         existingData?.recorded ? existingData.recorded : 0
-    )
-    const [restDays, setRestDays] = useState<number>(existingData?.rest ? existingData.rest : 0)
-    const [primaryAddress, setPrimaryAddress] = useState<BasicAddressDetails[]>([])
+    );
+    const [restDays, setRestDays] = useState<number>(existingData?.rest ? existingData.rest : 0);
+    const [primaryAddress, setPrimaryAddress] = useState<BasicAddressDetails[]>([]);
     const [clientAddress, setClientAddress] = useState<string>(
         existingData?.clientAddress ? existingData.clientAddress : ''
-    )
+    );
     const [distance, setDistance] = useState<string>(
         existingData?.distance ? existingData.distance : '5 Km'
-    )
+    );
 
     useEffect(() => {
         if (ptOnlineClasses > 30) {
-            setPtOnlineClasses(30)
+            setPtOnlineClasses(30);
         }
         if (ptOfflineClasses > 30) {
-            setPtOnlineClasses(30)
+            setPtOnlineClasses(30);
         }
         if (groupOnlineClasses > 30) {
-            setGroupOnlineClasses(30)
+            setGroupOnlineClasses(30);
         }
         if (groupOfflineClasses > 30) {
-            setGroupOfflineClasses(30)
+            setGroupOfflineClasses(30);
         }
         if (recordedClasses > 30) {
-            setRecordedClasses(30)
+            setRecordedClasses(30);
         }
     }, [
         ptOnlineClasses,
@@ -83,7 +83,7 @@ const CustomProgramDetails: React.FC<{
         recordedClasses,
         groupOfflineClasses,
         groupOnlineClasses
-    ])
+    ]);
 
     const FETCH_USER_ADDRESSES = gql`
         query addresses($id: ID!) {
@@ -96,74 +96,74 @@ const CustomProgramDetails: React.FC<{
                 }
             }
         }
-    `
+    `;
 
     const mainQuery = useQuery(FETCH_USER_ADDRESSES, {
         variables: { id: auth.userid },
         onCompleted: loadData
-    })
+    });
 
     // get primary addresses
     useQuery(ADDRESSES_IS_PRIMARY, {
         variables: { id: auth.userid, is_primary: true },
         onCompleted: (response) => {
-            const flattenDetail = flattenObj({ ...response.addresses })
+            const flattenDetail = flattenObj({ ...response.addresses });
 
-            setPrimaryAddress(flattenDetail)
+            setPrimaryAddress(flattenDetail);
             const address = flattenDetail.map(
                 (currentValue) =>
                     `${currentValue.House_Number}, ${currentValue.address1}, ${currentValue.address2}, ${currentValue.city}, ${currentValue.state}, ${currentValue.country}`
-            )
-            setClientAddress(address)
+            );
+            setClientAddress(address);
         }
-    })
+    });
 
     function loadData(data: any) {
-        const flattenedData = flattenObj({ ...data })
+        const flattenedData = flattenObj({ ...data });
 
         setAddresses(
             [...flattenedData.addresses].map((address) => {
                 return {
                     id: address.id,
                     address1: address.address1
-                }
+                };
             })
-        )
+        );
     }
 
     function OnChange(e) {
-        setSingleSelections(e)
+        setSingleSelections(e);
     }
 
     function handleCallback() {
-        mainQuery.refetch()
+        mainQuery.refetch();
     }
 
     function handleValidation(mode: string) {
         //    here we will check for online
         if (restDays < 0) {
-            return false
+            return false;
         }
         if (mode === '0') {
             if (ptOnlineClasses + groupOnlineClasses + recordedClasses + restDays === 30) {
-                return true
+                return true;
             } else {
-                return false
+                return false;
             }
         }
         //here we will check for offline
         if (mode === '1') {
             if (restDays + groupOfflineClasses + ptOfflineClasses + recordedClasses === 30) {
                 if (addressTitle === 'At My Address' && singleSelections.length) {
-                    return true
+                    return true;
                 }
                 if (addressTitle === 'At Client Address') {
-                    return true
+                    return true;
                 } else {
-                    return false
+                    return false;
                 }
             } else {
-                return false
+                return false;
             }
         }
         //here we will check for both(hybrid)
@@ -178,34 +178,34 @@ const CustomProgramDetails: React.FC<{
                 30
             ) {
                 if (addressTitle === 'At My Address' && singleSelections.length) {
-                    return true
+                    return true;
                 }
                 if (addressTitle === 'At Client Address') {
-                    return true
+                    return true;
                 } else {
-                    return false
+                    return false;
                 }
             } else {
-                return false
+                return false;
             }
         }
     }
 
     useEffect(() => {
         if (ptOnlineClasses < 0) {
-            setPtOnlineClasses(0)
+            setPtOnlineClasses(0);
         }
         if (ptOfflineClasses < 0) {
-            setPtOfflineClasses(0)
+            setPtOfflineClasses(0);
         }
         if (groupOnlineClasses < 0) {
-            setGroupOnlineClasses(0)
+            setGroupOnlineClasses(0);
         }
         if (groupOfflineClasses < 0) {
-            setGroupOfflineClasses(0)
+            setGroupOfflineClasses(0);
         }
         if (recordedClasses < 0) {
-            setRecordedClasses(0)
+            setRecordedClasses(0);
         }
     }, [
         ptOnlineClasses,
@@ -213,18 +213,18 @@ const CustomProgramDetails: React.FC<{
         recordedClasses,
         groupOfflineClasses,
         groupOnlineClasses
-    ])
+    ]);
 
     useEffect(() => {
         if (mode === '0') {
-            setGroupOfflineClasses(0)
-            setPtOfflineClasses(0)
-            setSingleSelections([])
+            setGroupOfflineClasses(0);
+            setPtOfflineClasses(0);
+            setSingleSelections([]);
         } else if (mode === '1') {
-            setPtOnlineClasses(0)
-            setGroupOnlineClasses(0)
+            setPtOnlineClasses(0);
+            setGroupOnlineClasses(0);
         }
-    }, [mode])
+    }, [mode]);
 
     if (handleValidation(mode)) {
         props.onChange(
@@ -241,17 +241,17 @@ const CustomProgramDetails: React.FC<{
                 clientAddress: clientAddress,
                 distance: distance
             })
-        )
+        );
     } else {
-        props.onChange(null)
+        props.onChange(null);
     }
 
     useEffect(() => {
         if (mode === '0') {
-            setRestDays(30 - (ptOnlineClasses + recordedClasses + groupOnlineClasses))
+            setRestDays(30 - (ptOnlineClasses + recordedClasses + groupOnlineClasses));
         }
         if (mode === '1') {
-            setRestDays(30 - (groupOfflineClasses + recordedClasses + ptOfflineClasses))
+            setRestDays(30 - (groupOfflineClasses + recordedClasses + ptOfflineClasses));
         }
         if (mode === '2') {
             setRestDays(
@@ -261,7 +261,7 @@ const CustomProgramDetails: React.FC<{
                         groupOnlineClasses +
                         recordedClasses +
                         groupOfflineClasses)
-            )
+            );
         }
     }, [
         ptOnlineClasses,
@@ -270,7 +270,7 @@ const CustomProgramDetails: React.FC<{
         groupOfflineClasses,
         recordedClasses,
         mode
-    ])
+    ]);
 
     return (
         <>
@@ -326,7 +326,7 @@ const CustomProgramDetails: React.FC<{
                                             disabled={inputDisabled}
                                             value={addressTitle}
                                             onChange={(e: any) => {
-                                                setAddressTitle(e.target.value)
+                                                setAddressTitle(e.target.value);
                                             }}
                                         >
                                             <option value="At My Address">At My Address</option>
@@ -474,7 +474,7 @@ const CustomProgramDetails: React.FC<{
                                             variant="outline-info"
                                             disabled={inputDisabled}
                                             onClick={() => {
-                                                setAddressModal(true)
+                                                setAddressModal(true);
                                             }}
                                         >
                                             + Add New Address
@@ -486,8 +486,8 @@ const CustomProgramDetails: React.FC<{
                             <AddFitnessAddressModal
                                 show={addressModal}
                                 onHide={() => {
-                                    setAddressModal(false)
-                                    handleCallback()
+                                    setAddressModal(false);
+                                    handleCallback();
                                 }}
                             />
                         </div>
@@ -660,7 +660,7 @@ const CustomProgramDetails: React.FC<{
                 </Row>
             )}
         </>
-    )
-}
+    );
+};
 
-export default CustomProgramDetails
+export default CustomProgramDetails;

@@ -2,8 +2,8 @@ const MobileIcon = ({
     width,
     height
 }: {
-    width: string | number
-    height: string | number
+    width: string | number;
+    height: string | number;
 }): JSX.Element => {
     return (
         <svg
@@ -28,7 +28,7 @@ const MobileIcon = ({
                 </clipPath>
             </defs>
         </svg>
-    )
-}
+    );
+};
 
-export default MobileIcon
+export default MobileIcon;

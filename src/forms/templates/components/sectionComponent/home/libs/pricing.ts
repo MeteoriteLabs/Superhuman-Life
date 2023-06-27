@@ -1,5 +1,5 @@
-import { UseFormReset } from 'react-hook-form'
-import { ClientPlans, Data, FormData, SectionData, ServerPlans } from '../@types/pricingType'
+import { UseFormReset } from 'react-hook-form';
+import { ClientPlans, Data, FormData, SectionData, ServerPlans } from '../@types/pricingType';
 
 export const FormatReceivedDataToState = (plans: ServerPlans): ClientPlans[] => {
     return plans.map((plan): ClientPlans => {
@@ -12,9 +12,9 @@ export const FormatReceivedDataToState = (plans: ServerPlans): ClientPlans[] => 
             price: plan.price,
             recurring: plan.recurring,
             title: plan.title
-        }
-    })
-}
+        };
+    });
+};
 
 export const FormatStateToServerData = (plans: ClientPlans[]): ServerPlans => {
     return plans.map((plan: ClientPlans) => {
@@ -26,9 +26,9 @@ export const FormatStateToServerData = (plans: ClientPlans[]): ServerPlans => {
             price: plan.price,
             recurring: plan.recurring,
             title: plan.title
-        }
-    })
-}
+        };
+    });
+};
 
 export function SetReceivingDataAndReset({
     sectionData,
@@ -37,11 +37,11 @@ export function SetReceivingDataAndReset({
     reset,
     setInitialValues
 }: {
-    sectionData: SectionData
-    data: Data
-    initialValues: FormData
-    reset: UseFormReset<FormData>
-    setInitialValues: React.Dispatch<React.SetStateAction<FormData>>
+    sectionData: SectionData;
+    data: Data;
+    initialValues: FormData;
+    reset: UseFormReset<FormData>;
+    setInitialValues: React.Dispatch<React.SetStateAction<FormData>>;
 }): void {
     if (!initialValues.plans.length) {
         setInitialValues({
@@ -50,12 +50,12 @@ export function SetReceivingDataAndReset({
             title: sectionData.title,
             plans: FormatReceivedDataToState(sectionData.plans),
             currency: sectionData.currency
-        })
+        });
 
         reset({
             title: sectionData.title,
             plans: FormatReceivedDataToState(sectionData.plans),
             currency: sectionData.currency
-        })
+        });
     }
 }

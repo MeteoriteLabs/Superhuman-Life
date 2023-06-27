@@ -1,10 +1,10 @@
-import FlatDiscount from './FlatDiscount'
-import DiscountPercentage from './DiscountPercentage'
+import FlatDiscount from './FlatDiscount';
+import DiscountPercentage from './DiscountPercentage';
 
 export const widgets = {
     discountPercentage: DiscountPercentage,
     flatDiscount: FlatDiscount
-}
+};
 // eslint-disable-next-line
 export const schema: any = {
     voucher_name: {
@@ -31,4 +31,4 @@ export const schema: any = {
             inline: true
         }
     }
-}
+};

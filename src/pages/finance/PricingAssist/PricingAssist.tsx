@@ -1,8 +1,8 @@
-import { Card, Tab, Tabs } from 'react-bootstrap'
-import Fitness from './Fitness/Fitness'
+import { Card, Tab, Tabs } from 'react-bootstrap';
+import Fitness from './Fitness/Fitness';
 // import Nutrition from "./Nutrition/Nutrition";
 // import Event from './Event/Event'
-import './pricingAssist.css'
+import './pricingAssist.css';
 
 export default function PricingAssist() {
     return (
@@ -23,5 +23,5 @@ export default function PricingAssist() {
                 </Card.Body>
             </Card>
         </div>
-    )
+    );
 }

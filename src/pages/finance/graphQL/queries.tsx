@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const GET_ALL_SUGGESTED_PRICING = gql`
     query suggestedPricings($id: ID!) {
@@ -21,7 +21,7 @@ export const GET_ALL_SUGGESTED_PRICING = gql`
             }
         }
     }
-`
+`;
 
 export const GET_ALL_VOUCHERS = gql`
     query vouchers($id: ID, $start: Int, $limit: Int) {
@@ -50,7 +50,7 @@ export const GET_ALL_VOUCHERS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_VOUCHERS_BY_ID = gql`
     query vouchers($id: ID!) {
@@ -68,7 +68,7 @@ export const GET_VOUCHERS_BY_ID = gql`
             }
         }
     }
-`
+`;
 
 export const GET_ALL_BOOKINGS_FINANCE = gql`
     query clientBookings($id: ID!) {
@@ -134,4 +134,4 @@ export const GET_ALL_BOOKINGS_FINANCE = gql`
             }
         }
     }
-`
+`;

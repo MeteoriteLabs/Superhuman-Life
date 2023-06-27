@@ -1,47 +1,47 @@
-import React, { useState, useContext } from 'react'
-import { Row, Col, Form, Button } from 'react-bootstrap'
-import { Typeahead } from 'react-bootstrap-typeahead'
-import 'react-bootstrap-typeahead/css/Typeahead.css'
-import { useQuery, gql } from '@apollo/client'
-import AuthContext from '../../../../context/auth-context'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
-import AddFitnessAddressModal from '../../../../components/customWidgets/AddFitnessAddressModal'
-import { ADDRESSES_IS_PRIMARY } from '../../../../pages/profile/queries/queries'
-import { BasicAddressDetails } from '../../../../pages/profile/ProfileOptions/AddressDetails/CreateAddress'
+import React, { useState, useContext } from 'react';
+import { Row, Col, Form, Button } from 'react-bootstrap';
+import { Typeahead } from 'react-bootstrap-typeahead';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
+import { useQuery, gql } from '@apollo/client';
+import AuthContext from '../../../../context/auth-context';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import AddFitnessAddressModal from '../../../../components/customWidgets/AddFitnessAddressModal';
+import { ADDRESSES_IS_PRIMARY } from '../../../../pages/profile/queries/queries';
+import { BasicAddressDetails } from '../../../../pages/profile/ProfileOptions/AddressDetails/CreateAddress';
 
 const PtProgramDetails: React.FC<{
-    value: string
-    readonly: boolean
-    onChange: (args: string | null) => void
+    value: string;
+    readonly: boolean;
+    onChange: (args: string | null) => void;
 }> = (props) => {
-    const inputDisabled = props.readonly
+    const inputDisabled = props.readonly;
 
-    const existingData = props.value ? JSON.parse(props.value) : null
+    const existingData = props.value ? JSON.parse(props.value) : null;
     if (existingData && existingData.length > 0) {
         existingData.address = {
             id: JSON.parse(existingData?.address)[0].id,
             title: JSON.parse(existingData?.address)[0].title
-        }
+        };
     }
 
-    const [primaryAddress, setPrimaryAddress] = useState<BasicAddressDetails[]>([])
+    const [primaryAddress, setPrimaryAddress] = useState<BasicAddressDetails[]>([]);
     const [clientAddress, setClientAddress] = useState<string>(
         existingData?.clientAddress ? existingData.clientAddress : ''
-    )
+    );
     const [distance, setDistance] = useState<string>(
         existingData?.distance ? existingData.distance : '5 Km'
-    )
-    const [mode, setMode] = useState<string>(props.value ? existingData.mode.toString() : '0')
-    const [addressModal, setAddressModal] = useState<boolean>(false)
+    );
+    const [mode, setMode] = useState<string>(props.value ? existingData.mode.toString() : '0');
+    const [addressModal, setAddressModal] = useState<boolean>(false);
 
-    const auth = useContext(AuthContext)
+    const auth = useContext(AuthContext);
     const [singleSelections, setSingleSelections] = useState<any[]>(
         existingData?.address?.length && props.value ? existingData?.address : []
-    )
-    const [addresses, setAddresses] = useState<any[]>([])
+    );
+    const [addresses, setAddresses] = useState<any[]>([]);
     const [addressTitle, setAddressTitle] = useState<string>(
         props.value ? existingData.addressTag : 'At My Address'
-    )
+    );
 
     const FETCH_USER_ADDRESSES = gql`
         query addresses($id: ID!) {
@@ -54,47 +54,47 @@ const PtProgramDetails: React.FC<{
                 }
             }
         }
-    `
+    `;
 
     const mainQuery = useQuery(FETCH_USER_ADDRESSES, {
         variables: { id: auth.userid },
         onCompleted: loadData
-    })
+    });
 
     // get primary addresses
     useQuery(ADDRESSES_IS_PRIMARY, {
         variables: { id: auth.userid, is_primary: true },
         onCompleted: (response) => {
-            const flattenDetail = flattenObj({ ...response.addresses })
+            const flattenDetail = flattenObj({ ...response.addresses });
 
-            setPrimaryAddress(flattenDetail)
+            setPrimaryAddress(flattenDetail);
             const address = flattenDetail.map(
                 (currentValue) =>
                     `${currentValue.House_Number}, ${currentValue.address1}, ${currentValue.address2}, ${currentValue.city}, ${currentValue.state}, ${currentValue.country}`
-            )
-            setClientAddress(address)
+            );
+            setClientAddress(address);
         }
-    })
+    });
 
     function loadData(data: any) {
-        const flattenedData = flattenObj({ ...data })
+        const flattenedData = flattenObj({ ...data });
 
         setAddresses(
             [...flattenedData.addresses].map((address) => {
                 return {
                     id: address.id,
                     address1: address.address1
-                }
+                };
             })
-        )
+        );
     }
 
     function OnChange(e) {
-        setSingleSelections(e)
+        setSingleSelections(e);
     }
 
     function handleCallback() {
-        mainQuery.refetch()
+        mainQuery.refetch();
     }
 
     if (mode === '0') {
@@ -104,7 +104,7 @@ const PtProgramDetails: React.FC<{
                 address: singleSelections,
                 mode: mode
             })
-        )
+        );
     } else if (
         (mode !== '' && addressTitle === 'At My Address' && singleSelections.length !== 0) ||
         addressTitle === 'At Client Address'
@@ -117,9 +117,9 @@ const PtProgramDetails: React.FC<{
                 clientAddress: clientAddress,
                 distance: distance
             })
-        )
+        );
     } else {
-        props.onChange(null)
+        props.onChange(null);
     }
 
     return (
@@ -166,7 +166,7 @@ const PtProgramDetails: React.FC<{
                                             disabled={inputDisabled}
                                             value={addressTitle}
                                             onChange={(e: any) => {
-                                                setAddressTitle(e.target.value)
+                                                setAddressTitle(e.target.value);
                                             }}
                                         >
                                             <option value="At My Address">At My Address</option>
@@ -314,7 +314,7 @@ const PtProgramDetails: React.FC<{
                                             variant="outline-info"
                                             disabled={inputDisabled}
                                             onClick={() => {
-                                                setAddressModal(true)
+                                                setAddressModal(true);
                                             }}
                                         >
                                             + Add New Address
@@ -325,8 +325,8 @@ const PtProgramDetails: React.FC<{
                             <AddFitnessAddressModal
                                 show={addressModal}
                                 onHide={() => {
-                                    setAddressModal(false)
-                                    handleCallback()
+                                    setAddressModal(false);
+                                    handleCallback();
                                 }}
                             />
                         </div>
@@ -334,7 +334,7 @@ const PtProgramDetails: React.FC<{
                 </>
             )}
         </>
-    )
-}
+    );
+};
 
-export default PtProgramDetails
+export default PtProgramDetails;

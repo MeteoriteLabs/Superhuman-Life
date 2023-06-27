@@ -1,126 +1,127 @@
-import React, { useRef, useState, useEffect } from 'react'
-import { withTheme, utils } from '@rjsf/core'
-import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4'
-import { Button, Col, Modal, ProgressBar, Row } from 'react-bootstrap'
-import _ from 'lodash'
-import moment from 'moment'
+import React, { useRef, useState, useEffect } from 'react';
+import { withTheme, utils } from '@rjsf/core';
+import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
+import { Button, Col, Modal, ProgressBar, Row } from 'react-bootstrap';
+import _ from 'lodash';
+import moment from 'moment';
 
 const CreateFitnessPackageModal: React.FC<{
-    name: any
-    formUISchema: any
-    formSubmit: any
-    formSchema: any
-    formData: any
-    isStepper: any
-    userData?: any
-    setUserData?: any
-    widgets?: any
-    setRender?: any
-    fitness_package_type?: any
-    PTProps: any
-    actionType?: any
-    groupProps?: any
-    customProps?: any
-    stepperValues: any
-    pricingDetailRef?: any
-    submitName?: any
-    classicProps?: any
-    setOperation?: any
-    type?: any
-    operation?: any
-    modalTrigger?: any
+    name: any;
+    formUISchema: any;
+    formSubmit: any;
+    formSchema: any;
+    formData: any;
+    isStepper: any;
+    userData?: any;
+    setUserData?: any;
+    widgets?: any;
+    setRender?: any;
+    fitness_package_type?: any;
+    PTProps: any;
+    actionType?: any;
+    groupProps?: any;
+    customProps?: any;
+    stepperValues: any;
+    pricingDetailRef?: any;
+    submitName?: any;
+    classicProps?: any;
+    setOperation?: any;
+    type?: any;
+    operation?: any;
+    modalTrigger?: any;
 }> = (props) => {
-    const registry = utils.getDefaultRegistry()
-    const defaultFileWidget = registry.widgets['FileWidget']
-    ;(Bootstrap4Theme as any).widgets['FileWidget'] = defaultFileWidget
+    const registry = utils.getDefaultRegistry();
+    const defaultFileWidget = registry.widgets['FileWidget'];
+    (Bootstrap4Theme as any).widgets['FileWidget'] = defaultFileWidget;
 
-    const Form: any = withTheme(Bootstrap4Theme)
-    const formRef = useRef<any>(null)
-    const [step, setStep] = useState<number>(1)
-    const [show, setShow] = useState<boolean>(false)
+    const Form: any = withTheme(Bootstrap4Theme);
+    const formRef = useRef<any>(null);
+    const [step, setStep] = useState<number>(1);
+    const [show, setShow] = useState<boolean>(false);
 
-    const [formValues, setFormValues] = useState<any>(props.formData)
-    const stepper: string[] = props.stepperValues
+    const [formValues, setFormValues] = useState<any>(props.formData);
+    const stepper: string[] = props.stepperValues;
 
     props.modalTrigger.subscribe((res: boolean) => {
-        setShow(res)
-    })
+        setShow(res);
+    });
 
     useEffect(() => {
-        setFormValues(props.formData)
-    }, [props.formData])
+        setFormValues(props.formData);
+    }, [props.formData]);
 
     const updatePrice = (
         formData: {
-            fitness_package_type: string
-            mode: string
-            fitnesspackagepricing: { duration: number; voucher: string; mrp: number }
+            fitness_package_type: string;
+            mode: string;
+            fitnesspackagepricing: { duration: number; voucher: string; mrp: number };
         },
         actionType: string
     ) => {
-        let updateFinesspackagepricing: any = ''
+        let updateFinesspackagepricing: any = '';
         if (props.pricingDetailRef.current.getFitnessPackagePricing?.()) {
-            updateFinesspackagepricing = props.pricingDetailRef.current.getFitnessPackagePricing?.()
+            updateFinesspackagepricing =
+                props.pricingDetailRef.current.getFitnessPackagePricing?.();
 
             if (
                 formData.fitness_package_type === '60e045867df648b0f5756c32' ||
                 formData.mode === 'Online Workout' ||
                 formData.mode === 'Offline Workout'
             ) {
-                updateFinesspackagepricing = updateFinesspackagepricing.slice(0, 1)
+                updateFinesspackagepricing = updateFinesspackagepricing.slice(0, 1);
             }
         }
 
         if (actionType === 'edit') {
             if (formData) {
-                updateFinesspackagepricing = _.cloneDeep(formData?.fitnesspackagepricing)
+                updateFinesspackagepricing = _.cloneDeep(formData?.fitnesspackagepricing);
                 if (props.pricingDetailRef.current.getFitnessPackagePricing?.()) {
                     updateFinesspackagepricing[0].packagepricing =
-                        props.pricingDetailRef.current.getFitnessPackagePricing?.()
-                    delete updateFinesspackagepricing[0].__typename
+                        props.pricingDetailRef.current.getFitnessPackagePricing?.();
+                    delete updateFinesspackagepricing[0].__typename;
                 }
             }
         }
 
-        return updateFinesspackagepricing
-    }
+        return updateFinesspackagepricing;
+    };
 
     const updateModeName = (formData: { mode: string }) => {
-        let { mode } = formData
+        let { mode } = formData;
 
         if (formData.mode) {
             if (mode === 'Online Workout') {
-                mode = 'Online_workout'
+                mode = 'Online_workout';
             } else if (mode === 'Offline Workout') {
-                mode = 'Offline_workout'
+                mode = 'Offline_workout';
             }
         }
-        return mode
-    }
+        return mode;
+    };
 
     const updateFormDuration = (formData: {
-        mode: 'Online Workout' | 'Offline Workout'
-        duration?: number
+        mode: 'Online Workout' | 'Offline Workout';
+        duration?: number;
     }) => {
         if (formData.mode) {
             if (formData.mode === 'Online Workout' || formData.mode === 'Offline Workout') {
-                formData.duration = 1
+                formData.duration = 1;
             } else {
-                formData.duration = 30
+                formData.duration = 30;
             }
         }
-        return formData.duration
-    }
+        return formData.duration;
+    };
     interface UserData {
-        ptonline: number
-        ptoffline: number
-        grouponline: number
-        groupoffline: number
-        recordedclasses: number
-        duration: number
-        mode: string
-        fitness_package_type: any
-        restdays: number
+        ptonline: number;
+        ptoffline: number;
+        grouponline: number;
+        groupoffline: number;
+        recordedclasses: number;
+        duration: number;
+        mode: string;
+        fitness_package_type: any;
+        restdays: number;
     }
     const resetClassesValue = ({
         ptonline,
@@ -133,83 +134,83 @@ const CreateFitnessPackageModal: React.FC<{
         fitness_package_type,
         restdays
     }: UserData) => {
-        props.PTProps.properties.ptonlineClasses.value = ptonline
-        props.PTProps.properties.ptofflineClasses.value = ptoffline
-        props.groupProps.properties.grouponlineClasses.value = grouponline
-        props.groupProps.properties.groupofflineClasses.value = groupoffline
-        props.PTProps.properties.restDay.value = restdays
-        props.groupProps.properties.restDay.value = restdays
-        props.customProps.properties.restDay.value = restdays
+        props.PTProps.properties.ptonlineClasses.value = ptonline;
+        props.PTProps.properties.ptofflineClasses.value = ptoffline;
+        props.groupProps.properties.grouponlineClasses.value = grouponline;
+        props.groupProps.properties.groupofflineClasses.value = groupoffline;
+        props.PTProps.properties.restDay.value = restdays;
+        props.groupProps.properties.restDay.value = restdays;
+        props.customProps.properties.restDay.value = restdays;
 
         if (
             props.PTProps.properties.duration.value === 1 ||
             props.groupProps.properties.duration.value === 1
         ) {
-            props.PTProps.properties.restDay.maximum = 0
-            props.groupProps.properties.restDay.maximum = 0
+            props.PTProps.properties.restDay.maximum = 0;
+            props.groupProps.properties.restDay.maximum = 0;
         }
 
         if (mode === 'Online Workout' || mode === 'Offline Workout') {
-            duration = 1
+            duration = 1;
         }
         if (props.fitness_package_type !== '60e045867df648b0f5756c32') {
-            duration = 30
+            duration = 30;
         }
-        duration = mode === 'Online Workout' || mode === 'Offline Workout' ? 1 : 30
-        props.setUserData({ ...props.userData, duration, recordedclasses })
-        setFormValues({ ...formValues, duration, recordedclasses })
-    }
+        duration = mode === 'Online Workout' || mode === 'Offline Workout' ? 1 : 30;
+        props.setUserData({ ...props.userData, duration, recordedclasses });
+        setFormValues({ ...formValues, duration, recordedclasses });
+    };
 
     const updateInputValue = (formData: {
-        ptonline: number
-        ptoffline: number
-        groupoffline: number
-        grouponline: number
+        ptonline: number;
+        ptoffline: number;
+        groupoffline: number;
+        grouponline: number;
     }) => {
-        const update = { ...formData }
+        const update = { ...formData };
         if (props.userData.mode === 'Online') {
-            update.ptoffline = 0
-            update.groupoffline = 0
+            update.ptoffline = 0;
+            update.groupoffline = 0;
         } else if (props.userData.mode === 'Offline') {
-            update.ptonline = 0
-            update.grouponline = 0
+            update.ptonline = 0;
+            update.grouponline = 0;
         } else if (props.userData.mode === 'Online Workout') {
-            update.ptoffline = 0
+            update.ptoffline = 0;
         } else if (props.userData.mode === 'Offline Workout') {
-            update.ptonline = 0
+            update.ptonline = 0;
         }
 
-        return update
-    }
+        return update;
+    };
 
     function submitHandler(formData: any) {
-        const updateFinesspackagepricing = updatePrice(formData, props.actionType)
-        const updateMode = updateModeName(formData)
-        const updateDuration = updateFormDuration(formData)
-        const publishing_date = moment()
-        const expiry_date = moment(moment().add(365, 'days').calendar())
+        const updateFinesspackagepricing = updatePrice(formData, props.actionType);
+        const updateMode = updateModeName(formData);
+        const updateDuration = updateFormDuration(formData);
+        const publishing_date = moment();
+        const expiry_date = moment(moment().add(365, 'days').calendar());
 
         if (props.isStepper && step < stepper.length) {
-            const update = updateInputValue(formData)
+            const update = updateInputValue(formData);
 
-            setStep(step + 1)
+            setStep(step + 1);
             setFormValues({
                 ...formValues,
                 ...update,
                 // fitness_package_type,
                 fitnesspackagepricing: updateFinesspackagepricing,
                 duration: updateDuration
-            })
+            });
             props.setUserData({
                 ...formValues,
                 ...update,
                 // fitness_package_type,
                 fitnesspackagepricing: updateFinesspackagepricing,
                 duration: updateDuration
-            })
+            });
         } else {
             if (typeof formData.disciplines !== 'object') {
-                formData.disciplines = JSON.parse(formData.disciplines).map((item) => item.id)
+                formData.disciplines = JSON.parse(formData.disciplines).map((item) => item.id);
             }
             formData = {
                 ...formData,
@@ -217,10 +218,10 @@ const CreateFitnessPackageModal: React.FC<{
                 mode: updateMode,
                 publishing_date,
                 expiry_date
-            }
-            props.formSubmit(formData)
+            };
+            props.formSubmit(formData);
 
-            props.actionType === 'view' && props.setRender(false)
+            props.actionType === 'view' && props.setRender(false);
         }
     }
 
@@ -274,10 +275,10 @@ const CreateFitnessPackageModal: React.FC<{
                                 variant="light"
                                 size="sm"
                                 onClick={() => {
-                                    setStep(step - 1)
+                                    setStep(step - 1);
                                     if (step === 4) {
                                         if (props.actionType === 'create') {
-                                            resetClassesValue(props.userData)
+                                            resetClassesValue(props.userData);
                                         }
                                     }
                                 }}
@@ -289,7 +290,7 @@ const CreateFitnessPackageModal: React.FC<{
                                 variant="danger"
                                 size="sm"
                                 onClick={(event) => {
-                                    formRef.current.onSubmit(event)
+                                    formRef.current.onSubmit(event);
                                 }}
                             >
                                 {step < stepper.length ? (
@@ -308,7 +309,7 @@ const CreateFitnessPackageModal: React.FC<{
                 </Modal.Footer>
             </Modal>
         </>
-    )
-}
+    );
+};
 
-export default CreateFitnessPackageModal
+export default CreateFitnessPackageModal;

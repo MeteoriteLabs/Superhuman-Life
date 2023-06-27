@@ -1,10 +1,10 @@
-import Upload from '../../../../components/upload/upload'
-import DatesConfig from '../../../../components/customWidgets/datesConfig'
-import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect'
-import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect'
-import PtProgramDetails from './ptProgramDetails'
-import PTPricingTable from './ptPricingTable'
-import LanguageList from '../../../../components/customWidgets/languageSelect'
+import Upload from '../../../../components/upload/upload';
+import DatesConfig from '../../../../components/customWidgets/datesConfig';
+import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect';
+import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect';
+import PtProgramDetails from './ptProgramDetails';
+import PTPricingTable from './ptPricingTable';
+import LanguageList from '../../../../components/customWidgets/languageSelect';
 
 export const widgets = {
     datesConfig: DatesConfig,
@@ -13,7 +13,7 @@ export const widgets = {
     ptProgramDetails: PtProgramDetails,
     ptPricingTable: PTPricingTable,
     languageList: LanguageList
-}
+};
 
 export const schemaView: any = {
     durationOfOffering: {
@@ -88,7 +88,7 @@ export const schemaView: any = {
                     title={'Thumbnail'}
                     readonly={true}
                 />
-            )
+            );
         }
     },
     VideoUrl: {
@@ -127,4 +127,4 @@ export const schemaView: any = {
         },
         'ui:readonly': true
     }
-}
+};

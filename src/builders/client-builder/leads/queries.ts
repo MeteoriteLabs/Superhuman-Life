@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const GET_LEADS = gql`
     query Forms($id: ID) {
@@ -19,7 +19,7 @@ export const GET_LEADS = gql`
             updatedAt
         }
     }
-`
+`;
 
 export const GET_LEADS_NEW = gql`
     query Forms($id: ID, $start: Int, $limit: Int) {
@@ -55,7 +55,7 @@ export const GET_LEADS_NEW = gql`
             }
         }
     }
-`
+`;
 
 export const ADD_LEADS = gql`
     mutation addLead($id: ID, $details: JSON) {
@@ -70,7 +70,7 @@ export const ADD_LEADS = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_NOTIFICATION = gql`
     mutation createChangemakerNotification($data: ChangemakerNotificationInput!) {
@@ -93,7 +93,7 @@ export const CREATE_NOTIFICATION = gql`
             }
         }
     }
-`
+`;
 
 export const ADD_LEADS_NEW = gql`
     mutation addLead($id: ID, $details: JSON) {
@@ -106,7 +106,7 @@ export const ADD_LEADS_NEW = gql`
             }
         }
     }
-`
+`;
 
 export const DELETE_LEAD = gql`
     mutation deleteLead($id: ID!) {
@@ -116,7 +116,7 @@ export const DELETE_LEAD = gql`
             }
         }
     }
-`
+`;
 
 export const DELETE_LEAD_NEW = gql`
     mutation deleteLead($id: ID!) {
@@ -126,7 +126,7 @@ export const DELETE_LEAD_NEW = gql`
             }
         }
     }
-`
+`;
 
 export const GET_LEADS_ID = gql`
     query leadbyid($id: ID) {
@@ -144,7 +144,7 @@ export const GET_LEADS_ID = gql`
             updatedAt
         }
     }
-`
+`;
 
 export const GET_LEADS_ID_NEW = gql`
     query leadbyid($id: ID) {
@@ -170,7 +170,7 @@ export const GET_LEADS_ID_NEW = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_LEADS = gql`
     mutation updateleads($id: ID, $details: JSON, $messageid: ID!) {
@@ -185,7 +185,7 @@ export const UPDATE_LEADS = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_LEADS_NEW = gql`
     mutation updateleads($id: ID, $details: JSON, $messageid: ID!) {
@@ -198,7 +198,7 @@ export const UPDATE_LEADS_NEW = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_SEEN = gql`
     mutation updateleads($seen: Boolean, $messageid: ID!) {
@@ -208,7 +208,7 @@ export const UPDATE_SEEN = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_SEEN_NEW = gql`
     mutation updateleads($seen: Boolean, $id: ID!) {
@@ -218,4 +218,4 @@ export const UPDATE_SEEN_NEW = gql`
             }
         }
     }
-`
+`;

@@ -1,26 +1,26 @@
-import React, { useState } from 'react'
-import { Modal, Button, Row, Col, Container } from 'react-bootstrap'
-import { GET_PARTICULAR_CLIENT } from './graphql/queries'
-import { useQuery, useMutation } from '@apollo/client'
-import { flattenObj } from '../../../components/utils/responseFlatten'
-import { UPDATE_ATTENDANCE_DATA } from './graphql/queries'
-import moment from 'moment'
+import React, { useState } from 'react';
+import { Modal, Button, Row, Col, Container } from 'react-bootstrap';
+import { GET_PARTICULAR_CLIENT } from './graphql/queries';
+import { useQuery, useMutation } from '@apollo/client';
+import { flattenObj } from '../../../components/utils/responseFlatten';
+import { UPDATE_ATTENDANCE_DATA } from './graphql/queries';
+import moment from 'moment';
 
 const AttendanceModal: React.FC<{ show: boolean; onHide: () => void }> = (props) => {
-    const [attendanceData, setAttendanceData] = useState<any>([])
-    const [showData, setShowData] = useState<boolean>(false)
-    const [sessionDate, setSessionDate] = useState<string>('')
+    const [attendanceData, setAttendanceData] = useState<any>([]);
+    const [showData, setShowData] = useState<boolean>(false);
+    const [sessionDate, setSessionDate] = useState<string>('');
 
-    const [updateAttendance] = useMutation(UPDATE_ATTENDANCE_DATA)
+    const [updateAttendance] = useMutation(UPDATE_ATTENDANCE_DATA);
 
     useQuery(GET_PARTICULAR_CLIENT, {
         variables: {
             id: window.location.pathname.split('/').pop()
         },
         onCompleted: (data) => {
-            const flattenData = flattenObj({ ...data })
-            setSessionDate(flattenData?.sessionsBookings[0]?.session?.session_date)
-            const values = [...attendanceData]
+            const flattenData = flattenObj({ ...data });
+            setSessionDate(flattenData?.sessionsBookings[0]?.session?.session_date);
+            const values = [...attendanceData];
             // eslint-disable-next-line
             flattenData.sessionsBookings.map((val: any) => {
                 if (val?.client !== null) {
@@ -28,44 +28,44 @@ const AttendanceModal: React.FC<{ show: boolean; onHide: () => void }> = (props)
                         username: val?.client?.username,
                         attendance: handleUserAttendance(val?.Session_booking_status),
                         bookingId: val?.id
-                    })
+                    });
                 }
-            })
-            setAttendanceData(values)
-            setShowData(true)
+            });
+            setAttendanceData(values);
+            setShowData(true);
         }
-    })
+    });
 
     function handleUserAttendance(val: any) {
         if (val === 'Attended') {
-            return 'Attended'
+            return 'Attended';
         } else if (val === 'Absent') {
-            return 'Absent'
+            return 'Absent';
         } else {
-            return val
+            return val;
         }
     }
 
     function handlePresentClicked(id: number) {
-        const values = [...attendanceData]
+        const values = [...attendanceData];
         // eslint-disable-next-line
         values.map((val: any, index: number) => {
             if (index === id) {
-                return (val.attendance = 'Attended')
+                return (val.attendance = 'Attended');
             }
-        })
-        setAttendanceData(values)
+        });
+        setAttendanceData(values);
     }
 
     function handleAbsentClicked(id: number) {
-        const values = [...attendanceData]
+        const values = [...attendanceData];
         // eslint-disable-next-line
         values.map((val: any, index: number) => {
             if (index === id) {
-                return (val.attendance = 'Absent')
+                return (val.attendance = 'Absent');
             }
-        })
-        setAttendanceData(values)
+        });
+        setAttendanceData(values);
     }
 
     function handleSessionAttendanceUpdate(data: any) {
@@ -75,27 +75,27 @@ const AttendanceModal: React.FC<{ show: boolean; onHide: () => void }> = (props)
                     id: data[i].bookingId,
                     status: data[i].attendance
                 }
-            })
+            });
         }
-        props.onHide()
+        props.onHide();
     }
 
     function handleAttendanceDisable(date: string) {
-        const duration = moment().diff(moment(date))
+        const duration = moment().diff(moment(date));
         if (duration / (1000 * 3600) > 12) {
-            return true
+            return true;
         } else {
-            return false
+            return false;
         }
     }
 
     function padTo2Digits(num) {
-        return num.toString().padStart(2, '0')
+        return num.toString().padStart(2, '0');
     }
 
     function handleAttendanceCalculations(data: any[], statusToCheck?: string) {
-        const filteredData = data.filter((session: any) => session.attendance === statusToCheck)
-        return padTo2Digits(filteredData.length)
+        const filteredData = data.filter((session: any) => session.attendance === statusToCheck);
+        return padTo2Digits(filteredData.length);
     }
 
     return (
@@ -165,7 +165,7 @@ const AttendanceModal: React.FC<{ show: boolean; onHide: () => void }> = (props)
                                                 style={{ cursor: 'pointer' }}
                                                 onClick={() => {
                                                     if (!handleAttendanceDisable(sessionDate)) {
-                                                        handlePresentClicked(index)
+                                                        handlePresentClicked(index);
                                                     }
                                                 }}
                                             >
@@ -180,7 +180,7 @@ const AttendanceModal: React.FC<{ show: boolean; onHide: () => void }> = (props)
                                                 style={{ cursor: 'pointer' }}
                                                 onClick={() => {
                                                     if (!handleAttendanceDisable(sessionDate)) {
-                                                        handleAbsentClicked(index)
+                                                        handleAbsentClicked(index);
                                                     }
                                                 }}
                                             >
@@ -190,7 +190,7 @@ const AttendanceModal: React.FC<{ show: boolean; onHide: () => void }> = (props)
                                     </Col>
                                 </Row>
                             </Container>
-                        )
+                        );
                     })
                 )}
             </Modal.Body>
@@ -202,14 +202,14 @@ const AttendanceModal: React.FC<{ show: boolean; onHide: () => void }> = (props)
                     variant="success"
                     disabled={handleAttendanceDisable(sessionDate)}
                     onClick={() => {
-                        handleSessionAttendanceUpdate(attendanceData)
+                        handleSessionAttendanceUpdate(attendanceData);
                     }}
                 >
                     Update
                 </Button>
             </Modal.Footer>
         </Modal>
-    )
-}
+    );
+};
 
-export default AttendanceModal
+export default AttendanceModal;

@@ -1,22 +1,22 @@
-import { useState } from 'react'
-import { InputGroup, FormControl } from 'react-bootstrap'
-import moment from 'moment'
+import { useState } from 'react';
+import { InputGroup, FormControl } from 'react-bootstrap';
+import moment from 'moment';
 
 const PackageDateConfig = (props: any) => {
-    const inputDisabled = props.readonly
+    const inputDisabled = props.readonly;
     const [publishingDate, setPublishingDate] = useState(
         props.value
             ? moment(JSON.parse(props.value).publishingDate).format('YYYY-MM-DDTHH:mm')
             : `${moment().add(1, 'days').format('YYYY-MM-DDTHH:mm')}`
-    )
+    );
     const [expiryDate, setExpiryDate] = useState(
         props.value
             ? moment(JSON.parse(props.value).expiryDate).format('YYYY-MM-DDTHH:mm')
             : `${moment().add({ days: 1, year: 1 }).format('YYYY-MM-DDTHH:mm')}`
-    )
+    );
 
     if (publishingDate && expiryDate) {
-        props.onChange(JSON.stringify({ publishingDate, expiryDate }))
+        props.onChange(JSON.stringify({ publishingDate, expiryDate }));
     }
 
     return (
@@ -34,7 +34,7 @@ const PackageDateConfig = (props: any) => {
                     }
                     value={publishingDate}
                     onChange={(e) => {
-                        setPublishingDate(e.target.value)
+                        setPublishingDate(e.target.value);
                     }}
                     disabled={inputDisabled}
                 />
@@ -56,7 +56,7 @@ const PackageDateConfig = (props: any) => {
                         .format('YYYY-MM-DDTHH:mm')}
                     value={expiryDate}
                     onChange={(e) => {
-                        setExpiryDate(e.target.value)
+                        setExpiryDate(e.target.value);
                     }}
                     disabled={inputDisabled}
                 />
@@ -67,7 +67,7 @@ const PackageDateConfig = (props: any) => {
                 </span>
             )}
         </div>
-    )
-}
+    );
+};
 
-export default PackageDateConfig
+export default PackageDateConfig;

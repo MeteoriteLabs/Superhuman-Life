@@ -1,41 +1,41 @@
-import { useState } from 'react'
-import { useQuery, useLazyQuery } from '@apollo/client'
-import { FETCH_CONTACT_DETAILS } from './queries'
-import { FETCH_USER_PROFILE_DATA } from '../../../pages/profile/queries/queries'
-import { Card, Tab, Tabs, TabContent } from 'react-bootstrap'
-import { flattenObj } from '../../../components/utils/responseFlatten'
-import AllTransactions from '../AllTransactions/AllTransactions'
-import PaymentSchedule from '../PaymentSchedule'
-import PayeeProfile from '../PayeeProfile'
-import PaymentMode from '../PaymentMode'
+import { useState } from 'react';
+import { useQuery, useLazyQuery } from '@apollo/client';
+import { FETCH_CONTACT_DETAILS } from './queries';
+import { FETCH_USER_PROFILE_DATA } from '../../../pages/profile/queries/queries';
+import { Card, Tab, Tabs, TabContent } from 'react-bootstrap';
+import { flattenObj } from '../../../components/utils/responseFlatten';
+import AllTransactions from '../AllTransactions/AllTransactions';
+import PaymentSchedule from '../PaymentSchedule';
+import PayeeProfile from '../PayeeProfile';
+import PaymentMode from '../PaymentMode';
 
 const PaymentScheduleSettings = () => {
-    const [contactData, setContactData] = useState<any>({})
-    const [userData, setUserData] = useState<any>({})
-    const query = window.location.search
-    const params = new URLSearchParams(query)
-    const id: string | null = params.get('id')
-    const isChangemaker: boolean = params.get('isChangemaker') === 'true'
+    const [contactData, setContactData] = useState<any>({});
+    const [userData, setUserData] = useState<any>({});
+    const query = window.location.search;
+    const params = new URLSearchParams(query);
+    const id: string | null = params.get('id');
+    const isChangemaker: boolean = params.get('isChangemaker') === 'true';
 
     // eslint-disable-next-line
     const [users, { data: get_changemakers }] = useLazyQuery(FETCH_USER_PROFILE_DATA, {
         onCompleted: (data) => {
-            const flattenContactsData = flattenObj({ ...get_contacts.contact })
-            const flattenUsersData = flattenObj({ ...data.usersPermissionsUser })
+            const flattenContactsData = flattenObj({ ...get_contacts.contact });
+            const flattenUsersData = flattenObj({ ...data.usersPermissionsUser });
 
-            setContactData(flattenContactsData)
-            setUserData(flattenUsersData)
+            setContactData(flattenContactsData);
+            setUserData(flattenUsersData);
         }
-    })
+    });
 
     const { data: get_contacts } = useQuery(FETCH_CONTACT_DETAILS, {
         variables: { id: id },
         skip: !id,
         onCompleted: (r: any) => {
             //calling useLazyQuery function for FETCH_USER_PROFILE_DATA query
-            users({ variables: { id: id } })
+            users({ variables: { id: id } });
         }
-    })
+    });
 
     return (
         <>
@@ -126,7 +126,7 @@ const PaymentScheduleSettings = () => {
                 </Card.Body>
             </Card>
         </>
-    )
-}
+    );
+};
 
-export default PaymentScheduleSettings
+export default PaymentScheduleSettings;

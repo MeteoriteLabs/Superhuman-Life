@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const GET_AVAILABILITY = gql`
     query changemakerAvailability($id: ID) {
@@ -14,7 +14,7 @@ export const GET_AVAILABILITY = gql`
             }
         }
     }
-`
+`;
 
 export const BOOKING_CONFIG = gql`
     query bookingConfigs($id: ID!) {
@@ -30,7 +30,7 @@ export const BOOKING_CONFIG = gql`
             }
         }
     }
-`
+`;
 
 export const FETCH_USER_PROFILE_DATA = gql`
     query fetchUserProfileData($id: ID!) {
@@ -43,4 +43,4 @@ export const FETCH_USER_PROFILE_DATA = gql`
             }
         }
     }
-`
+`;

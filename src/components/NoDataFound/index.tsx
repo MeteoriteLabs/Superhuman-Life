@@ -1,5 +1,5 @@
-import React from 'react'
-import { Row, Col } from 'react-bootstrap'
+import React from 'react';
+import { Row, Col } from 'react-bootstrap';
 
 const NoDataFound: React.FC<{ msg: string }> = (props) => {
     return (
@@ -16,7 +16,7 @@ const NoDataFound: React.FC<{ msg: string }> = (props) => {
                 <h4 className="text-center pt-3">{props.msg}</h4>
             </Col>
         </Row>
-    )
-}
+    );
+};
 
-export default NoDataFound
+export default NoDataFound;

@@ -1,70 +1,70 @@
-import React, { useState, useContext } from 'react'
-import { Row, Col, Form, InputGroup, Button } from 'react-bootstrap'
-import { Typeahead } from 'react-bootstrap-typeahead'
-import 'react-bootstrap-typeahead/css/Typeahead.css'
-import { useQuery, gql } from '@apollo/client'
-import AuthContext from '../../../../context/auth-context'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
-import AddFitnessAddressModal from '../../../../components/customWidgets/AddFitnessAddressModal'
+import React, { useState, useContext } from 'react';
+import { Row, Col, Form, InputGroup, Button } from 'react-bootstrap';
+import { Typeahead } from 'react-bootstrap-typeahead';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
+import { useQuery, gql } from '@apollo/client';
+import AuthContext from '../../../../context/auth-context';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import AddFitnessAddressModal from '../../../../components/customWidgets/AddFitnessAddressModal';
 
 const ProgramDetails: React.FC<{
-    readonly: boolean
-    value: string
-    onChange: (args: string | null) => void
-    formContext: any
+    readonly: boolean;
+    value: string;
+    onChange: (args: string | null) => void;
+    formContext: any;
 }> = (props) => {
-    const inputDisabled = props.readonly
-    const cohortClassSize = props.formContext.classSize
-    const existingData = props.value === undefined ? undefined : JSON.parse(props.value)
+    const inputDisabled = props.readonly;
+    const cohortClassSize = props.formContext.classSize;
+    const existingData = props.value === undefined ? undefined : JSON.parse(props.value);
 
     if (existingData && existingData.length > 0) {
         existingData.address = {
             id: JSON.parse(existingData?.address)[0].id,
             title: JSON.parse(existingData?.address)[0].title
-        }
+        };
     }
 
-    const [mode, setMode] = useState<string>(props.value ? existingData.mode.toString() : '0')
+    const [mode, setMode] = useState<string>(props.value ? existingData.mode.toString() : '0');
     const [residential, setResidential] = useState<string>(
         '0'
         // (props?.value === undefined || existingData?.residential === null)
         //   ? '0'
         //   : existingData?.residential?.toString()
-    )
-    const [addressModal, setAddressModal] = useState<boolean>(false)
+    );
+    const [addressModal, setAddressModal] = useState<boolean>(false);
 
-    const auth = useContext(AuthContext)
+    const auth = useContext(AuthContext);
     const [singleSelections, setSingleSelections] = useState<any[]>(
         existingData?.address?.length && props.value ? existingData?.address : []
-    )
-    const [addresses, setAddresses] = useState<any[]>([])
+    );
+    const [addresses, setAddresses] = useState<any[]>([]);
     const [addressTitle, setAddressTitle] = useState(
         props.value ? existingData.addressTag : 'At My Address'
-    )
+    );
 
     const [showPrivate, setShowPrivate] = useState<boolean>(
         props.value ? existingData.accomodationDetails?.private : false
-    )
+    );
     const [showSharing, setShowSharing] = useState<boolean>(
         props.value ? existingData.accomodationDetails?.sharing : false
-    )
+    );
     const [privateRooms, setPrivateRooms] = useState<number>(
         props.value ? existingData.accomodationDetails?.privateRooms : null
-    )
+    );
     const [twoSharing, setTwoSharing] = useState<number>(
         props.value ? existingData.accomodationDetails?.twoSharingRooms : null
-    )
+    );
     const [threeSharing, setThreeSharing] = useState<number>(
         props.value ? existingData.accomodationDetails?.threeSharingRooms : null
-    )
+    );
     const [foodDescription, setFoodDescription] = useState<string>(
         props?.value === undefined
             ? ''
             : existingData?.accomodationDetails?.foodDescription === undefined
             ? ''
             : existingData?.accomodationDetails?.foodDescription
-    )
-    const [accomodationDetails] = useState<any>({})
+    );
+    const [accomodationDetails] = useState<any>({});
 
     const FETCH_USER_ADDRESSES = gql`
         query addresses($id: ID!) {
@@ -77,32 +77,32 @@ const ProgramDetails: React.FC<{
                 }
             }
         }
-    `
+    `;
 
     const mainQuery = useQuery(FETCH_USER_ADDRESSES, {
         variables: { id: auth.userid },
         onCompleted: loadData
-    })
+    });
 
     function handleCallback() {
-        mainQuery.refetch()
+        mainQuery.refetch();
     }
 
     function loadData(data: any) {
-        const flattenedData = flattenObj({ ...data })
+        const flattenedData = flattenObj({ ...data });
 
         setAddresses(
             [...flattenedData.addresses].map((address) => {
                 return {
                     id: address.id,
                     address1: address.address1
-                }
+                };
             })
-        )
+        );
     }
 
     function OnChange(e) {
-        setSingleSelections(e)
+        setSingleSelections(e);
     }
 
     function calculateAccomodation({
@@ -110,27 +110,27 @@ const ProgramDetails: React.FC<{
         twoPerRoom = 0,
         threePerRoom = 0
     }: {
-        onePerRoom?: number
-        twoPerRoom?: number
-        threePerRoom?: number
+        onePerRoom?: number;
+        twoPerRoom?: number;
+        threePerRoom?: number;
     }): boolean {
         if (onePerRoom + 2 * twoPerRoom + 3 * threePerRoom <= cohortClassSize) {
-            return true
+            return true;
         } else {
-            return false
+            return false;
         }
     }
 
     function handleValidation() {
         if (mode === '0') {
-            return true
+            return true;
         }
         if (mode === '1') {
             if (
                 (addressTitle === 'At My Address' && singleSelections.length !== 0) ||
                 addressTitle === 'At Client Address'
             ) {
-                return true
+                return true;
             }
         }
         if (mode === '2') {
@@ -141,10 +141,10 @@ const ProgramDetails: React.FC<{
                 (mode === '2' && addressTitle === 'At Client Address')
             ) {
                 if (!showPrivate && !showSharing) {
-                    return false
+                    return false;
                 }
                 if (foodDescription === '' && residential === '1') {
-                    return false
+                    return false;
                 }
                 if (showPrivate && privateRooms! > 0 && !showSharing) {
                     if (
@@ -154,7 +154,7 @@ const ProgramDetails: React.FC<{
                             threePerRoom: threeSharing
                         })
                     ) {
-                        return true
+                        return true;
                     }
                 }
                 if (showSharing && !showPrivate && (twoSharing! > 0 || threeSharing! > 0)) {
@@ -165,7 +165,7 @@ const ProgramDetails: React.FC<{
                             threePerRoom: threeSharing
                         })
                     ) {
-                        return true
+                        return true;
                     }
                 }
                 if (
@@ -181,19 +181,19 @@ const ProgramDetails: React.FC<{
                             threePerRoom: threeSharing
                         })
                     ) {
-                        return true
+                        return true;
                     }
                 }
             }
         }
     }
 
-    accomodationDetails.private = showPrivate
-    accomodationDetails.sharing = showSharing
-    accomodationDetails.privateRooms = (showPrivate && privateRooms) || null
-    accomodationDetails.twoSharingRooms = (showSharing && twoSharing) || null
-    accomodationDetails.threeSharingRooms = (showSharing && threeSharing) || null
-    accomodationDetails.foodDescription = foodDescription
+    accomodationDetails.private = showPrivate;
+    accomodationDetails.sharing = showSharing;
+    accomodationDetails.privateRooms = (showPrivate && privateRooms) || null;
+    accomodationDetails.twoSharingRooms = (showSharing && twoSharing) || null;
+    accomodationDetails.threeSharingRooms = (showSharing && threeSharing) || null;
+    accomodationDetails.foodDescription = foodDescription;
 
     if (handleValidation()) {
         props.onChange(
@@ -204,17 +204,17 @@ const ProgramDetails: React.FC<{
                 residential: residential,
                 accomodationDetails: accomodationDetails
             })
-        )
+        );
     } else {
-        props.onChange(null)
+        props.onChange(null);
     }
 
-    accomodationDetails.private = showPrivate
-    accomodationDetails.sharing = showSharing
-    accomodationDetails.privateRooms = privateRooms
-    accomodationDetails.twoSharingRooms = twoSharing
-    accomodationDetails.threeSharingRooms = threeSharing
-    accomodationDetails.foodDescription = foodDescription
+    accomodationDetails.private = showPrivate;
+    accomodationDetails.sharing = showSharing;
+    accomodationDetails.privateRooms = privateRooms;
+    accomodationDetails.twoSharingRooms = twoSharing;
+    accomodationDetails.threeSharingRooms = threeSharing;
+    accomodationDetails.foodDescription = foodDescription;
 
     if (handleValidation()) {
         props.onChange(
@@ -225,9 +225,9 @@ const ProgramDetails: React.FC<{
                 residential: residential,
                 accomodationDetails: accomodationDetails
             })
-        )
+        );
     } else {
-        props.onChange(null)
+        props.onChange(null);
     }
 
     return (
@@ -284,7 +284,7 @@ const ProgramDetails: React.FC<{
                                             disabled={inputDisabled}
                                             value={addressTitle}
                                             onChange={(e: any) => {
-                                                setAddressTitle(e.target.value)
+                                                setAddressTitle(e.target.value);
                                             }}
                                         >
                                             <option value="At My Address">At My Address</option>
@@ -313,7 +313,7 @@ const ProgramDetails: React.FC<{
                                             variant="outline-info"
                                             disabled={inputDisabled}
                                             onClick={() => {
-                                                setAddressModal(true)
+                                                setAddressModal(true);
                                             }}
                                         >
                                             + Add New Address
@@ -324,8 +324,8 @@ const ProgramDetails: React.FC<{
                             <AddFitnessAddressModal
                                 show={addressModal}
                                 onHide={() => {
-                                    setAddressModal(false)
-                                    handleCallback()
+                                    setAddressModal(false);
+                                    handleCallback();
                                 }}
                             />
                         </div>
@@ -370,7 +370,7 @@ const ProgramDetails: React.FC<{
                                 checked={showPrivate}
                                 disabled={inputDisabled}
                                 onChange={() => {
-                                    setShowPrivate(!showPrivate)
+                                    setShowPrivate(!showPrivate);
                                 }}
                             />
                             <Form.Check
@@ -382,7 +382,7 @@ const ProgramDetails: React.FC<{
                                 checked={showSharing}
                                 disabled={inputDisabled}
                                 onChange={() => {
-                                    setShowSharing(!showSharing)
+                                    setShowSharing(!showSharing);
                                 }}
                             />
                         </div>
@@ -423,7 +423,7 @@ const ProgramDetails: React.FC<{
                                             min={0}
                                             value={twoSharing}
                                             onChange={(e: any) => {
-                                                setTwoSharing(parseInt(e.target.value))
+                                                setTwoSharing(parseInt(e.target.value));
                                             }}
                                         />
                                         <InputGroup.Prepend>
@@ -476,7 +476,7 @@ const ProgramDetails: React.FC<{
                                     aria-label="With textarea"
                                     value={foodDescription}
                                     onChange={(e: any) => {
-                                        setFoodDescription(e.target.value)
+                                        setFoodDescription(e.target.value);
                                     }}
                                 />
                             </Form.Group>
@@ -485,7 +485,7 @@ const ProgramDetails: React.FC<{
                 </>
             )}
         </>
-    )
-}
+    );
+};
 
-export default ProgramDetails
+export default ProgramDetails;

@@ -1,20 +1,20 @@
-import React, { useState, ChangeEvent } from 'react'
-import { InputGroup, FormControl } from 'react-bootstrap'
+import React, { useState, ChangeEvent } from 'react';
+import { InputGroup, FormControl } from 'react-bootstrap';
 
 const FlatDiscount: React.FC<{
-    value?: number
-    onChange: (params: string | null) => void
+    value?: number;
+    onChange: (params: string | null) => void;
     // eslint-disable-next-line
-    uiSchema?: any
-    readonly: boolean
+    uiSchema?: any;
+    readonly: boolean;
 }> = ({ value, onChange, readonly }) => {
-    const [input, setInput] = useState<number>(value ? JSON.parse(`${value}`).input : 0)
+    const [input, setInput] = useState<number>(value ? JSON.parse(`${value}`).input : 0);
 
     const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        setInput(+e.target.value)
-    }
+        setInput(+e.target.value);
+    };
 
-    onChange(JSON.stringify({ input }))
+    onChange(JSON.stringify({ input }));
 
     return (
         <InputGroup className="mb-3">
@@ -30,7 +30,7 @@ const FlatDiscount: React.FC<{
                 disabled={readonly ? readonly : false}
             />
         </InputGroup>
-    )
-}
+    );
+};
 
-export default FlatDiscount
+export default FlatDiscount;

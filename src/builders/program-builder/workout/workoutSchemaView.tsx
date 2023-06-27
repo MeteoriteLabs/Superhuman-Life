@@ -1,9 +1,9 @@
-import TextEditor from '../../../components/customWidgets/textEditor'
-import EquipmentSearch from '../../../components/customWidgets/equipmentListSelect'
-import MuscleGroupSearch from '../../../components/customWidgets/muscleGroupMultiSelect'
-import FitnessMultiSelect from '../../../components/customWidgets/fitnessMultiSelect'
-import BuildWorkout from './buildWorkout'
-import Upload from '../../../components/upload/upload'
+import TextEditor from '../../../components/customWidgets/textEditor';
+import EquipmentSearch from '../../../components/customWidgets/equipmentListSelect';
+import MuscleGroupSearch from '../../../components/customWidgets/muscleGroupMultiSelect';
+import FitnessMultiSelect from '../../../components/customWidgets/fitnessMultiSelect';
+import BuildWorkout from './buildWorkout';
+import Upload from '../../../components/upload/upload';
 
 export const widgets = {
     fitnessSelect: FitnessMultiSelect,
@@ -12,7 +12,7 @@ export const widgets = {
     textEditor: TextEditor,
     buildWorkout: BuildWorkout,
     upload: Upload
-}
+};
 
 export const schemaView: any = {
     workout: {
@@ -81,7 +81,7 @@ export const schemaView: any = {
                         value={props.value}
                         readonly={true}
                     />
-                )
+                );
             }
         },
         AddURL: {
@@ -116,7 +116,7 @@ export const schemaView: any = {
                             value={props.value}
                             readonly={true}
                         />
-                    )
+                    );
                 }
             }
         },
@@ -146,7 +146,7 @@ export const schemaView: any = {
                             value={props.value}
                             readonly={true}
                         />
-                    )
+                    );
                 }
             }
         },
@@ -173,9 +173,9 @@ export const schemaView: any = {
                             value={props.value}
                             readonly={true}
                         />
-                    )
+                    );
                 }
             }
         }
     }
-}
+};

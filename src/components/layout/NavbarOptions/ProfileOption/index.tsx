@@ -1,21 +1,21 @@
-import { useContext, useState } from 'react'
-import { NavDropdown } from 'react-bootstrap'
-import authContext from '../../../../context/auth-context'
-import { useQuery } from '@apollo/client'
-import { FETCH_USER_PROFILE_DATA } from '../../../../pages/profile/queries/queries'
-import DisplayImage from '../../../../components/DisplayImage/index'
-import './ProfileOption.css'
+import { useContext, useState } from 'react';
+import { NavDropdown } from 'react-bootstrap';
+import authContext from '../../../../context/auth-context';
+import { useQuery } from '@apollo/client';
+import { FETCH_USER_PROFILE_DATA } from '../../../../pages/profile/queries/queries';
+import DisplayImage from '../../../../components/DisplayImage/index';
+import './ProfileOption.css';
 
 export function ProfileOption() {
-    const auth = useContext(authContext)
-    const [profileData, setProfileData] = useState<any>({})
+    const auth = useContext(authContext);
+    const [profileData, setProfileData] = useState<any>({});
 
     useQuery(FETCH_USER_PROFILE_DATA, {
         variables: { id: auth.userid },
         onCompleted: (r: any) => {
-            setProfileData(r.usersPermissionsUser.data.attributes)
+            setProfileData(r.usersPermissionsUser.data.attributes);
         }
-    })
+    });
 
     return (
         <NavDropdown
@@ -53,5 +53,5 @@ export function ProfileOption() {
                 Logout
             </NavDropdown.Item>
         </NavDropdown>
-    )
+    );
 }

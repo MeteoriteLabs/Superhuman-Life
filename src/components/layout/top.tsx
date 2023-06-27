@@ -1,17 +1,17 @@
-import { useQuery } from '@apollo/client'
-import { useContext, useEffect, useState } from 'react'
-import authContext from '../../context/auth-context'
-import { Container, Nav, Navbar, Badge } from 'react-bootstrap'
-import { MiniLobbyComponent } from '../../pages/dashboard/mini-lobby/LobbyPopover'
-import { ProfileOption } from './NavbarOptions/ProfileOption'
-import { Link } from 'react-router-dom'
-import './topNavbar.css'
-import { GET_CHANGEMAKER_NOTIFICATION } from './queries'
-import { flattenObj } from '../../components/utils/responseFlatten'
+import { useQuery } from '@apollo/client';
+import { useContext, useEffect, useState } from 'react';
+import authContext from '../../context/auth-context';
+import { Container, Nav, Navbar, Badge } from 'react-bootstrap';
+import { MiniLobbyComponent } from '../../pages/dashboard/mini-lobby/LobbyPopover';
+import { ProfileOption } from './NavbarOptions/ProfileOption';
+import { Link } from 'react-router-dom';
+import './topNavbar.css';
+import { GET_CHANGEMAKER_NOTIFICATION } from './queries';
+import { flattenObj } from '../../components/utils/responseFlatten';
 
 export function AuthenticatedNav(): JSX.Element {
-    const auth = useContext(authContext)
-    const [notifications, setNotifications] = useState<Notification[]>([])
+    const auth = useContext(authContext);
+    const [notifications, setNotifications] = useState<Notification[]>([]);
 
     const {
         // eslint-disable-next-line
@@ -21,15 +21,15 @@ export function AuthenticatedNav(): JSX.Element {
     } = useQuery(GET_CHANGEMAKER_NOTIFICATION, {
         variables: { id: auth.userid },
         onCompleted: (data) => {
-            const flattenData = flattenObj({ ...data })
-            setNotifications(flattenData.changemakerNotifications)
+            const flattenData = flattenObj({ ...data });
+            setNotifications(flattenData.changemakerNotifications);
         }
-    })
+    });
 
     useEffect(() => {
-        refetch_changemaker_notifications()
+        refetch_changemaker_notifications();
         // eslint-disable-next-line
-    }, [notifications])
+    }, [notifications]);
 
     return (
         <>
@@ -114,7 +114,7 @@ export function AuthenticatedNav(): JSX.Element {
                 </Navbar.Collapse>
             </Navbar>
         </>
-    )
+    );
 }
 
 // unauthorised user
@@ -127,5 +127,5 @@ export function UnauthenticatedNav() {
                 </Navbar.Brand>
             </Container>
         </Navbar>
-    )
+    );
 }

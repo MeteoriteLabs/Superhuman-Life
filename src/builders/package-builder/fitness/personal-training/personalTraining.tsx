@@ -1,10 +1,10 @@
-import Upload from '../../../../components/upload/upload'
-import DatesConfig from '../../../../components/customWidgets/datesConfig'
-import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect'
-import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect'
-import LanguageList from '../../../../components/customWidgets/languageSelect'
-import PtProgramDetails from './ptProgramDetails'
-import PTPricingTable from './ptPricingTable'
+import Upload from '../../../../components/upload/upload';
+import DatesConfig from '../../../../components/customWidgets/datesConfig';
+import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect';
+import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect';
+import LanguageList from '../../../../components/customWidgets/languageSelect';
+import PtProgramDetails from './ptProgramDetails';
+import PTPricingTable from './ptPricingTable';
 
 export const widgets = {
     datesConfig: DatesConfig,
@@ -13,7 +13,7 @@ export const widgets = {
     ptProgramDetails: PtProgramDetails,
     ptPricingTable: PTPricingTable,
     languageList: LanguageList
-}
+};
 
 export const schema: any = {
     disciplines: {
@@ -71,7 +71,7 @@ export const schema: any = {
                     value={props.value}
                     title={'Thumbnail'}
                 />
-            )
+            );
         }
     },
     VideoUrl: {
@@ -109,4 +109,4 @@ export const schema: any = {
             inline: true
         }
     }
-}
+};

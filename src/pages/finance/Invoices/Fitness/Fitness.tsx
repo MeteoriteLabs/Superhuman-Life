@@ -1,35 +1,35 @@
-import React from 'react'
-import { Badge, Row, Col } from 'react-bootstrap'
-import { useContext, useMemo, useRef, useState } from 'react'
-import Table from '../../../../components/table/index'
-import ActionButton from '../../../../components/actionbutton'
-import { GET_ALL_BOOKINGS_FINANCE } from '../../graphQL/queries'
-import { useQuery } from '@apollo/client'
-import authContext from '../../../../context/auth-context'
-import moment from 'moment'
-import InvoicesAction from '../InvoicesAction'
+import React from 'react';
+import { Badge, Row, Col } from 'react-bootstrap';
+import { useContext, useMemo, useRef, useState } from 'react';
+import Table from '../../../../components/table/index';
+import ActionButton from '../../../../components/actionbutton';
+import { GET_ALL_BOOKINGS_FINANCE } from '../../graphQL/queries';
+import { useQuery } from '@apollo/client';
+import authContext from '../../../../context/auth-context';
+import moment from 'moment';
+import InvoicesAction from '../InvoicesAction';
 
 export default function Fitness() {
-    const InvoiceActionRef = useRef<any>(null)
+    const InvoiceActionRef = useRef<any>(null);
 
-    const auth = useContext(authContext)
-    const [dataTable, setDataTable] = useState<any[]>([])
+    const auth = useContext(authContext);
+    const [dataTable, setDataTable] = useState<any[]>([]);
 
     const FetchData = () =>
         useQuery(GET_ALL_BOOKINGS_FINANCE, {
             variables: { id: auth.userid },
             onCompleted: (data) => loadData(data)
-        })
+        });
 
     const loadData = (data: any) => {
         setDataTable(
             [...data.clientBookings.data].map((fitnessPackage) => {
-                const renewDay: Date = new Date(fitnessPackage.attributes.effective_date)
-                renewDay.setDate(renewDay.getDate() + fitnessPackage.attributes.package_duration)
+                const renewDay: Date = new Date(fitnessPackage.attributes.effective_date);
+                renewDay.setDate(renewDay.getDate() + fitnessPackage.attributes.package_duration);
                 const mrpFilter =
                     fitnessPackage.attributes.fitnesspackages.data[0].attributes.fitnesspackagepricing.filter(
                         (item) => item.duration === fitnessPackage.attributes.package_duration
-                    )
+                    );
 
                 return {
                     client:
@@ -65,13 +65,13 @@ export default function Fitness() {
                     userInfo:
                         fitnessPackage.attributes.fitnesspackages.data[0].attributes
                             .users_permissions_user.data.attributes
-                }
+                };
             })
-        )
-    }
+        );
+    };
 
-    FetchData()
-    console.log(dataTable)
+    FetchData();
+    console.log(dataTable);
 
     const columns = useMemo(
         () => [
@@ -98,84 +98,84 @@ export default function Fitness() {
                                 <p className="mt-3 mb-0">{row.value}</p>
                             )}
                         </>
-                    )
+                    );
                 }
             },
             {
                 accessor: 'type',
                 Header: 'Type',
                 Cell: ({ row }: any) => {
-                    let imgName = ''
-                    let name = ''
+                    let imgName = '';
+                    let name = '';
 
                     switch (row.original.type) {
                         case 'One-On-One': {
                             switch (row.original.mode) {
                                 case 'Online': {
-                                    imgName = 'custompersonal-training-Online.svg'
-                                    name = 'PT'
-                                    break
+                                    imgName = 'custompersonal-training-Online.svg';
+                                    name = 'PT';
+                                    break;
                                 }
 
                                 case 'Online_workout': {
-                                    imgName = 'custompersonal-training-Online.svg'
-                                    name = 'PT'
-                                    break
+                                    imgName = 'custompersonal-training-Online.svg';
+                                    name = 'PT';
+                                    break;
                                 }
 
                                 case 'Offline': {
-                                    imgName = 'custompersonal-training-Offline.svg'
-                                    name = 'PT'
-                                    break
+                                    imgName = 'custompersonal-training-Offline.svg';
+                                    name = 'PT';
+                                    break;
                                 }
 
                                 case 'Offline_workout': {
-                                    imgName = 'custompersonal-training-Offline.svg'
-                                    name = 'PT'
-                                    break
+                                    imgName = 'custompersonal-training-Offline.svg';
+                                    name = 'PT';
+                                    break;
                                 }
 
                                 case 'Hybrid': {
-                                    imgName = 'pt.svg'
-                                    name = ''
-                                    break
+                                    imgName = 'pt.svg';
+                                    name = '';
+                                    break;
                                 }
                             }
-                            break
+                            break;
                         }
 
                         case 'Group Class': {
                             switch (row.original.mode) {
                                 case 'Online': {
-                                    imgName = 'customgroup-Online.svg'
-                                    name = 'Group Online'
-                                    break
+                                    imgName = 'customgroup-Online.svg';
+                                    name = 'Group Online';
+                                    break;
                                 }
 
                                 case 'Offline': {
-                                    imgName = 'customgroup-Offline.svg'
-                                    name = 'Group Offline'
-                                    break
+                                    imgName = 'customgroup-Offline.svg';
+                                    name = 'Group Offline';
+                                    break;
                                 }
 
                                 case 'Hybrid': {
-                                    imgName = 'group.svg'
-                                    name = ''
-                                    break
+                                    imgName = 'group.svg';
+                                    name = '';
+                                    break;
                                 }
                             }
-                            break
+                            break;
                         }
 
                         case 'Classic Class': {
-                            imgName = 'customclassic.svg'
-                            name = 'classic'
-                            break
+                            imgName = 'customclassic.svg';
+                            name = 'classic';
+                            break;
                         }
                         case 'Custom Fitness': {
-                            imgName = 'CustomType.svg'
-                            name = ''
-                            break
+                            imgName = 'CustomType.svg';
+                            name = '';
+                            break;
                         }
                     }
 
@@ -186,7 +186,7 @@ export default function Fitness() {
                                 <p className="mb-0">{name}</p>
                             </div>
                         </div>
-                    )
+                    );
                 }
             },
             { accessor: 'packageName', Header: 'Package' },
@@ -194,7 +194,7 @@ export default function Fitness() {
                 accessor: 'duration',
                 Header: 'Duration',
                 Cell: ({ row }: any) => {
-                    return <p className="mb-0">{row.values.duration}</p>
+                    return <p className="mb-0">{row.values.duration}</p>;
                 }
             },
             { accessor: 'effective', Header: 'Start Date' },
@@ -203,30 +203,30 @@ export default function Fitness() {
                 accessor: 'mrp',
                 Header: 'Mrp',
                 Cell: ({ row }: any) => {
-                    return <p className="mb-0">Rs {row.values.mrp}</p>
+                    return <p className="mb-0">Rs {row.values.mrp}</p>;
                 }
             },
             {
                 accessor: 'status',
                 Header: 'Status',
                 Cell: ({ row }: any) => {
-                    let statusColor = ''
-                    let name = ''
+                    let statusColor = '';
+                    let name = '';
                     switch (row.values.status) {
                         case 'accepted':
-                            name = 'Paid'
-                            statusColor = 'success'
-                            break
+                            name = 'Paid';
+                            statusColor = 'success';
+                            break;
 
                         case 'rejected':
-                            name = 'Cancelled'
-                            statusColor = 'danger'
-                            break
+                            name = 'Cancelled';
+                            statusColor = 'danger';
+                            break;
 
                         case 'pending':
-                            name = 'Processing'
-                            statusColor = 'warning'
-                            break
+                            name = 'Processing';
+                            statusColor = 'warning';
+                            break;
                     }
                     return (
                         <>
@@ -238,7 +238,7 @@ export default function Fitness() {
                                 {name}
                             </Badge>
                         </>
-                    )
+                    );
                 }
             },
             {
@@ -250,17 +250,17 @@ export default function Fitness() {
                             id: row.original.id,
                             actionType: 'view',
                             rowData: row.original
-                        })
-                    }
+                        });
+                    };
 
-                    const arrayAction = [{ actionName: 'View', actionClick: actionClick1 }]
+                    const arrayAction = [{ actionName: 'View', actionClick: actionClick1 }];
 
-                    return <ActionButton arrayAction={arrayAction}></ActionButton>
+                    return <ActionButton arrayAction={arrayAction}></ActionButton>;
                 }
             }
         ],
         []
-    )
+    );
 
     return (
         <div className="mt-5">
@@ -271,5 +271,5 @@ export default function Fitness() {
                 </Col>
             </Row>
         </div>
-    )
+    );
 }

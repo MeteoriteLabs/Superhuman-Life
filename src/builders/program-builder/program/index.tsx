@@ -1,4 +1,4 @@
-import { useMemo, useContext, useState, useRef } from 'react'
+import { useMemo, useContext, useState, useRef } from 'react';
 import {
     Button,
     Card,
@@ -9,45 +9,45 @@ import {
     InputGroup,
     Row,
     Container
-} from 'react-bootstrap'
-import Table from '../../../components/table'
-import { useQuery, useMutation } from '@apollo/client'
-import { GET_TABLEDATA, CREATE_PROGRAM, CREATE_SESSION } from './queries'
-import AuthContext from '../../../context/auth-context'
-import ActionButton from '../../../components/actionbutton'
-import CreateEditProgram from './createoredit-program'
-import { flattenObj } from '../../../components/utils/responseFlatten'
-import moment from 'moment'
-import Toaster from '../../../components/Toaster'
+} from 'react-bootstrap';
+import Table from '../../../components/table';
+import { useQuery, useMutation } from '@apollo/client';
+import { GET_TABLEDATA, CREATE_PROGRAM, CREATE_SESSION } from './queries';
+import AuthContext from '../../../context/auth-context';
+import ActionButton from '../../../components/actionbutton';
+import CreateEditProgram from './createoredit-program';
+import { flattenObj } from '../../../components/utils/responseFlatten';
+import moment from 'moment';
+import Toaster from '../../../components/Toaster';
 
 export default function EventsTab(): JSX.Element {
-    const auth = useContext(AuthContext)
-    const [tableData, setTableData] = useState<any[]>([])
-    const createEditProgramComponent = useRef<any>(null)
+    const auth = useContext(AuthContext);
+    const [tableData, setTableData] = useState<any[]>([]);
+    const createEditProgramComponent = useRef<any>(null);
     function handleRedirect(id: any) {
-        window.location.href = `/programs/manage/${id}`
+        window.location.href = `/programs/manage/${id}`;
     }
-    const newSessionIds: any[] = []
-    let sessionsCount = 0
-    const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false)
-    const [show, setShow] = useState<boolean>(false)
-    const [name, setName] = useState<string>('')
-    const [frm, setFrm] = useState<any>()
-    const [searchFilter, setSearchFilter] = useState('')
-    const searchInput = useRef<HTMLInputElement>(null)
-    const [page, setPage] = useState<number>(1)
-    const [totalRecords, setTotalRecords] = useState<number>(0)
+    const newSessionIds: any[] = [];
+    let sessionsCount = 0;
+    const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+    const [show, setShow] = useState<boolean>(false);
+    const [name, setName] = useState<string>('');
+    const [frm, setFrm] = useState<any>();
+    const [searchFilter, setSearchFilter] = useState('');
+    const searchInput = useRef<HTMLInputElement>(null);
+    const [page, setPage] = useState<number>(1);
+    const [totalRecords, setTotalRecords] = useState<number>(0);
 
     const [createProgram] = useMutation(CREATE_PROGRAM, {
         onCompleted: (e: any) => {
-            refetchQueryCallback()
+            refetchQueryCallback();
         }
-    })
+    });
 
     const [createSession] = useMutation(CREATE_SESSION, {
         onCompleted: (e: any) => {
-            setIsFormSubmitted(!isFormSubmitted)
-            newSessionIds.push(e.createSession.data.id)
+            setIsFormSubmitted(!isFormSubmitted);
+            newSessionIds.push(e.createSession.data.id);
             if (sessionsCount === newSessionIds.length) {
                 createProgram({
                     variables: {
@@ -59,18 +59,18 @@ export default function EventsTab(): JSX.Element {
                         description: frm.description,
                         users_permissions_user: frm.user
                     }
-                })
+                });
             }
         }
-    })
+    });
 
-    const handleClose = () => setShow(false)
-    const handleShow = () => setShow(true)
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     function CreateProgram(
         _variables: Record<string, unknown> = { id: auth.userid, details: frm }
     ) {
-        sessionsCount = frm.sessions.length
+        sessionsCount = frm.sessions.length;
         for (let i = 0; i < frm.sessions.length; i++) {
             createSession({
                 variables: {
@@ -88,7 +88,7 @@ export default function EventsTab(): JSX.Element {
                     workout: frm.sessions[i].workout?.id,
                     changemaker: auth.userid
                 }
-            })
+            });
         }
     }
 
@@ -108,28 +108,28 @@ export default function EventsTab(): JSX.Element {
                         createEditProgramComponent.current.TriggerForm({
                             id: row.original.id,
                             type: 'edit'
-                        })
-                    }
+                        });
+                    };
                     const viewHandler = () => {
                         createEditProgramComponent.current.TriggerForm({
                             id: row.original.id,
                             type: 'view'
-                        })
-                    }
+                        });
+                    };
                     const deleteHandler = () => {
                         createEditProgramComponent.current.TriggerForm({
                             id: row.original.id,
                             type: 'delete'
-                        })
-                    }
+                        });
+                    };
                     const manageHandler = () => {
-                        handleRedirect(row.original.id)
-                    }
+                        handleRedirect(row.original.id);
+                    };
                     const duplicateHandler = () => {
-                        setName(row.original.programName + ' copy')
-                        setFrm(row.original)
-                        handleShow()
-                    }
+                        setName(row.original.programName + ' copy');
+                        setFrm(row.original);
+                        handleShow();
+                    };
 
                     const arrayAction = [
                         { actionName: 'Manage', actionClick: manageHandler },
@@ -137,25 +137,25 @@ export default function EventsTab(): JSX.Element {
                         { actionName: 'View', actionClick: viewHandler },
                         { actionName: 'Delete', actionClick: deleteHandler },
                         { actionName: 'Duplicate', actionClick: duplicateHandler }
-                    ]
+                    ];
 
-                    return <ActionButton arrayAction={arrayAction}></ActionButton>
+                    return <ActionButton arrayAction={arrayAction}></ActionButton>;
                 }
             }
         ],
         []
-    )
+    );
 
     const fetch = useQuery(GET_TABLEDATA, {
         variables: { id: auth.userid, filter: searchFilter, start: page * 10 - 10, limit: 10 },
         onCompleted: (data) => {
-            setTotalRecords(data.fitnessprograms.meta.pagination.total)
-            loadData(data)
+            setTotalRecords(data.fitnessprograms.meta.pagination.total);
+            loadData(data);
         }
-    })
+    });
 
     function refetchQueryCallback() {
-        fetch.refetch()
+        fetch.refetch();
     }
 
     function getDate(time: any) {
@@ -172,17 +172,17 @@ export default function EventsTab(): JSX.Element {
             'Oct',
             'Nov',
             'Dec'
-        ]
-        const dateObj = new Date(time)
-        const month = monthNames[dateObj.getMonth()]
-        const year = dateObj.getFullYear()
-        const date = dateObj.getDate()
+        ];
+        const dateObj = new Date(time);
+        const month = monthNames[dateObj.getMonth()];
+        const year = dateObj.getFullYear();
+        const date = dateObj.getDate();
 
-        return `${date}-${month}-${year}`
+        return `${date}-${month}-${year}`;
     }
 
     function loadData(data: any) {
-        const flattenData = flattenObj({ ...data })
+        const flattenData = flattenObj({ ...data });
 
         setTableData(
             [...flattenData.fitnessprograms].map((detail) => {
@@ -191,18 +191,18 @@ export default function EventsTab(): JSX.Element {
                     programName: detail.title,
                     discipline: detail.fitnessdisciplines
                         .map((val: any) => {
-                            return val.disciplinename
+                            return val.disciplinename;
                         })
                         .join(', '),
                     disciplineId: detail.fitnessdisciplines
                         .map((val: any) => {
-                            return val.id
+                            return val.id;
                         })
                         .join(','),
                     level: detail.level,
                     sessionId: detail.sessions
                         .map((val: any) => {
-                            return val.id
+                            return val.id;
                         })
                         .join(','),
                     sessions: detail.sessions,
@@ -210,14 +210,14 @@ export default function EventsTab(): JSX.Element {
                     description: detail.description,
                     user: detail.users_permissions_user.id,
                     updatedOn: moment(getDate(Date.parse(detail.updatedAt))).format('Do MMM YYYY')
-                }
+                };
             })
-        )
+        );
     }
 
     const pageHandler = (selectedPageNumber: number) => {
-        setPage(selectedPageNumber)
-    }
+        setPage(selectedPageNumber);
+    };
 
     return (
         <TabContent>
@@ -235,9 +235,9 @@ export default function EventsTab(): JSX.Element {
                                 <Button
                                     variant="outline-secondary"
                                     onClick={(e) => {
-                                        e.preventDefault()
+                                        e.preventDefault();
                                         searchInput.current &&
-                                            setSearchFilter(searchInput.current.value)
+                                            setSearchFilter(searchInput.current.value);
                                     }}
                                 >
                                     <i className="fas fa-search"></i>
@@ -254,7 +254,7 @@ export default function EventsTab(): JSX.Element {
                                     createEditProgramComponent.current.TriggerForm({
                                         id: null,
                                         type: 'create'
-                                    })
+                                    });
                                 }}
                             >
                                 <i className="fas fa-plus-circle"></i> Create Program
@@ -281,8 +281,8 @@ export default function EventsTab(): JSX.Element {
                                         <Button
                                             variant="success"
                                             onClick={() => {
-                                                handleClose()
-                                                CreateProgram({ id: auth.userid, frm: frm })
+                                                handleClose();
+                                                CreateProgram({ id: auth.userid, frm: frm });
                                             }}
                                         >
                                             Save Changes
@@ -329,5 +329,5 @@ export default function EventsTab(): JSX.Element {
                 />
             ) : null}
         </TabContent>
-    )
+    );
 }

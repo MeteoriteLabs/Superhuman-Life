@@ -1,30 +1,30 @@
-import { useForm, Controller } from 'react-hook-form'
-import style from '../style.module.css'
-import { Button, Form } from 'react-bootstrap'
-import authContext from '../../../../../context/auth-context'
-import { useContext, useEffect, useState } from 'react'
-import { ChangeMakerWebsiteContext } from '../../../../../context/changemakerWebsite-context'
-import { GET_WEBSITE_SECTION } from './queries'
-import { useMutation, useQuery } from '@apollo/client'
-import { UPDATE_WEBSITE_SECTION } from './queries/cta'
-import Toaster from '../../../../../components/Toaster'
+import { useForm, Controller } from 'react-hook-form';
+import style from '../style.module.css';
+import { Button, Form } from 'react-bootstrap';
+import authContext from '../../../../../context/auth-context';
+import { useContext, useEffect, useState } from 'react';
+import { ChangeMakerWebsiteContext } from '../../../../../context/changemakerWebsite-context';
+import { GET_WEBSITE_SECTION } from './queries';
+import { useMutation, useQuery } from '@apollo/client';
+import { UPDATE_WEBSITE_SECTION } from './queries/cta';
+import Toaster from '../../../../../components/Toaster';
 
 type FormData = {
-    sectionId: number
-    title: string
-    buttonText: string
-    link: string
-}
+    sectionId: number;
+    title: string;
+    buttonText: string;
+    link: string;
+};
 
 function CallToAction(): JSX.Element {
-    const auth = useContext(authContext)
-    const [errorMsg, setErrorMsg] = useState<string>('')
+    const auth = useContext(authContext);
+    const [errorMsg, setErrorMsg] = useState<string>('');
     const [initialValues, setInitialValues] = useState<FormData>({
         sectionId: 0,
         title: '',
         buttonText: '',
         link: '/'
-    })
+    });
 
     const {
         handleSubmit,
@@ -37,10 +37,10 @@ function CallToAction(): JSX.Element {
             buttonText: initialValues.buttonText,
             link: initialValues.link
         }
-    })
+    });
 
     const { setChangemakerWebsiteState, changemakerWebsiteState } =
-        useContext(ChangeMakerWebsiteContext)
+        useContext(ChangeMakerWebsiteContext);
 
     useQuery(GET_WEBSITE_SECTION, {
         variables: {
@@ -55,21 +55,21 @@ function CallToAction(): JSX.Element {
                 title: data.websiteSections.data[0].attributes.sectionData.title,
                 buttonText: data.websiteSections.data[0].attributes.sectionData.button.text,
                 link: data.websiteSections.data[0].attributes.sectionData.button.link
-            })
+            });
 
             reset({
                 title: data.websiteSections.data[0].attributes.sectionData.title,
                 buttonText: data.websiteSections.data[0].attributes.sectionData.button.text,
                 link: data.websiteSections.data[0].attributes.sectionData.button.link
-            })
+            });
         }
-    })
+    });
 
-    const [mutateFunction, { loading, error }] = useMutation(UPDATE_WEBSITE_SECTION)
+    const [mutateFunction, { loading, error }] = useMutation(UPDATE_WEBSITE_SECTION);
 
     const onSubmit = handleSubmit(async (formData) => {
         // ! Need to add image upload
-        const { title, buttonText, link } = formData
+        const { title, buttonText, link } = formData;
 
         await mutateFunction({
             variables: {
@@ -78,15 +78,15 @@ function CallToAction(): JSX.Element {
                 buttonText: buttonText ? buttonText : initialValues.buttonText,
                 link: link ? link : initialValues.link
             }
-        })
-    })
+        });
+    });
 
     useEffect(() => {
         loading
             ? setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: true })
-            : setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: false })
-        error ? setErrorMsg(`${error.name}: ${error.message}`) : setErrorMsg('')
-    }, [loading, error])
+            : setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: false });
+        error ? setErrorMsg(`${error.name}: ${error.message}`) : setErrorMsg('');
+    }, [loading, error]);
 
     return (
         <div className={style.form_container}>
@@ -156,7 +156,7 @@ function CallToAction(): JSX.Element {
                 </Button>
             </Form>
         </div>
-    )
+    );
 }
 
-export default CallToAction
+export default CallToAction;

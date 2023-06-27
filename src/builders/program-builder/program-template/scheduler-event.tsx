@@ -1,54 +1,54 @@
-import React, { useState, useEffect } from 'react'
-import './styles.css'
-import { Row } from 'react-bootstrap'
-import TransferPrograms from './transferPrograms'
-import Loader from '../../../components/Loader/Loader'
-import moment from 'moment'
+import React, { useState, useEffect } from 'react';
+import './styles.css';
+import { Row } from 'react-bootstrap';
+import TransferPrograms from './transferPrograms';
+import Loader from '../../../components/Loader/Loader';
+import moment from 'moment';
 
 const SchedulerEvent = (props: any) => {
-    const [arr, setArr] = useState<any>([])
-    const [show, setShow] = useState<boolean>(false)
-    const schedulerDay: any = require('./json/scheduler-day.json')
+    const [arr, setArr] = useState<any>([]);
+    const [show, setShow] = useState<boolean>(false);
+    const schedulerDay: any = require('./json/scheduler-day.json');
 
     function draganddrop() {
-        const draggable: any = document.querySelectorAll('.draggable-event')
-        const container: any = document.querySelectorAll('.event-container')
+        const draggable: any = document.querySelectorAll('.draggable-event');
+        const container: any = document.querySelectorAll('.event-container');
 
         draggable.forEach((drag) => {
             drag.addEventListener('dragstart', () => {
-                drag.classList.add('dragging')
-            })
+                drag.classList.add('dragging');
+            });
 
             drag.addEventListener('dragend', () => {
-                drag.classList.remove('dragging')
-            })
-        })
+                drag.classList.remove('dragging');
+            });
+        });
 
         container.forEach((con) => {
             con.addEventListener('dragover', (e) => {
-                e.preventDefault()
-                const draggable = document.querySelector('.dragging')
-                con.appendChild(draggable)
-            })
-        })
+                e.preventDefault();
+                const draggable = document.querySelector('.dragging');
+                con.appendChild(draggable);
+            });
+        });
     }
 
     useEffect(() => {
         setTimeout(() => {
-            setShow(true)
-        }, 300)
-    }, [show])
+            setShow(true);
+        }, 300);
+    }, [show]);
 
     function handleTemplteRenderTable(data: any) {
-        const values = [...data]
+        const values = [...data];
         for (let d = 1; d <= props.programDays; d++) {
-            values[d] = JSON.parse(JSON.stringify(schedulerDay))
+            values[d] = JSON.parse(JSON.stringify(schedulerDay));
         }
 
         if (props.programEvents) {
             props.programEvents.forEach((val) => {
                 if (!values[val.day_of_program]) {
-                    values[val.day_of_program] = []
+                    values[val.day_of_program] = [];
                 }
                 values[val.day_of_program].push({
                     import: 'importedEvent',
@@ -69,25 +69,25 @@ const SchedulerEvent = (props: any) => {
                     sessionId: val.id,
                     sessionDate: val.session_date,
                     isProgram: val?.Is_program_template
-                })
-            })
-            setArr(values)
+                });
+            });
+            setArr(values);
         }
-        draganddrop()
+        draganddrop();
     }
 
     function handleRenderTable(data: any) {
         if (props.dayType === 'programs') {
-            return handleTemplteRenderTable(data)
+            return handleTemplteRenderTable(data);
         }
-        const values = [...data]
+        const values = [...data];
         for (let d = 1; d <= props.programDays; d++) {
-            values[d] = JSON.parse(JSON.stringify(schedulerDay))
+            values[d] = JSON.parse(JSON.stringify(schedulerDay));
         }
         if (props.programEvents) {
             props.programEvents.forEach((val) => {
                 if (!values[calculateDay(props.startDate, val.session_date)]) {
-                    values[calculateDay(props.startDate, val.session_date)] = []
+                    values[calculateDay(props.startDate, val.session_date)] = [];
                 }
 
                 values[calculateDay(props.startDate, val.session_date)].push({
@@ -109,31 +109,31 @@ const SchedulerEvent = (props: any) => {
                     sessionId: val.id,
                     sessionDate: val.session_date,
                     isProgram: val?.Is_program_template
-                })
-            })
-            setArr(values)
+                });
+            });
+            setArr(values);
         }
-        draganddrop()
+        draganddrop();
     }
     function calculateDay(startDate, sessionDate) {
-        const startDateFormatted = moment(startDate)
-        startDateFormatted.set({ hour: 12, minute: 0, second: 0, millisecond: 0 })
-        const sessionDateFormatted = moment(sessionDate)
+        const startDateFormatted = moment(startDate);
+        startDateFormatted.set({ hour: 12, minute: 0, second: 0, millisecond: 0 });
+        const sessionDateFormatted = moment(sessionDate);
         sessionDateFormatted.set({
             hour: 12,
             minute: 0,
             second: 0,
             millisecond: 0
-        })
-        const diffDays = sessionDateFormatted.diff(startDateFormatted, 'days') + 1
-        return diffDays
+        });
+        const diffDays = sessionDateFormatted.diff(startDateFormatted, 'days') + 1;
+        return diffDays;
     }
 
     useEffect(() => {
-        handleRenderTable([])
-    }, [props.programEvents])
+        handleRenderTable([]);
+    }, [props.programEvents]);
 
-    if (!show) return <Loader />
+    if (!show) return <Loader />;
     else
         return (
             <>
@@ -154,7 +154,7 @@ const SchedulerEvent = (props: any) => {
                                         className="cell"
                                         style={{ backgroundColor: 'white' }}
                                     >{`Day - ${val}`}</div>
-                                )
+                                );
                             })}
                         </div>
                         <div className="events-row">
@@ -179,9 +179,9 @@ const SchedulerEvent = (props: any) => {
                                                             e.dataTransfer.setData(
                                                                 'scheduler-event',
                                                                 JSON.stringify(val)
-                                                            )
-                                                            const el: any = e.target
-                                                            el.id = 'rem'
+                                                            );
+                                                            const el: any = e.target;
+                                                            el.id = 'rem';
                                                         }}
                                                     >
                                                         <span
@@ -194,10 +194,10 @@ const SchedulerEvent = (props: any) => {
                                                             {val.title}
                                                         </span>
                                                     </div>
-                                                )
+                                                );
                                             })}
                                     </div>
-                                )
+                                );
                             })}
                         </div>
                     </div>
@@ -214,7 +214,7 @@ const SchedulerEvent = (props: any) => {
                     </Row>
                 )}
             </>
-        )
-}
+        );
+};
 
-export default SchedulerEvent
+export default SchedulerEvent;

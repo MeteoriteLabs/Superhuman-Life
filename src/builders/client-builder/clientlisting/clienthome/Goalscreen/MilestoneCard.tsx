@@ -1,5 +1,5 @@
-import { Card } from 'react-bootstrap'
-import './GoalCard.css'
+import { Card } from 'react-bootstrap';
+import './GoalCard.css';
 
 function MilestoneCard(props: any) {
     return (
@@ -53,7 +53,7 @@ function MilestoneCard(props: any) {
                 </div>
             </Card.Header>
         </Card>
-    )
+    );
 }
 
-export default MilestoneCard
+export default MilestoneCard;

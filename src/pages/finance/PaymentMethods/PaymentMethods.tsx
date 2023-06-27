@@ -1,6 +1,6 @@
-import { Tabs, Tab, Card } from 'react-bootstrap'
-import BankAccount from './BankAccountDetails'
-import UPI from './UPIDetails'
+import { Tabs, Tab, Card } from 'react-bootstrap';
+import BankAccount from './BankAccountDetails';
+import UPI from './UPIDetails';
 
 export default function PaymentMethods() {
     return (
@@ -25,5 +25,5 @@ export default function PaymentMethods() {
                 </Card.Body>
             </Card>
         </div>
-    )
+    );
 }

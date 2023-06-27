@@ -1,7 +1,15 @@
-import { useMemo } from 'react'
-import { Badge, Button, Card, Dropdown, OverlayTrigger, Popover, TabContent } from 'react-bootstrap'
-import CreateFitnessPackageModal from '../../../components/CreateFitnessPackageModal/CreateFitnessPackageModal'
-import Table from '../../../components/table'
+import { useMemo } from 'react';
+import {
+    Badge,
+    Button,
+    Card,
+    Dropdown,
+    OverlayTrigger,
+    Popover,
+    TabContent
+} from 'react-bootstrap';
+import CreateFitnessPackageModal from '../../../components/CreateFitnessPackageModal/CreateFitnessPackageModal';
+import Table from '../../../components/table';
 
 export default function NutritionTab() {
     const columns = useMemo<any>(
@@ -48,7 +56,7 @@ export default function NutritionTab() {
             }
         ],
         []
-    )
+    );
     const data = useMemo<any>(
         () => [
             {
@@ -73,11 +81,11 @@ export default function NutritionTab() {
             }
         ],
         []
-    )
-    const classicMealSchema: any = require('./classic-meal.json')
-    const consultSchema: any = require('./consultation.json')
-    const customMealSchema: any = require('./custom-meal.json')
-    const customSchema: any = require('./custom.json')
+    );
+    const classicMealSchema: any = require('./classic-meal.json');
+    const consultSchema: any = require('./consultation.json');
+    const customMealSchema: any = require('./custom-meal.json');
+    const customSchema: any = require('./custom.json');
     const uiSchema: any = {
         about: {
             'ui:widget': 'textarea',
@@ -101,10 +109,10 @@ export default function NutritionTab() {
         schedule: {
             'ui:placeholder': 'Number of days'
         }
-    }
+    };
 
     function onSubmit(formData: any) {
-        alert('Values submitted: ' + JSON.stringify(formData, null, 2))
+        alert('Values submitted: ' + JSON.stringify(formData, null, 2));
     }
 
     return (
@@ -154,5 +162,5 @@ export default function NutritionTab() {
             </Card.Title>
             <Table columns={columns} data={data} />
         </TabContent>
-    )
+    );
 }

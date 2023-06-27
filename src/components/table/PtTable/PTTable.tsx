@@ -1,32 +1,32 @@
-import { useTable } from 'react-table'
-import NoDataInCard from '../../NoDataInCard'
-import './ptTable.css'
+import { useTable } from 'react-table';
+import NoDataInCard from '../../NoDataInCard';
+import './ptTable.css';
 
 function PTTable({ data, columns }: any) {
     function useInstance(instance) {
-        const { allColumns } = instance
+        const { allColumns } = instance;
 
-        let rowSpanHeaders: any[] = []
+        let rowSpanHeaders: any[] = [];
 
         allColumns.forEach((column: any, i: any) => {
-            const { id, enableRowSpan } = column
+            const { id, enableRowSpan } = column;
 
             if (enableRowSpan) {
-                rowSpanHeaders = [...rowSpanHeaders, { id, topCellValue: null, topCellIndex: 0 }]
+                rowSpanHeaders = [...rowSpanHeaders, { id, topCellValue: null, topCellIndex: 0 }];
             }
-        })
+        });
 
-        Object.assign(instance, { rowSpanHeaders })
+        Object.assign(instance, { rowSpanHeaders });
     }
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow }: any = useTable(
         { columns, data },
         (hooks) => {
-            hooks.useInstance.push(useInstance)
+            hooks.useInstance.push(useInstance);
         }
-    )
+    );
 
-    let currentRowsIndex = 0
+    let currentRowsIndex = 0;
     return (
         <div className="table-responsive">
             <table {...getTableProps()} className="pt table text-center">
@@ -54,23 +54,23 @@ function PTTable({ data, columns }: any) {
                 </thead>
                 <tbody {...getTableBodyProps()}>
                     {rows.forEach((row, i) => {
-                        prepareRow(row)
+                        prepareRow(row);
 
-                        const samePackage = false
+                        const samePackage = false;
 
                         if (!samePackage) {
-                            currentRowsIndex = i
+                            currentRowsIndex = i;
                         }
 
                         for (let j = 0; j < row.cells.length; j++) {
-                            const cell = row.allCells[j]
+                            const cell = row.allCells[j];
 
                             if (!samePackage || j > 4) {
-                                cell.rowSpan = 1
-                                cell.isRowSpanned = false
+                                cell.rowSpan = 1;
+                                cell.isRowSpanned = false;
                             } else {
-                                cell.isRowSpanned = true
-                                rows[currentRowsIndex].allCells[j].rowSpan++
+                                cell.isRowSpanned = true;
+                                rows[currentRowsIndex].allCells[j].rowSpan++;
                             }
 
                             // if (rowSpanHeader !== undefined) {
@@ -90,7 +90,7 @@ function PTTable({ data, columns }: any) {
                         return (
                             <tr className="rowCard" {...row.getRowProps()} key={index}>
                                 {row.cells.map((cell) => {
-                                    if (cell.isRowSpanned) return null
+                                    if (cell.isRowSpanned) return null;
                                     else {
                                         return (
                                             <td
@@ -101,16 +101,16 @@ function PTTable({ data, columns }: any) {
                                             >
                                                 {cell.render('Cell')}
                                             </td>
-                                        )
+                                        );
                                     }
                                 })}
                             </tr>
-                        )
+                        );
                     })}
                 </tbody>
             </table>
         </div>
-    )
+    );
 }
 
-export default PTTable
+export default PTTable;

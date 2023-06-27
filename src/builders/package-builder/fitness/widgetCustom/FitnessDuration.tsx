@@ -1,5 +1,5 @@
-import React from 'react'
-import { Form } from 'react-bootstrap'
+import React from 'react';
+import { Form } from 'react-bootstrap';
 
 const FitnessDuration: React.FC<{ widgetProps: any; type: any; actionType: any; userData: any }> = (
     props
@@ -16,8 +16,8 @@ const FitnessDuration: React.FC<{ widgetProps: any; type: any; actionType: any; 
                             value={props.widgetProps.value ? props.widgetProps.value : 30}
                             disabled={props.actionType === 'view' ? true : false}
                             onChange={(e) => {
-                                props.widgetProps.schema.value = e.target.value
-                                props.widgetProps.onChange(e.target.value)
+                                props.widgetProps.schema.value = e.target.value;
+                                props.widgetProps.onChange(e.target.value);
                             }}
                         />
                     </Form.Group>
@@ -33,7 +33,7 @@ const FitnessDuration: React.FC<{ widgetProps: any; type: any; actionType: any; 
                 </div>
             )}
         </>
-    )
-}
+    );
+};
 
-export default FitnessDuration
+export default FitnessDuration;

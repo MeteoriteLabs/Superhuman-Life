@@ -1,13 +1,13 @@
-import { Breadcrumb } from 'react-bootstrap'
-import { NavLink, useLocation } from 'react-router-dom'
+import { Breadcrumb } from 'react-bootstrap';
+import { NavLink, useLocation } from 'react-router-dom';
 
 type AppProps = {
-    mod: string
-    page: string
-}
+    mod: string;
+    page: string;
+};
 
 export default function Bread({ mod, page }: AppProps) {
-    const { pathname } = useLocation()
+    const { pathname } = useLocation();
 
     return (
         <Breadcrumb>
@@ -20,5 +20,5 @@ export default function Bread({ mod, page }: AppProps) {
                 Add
             </NavLink>
         </Breadcrumb>
-    )
+    );
 }

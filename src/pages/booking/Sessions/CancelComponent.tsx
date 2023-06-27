@@ -1,79 +1,79 @@
-import React, { useImperativeHandle, useState, useContext } from 'react'
-import { useQuery, useMutation, useLazyQuery } from '@apollo/client'
+import React, { useImperativeHandle, useState, useContext } from 'react';
+import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
 import {
     UPDATE_STATUS,
     UPDATE_SCHEDULE,
     CREATE_SCHEDULE,
     GET_FUTURE_SESSIONS,
     GET_SESSION
-} from './queries'
-import StatusModal from '../../../components/StatusModal/StatusModal'
-import { flattenObj } from '../../../components/utils/responseFlatten'
-import AuthContext from '../../../context/auth-context'
-import moment from 'moment'
-import Toaster from '../../../components/Toaster'
-import { Modal, DropdownButton, Dropdown, Row, Col, Button } from 'react-bootstrap'
-import './RescheduleModal.css'
+} from './queries';
+import StatusModal from '../../../components/StatusModal/StatusModal';
+import { flattenObj } from '../../../components/utils/responseFlatten';
+import AuthContext from '../../../context/auth-context';
+import moment from 'moment';
+import Toaster from '../../../components/Toaster';
+import { Modal, DropdownButton, Dropdown, Row, Col, Button } from 'react-bootstrap';
+import './RescheduleModal.css';
 
 interface Operation {
-    id: string
-    modal_status: boolean
-    type: 'reschedule' | 'cancel'
-    tag: string
+    id: string;
+    modal_status: boolean;
+    type: 'reschedule' | 'cancel';
+    tag: string;
 }
 
 function CancelComponent(props: any, ref: any) {
-    const [isScheduleCanceled, setIsScheduleCanceled] = useState<boolean>(false)
-    const [operation, setOperation] = useState<Operation>({} as Operation)
-    const [showCancelModal, setShowCancelModal] = useState<boolean>(false)
-    const [selectedTime, setSelectedTime] = useState<string | null | any>(null)
-    const [showRescheduleModal, setShowRescheduleModal] = useState<boolean>(false)
-    const [sessionData, setSessionData] = useState<any>([])
-    const [currentSessionData, setCurrentSessionData] = useState<any>([])
-    const auth = useContext(AuthContext)
-    const currentDate = new Date()
+    const [isScheduleCanceled, setIsScheduleCanceled] = useState<boolean>(false);
+    const [operation, setOperation] = useState<Operation>({} as Operation);
+    const [showCancelModal, setShowCancelModal] = useState<boolean>(false);
+    const [selectedTime, setSelectedTime] = useState<string | null | any>(null);
+    const [showRescheduleModal, setShowRescheduleModal] = useState<boolean>(false);
+    const [sessionData, setSessionData] = useState<any>([]);
+    const [currentSessionData, setCurrentSessionData] = useState<any>([]);
+    const auth = useContext(AuthContext);
+    const currentDate = new Date();
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
-            setOperation(msg)
+            setOperation(msg);
 
             // render delete modal for delete operation
             if (msg.type === 'cancel') {
-                setShowCancelModal(true)
+                setShowCancelModal(true);
             }
             // restrict reschedule modal to render for cancel operation
             if (msg.type !== 'cancel') {
-                setShowRescheduleModal(true)
+                setShowRescheduleModal(true);
             }
         }
-    }))
+    }));
 
     const [updateStatus] = useMutation(UPDATE_STATUS, {
         onCompleted: () => {
-            props.callback()
+            props.callback();
         }
-    })
+    });
 
     const [updateSchedule] = useMutation(UPDATE_SCHEDULE, {
         onCompleted: () => {
-            setIsScheduleCanceled(true)
+            setIsScheduleCanceled(true);
         }
-    })
+    });
 
     const [createSchedule] = useMutation(CREATE_SCHEDULE, {
         onCompleted: () => {
-            props.callback()
+            props.callback();
         }
-    })
+    });
 
     function getDate(time: Date): string {
-        const dateObj: Date = new Date(time)
-        const month: number = dateObj.getMonth() + 1
-        const year: number = dateObj.getFullYear()
+        const dateObj: Date = new Date(time);
+        const month: number = dateObj.getMonth() + 1;
+        const year: number = dateObj.getFullYear();
         const date: number | string =
-            dateObj.getDate() < 10 ? `0${dateObj.getDate()}` : dateObj.getDate()
+            dateObj.getDate() < 10 ? `0${dateObj.getDate()}` : dateObj.getDate();
 
-        return `${year}-${month}-${date}`
+        return `${year}-${month}-${date}`;
     }
 
     // eslint-disable-next-line
@@ -81,11 +81,11 @@ function CancelComponent(props: any, ref: any) {
         GET_SESSION,
         {
             onCompleted: (data) => {
-                const flattenSessionsData = flattenObj({ ...data.session })
-                setCurrentSessionData(flattenSessionsData)
+                const flattenSessionsData = flattenObj({ ...data.session });
+                setCurrentSessionData(flattenSessionsData);
             }
         }
-    )
+    );
 
     useQuery(GET_FUTURE_SESSIONS, {
         variables: {
@@ -95,10 +95,10 @@ function CancelComponent(props: any, ref: any) {
         },
         skip: !operation.tag,
         onCompleted: (data) => {
-            const currentTime = new Date()
-            const flattenSessionsData = flattenObj({ ...data.sessions })
+            const currentTime = new Date();
+            const flattenSessionsData = flattenObj({ ...data.sessions });
             const nextUpcomingSessions = flattenSessionsData.filter((currentValue) => {
-                const [hours, minutes] = currentValue.start_time.split(':')
+                const [hours, minutes] = currentValue.start_time.split(':');
                 const date = new Date(
                     currentTime.getFullYear(),
                     currentTime.getMonth(),
@@ -106,43 +106,43 @@ function CancelComponent(props: any, ref: any) {
                     +hours,
                     +minutes,
                     0
-                )
+                );
 
-                return date >= currentTime
-            })
-            setSessionData(nextUpcomingSessions)
-            getSession({ variables: { id: operation.id } })
+                return date >= currentTime;
+            });
+            setSessionData(nextUpcomingSessions);
+            getSession({ variables: { id: operation.id } });
         }
-    })
+    });
 
     const CancelStatus = (id: string) => {
         updateStatus({
             variables: { id: id, data: { Session_booking_status: 'Canceled' } }
-        })
-    }
+        });
+    };
 
     function getTime(startTime: string): string {
-        const splitTime: string[] = startTime.split(':')
+        const splitTime: string[] = startTime.split(':');
         const date: moment.Moment = moment().set({
             hour: Number(splitTime[0]),
             minute: Number(splitTime[1])
-        })
-        const time: string = moment(date).format('h:mm A')
-        return time
+        });
+        const time: string = moment(date).format('h:mm A');
+        return time;
     }
 
     const changeScheduleHandler = (id: string, selectedTime: any) => {
-        const selectedSession = sessionData.find((currentValue: any) => currentValue.id === id)
+        const selectedSession = sessionData.find((currentValue: any) => currentValue.id === id);
 
         const sessionBookingArray =
             selectedSession &&
             selectedSession.sessions_bookings.length &&
-            selectedSession.sessions_bookings.map((currentValue: any) => currentValue.id)
+            selectedSession.sessions_bookings.map((currentValue: any) => currentValue.id);
 
         const feedbackNotesArray =
             selectedSession &&
             selectedSession.feedback_notes.length &&
-            selectedSession.feedback_notes.map((currentValue: any) => currentValue.id)
+            selectedSession.feedback_notes.map((currentValue: any) => currentValue.id);
 
         updateSchedule({
             variables: {
@@ -204,12 +204,12 @@ function CancelComponent(props: any, ref: any) {
                             feedback_notes: feedbackNotesArray
                         }
                     }
-                })
+                });
             }
-        })
-        props.callback()
-        setShowRescheduleModal(false)
-    }
+        });
+        props.callback();
+        setShowRescheduleModal(false);
+    };
 
     return (
         <>
@@ -334,7 +334,7 @@ function CancelComponent(props: any, ref: any) {
                     buttonLeft="Cancel"
                     buttonRight="Yes"
                     onClick={() => {
-                        CancelStatus(operation.id)
+                        CancelStatus(operation.id);
                     }}
                 />
             )}
@@ -348,7 +348,7 @@ function CancelComponent(props: any, ref: any) {
                 />
             ) : null}
         </>
-    )
+    );
 }
 
-export default React.forwardRef(CancelComponent)
+export default React.forwardRef(CancelComponent);

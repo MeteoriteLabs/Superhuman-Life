@@ -43,4 +43,4 @@ export const ImageCaptions = [
         imageWidth: '55px',
         id: 6
     }
-]
+];

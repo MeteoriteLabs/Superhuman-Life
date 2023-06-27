@@ -1,26 +1,26 @@
-import React, { useState } from 'react'
-import { Typeahead } from 'react-bootstrap-typeahead'
-import 'react-bootstrap-typeahead/css/Typeahead.css'
-import { FETCH_FITNESSDISCPLINES } from '../../builders/program-builder/exercises/queries'
-import { useQuery } from '@apollo/client'
-import { flattenObj } from '../utils/responseFlatten'
+import React, { useState } from 'react';
+import { Typeahead } from 'react-bootstrap-typeahead';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
+import { FETCH_FITNESSDISCPLINES } from '../../builders/program-builder/exercises/queries';
+import { useQuery } from '@apollo/client';
+import { flattenObj } from '../utils/responseFlatten';
 
 const FitnessSelect: React.FC<{
-    onChange: (args: string) => void
-    value: string[]
-    uiSchema: any
+    onChange: (args: string) => void;
+    value: string[];
+    uiSchema: any;
 }> = (props) => {
     const [singleSelections, setSingleSelections] = useState<any[]>(
         props.value?.length > 0 ? props.value : []
-    )
-    const [fitnessdisciplines, setFitnessDisciplines] = useState<any[]>([])
+    );
+    const [fitnessdisciplines, setFitnessDisciplines] = useState<any[]>([]);
 
     function FetchData() {
-        useQuery(FETCH_FITNESSDISCPLINES, { onCompleted: loadData })
+        useQuery(FETCH_FITNESSDISCPLINES, { onCompleted: loadData });
     }
 
     function loadData(data: any) {
-        const flattenedData = flattenObj({ ...data })
+        const flattenedData = flattenObj({ ...data });
 
         setFitnessDisciplines(
             [...flattenedData.fitnessdisciplines].map((discipline) => {
@@ -28,18 +28,18 @@ const FitnessSelect: React.FC<{
                     id: discipline.id,
                     disciplinename: discipline.disciplinename,
                     updatedAt: discipline.updatedAt
-                }
+                };
             })
-        )
+        );
     }
 
     function OnChange(e) {
-        setSingleSelections(e)
+        setSingleSelections(e);
     }
 
-    props.onChange(JSON.stringify(singleSelections))
+    props.onChange(JSON.stringify(singleSelections));
 
-    FetchData()
+    FetchData();
 
     return (
         <div>
@@ -54,7 +54,7 @@ const FitnessSelect: React.FC<{
                 disabled={props.uiSchema.readonly ? true : false}
             />
         </div>
-    )
-}
+    );
+};
 
-export default FitnessSelect
+export default FitnessSelect;

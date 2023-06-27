@@ -1,12 +1,12 @@
-import { Fragment } from 'react'
-import { useTable, useExpanded } from 'react-table'
-import NoDataInCard from '../NoDataInCard'
+import { Fragment } from 'react';
+import { useTable, useExpanded } from 'react-table';
+import NoDataInCard from '../NoDataInCard';
 
 function Table({ data, columns }: any) {
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
         { columns, data },
         useExpanded
-    )
+    );
 
     return (
         <div className="table-responsive">
@@ -35,8 +35,8 @@ function Table({ data, columns }: any) {
                 </thead>
                 <tbody {...getTableBodyProps()}>
                     {rows.map((row) => {
-                        prepareRow(row)
-                        const rowProps = row.getRowProps()
+                        prepareRow(row);
+                        const rowProps = row.getRowProps();
                         return (
                             <Fragment key={rowProps.key}>
                                 <tr className="rowCard text-center" {...row.getRowProps()}>
@@ -47,12 +47,12 @@ function Table({ data, columns }: any) {
                                     ))}
                                 </tr>
                             </Fragment>
-                        )
+                        );
                     })}
                 </tbody>
             </table>
         </div>
-    )
+    );
 }
 
-export default Table
+export default Table;

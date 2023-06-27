@@ -1,83 +1,83 @@
-import React, { useState } from 'react'
-import { Dropdown, Row, Col, Button, Modal, Form } from 'react-bootstrap'
-import { useMutation } from '@apollo/client'
+import React, { useState } from 'react';
+import { Dropdown, Row, Col, Button, Modal, Form } from 'react-bootstrap';
+import { useMutation } from '@apollo/client';
 import {
     UPDATE_SESSION_TIME,
     UPDATE_SESSION_MODE,
     UPDATE_SESSION_BOOKING_STATUS,
     UPDATE_SESSION_DATE
-} from '../graphql/mutations'
-import moment from 'moment'
-import TimePicker from 'rc-time-picker'
-import 'rc-time-picker/assets/index.css'
+} from '../graphql/mutations';
+import moment from 'moment';
+import TimePicker from 'rc-time-picker';
+import 'rc-time-picker/assets/index.css';
 
 const RosterSettings: React.FC<{ data: any[] }> = (props) => {
-    const data = props.data[0]
+    const data = props.data[0];
 
-    const [startTime, setStartTime] = useState(data?.session?.start_time)
-    const [endTime, setEndTime] = useState(data?.session?.end_time)
-    const [newMode, setNewMode] = useState(data?.session?.mode)
-    const [newDate, setNewDate] = useState(data?.session?.session_date)
-    const [classCancel, setClassCancel] = useState<string>('')
-    const [classCancellationReason, setClassCancellationReason] = useState<string>('')
-    const [showRescheduleTime, setShowRescheduleTime] = useState<boolean>(false)
-    const [showChangeMode, setShowChangeMode] = useState<boolean>(false)
-    const [showCancelStatus, setShowCancelStatus] = useState<boolean>(false)
-    const [showRescheduleDate, setShowRescheduleDate] = useState<boolean>(false)
+    const [startTime, setStartTime] = useState(data?.session?.start_time);
+    const [endTime, setEndTime] = useState(data?.session?.end_time);
+    const [newMode, setNewMode] = useState(data?.session?.mode);
+    const [newDate, setNewDate] = useState(data?.session?.session_date);
+    const [classCancel, setClassCancel] = useState<string>('');
+    const [classCancellationReason, setClassCancellationReason] = useState<string>('');
+    const [showRescheduleTime, setShowRescheduleTime] = useState<boolean>(false);
+    const [showChangeMode, setShowChangeMode] = useState<boolean>(false);
+    const [showCancelStatus, setShowCancelStatus] = useState<boolean>(false);
+    const [showRescheduleDate, setShowRescheduleDate] = useState<boolean>(false);
 
-    const handleClose = () => setShowRescheduleTime(false)
-    const handleShow = () => setShowRescheduleTime(true)
+    const handleClose = () => setShowRescheduleTime(false);
+    const handleShow = () => setShowRescheduleTime(true);
 
-    const handleCloseMode = () => setShowChangeMode(false)
-    const handleShowMode = () => setShowChangeMode(true)
+    const handleCloseMode = () => setShowChangeMode(false);
+    const handleShowMode = () => setShowChangeMode(true);
 
-    const handleCloseStatus = () => setShowCancelStatus(false)
-    const handleShowStatus = () => setShowCancelStatus(true)
+    const handleCloseStatus = () => setShowCancelStatus(false);
+    const handleShowStatus = () => setShowCancelStatus(true);
 
-    const handleCloseDate = () => setShowRescheduleDate(false)
-    const handleShowDate = () => setShowRescheduleDate(true)
+    const handleCloseDate = () => setShowRescheduleDate(false);
+    const handleShowDate = () => setShowRescheduleDate(true);
 
     const [updateSessionTime] = useMutation(UPDATE_SESSION_TIME, {
         onCompleted: () => {
-            handleClose()
+            handleClose();
         }
-    })
+    });
     const [updateSessionMode] = useMutation(UPDATE_SESSION_MODE, {
         onCompleted: () => {
-            handleCloseMode()
+            handleCloseMode();
         }
-    })
+    });
     const [updateSessionClassStatus] = useMutation(UPDATE_SESSION_BOOKING_STATUS, {
         onCompleted: () => {
-            handleCloseStatus()
+            handleCloseStatus();
         }
-    })
+    });
     const [updateSessionDate] = useMutation(UPDATE_SESSION_DATE, {
         onCompleted: () => {
-            handleCloseDate()
+            handleCloseDate();
         }
-    })
+    });
 
     function convertToMoment(time: string) {
-        const timeSplit = time.split(':').map(Number)
-        return moment().set({ hour: timeSplit[0], minute: timeSplit[1] })
+        const timeSplit = time.split(':').map(Number);
+        return moment().set({ hour: timeSplit[0], minute: timeSplit[1] });
     }
 
     function handleFromTimeInput(val: any) {
-        const m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60
-        setStartTime(val.slice(0, 2) + ':' + (m === 0 ? '00' : m))
+        const m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60;
+        setStartTime(val.slice(0, 2) + ':' + (m === 0 ? '00' : m));
     }
 
     function handleToTimeInput(val: any) {
-        const m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60
-        setEndTime(val.slice(0, 2) + ':' + (m === 0 ? '00' : m))
+        const m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60;
+        setEndTime(val.slice(0, 2) + ':' + (m === 0 ? '00' : m));
     }
 
     function handleTimeValidation() {
-        const sh = startTime.split(':')[0]
-        const sm = startTime.split(':')[1]
-        const eh = endTime.split(':')[0]
-        const em = endTime.split(':')[1]
+        const sh = startTime.split(':')[0];
+        const sm = startTime.split(':')[1];
+        const eh = endTime.split(':')[0];
+        const em = endTime.split(':')[1];
 
         if (startTime !== '00:00' || endTime !== '00:00') {
             if (parseInt(sh) > parseInt(eh)) {
@@ -85,31 +85,31 @@ const RosterSettings: React.FC<{ data: any[] }> = (props) => {
                     <span id="timeErr" style={{ color: 'red' }}>
                         End Time should be greater than Start Time
                     </span>
-                )
+                );
             } else if (parseInt(sh) === parseInt(eh) && parseInt(sm) === parseInt(em)) {
                 return (
                     <span id="timeErr" style={{ color: 'red' }}>
                         End Time and start Time cannot be the same
                     </span>
-                )
+                );
             } else if (parseInt(sh) === parseInt(eh) && parseInt(sm) > parseInt(em)) {
                 return (
                     <span id="timeErr" style={{ color: 'red' }}>
                         End Time Cannot be lesser than Start Time
                     </span>
-                )
+                );
             } else {
-                return <span style={{ color: 'green' }}>Valid Time</span>
+                return <span style={{ color: 'green' }}>Valid Time</span>;
             }
         }
     }
 
     function handleDisableCheck() {
-        const ele = document.getElementById('timeErr')
+        const ele = document.getElementById('timeErr');
         if (ele) {
-            return true
+            return true;
         }
-        return false
+        return false;
     }
 
     return (
@@ -227,7 +227,7 @@ const RosterSettings: React.FC<{ data: any[] }> = (props) => {
                                 showSecond={false}
                                 minuteStep={15}
                                 onChange={(e) => {
-                                    handleFromTimeInput(moment(e).format('HH:mm'))
+                                    handleFromTimeInput(moment(e).format('HH:mm'));
                                 }}
                             />
                             <span>&nbsp;&nbsp;to&nbsp;&nbsp;</span>
@@ -236,7 +236,7 @@ const RosterSettings: React.FC<{ data: any[] }> = (props) => {
                                 showSecond={false}
                                 minuteStep={15}
                                 onChange={(e) => {
-                                    handleToTimeInput(moment(e).format('HH:mm'))
+                                    handleToTimeInput(moment(e).format('HH:mm'));
                                 }}
                             />
                         </div>
@@ -256,7 +256,7 @@ const RosterSettings: React.FC<{ data: any[] }> = (props) => {
                                         start_time: startTime,
                                         end_time: endTime
                                     }
-                                })
+                                });
                             }}
                         >
                             Save Changes
@@ -277,7 +277,7 @@ const RosterSettings: React.FC<{ data: any[] }> = (props) => {
                             <Form.Control
                                 as="select"
                                 onChange={(e: any) => {
-                                    setNewMode(e.target.value)
+                                    setNewMode(e.target.value);
                                 }}
                                 defaultValue={data?.session?.mode}
                             >
@@ -299,7 +299,7 @@ const RosterSettings: React.FC<{ data: any[] }> = (props) => {
                                         id: data?.session?.id,
                                         mode: newMode
                                     }
-                                })
+                                });
                             }}
                         >
                             Submit
@@ -323,7 +323,7 @@ const RosterSettings: React.FC<{ data: any[] }> = (props) => {
                                     data?.Session_booking_status === 'Canceled' ? false : true
                                 }
                                 onClick={() => {
-                                    setClassCancel('Booked')
+                                    setClassCancel('Booked');
                                 }}
                             >
                                 Active
@@ -335,7 +335,7 @@ const RosterSettings: React.FC<{ data: any[] }> = (props) => {
                                     data?.Session_booking_status !== 'Canceled' ? false : true
                                 }
                                 onClick={() => {
-                                    setClassCancel('Canceled')
+                                    setClassCancel('Canceled');
                                 }}
                             >
                                 Cancel Class
@@ -351,7 +351,7 @@ const RosterSettings: React.FC<{ data: any[] }> = (props) => {
                                     className="shadow-lg mt-3"
                                     value={classCancellationReason}
                                     onChange={(e: any) => {
-                                        setClassCancellationReason(e.target.value)
+                                        setClassCancellationReason(e.target.value);
                                     }}
                                     style={{ border: 'none', borderRadius: '15px' }}
                                 ></textarea>
@@ -378,7 +378,7 @@ const RosterSettings: React.FC<{ data: any[] }> = (props) => {
                                             id: data?.id,
                                             status: classCancel
                                         }
-                                    })
+                                    });
                                 }}
                             >
                                 Submit
@@ -393,7 +393,7 @@ const RosterSettings: React.FC<{ data: any[] }> = (props) => {
                                             id: data?.id,
                                             status: classCancel
                                         }
-                                    })
+                                    });
                                 }}
                             >
                                 Submit
@@ -441,7 +441,7 @@ const RosterSettings: React.FC<{ data: any[] }> = (props) => {
                                         id: data?.session?.id,
                                         date: newDate
                                     }
-                                })
+                                });
                             }}
                         >
                             Submit
@@ -450,7 +450,7 @@ const RosterSettings: React.FC<{ data: any[] }> = (props) => {
                 </Modal>
             }
         </>
-    )
-}
+    );
+};
 
-export default RosterSettings
+export default RosterSettings;

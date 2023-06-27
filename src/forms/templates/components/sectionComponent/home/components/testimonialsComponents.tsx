@@ -1,19 +1,19 @@
-import { Control, Controller } from 'react-hook-form'
+import { Control, Controller } from 'react-hook-form';
 import {
     SetFirstLetterToUpperCase,
     SplitAtUpperCase
-} from './../../../../../../lib/StringManipulation'
-import { Form } from 'react-bootstrap'
-import { FormData, InputProps } from '../@types/testimonialsType'
+} from './../../../../../../lib/StringManipulation';
+import { Form } from 'react-bootstrap';
+import { FormData, InputProps } from '../@types/testimonialsType';
 
 export const InputComponent = ({
     input,
     index,
     control
 }: {
-    input: InputProps
-    index: number
-    control: Control<FormData>
+    input: InputProps;
+    index: number;
+    control: Control<FormData>;
 }): JSX.Element => {
     return (
         <Form.Group>
@@ -31,5 +31,5 @@ export const InputComponent = ({
                 )}
             />
         </Form.Group>
-    )
-}
+    );
+};

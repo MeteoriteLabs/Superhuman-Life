@@ -1,16 +1,16 @@
-import React, { useContext, useState } from 'react'
-import { Col, Row, Form } from 'react-bootstrap'
-import { Typeahead } from 'react-bootstrap-typeahead'
-import 'react-bootstrap-typeahead/css/Typeahead.css'
-import { useQuery, gql } from '@apollo/client'
-import AuthContext from '../../context/auth-context'
-import { flattenObj } from '../utils/responseFlatten'
+import React, { useContext, useState } from 'react';
+import { Col, Row, Form } from 'react-bootstrap';
+import { Typeahead } from 'react-bootstrap-typeahead';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
+import { useQuery, gql } from '@apollo/client';
+import AuthContext from '../../context/auth-context';
+import { flattenObj } from '../utils/responseFlatten';
 
 const LocationList: React.FC<{ onChange: (args: string) => void }> = (props) => {
-    const auth = useContext(AuthContext)
-    const [singleSelections, setSingleSelections] = useState<any[]>([])
-    const [addresses, setAddresses] = useState<any[]>([])
-    const [addressTitle, setAddressTitle] = useState('Other')
+    const auth = useContext(AuthContext);
+    const [singleSelections, setSingleSelections] = useState<any[]>([]);
+    const [addresses, setAddresses] = useState<any[]>([]);
+    const [addressTitle, setAddressTitle] = useState('Other');
 
     const FETCH_USER_ADDRESSES = gql`
         query addresses($id: ID!) {
@@ -23,35 +23,35 @@ const LocationList: React.FC<{ onChange: (args: string) => void }> = (props) => 
                 }
             }
         }
-    `
+    `;
 
     function FetchData() {
         useQuery(FETCH_USER_ADDRESSES, {
             variables: { id: auth.userid },
             onCompleted: loadData
-        })
+        });
     }
 
     function loadData(data: any) {
-        const flattenedData = flattenObj({ ...data })
+        const flattenedData = flattenObj({ ...data });
 
         setAddresses(
             [...flattenedData.addresses].map((address) => {
                 return {
                     id: address.id,
                     title: address.address1
-                }
+                };
             })
-        )
+        );
     }
 
-    FetchData()
+    FetchData();
 
     function OnChange(e) {
-        setSingleSelections(e)
+        setSingleSelections(e);
     }
 
-    props.onChange(JSON.stringify({ addressTag: addressTitle, address: singleSelections }))
+    props.onChange(JSON.stringify({ addressTag: addressTitle, address: singleSelections }));
 
     return (
         <>
@@ -64,7 +64,7 @@ const LocationList: React.FC<{ onChange: (args: string) => void }> = (props) => 
                                 as="select"
                                 value={addressTitle}
                                 onChange={(e: any) => {
-                                    setAddressTitle(e.target.value)
+                                    setAddressTitle(e.target.value);
                                 }}
                             >
                                 <option value="Other">Other</option>
@@ -86,7 +86,7 @@ const LocationList: React.FC<{ onChange: (args: string) => void }> = (props) => 
                 </Row>
             </div>
         </>
-    )
-}
+    );
+};
 
-export default LocationList
+export default LocationList;

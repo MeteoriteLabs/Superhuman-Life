@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const GET_WEBSITE_SECTION = gql`
     query GetWebsiteSectionId($id: ID, $sectionPage: String, $sectionType: String) {
@@ -17,4 +17,4 @@ export const GET_WEBSITE_SECTION = gql`
             }
         }
     }
-`
+`;

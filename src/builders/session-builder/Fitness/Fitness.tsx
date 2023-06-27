@@ -1,13 +1,13 @@
-import React from 'react'
-import { Card, Tab, Tabs } from 'react-bootstrap'
-import Group from './Group/Group'
-import PT from './PT/PT'
-import Classic from './Classic/Classic'
-import Custom from './Custom/Custom'
-import Channel from './Channel/channel'
-import Cohort from './Cohort/cohort'
-import Event from './Event/event'
-import './fitness.css'
+import React from 'react';
+import { Card, Tab, Tabs } from 'react-bootstrap';
+import Group from './Group/Group';
+import PT from './PT/PT';
+import Classic from './Classic/Classic';
+import Custom from './Custom/Custom';
+import Channel from './Channel/channel';
+import Cohort from './Cohort/cohort';
+import Event from './Event/event';
+import './fitness.css';
 
 const Fitness: React.FC = () => {
     return (
@@ -61,7 +61,7 @@ const Fitness: React.FC = () => {
                 </Card.Body>
             </Card>
         </div>
-    )
-}
+    );
+};
 
-export default Fitness
+export default Fitness;

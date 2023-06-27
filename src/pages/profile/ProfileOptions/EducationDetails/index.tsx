@@ -1,22 +1,22 @@
-import React, { useState, useContext, useRef } from 'react'
-import { Card, Row, Col, Button, Dropdown } from 'react-bootstrap'
-import { EDUCATIONAL_DETAILS } from '../../queries/queries'
-import { useQuery } from '@apollo/client'
-import AuthContext from '../../../../context/auth-context'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
-import CreateEducation from './CreateEducation'
-import NoDataFound from '../../../../components/NoDataFound'
-import './education.css'
-import Loader from '../../../../components/Loader/Loader'
+import React, { useState, useContext, useRef } from 'react';
+import { Card, Row, Col, Button, Dropdown } from 'react-bootstrap';
+import { EDUCATIONAL_DETAILS } from '../../queries/queries';
+import { useQuery } from '@apollo/client';
+import AuthContext from '../../../../context/auth-context';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import CreateEducation from './CreateEducation';
+import NoDataFound from '../../../../components/NoDataFound';
+import './education.css';
+import Loader from '../../../../components/Loader/Loader';
 
 const EducationDetails: React.FC = () => {
     // eslint-disable-next-line
-    const CreateEducationComponent = useRef<any>(null)
-    const auth = useContext(AuthContext)
+    const CreateEducationComponent = useRef<any>(null);
+    const auth = useContext(AuthContext);
     // eslint-disable-next-line
-    const [educationData, setEducationData] = useState<any>([])
-    const [page, setPage] = useState<number>(1)
-    const [totalRecords, setTotalRecords] = useState<number>(0)
+    const [educationData, setEducationData] = useState<any>([]);
+    const [page, setPage] = useState<number>(1);
+    const [totalRecords, setTotalRecords] = useState<number>(0);
 
     const {
         // eslint-disable-next-line
@@ -27,16 +27,16 @@ const EducationDetails: React.FC = () => {
     } = useQuery(EDUCATIONAL_DETAILS, {
         variables: { id: auth.userid, start: page * 10 - 10, limit: 10 },
         onCompleted: (response) => {
-            const flattenData = flattenObj({ ...response.educationalDetails })
-            setEducationData(flattenData)
-            setTotalRecords(response.educationalDetails.meta.pagination.total)
+            const flattenData = flattenObj({ ...response.educationalDetails });
+            setEducationData(flattenData);
+            setTotalRecords(response.educationalDetails.meta.pagination.total);
         }
-    })
+    });
 
     //Delete User's Education Data function
     const deleteHandler = (data) => {
-        CreateEducationComponent.current.TriggerForm({ id: data.id, type: 'delete' })
-    }
+        CreateEducationComponent.current.TriggerForm({ id: data.id, type: 'delete' });
+    };
 
     // calling modal for update option
     function updateEducation(data) {
@@ -44,19 +44,19 @@ const EducationDetails: React.FC = () => {
             id: data.id,
             type: 'edit',
             modal_status: true
-        })
+        });
     }
 
     function refetchQueryCallback() {
-        refetch_educational_details()
+        refetch_educational_details();
     }
 
     const pageHandler = (selectedPageNumber: number) => {
-        setPage(selectedPageNumber)
-    }
+        setPage(selectedPageNumber);
+    };
 
     if (loading_educational_details) {
-        return <Loader msg={'Loading educational details ...'} />
+        return <Loader msg={'Loading educational details ...'} />;
     }
 
     return (
@@ -71,7 +71,7 @@ const EducationDetails: React.FC = () => {
                                 id: null,
                                 type: 'create',
                                 modal_status: true
-                            })
+                            });
                         }}
                     >
                         <i className="fas fa-plus-circle"></i> Add Education
@@ -171,7 +171,7 @@ const EducationDetails: React.FC = () => {
                 </Row>
             ) : null}
         </Col>
-    )
-}
+    );
+};
 
-export default EducationDetails
+export default EducationDetails;

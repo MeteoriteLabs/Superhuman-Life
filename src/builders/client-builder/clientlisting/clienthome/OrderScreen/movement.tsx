@@ -1,45 +1,45 @@
-import ActionButton from '../../../../../components/actionbutton/index'
-import { useMemo, useContext, useState, useRef } from 'react'
-import { Badge } from 'react-bootstrap'
-import { useQuery } from '@apollo/client'
-import Table from '../../../../../components/table'
-import { Row, Button, Col } from 'react-bootstrap'
-import AuthContext from '../../../../../context/auth-context'
-import { GET_BOOKINGS_NEW, GET_FITNESS_PACKAGE_TYPES } from './queries'
-import CreateSuggestion from './addSuggestion'
-import { flattenObj } from '../../../../../components/utils/responseFlatten'
-import CreateEditView from '../../../../../builders/package-builder/fitness/CreateEditView'
+import ActionButton from '../../../../../components/actionbutton/index';
+import { useMemo, useContext, useState, useRef } from 'react';
+import { Badge } from 'react-bootstrap';
+import { useQuery } from '@apollo/client';
+import Table from '../../../../../components/table';
+import { Row, Button, Col } from 'react-bootstrap';
+import AuthContext from '../../../../../context/auth-context';
+import { GET_BOOKINGS_NEW, GET_FITNESS_PACKAGE_TYPES } from './queries';
+import CreateSuggestion from './addSuggestion';
+import { flattenObj } from '../../../../../components/utils/responseFlatten';
+import CreateEditView from '../../../../../builders/package-builder/fitness/CreateEditView';
 
 function Movement() {
-    const last = window.location.pathname.split('/').pop()
-    const CreateSuggestionComponent = useRef<any>(null)
+    const last = window.location.pathname.split('/').pop();
+    const CreateSuggestionComponent = useRef<any>(null);
 
-    const createEditViewRef = useRef<any>(null)
+    const createEditViewRef = useRef<any>(null);
 
-    const { data } = useQuery(GET_FITNESS_PACKAGE_TYPES)
+    const { data } = useQuery(GET_FITNESS_PACKAGE_TYPES);
 
     function getDate(time: any) {
-        const dateObj = new Date(time)
-        const month = dateObj.getMonth() + 1
-        const year = dateObj.getFullYear()
-        const date = dateObj.getDate()
+        const dateObj = new Date(time);
+        const month = dateObj.getMonth() + 1;
+        const year = dateObj.getFullYear();
+        const date = dateObj.getDate();
 
-        return `${date}/${month}/${year}`
+        return `${date}/${month}/${year}`;
     }
     function getRenewalDate(time: any, duration: any) {
-        const date = new Date(time)
-        date.setDate(date.getDate() + duration)
-        return getDate(date)
+        const date = new Date(time);
+        date.setDate(date.getDate() + duration);
+        return getDate(date);
     }
     function compareDates(time: any) {
-        const date = new Date(time)
-        const currentdate = new Date()
+        const date = new Date(time);
+        const currentdate = new Date();
         if (date.getTime() < currentdate.getTime()) {
-            return true
+            return true;
         }
-        return false
+        return false;
     }
-    const auth = useContext(AuthContext)
+    const auth = useContext(AuthContext);
 
     const columns = useMemo<any>(
         () => [
@@ -71,7 +71,7 @@ function Movement() {
                                 ''
                             )}
                         </>
-                    )
+                    );
                 }
             },
             {
@@ -131,7 +131,7 @@ function Movement() {
                                 ' '
                             )}
                         </Row>
-                    )
+                    );
                 }
             },
             { accessor: 'duration', Header: 'Duration' },
@@ -169,7 +169,7 @@ function Movement() {
                                 ''
                             )}
                         </>
-                    )
+                    );
                 }
             },
             {
@@ -194,32 +194,32 @@ function Movement() {
                 Cell: ({ row }: any) => {
                     const actionClick1 = () => {
                         //handleRedirect(row.original.id);
-                    }
+                    };
                     const actionClick2 = () => {
                         //CreateClientComponent.current.TriggerForm({id: row.original.id, type: 'view'})
-                    }
+                    };
 
                     const arrayAction = [
                         { actionName: 'View Invoice', actionClick: actionClick1 },
                         { actionName: 'Renew Package', actionClick: actionClick2 }
-                    ]
+                    ];
 
-                    return <ActionButton arrayAction={arrayAction}></ActionButton>
+                    return <ActionButton arrayAction={arrayAction}></ActionButton>;
                 }
             }
         ],
         []
-    )
+    );
 
-    const [dataActivetable, setActiveDataTable] = useState<Record<string, unknown>[]>([])
-    const [dataHistorytable, setHistoryDataTable] = useState<Record<string, unknown>[]>([])
+    const [dataActivetable, setActiveDataTable] = useState<Record<string, unknown>[]>([]);
+    const [dataHistorytable, setHistoryDataTable] = useState<Record<string, unknown>[]>([]);
 
     function FetchData(_variables: Record<string, unknown> = { id: auth.userid, clientid: last }) {
-        useQuery(GET_BOOKINGS_NEW, { variables: _variables, onCompleted: loadData })
+        useQuery(GET_BOOKINGS_NEW, { variables: _variables, onCompleted: loadData });
     }
 
     function loadData(data: any) {
-        const flattenData = flattenObj({ ...data })
+        const flattenData = flattenObj({ ...data });
         setHistoryDataTable(
             [...flattenData.clientBookings].flatMap((Detail) =>
                 compareDates(getRenewalDate(Detail.effective_date, Detail.package_duration))
@@ -242,7 +242,7 @@ function Movement() {
                       }
                     : []
             )
-        )
+        );
 
         setActiveDataTable(
             [...flattenData.clientBookings].flatMap((Detail) =>
@@ -266,10 +266,10 @@ function Movement() {
                       }
                     : []
             )
-        )
+        );
     }
 
-    FetchData({ id: auth.userid, clientid: last })
+    FetchData({ id: auth.userid, clientid: last });
 
     return (
         <div>
@@ -283,7 +283,7 @@ function Movement() {
                                 id: null,
                                 actionType: 'create',
                                 type: 'One-On-One'
-                            })
+                            });
                         }}
                     >
                         <i className="fas fa-plus-circle"></i> PT
@@ -299,7 +299,7 @@ function Movement() {
                                 id: null,
                                 actionType: 'create',
                                 type: 'Classic Class'
-                            })
+                            });
                         }}
                     >
                         <i className="fas fa-plus-circle"></i> Classic
@@ -314,7 +314,7 @@ function Movement() {
                                 id: null,
                                 actionType: 'create',
                                 type: 'Custom Fitness'
-                            })
+                            });
                         }}
                     >
                         <i className="fas fa-plus-circle"></i> Custom
@@ -329,7 +329,7 @@ function Movement() {
                                 id: null,
                                 actionType: 'create',
                                 type: 'Group Class'
-                            })
+                            });
                         }}
                     >
                         <i className="fas fa-plus-circle"></i> Group
@@ -343,7 +343,7 @@ function Movement() {
                             CreateSuggestionComponent.current.TriggerForm({
                                 id: null,
                                 type: 'create'
-                            })
+                            });
                         }}
                     >
                         Suggest Package
@@ -370,7 +370,7 @@ function Movement() {
                 ref={createEditViewRef}
             ></CreateEditView>
         </div>
-    )
+    );
 }
 
-export default Movement
+export default Movement;

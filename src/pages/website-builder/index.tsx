@@ -1,12 +1,12 @@
-import { FC, useState } from 'react'
-import SideNav from './layout/sidenav'
-import 'react-toggle/style.css'
-import { Button, Container } from 'react-bootstrap'
-import WebsiteBuilder_settings from './components/websiteBuilder_settings'
-import WebsiteBuilder_template from './components/websiteBuilder_template'
+import { FC, useState } from 'react';
+import SideNav from './layout/sidenav';
+import 'react-toggle/style.css';
+import { Button, Container } from 'react-bootstrap';
+import WebsiteBuilder_settings from './components/websiteBuilder_settings';
+import WebsiteBuilder_template from './components/websiteBuilder_template';
 
 const WebsiteBuilder: FC = () => {
-    const [collapse, setCollapse] = useState<boolean>(true)
+    const [collapse, setCollapse] = useState<boolean>(true);
 
     return (
         <>
@@ -63,7 +63,7 @@ const WebsiteBuilder: FC = () => {
                 </Container>
             </div>
         </>
-    )
-}
+    );
+};
 
-export default WebsiteBuilder
+export default WebsiteBuilder;

@@ -1,6 +1,6 @@
-import React, { useContext, useImperativeHandle, useState } from 'react'
-import { useQuery, useMutation, gql } from '@apollo/client'
-import ModalView from '../../../../components/modal'
+import React, { useContext, useImperativeHandle, useState } from 'react';
+import { useQuery, useMutation, gql } from '@apollo/client';
+import ModalView from '../../../../components/modal';
 import {
     GET_SCHEDULEREVENTS,
     CREATE_SESSION,
@@ -8,38 +8,38 @@ import {
     CREATE_SESSION_BOOKING,
     GET_TEMPLATE_SESSIONS,
     UPDATE_FITNESSPORGRAMS_SESSIONS
-} from '../queries'
-import AuthContext from '../../../../context/auth-context'
-import { schema, widgets } from '../schema/workoutTemplateSchema'
-import { Subject } from 'rxjs'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
-import moment from 'moment'
-import { AvailabilityCheck } from './availabilityCheck'
-import { Modal, Button } from 'react-bootstrap'
-import Toaster from '../../../../components/Toaster'
+} from '../queries';
+import AuthContext from '../../../../context/auth-context';
+import { schema, widgets } from '../schema/workoutTemplateSchema';
+import { Subject } from 'rxjs';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import moment from 'moment';
+import { AvailabilityCheck } from './availabilityCheck';
+import { Modal, Button } from 'react-bootstrap';
+import Toaster from '../../../../components/Toaster';
 
 interface Operation {
-    id: string
-    type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete'
-    current_status: boolean
+    id: string;
+    type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
+    current_status: boolean;
 }
 
 function CreateEditWorkoutTemplate(props: any, ref: any) {
-    const auth = useContext(AuthContext)
+    const auth = useContext(AuthContext);
     const programSchema: {
-        [name: string]: any
+        [name: string]: any;
     } = require(window.location.pathname.includes('session')
         ? '../json/sessionManager/workoutTemplate.json'
-        : '../json/workoutTemplate.json')
-    const [programDetails, setProgramDetails] = useState<any>({})
-    const [operation, setOperation] = useState<Operation>({} as Operation)
-    const program_id = window.location.pathname.split('/').pop()
+        : '../json/workoutTemplate.json');
+    const [programDetails, setProgramDetails] = useState<any>({});
+    const [operation, setOperation] = useState<Operation>({} as Operation);
+    const program_id = window.location.pathname.split('/').pop();
     // const [sessionsIds, setSessionsIds] = useState<any>(props);
-    const [templateSessionsIds, setTemplateSessionsIds] = useState<any>([])
+    const [templateSessionsIds, setTemplateSessionsIds] = useState<any>([]);
     // userId here is the new sessionID.
-    const [userId, setUserId] = useState<string>('')
-    const [dropConflict, setDropConflict] = useState<boolean>(false)
-    const [isCreated, setIsCreated] = useState<boolean>(false)
+    const [userId, setUserId] = useState<string>('');
+    const [dropConflict, setDropConflict] = useState<boolean>(false);
+    const [isCreated, setIsCreated] = useState<boolean>(false);
 
     const GET_SESSIONS_BY_DATE = gql`
         query getprogramdata($date: Date) {
@@ -54,36 +54,36 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
                 }
             }
         }
-    `
+    `;
 
-    const query = useQuery(GET_SESSIONS_BY_DATE, { skip: true })
+    const query = useQuery(GET_SESSIONS_BY_DATE, { skip: true });
 
     useQuery(GET_TEMPLATE_SESSIONS, {
         variables: { id: program_id },
         skip: window.location.pathname.split('/')[1] !== 'programs',
         onCompleted: (data: any) => {
-            const flattenData = flattenObj({ ...data })
-            const templateExistingValues = [...templateSessionsIds]
+            const flattenData = flattenObj({ ...data });
+            const templateExistingValues = [...templateSessionsIds];
             for (let q = 0; q < flattenData.fitnessprograms[0].sessions.length; q++) {
-                templateExistingValues.push(flattenData.fitnessprograms[0].sessions[q].id)
+                templateExistingValues.push(flattenData.fitnessprograms[0].sessions[q].id);
             }
-            setTemplateSessionsIds(templateExistingValues)
+            setTemplateSessionsIds(templateExistingValues);
         }
-    })
+    });
 
     const [updateFitenssProgram] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, {
         onCompleted: (data: any) => {
-            modalTrigger.next(false)
-            props.callback()
+            modalTrigger.next(false);
+            props.callback();
         }
-    })
+    });
 
     const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, {
         onCompleted: (data: any) => {
-            modalTrigger.next(false)
-            props.callback()
+            modalTrigger.next(false);
+            props.callback();
         }
-    })
+    });
 
     const [upateSessions] = useMutation(UPDATE_TAG_SESSIONS, {
         onCompleted: (data: any) => {
@@ -94,28 +94,28 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
                             session: userId,
                             client: props.clientIds[i]
                         }
-                    })
+                    });
                 }
             } else {
-                modalTrigger.next(false)
-                props.callback()
+                modalTrigger.next(false);
+                props.callback();
             }
         }
-    })
+    });
 
     const [createSession] = useMutation(CREATE_SESSION, {
         onCompleted: (r: any) => {
-            setIsCreated(!isCreated)
+            setIsCreated(!isCreated);
             if (window.location.pathname.split('/')[1] === 'programs') {
-                const templateValues = [...templateSessionsIds]
-                setUserId(r.createSession.data.id)
-                templateValues.push(r.createSession.data.id)
+                const templateValues = [...templateSessionsIds];
+                setUserId(r.createSession.data.id);
+                templateValues.push(r.createSession.data.id);
                 updateFitenssProgram({
                     variables: {
                         id: program_id,
                         sessions_ids: templateValues
                     }
-                })
+                });
             }
             if (window.location.pathname.split('/')[1] === 'client') {
                 createSessionBooking({
@@ -123,53 +123,53 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
                         session: r.createSession.data.id,
                         client: program_id
                     }
-                })
+                });
             } else if (
                 window.location.pathname.split('/')[1] !== 'client' &&
                 window.location.pathname.split('/')[1] !== 'programs'
             ) {
-                const values = [...props.sessionIds]
+                const values = [...props.sessionIds];
                 // here userId refers to the sessionID
-                setUserId(r.createSession.data.id)
-                values.push(r.createSession.data.id)
+                setUserId(r.createSession.data.id);
+                values.push(r.createSession.data.id);
                 upateSessions({
                     variables: {
                         id: program_id,
                         sessions_ids: values
                     }
-                })
+                });
             }
         }
-    })
+    });
 
-    const modalTrigger = new Subject()
+    const modalTrigger = new Subject();
 
     useImperativeHandle(ref, () => ({
         TriggerForm: (msg: Operation) => {
-            setOperation(msg)
-            schema.startDate = props.startDate
-            schema.duration = props.duration
+            setOperation(msg);
+            schema.startDate = props.startDate;
+            schema.duration = props.duration;
             schema.type =
                 window.location.pathname.split('/')[1] === 'programs'
                     ? 'day'
                     : window.location.pathname.includes('classic')
                     ? 'day'
-                    : ''
+                    : '';
 
             if (msg && !msg.id)
                 //render form if no message id
-                modalTrigger.next(true)
+                modalTrigger.next(true);
         }
-    }))
+    }));
 
     function FillDetails(data: any) {
-        const details: any = {}
+        const details: any = {};
 
-        setProgramDetails(details)
+        setProgramDetails(details);
 
         //if message exists - show form only for edit and view
-        if (['edit', 'view'].indexOf(operation.type) > -1) modalTrigger.next(true)
-        else OnSubmit(null)
+        if (['edit', 'view'].indexOf(operation.type) > -1) modalTrigger.next(true);
+        else OnSubmit(null);
     }
 
     function FetchData() {
@@ -177,94 +177,94 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
             variables: { id: program_id },
             skip: !operation.id || operation.type === 'toggle-status',
             onCompleted: (e: any) => {
-                FillDetails(e)
+                FillDetails(e);
             }
-        })
+        });
     }
 
     function handleTimeFormat(time: string) {
-        const timeArray = time.split(':')
-        const hours = timeArray[0]
-        const minutes = timeArray[1]
+        const timeArray = time.split(':');
+        const hours = timeArray[0];
+        const minutes = timeArray[1];
         const timeString =
             (parseInt(hours) < 10 ? `0${hours}` : hours) +
             ':' +
-            (parseInt(minutes) === 0 ? `0${minutes}` : minutes)
-        return timeString.toString()
+            (parseInt(minutes) === 0 ? `0${minutes}` : minutes);
+        return timeString.toString();
     }
 
     async function UpdateProgram(frm: any) {
-        const existingEvents: any = props.events === null ? [] : [...props.events]
+        const existingEvents: any = props.events === null ? [] : [...props.events];
         if (frm.day) {
-            frm.day = JSON.parse(frm.day)
+            frm.day = JSON.parse(frm.day);
         }
 
         if (window.location.pathname.split('/')[1] !== 'programs') {
             const variables = {
                 date: moment(frm.day[0].day, 'Do, MMM YY').format('YYYY-MM-DD')
-            }
+            };
 
-            const result = await query.refetch(variables)
+            const result = await query.refetch(variables);
             const filterResult = await AvailabilityCheck({
                 sessions: result.data.sessions,
                 event: frm
-            })
+            });
             if (filterResult) {
-                setDropConflict(true)
-                return
+                setDropConflict(true);
+                return;
             }
         }
 
-        const eventJson: any = {}
+        const eventJson: any = {};
         if (frm.workoutEvent) {
-            frm.workoutEvent = JSON.parse(frm.workoutEvent)
-            frm.time = JSON.parse(frm.time)
-            eventJson.type = 'workout'
-            eventJson.mode = frm.assignMode
-            eventJson.tag = frm.tag
-            eventJson.name = frm.workoutEvent[0].name
-            eventJson.id = frm.workoutEvent[0].id
-            eventJson.startTime = handleTimeFormat(frm.time.startTime)
-            eventJson.endTime = handleTimeFormat(frm.time.endTime)
-            eventJson.day = parseInt(frm.day[0].key)
+            frm.workoutEvent = JSON.parse(frm.workoutEvent);
+            frm.time = JSON.parse(frm.time);
+            eventJson.type = 'workout';
+            eventJson.mode = frm.assignMode;
+            eventJson.tag = frm.tag;
+            eventJson.name = frm.workoutEvent[0].name;
+            eventJson.id = frm.workoutEvent[0].id;
+            eventJson.startTime = handleTimeFormat(frm.time.startTime);
+            eventJson.endTime = handleTimeFormat(frm.time.endTime);
+            eventJson.day = parseInt(frm.day[0].key);
             if (existingEvents.length === 0) {
-                existingEvents.push(eventJson)
+                existingEvents.push(eventJson);
             } else {
                 const timeStart: any = new Date(
                     '01/01/2007 ' + handleTimeFormat(frm.time.startTime)
-                )
-                const timeEnd: any = new Date('01/01/2007 ' + handleTimeFormat(frm.time.endTime))
-                const diff1 = timeEnd - timeStart
+                );
+                const timeEnd: any = new Date('01/01/2007 ' + handleTimeFormat(frm.time.endTime));
+                const diff1 = timeEnd - timeStart;
                 for (let i = 0; i <= existingEvents.length - 1; i++) {
                     const startTimeHour: any = new Date(
                         '01/01/2007 ' + handleTimeFormat(existingEvents[i].startTime)
-                    )
+                    );
                     const endTimeHour: any = new Date(
                         '01/01/2007 ' + handleTimeFormat(existingEvents[i].endTime)
-                    )
-                    const diff2 = endTimeHour - startTimeHour
+                    );
+                    const diff2 = endTimeHour - startTimeHour;
 
                     if (diff2 < diff1) {
-                        existingEvents.splice(i, 0, eventJson)
-                        break
+                        existingEvents.splice(i, 0, eventJson);
+                        break;
                     }
                     if (i === existingEvents.length - 1) {
-                        existingEvents.push(eventJson)
-                        break
+                        existingEvents.push(eventJson);
+                        break;
                     }
                 }
             }
         }
 
-        let lastEventDay = 0
+        let lastEventDay = 0;
 
         for (let k = 0; k <= existingEvents.length - 1; k++) {
             if (existingEvents[k].day > lastEventDay) {
-                lastEventDay = parseInt(existingEvents[k].day)
+                lastEventDay = parseInt(existingEvents[k].day);
             }
         }
 
-        let data: Record<string, unknown> = {}
+        let data: Record<string, unknown> = {};
 
         if (window.location.pathname.split('/')[1] === 'programs') {
             data = {
@@ -276,7 +276,7 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
                 changemaker: auth.userid,
                 session_date: null,
                 isProgram: true
-            }
+            };
         } else {
             data = {
                 start_time: eventJson.startTime,
@@ -289,35 +289,35 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
                 session_date: moment(frm.day[0].day, 'Do, MMM YY').format('YYYY-MM-DD'),
                 changemaker: auth.userid,
                 isProgram: false
-            }
+            };
         }
 
         createSession({
             variables: data
-        })
+        });
     }
 
     function OnSubmit(frm: any) {
         //bind user id
-        if (frm) frm.user_permissions_user = auth.userid
+        if (frm) frm.user_permissions_user = auth.userid;
 
         switch (operation.type) {
             case 'create':
-                UpdateProgram(frm)
-                break
+                UpdateProgram(frm);
+                break;
         }
     }
 
-    let name = ''
+    let name = '';
     if (operation.type === 'create') {
-        name = 'Workout Template'
+        name = 'Workout Template';
     } else if (operation.type === 'edit') {
-        name = 'Edit'
+        name = 'Edit';
     } else if (operation.type === 'view') {
-        name = 'View'
+        name = 'View';
     }
 
-    FetchData()
+    FetchData();
 
     return (
         <>
@@ -330,10 +330,10 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
                 formSubmit={
                     name === 'View'
                         ? () => {
-                              modalTrigger.next(false)
+                              modalTrigger.next(false);
                           }
                         : (frm: any) => {
-                              OnSubmit(frm)
+                              OnSubmit(frm);
                           }
                 }
                 formData={programDetails}
@@ -359,8 +359,8 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
                         <Button
                             variant="success"
                             onClick={() => {
-                                setDropConflict(false)
-                                modalTrigger.next(false)
+                                setDropConflict(false);
+                                modalTrigger.next(false);
                             }}
                         >
                             Understood
@@ -378,7 +378,7 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
                 />
             )}
         </>
-    )
+    );
 }
 
-export default React.forwardRef(CreateEditWorkoutTemplate)
+export default React.forwardRef(CreateEditWorkoutTemplate);

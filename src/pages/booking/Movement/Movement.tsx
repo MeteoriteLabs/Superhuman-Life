@@ -1,22 +1,22 @@
-import { useQuery } from '@apollo/client'
-import moment from 'moment'
-import { useContext, useMemo, useRef, useState } from 'react'
-import { useHistory } from 'react-router-dom'
-import { Badge, Col, Row, Button } from 'react-bootstrap'
-import ActionButton from '../../../components/actionbutton'
-import BookingTable from '../../../components/table/BookingTable/BookingTable'
-import authContext from '../../../context/auth-context'
-import { GET_ALL_BOOKINGS } from '../GraphQL/queries'
-import BookingAction from './BookingAction'
-import { flattenObj } from '../../../components/utils/responseFlatten'
+import { useQuery } from '@apollo/client';
+import moment from 'moment';
+import { useContext, useMemo, useRef, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { Badge, Col, Row, Button } from 'react-bootstrap';
+import ActionButton from '../../../components/actionbutton';
+import BookingTable from '../../../components/table/BookingTable/BookingTable';
+import authContext from '../../../context/auth-context';
+import { GET_ALL_BOOKINGS } from '../GraphQL/queries';
+import BookingAction from './BookingAction';
+import { flattenObj } from '../../../components/utils/responseFlatten';
 
 export default function Movement() {
-    const history = useHistory()
-    const auth = useContext(authContext)
-    const [userPackage, setUserPackage] = useState<any>([])
-    const bookingActionRef = useRef<any>(null)
-    const [page, setPage] = useState<number>(1)
-    const [totalRecords, setTotalRecords] = useState<number>(0)
+    const history = useHistory();
+    const auth = useContext(authContext);
+    const [userPackage, setUserPackage] = useState<any>([]);
+    const bookingActionRef = useRef<any>(null);
+    const [page, setPage] = useState<number>(1);
+    const [totalRecords, setTotalRecords] = useState<number>(0);
 
     // eslint-disable-next-line
     const { data: get_bookings, refetch: refetchBookings } = useQuery(GET_ALL_BOOKINGS, {
@@ -26,18 +26,18 @@ export default function Movement() {
             limit: 10
         },
         onCompleted: (data) => {
-            setTotalRecords(data.clientBookings.meta.pagination.total)
-            loadData(data)
+            setTotalRecords(data.clientBookings.meta.pagination.total);
+            loadData(data);
         }
-    })
+    });
 
     const loadData = (data: { clientBookings: any[] }) => {
-        const flattenData = flattenObj({ ...data })
+        const flattenData = flattenObj({ ...data });
 
         const newData = [
             ...flattenData.clientBookings.map((packageItem) => {
-                const renewDay: Date = new Date(packageItem.effective_date)
-                renewDay.setDate(renewDay.getDate() + packageItem.package_duration)
+                const renewDay: Date = new Date(packageItem.effective_date);
+                renewDay.setDate(renewDay.getDate() + packageItem.package_duration);
                 return {
                     id: packageItem.id,
                     booking_date: packageItem.booking_date,
@@ -50,12 +50,12 @@ export default function Movement() {
                     price: 'Rs 4000',
                     payment_status: 'Paid',
                     Status: packageItem.booking_status
-                }
+                };
             })
-        ]
+        ];
 
-        setUserPackage(newData)
-    }
+        setUserPackage(newData);
+    };
 
     const columns = useMemo(
         () => [
@@ -78,21 +78,21 @@ export default function Movement() {
                             <p>{moment(row.value).format('MMMM DD, YYYY')}</p>
                             <p>{moment(row.value).format('hh:mm a')}</p>
                         </div>
-                    )
+                    );
                 }
             },
             {
                 accessor: 'effectiveDate',
                 Header: 'Effective Date',
                 Cell: (row: any) => {
-                    return <p>{moment(row.value).format('MMMM DD, YYYY')}</p>
+                    return <p>{moment(row.value).format('MMMM DD, YYYY')}</p>;
                 }
             },
             {
                 accessor: 'packageRenewal',
                 Header: 'Renewal Date',
                 Cell: (row: any) => {
-                    return <p>{moment(row.value).format('MMMM DD, YYYY')}</p>
+                    return <p>{moment(row.value).format('MMMM DD, YYYY')}</p>;
                 }
             },
             { accessor: 'duration', Header: 'Duration ', disableSortBy: true },
@@ -122,7 +122,7 @@ export default function Movement() {
                                 </Badge>
                             )}
                         </>
-                    )
+                    );
                 }
             },
             {
@@ -165,7 +165,7 @@ export default function Movement() {
                                 ''
                             )}
                         </>
-                    )
+                    );
                 }
             },
             {
@@ -173,51 +173,51 @@ export default function Movement() {
                 Header: 'Actions',
                 Cell: ({ row }: any) => {
                     const manageHandler = () => {
-                        history.push('/clients')
-                    }
+                        history.push('/clients');
+                    };
 
                     const viewHandler = () => {
-                        history.push('/receipt')
-                    }
+                        history.push('/receipt');
+                    };
 
                     const acceptHandler = () => {
                         bookingActionRef.current.TriggerForm({
                             type: row.original.fitness_package_type,
                             id: row.original.id,
                             actionType: 'accept'
-                        })
-                    }
+                        });
+                    };
 
                     const rejectHandler = () => {
                         bookingActionRef.current.TriggerForm({
                             type: row.original.fitness_package_type,
                             id: row.original.id,
                             actionType: 'reject'
-                        })
-                    }
+                        });
+                    };
 
                     const arrayAction = [
                         { actionName: 'Go To Client', actionClick: manageHandler },
                         { actionName: 'View Invoice', actionClick: viewHandler },
                         { actionName: 'Accept', actionClick: acceptHandler },
                         { actionName: 'Reject', actionClick: rejectHandler }
-                    ]
+                    ];
                     return (
                         <ActionButton
                             status={row.original.Status}
                             arrayAction={arrayAction}
                         ></ActionButton>
-                    )
+                    );
                 }
             }
         ],
         // eslint-disable-next-line
         []
-    )
+    );
 
     const pageHandler = (selectedPageNumber: number) => {
-        setPage(selectedPageNumber)
-    }
+        setPage(selectedPageNumber);
+    };
 
     return (
         <div className="mt-5">
@@ -252,5 +252,5 @@ export default function Movement() {
                 </Row>
             ) : null}
         </div>
-    )
+    );
 }

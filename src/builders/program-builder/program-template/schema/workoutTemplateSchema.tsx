@@ -1,19 +1,19 @@
-import WorkoutList from '../../../../components/customWidgets/workoutList'
-import TimeField from '../../../../components/customWidgets/timeField'
-import DaysInput from '../daysInput'
-import ClassTypeSelect from '../../../../components/customWidgets/classTypeSelect'
+import WorkoutList from '../../../../components/customWidgets/workoutList';
+import TimeField from '../../../../components/customWidgets/timeField';
+import DaysInput from '../daysInput';
+import ClassTypeSelect from '../../../../components/customWidgets/classTypeSelect';
 
 export const widgets = {
     workoutList: WorkoutList,
     daysInput: DaysInput,
     timeField: TimeField
-}
+};
 
 export const schema: any = {
     effectiveDate: null,
     tag: {
         'ui:widget': (props: { onChange: () => void; value: string }) => {
-            return <ClassTypeSelect onChange={props.onChange} value={props.value} />
+            return <ClassTypeSelect onChange={props.onChange} value={props.value} />;
         }
     },
     day: {
@@ -27,7 +27,7 @@ export const schema: any = {
                     onChange={props.onChange}
                     val={props.value}
                 />
-            )
+            );
         }
     },
     workoutEvent: {
@@ -35,7 +35,7 @@ export const schema: any = {
     },
     time: {
         'ui:widget': (props: { onChange: () => void; value: string }) => {
-            return <TimeField onChange={props.onChange} value={props.value} />
+            return <TimeField onChange={props.onChange} value={props.value} />;
         }
     }
-}
+};

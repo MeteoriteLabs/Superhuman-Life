@@ -1,21 +1,21 @@
-import { useState, useContext, useRef, forwardRef } from 'react'
-import { Card, Row, Col, Button, Dropdown } from 'react-bootstrap'
-import { ADDRESSES } from '../../queries/queries'
-import AuthContext from '../../../../context/auth-context'
-import { useQuery } from '@apollo/client'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
-import CreateAddress from './CreateAddress'
-import Loader from '../../../../components/Loader/Loader'
-import NoDataFound from '../../../../components/NoDataFound'
-import { BasicAddressDetails } from './CreateAddress'
+import { useState, useContext, useRef, forwardRef } from 'react';
+import { Card, Row, Col, Button, Dropdown } from 'react-bootstrap';
+import { ADDRESSES } from '../../queries/queries';
+import AuthContext from '../../../../context/auth-context';
+import { useQuery } from '@apollo/client';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import CreateAddress from './CreateAddress';
+import Loader from '../../../../components/Loader/Loader';
+import NoDataFound from '../../../../components/NoDataFound';
+import { BasicAddressDetails } from './CreateAddress';
 
 const AddressDetails = () => {
-    const auth = useContext(AuthContext)
-    const [addressData, setAddressData] = useState<BasicAddressDetails[]>([])
+    const auth = useContext(AuthContext);
+    const [addressData, setAddressData] = useState<BasicAddressDetails[]>([]);
     // eslint-disable-next-line
-    const CreateAddressComponent = useRef<any>(null)
-    const [page, setPage] = useState<number>(1)
-    const [totalRecords, setTotalRecords] = useState<number>(0)
+    const CreateAddressComponent = useRef<any>(null);
+    const [page, setPage] = useState<number>(1);
+    const [totalRecords, setTotalRecords] = useState<number>(0);
 
     const {
         // eslint-disable-next-line
@@ -25,15 +25,15 @@ const AddressDetails = () => {
     } = useQuery(ADDRESSES, {
         variables: { id: auth.userid, start: page * 10 - 10, limit: 10 },
         onCompleted: (response) => {
-            const flattenData = flattenObj({ ...response.addresses })
-            setAddressData(flattenData)
-            setTotalRecords(response.addresses.meta.pagination.total)
+            const flattenData = flattenObj({ ...response.addresses });
+            setAddressData(flattenData);
+            setTotalRecords(response.addresses.meta.pagination.total);
         }
-    })
+    });
 
     const deleteUserAddress = (data) => {
-        CreateAddressComponent.current.TriggerForm({ id: data.id, type: 'delete' })
-    }
+        CreateAddressComponent.current.TriggerForm({ id: data.id, type: 'delete' });
+    };
 
     // calling modal for update option
     function updateAddress(data) {
@@ -41,20 +41,20 @@ const AddressDetails = () => {
             id: data.id,
             type: 'edit',
             modal_status: true
-        })
+        });
     }
 
     function refetchQueryCallback() {
-        refetch_address()
+        refetch_address();
     }
 
     if (loading_address_details) {
-        return <Loader msg={'Loading address details ...'} />
+        return <Loader msg={'Loading address details ...'} />;
     }
 
     const pageHandler = (selectedPageNumber: number) => {
-        setPage(selectedPageNumber)
-    }
+        setPage(selectedPageNumber);
+    };
 
     return (
         <Col md={{ span: 8, offset: 2 }}>
@@ -68,7 +68,7 @@ const AddressDetails = () => {
                                 id: null,
                                 type: 'create',
                                 modal_status: true
-                            })
+                            });
                         }}
                     >
                         <i className="fas fa-plus-circle"></i> Add Address
@@ -195,7 +195,7 @@ const AddressDetails = () => {
                 </Row>
             ) : null}
         </Col>
-    )
-}
+    );
+};
 
-export default forwardRef(AddressDetails)
+export default forwardRef(AddressDetails);

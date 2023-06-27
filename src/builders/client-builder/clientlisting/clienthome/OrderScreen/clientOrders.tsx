@@ -1,5 +1,5 @@
-import { Card, Tab, Tabs, TabContent } from 'react-bootstrap'
-import Orders from './movement'
+import { Card, Tab, Tabs, TabContent } from 'react-bootstrap';
+import Orders from './movement';
 
 function Programs() {
     return (
@@ -22,7 +22,7 @@ function Programs() {
                 </Card.Body>
             </Card>
         </div>
-    )
+    );
 }
 
-export default Programs
+export default Programs;

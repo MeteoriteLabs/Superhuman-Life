@@ -1,13 +1,13 @@
-import { Fragment } from 'react'
-import Classes from '../Classes'
+import { Fragment } from 'react';
+import Classes from '../Classes';
 
 type Props = {
-    onlineClassesType: number
-    offlineClassesType: number
-    packageTypeName: string
-    mode: 'Online' | 'Offline' | 'Hybird' | 'Workout' | 'Online Workout' | 'Offline Workout'
-    type: 'One-On-One' | 'Group Class' | 'Custom Fitness' | 'Classic Class'
-}
+    onlineClassesType: number;
+    offlineClassesType: number;
+    packageTypeName: string;
+    mode: 'Online' | 'Offline' | 'Hybird' | 'Workout' | 'Online Workout' | 'Offline Workout';
+    type: 'One-On-One' | 'Group Class' | 'Custom Fitness' | 'Classic Class';
+};
 
 export default function PTGroupPricingTable({
     onlineClassesType,
@@ -51,5 +51,5 @@ export default function PTGroupPricingTable({
                     )}
             </tr>
         </Fragment>
-    )
+    );
 }

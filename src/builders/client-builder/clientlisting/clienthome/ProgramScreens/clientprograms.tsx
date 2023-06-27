@@ -1,6 +1,6 @@
-import { Card, Tab, Tabs, TabContent } from 'react-bootstrap'
-import Movement from './movement'
-import Nutrition from './nutrition'
+import { Card, Tab, Tabs, TabContent } from 'react-bootstrap';
+import Movement from './movement';
+import Nutrition from './nutrition';
 function Programs() {
     return (
         <div>
@@ -23,7 +23,7 @@ function Programs() {
                 </Card.Body>
             </Card>
         </div>
-    )
+    );
 }
 
-export default Programs
+export default Programs;

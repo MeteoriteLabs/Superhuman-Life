@@ -1,6 +1,6 @@
-import { Card, Tab, Tabs } from 'react-bootstrap'
+import { Card, Tab, Tabs } from 'react-bootstrap';
 // import Event from "./Event/Event";
-import Fitness from './Fitness/Fitness'
+import Fitness from './Fitness/Fitness';
 // import Journey from "./Journey/Journey";
 // import Nutrition from "./Nutrition/Nutrition";
 
@@ -27,5 +27,5 @@ export default function Invoice() {
                 </Card.Body>
             </Card>
         </div>
-    )
+    );
 }

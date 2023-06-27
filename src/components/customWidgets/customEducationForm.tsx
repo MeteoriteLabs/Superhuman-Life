@@ -1,12 +1,12 @@
-import { Col, Container, Row, Form } from 'react-bootstrap'
+import { Col, Container, Row, Form } from 'react-bootstrap';
 
 function CustomEducationForm(props) {
     const handleChange = (e: any) => {
-        const { name, value } = e.target
+        const { name, value } = e.target;
 
-        let formValues = { ...props.value }
-        props.onChange(JSON.stringify({ ...formValues, [name]: value }))
-    }
+        let formValues = { ...props.value };
+        props.onChange(JSON.stringify({ ...formValues, [name]: value }));
+    };
 
     return (
         <>
@@ -77,7 +77,7 @@ function CustomEducationForm(props) {
                 </Row>
             </Container>
         </>
-    )
+    );
 }
 
-export default CustomEducationForm
+export default CustomEducationForm;

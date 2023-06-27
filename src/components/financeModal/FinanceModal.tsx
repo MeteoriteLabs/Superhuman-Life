@@ -1,28 +1,28 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { withTheme, utils } from '@rjsf/core'
-import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4'
-import { Button, Col, Modal, Row } from 'react-bootstrap'
+import React, { useEffect, useRef, useState } from 'react';
+import { withTheme, utils } from '@rjsf/core';
+import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
+import { Button, Col, Modal, Row } from 'react-bootstrap';
 
 const FinanceModal: React.FC<{
-    modalTrigger: any
-    formSchema: any
-    name: string
-    formSubmit: (args: any) => void
-    actionType: string
-    formData: any
-    formUISchema?: any
-    widgets?: any
-    showErrorList?: any
-    transformErrors?: any
+    modalTrigger: any;
+    formSchema: any;
+    name: string;
+    formSubmit: (args: any) => void;
+    actionType: string;
+    formData: any;
+    formUISchema?: any;
+    widgets?: any;
+    showErrorList?: any;
+    transformErrors?: any;
 }> = (props) => {
-    const registry = utils.getDefaultRegistry()
-    const defaultFileWidget = registry.widgets['FileWidget']
-    ;(Bootstrap4Theme as any).widgets['FileWidget'] = defaultFileWidget
+    const registry = utils.getDefaultRegistry();
+    const defaultFileWidget = registry.widgets['FileWidget'];
+    (Bootstrap4Theme as any).widgets['FileWidget'] = defaultFileWidget;
 
-    const Form: any = withTheme(Bootstrap4Theme)
-    const formRef = useRef<any>(null)
-    const [show, setShow] = useState<boolean>(false)
-    const [formValues, setFormValues] = useState<any>('')
+    const Form: any = withTheme(Bootstrap4Theme);
+    const formRef = useRef<any>(null);
+    const [show, setShow] = useState<boolean>(false);
+    const [formValues, setFormValues] = useState<any>('');
 
     useEffect(() => {
         props.actionType === 'view' ||
@@ -32,16 +32,16 @@ const FinanceModal: React.FC<{
         props.actionType === 'editBankDetails' ||
         props.actionType === 'editUPI'
             ? setFormValues(props.formData)
-            : setFormValues('')
-    }, [props.formData, props.actionType])
+            : setFormValues('');
+    }, [props.formData, props.actionType]);
 
     props.modalTrigger.subscribe((res: boolean) => {
-        setShow(res)
-    })
+        setShow(res);
+    });
 
     function submitHandler(formData: any) {
-        setFormValues({ ...formValues, ...formData })
-        props.formSubmit(formData)
+        setFormValues({ ...formValues, ...formData });
+        props.formSubmit(formData);
     }
 
     return (
@@ -91,7 +91,7 @@ const FinanceModal: React.FC<{
                             variant={'danger'}
                             size="sm"
                             onClick={(event) => {
-                                props.modalTrigger.next(false)
+                                props.modalTrigger.next(false);
                             }}
                         >
                             Close
@@ -105,7 +105,7 @@ const FinanceModal: React.FC<{
                         onClick={(event) => {
                             props.actionType === 'view'
                                 ? props.modalTrigger.next(false)
-                                : formRef.current.onSubmit(event)
+                                : formRef.current.onSubmit(event);
                         }}
                     >
                         {props.actionType === 'view' ? 'Close' : 'Save'}
@@ -113,7 +113,7 @@ const FinanceModal: React.FC<{
                 </Modal.Footer>
             </Modal>
         </div>
-    )
-}
+    );
+};
 
-export default FinanceModal
+export default FinanceModal;

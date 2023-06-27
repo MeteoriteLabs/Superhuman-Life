@@ -1,40 +1,40 @@
-import React, { useEffect, useContext, useState } from 'react'
-import { useHistory } from 'react-router-dom'
-import { useQuery } from '@apollo/client'
-import { Button } from 'react-bootstrap'
-import axios from 'axios'
-import AuthContext from '../../context/auth-context'
-import { GET_CLIENT_BOOKING } from '../Summary/queries'
-import { flattenObj } from '../../components/utils/responseFlatten'
-import { Card, CardDeck } from 'react-bootstrap'
+import React, { useEffect, useContext, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
+import { Button } from 'react-bootstrap';
+import axios from 'axios';
+import AuthContext from '../../context/auth-context';
+import { GET_CLIENT_BOOKING } from '../Summary/queries';
+import { flattenObj } from '../../components/utils/responseFlatten';
+import { Card, CardDeck } from 'react-bootstrap';
 
 const SuccessfulBooking: React.FC = () => {
-    const auth = useContext(AuthContext)
-    const history = useHistory()
-    const query = window.location.search
-    const params = new URLSearchParams(query)
-    const bookingId = params.get('bookingid')
-    const [linkId, setLinkId] = useState<string | null>(null)
-    const [packageDetails, setPackageDetails] = useState<any>()
-    const [paymentDetails, setPaymentDetails] = useState<any>()
+    const auth = useContext(AuthContext);
+    const history = useHistory();
+    const query = window.location.search;
+    const params = new URLSearchParams(query);
+    const bookingId = params.get('bookingid');
+    const [linkId, setLinkId] = useState<string | null>(null);
+    const [packageDetails, setPackageDetails] = useState<any>();
+    const [paymentDetails, setPaymentDetails] = useState<any>();
 
     const routeChange = () => {
-        const path = `/add_client`
-        history.push(path)
-    }
+        const path = `/add_client`;
+        history.push(path);
+    };
 
     const config = {
         headers: { Authorization: `Bearer ${auth.token}` }
-    }
+    };
 
     // eslint-disable-next-line
     const { data: get_client_booking } = useQuery(GET_CLIENT_BOOKING, {
         variables: { id: bookingId },
         onCompleted: (response) => {
-            const flattenBookingResponse = flattenObj(response.clientBooking)
-            setPackageDetails(flattenBookingResponse)
+            const flattenBookingResponse = flattenObj(response.clientBooking);
+            setPackageDetails(flattenBookingResponse);
         }
-    })
+    });
 
     useEffect(() => {
         // Fetch data from cashfree's GET API using the link Id
@@ -46,16 +46,16 @@ const SuccessfulBooking: React.FC = () => {
                         config
                     )
                     .then((response) => {
-                        setPaymentDetails(response.data.cfLink)
-                        setLinkId(response.data.cfLink.linkId)
-                    })
+                        setPaymentDetails(response.data.cfLink);
+                        setLinkId(response.data.cfLink.linkId);
+                    });
             }
-        }
+        };
 
         if (packageDetails?.fitnesspackages[0].fitnesspackagepricing[0].mrp !== 'free') {
-            fetchData()
+            fetchData();
         }
-    }, [])
+    }, []);
 
     return (
         <div className="col-lg-12">
@@ -144,7 +144,7 @@ const SuccessfulBooking: React.FC = () => {
                 </Card>
             </CardDeck>
         </div>
-    )
-}
+    );
+};
 
-export default SuccessfulBooking
+export default SuccessfulBooking;

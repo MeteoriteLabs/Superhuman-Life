@@ -1,30 +1,30 @@
-import { useState, useEffect } from 'react'
-import { Col, Row, Navbar, Nav } from 'react-bootstrap'
-import { SideNav } from './side'
-import { AuthenticatedNav, UnauthenticatedNav } from './top'
-import { useLocation } from 'react-router-dom'
-import Icon from '../Icons'
-import './bottomBar.css'
+import { useState, useEffect } from 'react';
+import { Col, Row, Navbar, Nav } from 'react-bootstrap';
+import { SideNav } from './side';
+import { AuthenticatedNav, UnauthenticatedNav } from './top';
+import { useLocation } from 'react-router-dom';
+import Icon from '../Icons';
+import './bottomBar.css';
 
 export default function Layout({
     token,
     children
 }: {
-    token: string
-    children: JSX.Element
+    token: string;
+    children: JSX.Element;
 }): JSX.Element {
-    const location = useLocation()
-    const [selected, setSelected] = useState<string>(location.pathname.slice(1))
-    const [collapse, setCollapse] = useState<boolean>(true)
-    const [sideNavStatus, setSideNavStatus] = useState<boolean>(false)
-    const [liveEditor, setLiveEditor] = useState<boolean>(false)
+    const location = useLocation();
+    const [selected, setSelected] = useState<string>(location.pathname.slice(1));
+    const [collapse, setCollapse] = useState<boolean>(true);
+    const [sideNavStatus, setSideNavStatus] = useState<boolean>(false);
+    const [liveEditor, setLiveEditor] = useState<boolean>(false);
 
-    const { pathname } = useLocation()
+    const { pathname } = useLocation();
 
     useEffect(() => {
-        pathname === '/website/templates/liveEditor' ? setLiveEditor(true) : setLiveEditor(false)
-        getSideNavStatus()
-    }, [pathname])
+        pathname === '/website/templates/liveEditor' ? setLiveEditor(true) : setLiveEditor(false);
+        getSideNavStatus();
+    }, [pathname]);
 
     const getSideNavStatus = () => {
         const currentSideNavStatus: boolean =
@@ -36,13 +36,13 @@ export default function Layout({
             pathname !== '/insights' &&
             pathname !== '/support'
                 ? true
-                : false
-        setSideNavStatus(currentSideNavStatus)
-    }
+                : false;
+        setSideNavStatus(currentSideNavStatus);
+    };
 
     useEffect(() => {
-        window.scrollTo(0, 0)
-    }, [])
+        window.scrollTo(0, 0);
+    }, []);
 
     return (
         <>
@@ -259,5 +259,5 @@ export default function Layout({
                 </Navbar>
             ) : null}
         </>
-    )
+    );
 }

@@ -1,15 +1,15 @@
-import { useState, useRef } from 'react'
-import { Col, Row, FormControl, InputGroup, Button, Dropdown } from 'react-bootstrap'
-import './actionButton.css'
-import { GET_PARTICULAR_CLIENT } from '../graphql/queries'
-import { useQuery } from '@apollo/client'
-import { flattenObj } from '../../../../components/utils/responseFlatten'
-import AddFeedback from './feedback/addFeedback'
+import { useState, useRef } from 'react';
+import { Col, Row, FormControl, InputGroup, Button, Dropdown } from 'react-bootstrap';
+import './actionButton.css';
+import { GET_PARTICULAR_CLIENT } from '../graphql/queries';
+import { useQuery } from '@apollo/client';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import AddFeedback from './feedback/addFeedback';
 
 const RosterAttendees = () => {
-    const [clients, setClients] = useState<any>([])
-    const [searchInput, setSearchInput] = useState<any>('')
-    const CreateFeedbackComponent = useRef<any>(null)
+    const [clients, setClients] = useState<any>([]);
+    const [searchInput, setSearchInput] = useState<any>('');
+    const CreateFeedbackComponent = useRef<any>(null);
 
     useQuery(GET_PARTICULAR_CLIENT, {
         variables: {
@@ -17,13 +17,13 @@ const RosterAttendees = () => {
             username: searchInput
         },
         onCompleted: (data) => {
-            const flattenData = flattenObj({ ...data })
-            setClients(flattenData.sessionsBookings)
+            const flattenData = flattenObj({ ...data });
+            setClients(flattenData.sessionsBookings);
         }
-    })
+    });
 
     function handleIndexFormatting(index: number) {
-        return (index + 1).toString().padStart(2, '0')
+        return (index + 1).toString().padStart(2, '0');
     }
 
     return (
@@ -42,7 +42,7 @@ const RosterAttendees = () => {
                                 <Button
                                     variant="outline-secondary"
                                     onClick={(e: any) => {
-                                        e.preventDefault()
+                                        e.preventDefault();
                                     }}
                                 >
                                     <i className="fas fa-search"></i>
@@ -171,7 +171,7 @@ const RosterAttendees = () => {
                                                                                     id: null,
                                                                                     type: 'create'
                                                                                 }
-                                                                            )
+                                                                            );
                                                                         }}
                                                                     >
                                                                         Add Feedback
@@ -183,7 +183,7 @@ const RosterAttendees = () => {
                                                                     ></AddFeedback>
                                                                     <Dropdown.Item
                                                                         onClick={() => {
-                                                                            window.location.href = `/client/home/${item?.client?.id}`
+                                                                            window.location.href = `/client/home/${item?.client?.id}`;
                                                                         }}
                                                                     >
                                                                         Go to Client
@@ -229,13 +229,13 @@ const RosterAttendees = () => {
                                         </Row>
                                     </div>
                                 </>
-                            )
+                            );
                         })}
                     </div>
                 )}
             </div>
         </>
-    )
-}
+    );
+};
 
-export default RosterAttendees
+export default RosterAttendees;

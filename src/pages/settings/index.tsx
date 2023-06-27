@@ -1,57 +1,57 @@
-import { Container, Col, Card, Row } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
-import { useQuery } from '@apollo/client'
-import { GET_AVAILABILITY, BOOKING_CONFIG, FETCH_USER_PROFILE_DATA } from './queries'
-import React, { useContext, useState } from 'react'
-import AuthContext from '../../context/auth-context'
-import moment from 'moment'
-import { flattenObj } from '../../components/utils/responseFlatten'
+import { Container, Col, Card, Row } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
+import { GET_AVAILABILITY, BOOKING_CONFIG, FETCH_USER_PROFILE_DATA } from './queries';
+import React, { useContext, useState } from 'react';
+import AuthContext from '../../context/auth-context';
+import moment from 'moment';
+import { flattenObj } from '../../components/utils/responseFlatten';
 
 interface Profile {
-    updatedAt: string
+    updatedAt: string;
 }
 
 const SettingsPage: React.FC = () => {
-    const auth = useContext(AuthContext)
-    const [changemakerAvailabilityData, setChangemakerAvailabilityData] = useState<string>()
-    const [bookingUpdatedDate, setBookingUpdatedDate] = useState<string>()
-    const [profileData, setProfileData] = useState<Profile>({} as Profile)
+    const auth = useContext(AuthContext);
+    const [changemakerAvailabilityData, setChangemakerAvailabilityData] = useState<string>();
+    const [bookingUpdatedDate, setBookingUpdatedDate] = useState<string>();
+    const [profileData, setProfileData] = useState<Profile>({} as Profile);
 
     useQuery(FETCH_USER_PROFILE_DATA, {
         variables: { id: auth.userid },
         onCompleted: (response) => {
-            console.log(response, typeof response)
-            setProfileData(response.usersPermissionsUser.data.attributes)
+            console.log(response, typeof response);
+            setProfileData(response.usersPermissionsUser.data.attributes);
         }
-    })
+    });
 
     useQuery(GET_AVAILABILITY, {
         variables: { id: auth.userid },
         onCompleted: (data) => {
             const flattenChangemakerAvailabilityData = flattenObj({
                 ...data.changemakerAvailabilties
-            })
+            });
 
             if (flattenChangemakerAvailabilityData.length) {
                 setChangemakerAvailabilityData(
                     moment(flattenChangemakerAvailabilityData[0].updatedAt).format('DD MMM YYYY')
-                )
+                );
             }
         }
-    })
+    });
 
     useQuery(BOOKING_CONFIG, {
         variables: { id: auth.userid },
         onCompleted: (data) => {
-            const flattenBookingsData = flattenObj({ ...data.bookingConfigs })
+            const flattenBookingsData = flattenObj({ ...data.bookingConfigs });
 
             if (flattenBookingsData.length) {
                 setBookingUpdatedDate(
                     moment(flattenBookingsData[0].updatedAt).format('DD MMM YYYY')
-                )
+                );
             }
         }
-    })
+    });
 
     return (
         <div>
@@ -175,7 +175,7 @@ const SettingsPage: React.FC = () => {
                 </Row>
             </Container>
         </div>
-    )
-}
+    );
+};
 
-export default SettingsPage
+export default SettingsPage;

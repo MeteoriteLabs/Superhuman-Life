@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const GET_CONTACTS = gql`
     query ContactsQuery($id: ID) {
@@ -28,7 +28,7 @@ export const GET_CONTACTS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_CONTACT = gql`
     query ContactQuery($id: ID) {
@@ -55,7 +55,7 @@ export const GET_CONTACT = gql`
             }
         }
     }
-`
+`;
 
 export const GET_PAYMENT_SCHEDULES = gql`
     query PaymentSchedulesQuery($Destination_Contacts_ID: [Int], $Source_User_ID: Int) {
@@ -85,7 +85,7 @@ export const GET_PAYMENT_SCHEDULES = gql`
             }
         }
     }
-`
+`;
 
 export const ADD_CONTACT = gql`
     mutation contact($data: ContactInput!) {
@@ -95,7 +95,7 @@ export const ADD_CONTACT = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_CONTACT = gql`
     mutation updateContact($id: ID!, $data: ContactInput!) {
@@ -105,7 +105,7 @@ export const UPDATE_CONTACT = gql`
             }
         }
     }
-`
+`;
 
 export const DELETE_CONTACT = gql`
     mutation deleteContact($id: ID!) {
@@ -115,7 +115,7 @@ export const DELETE_CONTACT = gql`
             }
         }
     }
-`
+`;
 
 export const ADD_PAYMENT_SCHEDULE = gql`
     mutation createPaymentSchedule($data: PaymentScheduleInput!) {
@@ -125,7 +125,7 @@ export const ADD_PAYMENT_SCHEDULE = gql`
             }
         }
     }
-`
+`;
 
 export const FETCH_CONTACT_DETAILS = gql`
     query contactDetail($id: ID!) {
@@ -144,7 +144,7 @@ export const FETCH_CONTACT_DETAILS = gql`
             }
         }
     }
-`
+`;
 
 export const FETCH_CHANGEMAKERS = gql`
     query fetchUsersProfileData {
@@ -210,7 +210,7 @@ export const FETCH_CHANGEMAKERS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_PAYMENT_SCHEDULES_FOR_CHANGEMAKER = gql`
     query PaymentSchedulesQuery($id: Int) {
@@ -236,4 +236,4 @@ export const GET_PAYMENT_SCHEDULES_FOR_CHANGEMAKER = gql`
             }
         }
     }
-`
+`;

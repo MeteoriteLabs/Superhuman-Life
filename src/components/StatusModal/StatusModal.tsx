@@ -1,18 +1,18 @@
-import React from 'react'
-import { Button, Col, Modal, Row } from 'react-bootstrap'
+import React from 'react';
+import { Button, Col, Modal, Row } from 'react-bootstrap';
 
 const StatusModal: React.FC<{
-    onClick: () => void
-    onHide: () => void
-    modalBody: string
-    show: boolean
-    modalTitle: string
-    buttonLeft: string
-    buttonRight: string
+    onClick: () => void;
+    onHide: () => void;
+    modalBody: string;
+    show: boolean;
+    modalTitle: string;
+    buttonLeft: string;
+    buttonRight: string;
 }> = (props) => {
     function handleClick() {
-        props.onClick()
-        props.onHide()
+        props.onClick();
+        props.onHide();
     }
 
     return (
@@ -47,7 +47,7 @@ const StatusModal: React.FC<{
                 </div>
             </Modal.Footer>
         </Modal>
-    )
-}
+    );
+};
 
-export default StatusModal
+export default StatusModal;

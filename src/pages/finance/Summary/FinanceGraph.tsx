@@ -1,30 +1,30 @@
-import React, { useContext, useEffect, useState, ChangeEvent } from 'react'
-import { useLazyQuery } from '@apollo/client'
+import React, { useContext, useEffect, useState, ChangeEvent } from 'react';
+import { useLazyQuery } from '@apollo/client';
 import {
     GET_EARNINGS_TRANSACTIONS,
     GET_EXPENSES_TRANSACTIONS,
     GET_USERS_JOINED_DATE
-} from './Queries'
-import { Row, Col } from 'react-bootstrap'
-import AuthContext from '../../../context/auth-context'
-import { flattenObj } from '../../../components/utils/responseFlatten'
-import LineGraph from '../../../components/Graphs/LineGraph/LineGraph'
-import moment from 'moment'
+} from './Queries';
+import { Row, Col } from 'react-bootstrap';
+import AuthContext from '../../../context/auth-context';
+import { flattenObj } from '../../../components/utils/responseFlatten';
+import LineGraph from '../../../components/Graphs/LineGraph/LineGraph';
+import moment from 'moment';
 
 interface ArrayType {
-    x: string
-    y: number
+    x: string;
+    y: number;
 }
 
 const FinanceGraph: React.FC = () => {
-    const [earningsData, setEarningsData] = useState<ArrayType[]>([])
-    const [expensesData, setExpensesData] = useState<ArrayType[]>([])
-    const [revenueData, setRevenueData] = useState<ArrayType[]>([])
-    const auth = useContext(AuthContext)
-    const [joinedYearArray, setJoinedYearArray] = useState<number[]>()
-    const [selectedYear, setSelectedYear] = useState<number>(Number(moment().format('YYYY')))
+    const [earningsData, setEarningsData] = useState<ArrayType[]>([]);
+    const [expensesData, setExpensesData] = useState<ArrayType[]>([]);
+    const [revenueData, setRevenueData] = useState<ArrayType[]>([]);
+    const auth = useContext(AuthContext);
+    const [joinedYearArray, setJoinedYearArray] = useState<number[]>();
+    const [selectedYear, setSelectedYear] = useState<number>(Number(moment().format('YYYY')));
 
-    const currentYear = new Date().getFullYear()
+    const currentYear = new Date().getFullYear();
 
     const [
         getEarnings,
@@ -37,14 +37,14 @@ const FinanceGraph: React.FC = () => {
         onCompleted: (data) => {
             const flattenEarningsTransactionsData = flattenObj({
                 ...data.transactions
-            })
-            const earningsArray: ArrayType[] = []
-            const revenueArray: ArrayType[] = []
-            const initialEarningsValue = 0
-            const initialRevenueValue = 0
+            });
+            const earningsArray: ArrayType[] = [];
+            const revenueArray: ArrayType[] = [];
+            const initialEarningsValue = 0;
+            const initialRevenueValue = 0;
 
             for (let month = 0; month < 12; month++) {
-                const currentMonth = toMonthName(month).substring(0, 3)
+                const currentMonth = toMonthName(month).substring(0, 3);
 
                 earningsArray[month] = {
                     x: `${currentMonth} ${selectedYear}`,
@@ -62,7 +62,7 @@ const FinanceGraph: React.FC = () => {
                                     accumulator + currentValue.ChangemakerAmount,
                                 initialEarningsValue
                             )
-                }
+                };
 
                 revenueArray[month] = {
                     x: `${currentMonth} ${selectedYear}`,
@@ -80,13 +80,13 @@ const FinanceGraph: React.FC = () => {
                                     accumulator + currentValue.TransactionAmount,
                                 initialRevenueValue
                             )
-                }
+                };
 
-                setEarningsData(earningsArray)
-                setRevenueData(revenueArray)
+                setEarningsData(earningsArray);
+                setRevenueData(revenueArray);
             }
         }
-    })
+    });
 
     const [
         getExpenses,
@@ -99,13 +99,13 @@ const FinanceGraph: React.FC = () => {
         onCompleted: (data) => {
             const flattenExpensesTransactionsData = flattenObj({
                 ...data.transactions
-            })
+            });
 
-            const expensesArray: ArrayType[] = []
-            const initialExpensesValue = 0
+            const expensesArray: ArrayType[] = [];
+            const initialExpensesValue = 0;
 
             for (let month = 0; month < 12; month++) {
-                const currentMonth = toMonthName(month).substring(0, 3)
+                const currentMonth = toMonthName(month).substring(0, 3);
 
                 expensesArray[month] = {
                     x: `${currentMonth} ${selectedYear}`,
@@ -117,19 +117,19 @@ const FinanceGraph: React.FC = () => {
                                 return (
                                     moment(currentValue.TransactionDateTime).format('MM/YY') ===
                                     moment(`${selectedYear}-${month + 1}-01`).format('MM/YY')
-                                )
+                                );
                             })
                             .reduce(
                                 (accumulator, currentValue) =>
                                     accumulator + currentValue.TransactionAmount,
                                 initialExpensesValue
                             )
-                }
+                };
             }
 
-            setExpensesData(expensesArray)
+            setExpensesData(expensesArray);
         }
-    })
+    });
 
     const [
         getUsersJoinedDate,
@@ -142,25 +142,25 @@ const FinanceGraph: React.FC = () => {
         onCompleted: (data) => {
             const flattenUsersData = flattenObj({
                 ...data.usersPermissionsUser
-            })
+            });
 
-            const accountCreatedAt = moment(flattenUsersData.createdAt).format('YYYY')
-            const arr: number[] = []
+            const accountCreatedAt = moment(flattenUsersData.createdAt).format('YYYY');
+            const arr: number[] = [];
 
             for (let i = Number(accountCreatedAt); i <= Number(moment().format('YYYY')); i++) {
-                arr.push(i)
+                arr.push(i);
             }
-            setJoinedYearArray(arr)
+            setJoinedYearArray(arr);
         }
-    })
+    });
 
     function toMonthName(monthNumber: number) {
-        const date = new Date()
-        date.setMonth(monthNumber)
+        const date = new Date();
+        date.setMonth(monthNumber);
 
         return date.toLocaleString('en-US', {
             month: 'long'
-        })
+        });
     }
 
     useEffect(() => {
@@ -170,7 +170,7 @@ const FinanceGraph: React.FC = () => {
                 transactionStartTime: moment(`${currentYear}-01-01`).format(),
                 transactionEndTime: moment(`${currentYear}-12-31`).format()
             }
-        })
+        });
 
         getExpenses({
             variables: {
@@ -178,15 +178,15 @@ const FinanceGraph: React.FC = () => {
                 transactionStartTime: moment(`${currentYear}-01-01`).format(),
                 transactionEndTime: moment(`${currentYear}-12-31`).format()
             }
-        })
+        });
 
-        getUsersJoinedDate({ variables: { id: auth.userid } })
+        getUsersJoinedDate({ variables: { id: auth.userid } });
 
         //eslint-disable-next-line
-    }, [])
+    }, []);
 
     const selectYearChangeHandler = (event: ChangeEvent<HTMLSelectElement>): void => {
-        setSelectedYear(Number(event.target.value))
+        setSelectedYear(Number(event.target.value));
 
         getEarnings({
             variables: {
@@ -194,7 +194,7 @@ const FinanceGraph: React.FC = () => {
                 transactionStartTime: moment(`${event.target.value}-01-01`).format(),
                 transactionEndTime: moment(`${event.target.value}-12-31`).format()
             }
-        })
+        });
 
         getExpenses({
             variables: {
@@ -202,8 +202,8 @@ const FinanceGraph: React.FC = () => {
                 transactionStartTime: moment(`${event.target.value}-01-01`).format(),
                 transactionEndTime: moment(`${event.target.value}-12-31`).format()
             }
-        })
-    }
+        });
+    };
 
     return (
         <>
@@ -271,7 +271,7 @@ const FinanceGraph: React.FC = () => {
                 </Col>
             </Row>
         </>
-    )
-}
+    );
+};
 
-export default FinanceGraph
+export default FinanceGraph;

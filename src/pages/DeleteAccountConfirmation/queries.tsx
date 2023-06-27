@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const FETCH_USER_PROFILE_DATA = gql`
     query fetchUserProfileData($id: ID!) {
@@ -64,7 +64,7 @@ export const FETCH_USER_PROFILE_DATA = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_USER_PROFILE_DATA = gql`
     mutation updateUserProfileData($id: ID!, $data: UsersPermissionsUserInput!) {
@@ -82,7 +82,7 @@ export const UPDATE_USER_PROFILE_DATA = gql`
             }
         }
     }
-`
+`;
 
 export const CREATE_DELETE_ACCOUNT = gql`
     mutation createDeleteAccount($data: DeleteAccountInput!) {
@@ -92,4 +92,4 @@ export const CREATE_DELETE_ACCOUNT = gql`
             }
         }
     }
-`
+`;

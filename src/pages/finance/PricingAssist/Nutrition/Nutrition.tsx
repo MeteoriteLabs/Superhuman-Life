@@ -1,8 +1,8 @@
-import React from 'react'
-import ActionButton, { ArrayAction } from '../../../../components/actionbutton'
-import { Badge, Row, Col } from 'react-bootstrap'
-import { useContext, useMemo, useRef, useState } from 'react'
-import Table from '../../../../components/table/index'
+import React from 'react';
+import ActionButton, { ArrayAction } from '../../../../components/actionbutton';
+import { Badge, Row, Col } from 'react-bootstrap';
+import { useContext, useMemo, useRef, useState } from 'react';
+import Table from '../../../../components/table/index';
 
 export default function Nutrition() {
     const dataTable = [
@@ -36,7 +36,7 @@ export default function Nutrition() {
             mrp: 100,
             updated: '8:00 AM | 05/07/20'
         }
-    ]
+    ];
 
     const columns = useMemo(
         () => [
@@ -96,21 +96,21 @@ export default function Nutrition() {
                                 ''
                             )}
                         </div>
-                    )
+                    );
                 }
             },
             {
                 accessor: 'duration',
                 Header: 'Duration',
                 Cell: ({ row }: any) => {
-                    return <p className="mb-0">{row.values.duration} class</p>
+                    return <p className="mb-0">{row.values.duration} class</p>;
                 }
             },
             {
                 accessor: 'mrp',
                 Header: 'Mrp',
                 Cell: ({ row }: any) => {
-                    return <p className="mb-0">Rs {row.values.mrp}</p>
+                    return <p className="mb-0">Rs {row.values.mrp}</p>;
                 }
             },
             { accessor: 'updated', Header: 'Updated' },
@@ -120,17 +120,17 @@ export default function Nutrition() {
                 Cell: ({ row }: any) => {
                     const actionClick1 = () => {
                         // fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "One-On-One", rowData: "" })
-                    }
+                    };
                     const arrayAction: ArrayAction[] = [
                         { actionName: 'Edit', actionClick: actionClick1 }
-                    ]
+                    ];
 
-                    return <ActionButton arrayAction={arrayAction}></ActionButton>
+                    return <ActionButton arrayAction={arrayAction}></ActionButton>;
                 }
             }
         ],
         []
-    )
+    );
 
     return (
         <div className="mt-5">
@@ -141,5 +141,5 @@ export default function Nutrition() {
                 </Col>
             </Row>
         </div>
-    )
+    );
 }

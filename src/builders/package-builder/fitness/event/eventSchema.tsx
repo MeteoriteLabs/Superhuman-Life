@@ -1,15 +1,15 @@
-import PricingTableChannel from './pricingTable'
-import LocationList from '../../../../components/customWidgets/locationList'
-import LanguageList from '../../../../components/customWidgets/languageSelect'
-import ProgramDetails from './ProgramDetails'
-import CourseDetails from '../cohort/course_details'
-import Upload from '../../../../components/upload/upload'
-import DatesConfig from '../../../../components/customWidgets/datesConfig'
-import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect'
-import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect'
-import BookingConfig from './bookingConfig'
-import CohortDateConfig from './eventDateConfig'
-import CohortPrimaryDateConfig from './primaryDatesConfig'
+import PricingTableChannel from './pricingTable';
+import LocationList from '../../../../components/customWidgets/locationList';
+import LanguageList from '../../../../components/customWidgets/languageSelect';
+import ProgramDetails from './ProgramDetails';
+import CourseDetails from '../cohort/course_details';
+import Upload from '../../../../components/upload/upload';
+import DatesConfig from '../../../../components/customWidgets/datesConfig';
+import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect';
+import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect';
+import BookingConfig from './bookingConfig';
+import CohortDateConfig from './eventDateConfig';
+import CohortPrimaryDateConfig from './primaryDatesConfig';
 
 export const widgets = {
     pricingTableChannel: PricingTableChannel,
@@ -22,7 +22,7 @@ export const widgets = {
     equipmentSelect: EquipmentSelect,
     cohortBookingConfig: BookingConfig,
     cohortDateConfig: CohortDateConfig
-}
+};
 
 export const schema: any = {
     level: {
@@ -76,7 +76,7 @@ export const schema: any = {
                     value={props.value}
                     title={'Thumbnail'}
                 />
-            )
+            );
         }
     },
     datesConfig: {
@@ -84,7 +84,7 @@ export const schema: any = {
     },
     dates: {
         'ui:widget': (props: any) => {
-            return <CohortPrimaryDateConfig value={props.value} onChange={props.onChange} />
+            return <CohortPrimaryDateConfig value={props.value} onChange={props.onChange} />;
         }
     },
     VideoUrl: {
@@ -131,4 +131,4 @@ export const schema: any = {
             'ui:widget': 'courseDetails'
         }
     }
-}
+};

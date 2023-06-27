@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const UPDATE_SESSION_TIME = gql`
     mutation updateSessionTime($id: ID!, $start_time: String!, $end_time: String!) {
@@ -8,7 +8,7 @@ export const UPDATE_SESSION_TIME = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_SESSION_MODE = gql`
     mutation updateSessionMode($id: ID!, $mode: String!) {
@@ -18,7 +18,7 @@ export const UPDATE_SESSION_MODE = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_SESSION_BOOKING_STATUS = gql`
     mutation updateSessionBookingStatus(
@@ -31,7 +31,7 @@ export const UPDATE_SESSION_BOOKING_STATUS = gql`
             }
         }
     }
-`
+`;
 
 export const UPDATE_SESSION_DATE = gql`
     mutation updateSessionDate($id: ID!, $date: Date!) {
@@ -41,4 +41,4 @@ export const UPDATE_SESSION_DATE = gql`
             }
         }
     }
-`
+`;

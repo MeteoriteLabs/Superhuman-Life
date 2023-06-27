@@ -1,88 +1,88 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext, useEffect } from 'react';
 import {
     GET_CLIENT_BOOKING,
     GET_OFFERING_INVENTORIES,
     CREATE_TRANSACTION,
     GET_TAG,
     UPDATE_TAG
-} from './queries'
-import { useQuery, useMutation, useLazyQuery } from '@apollo/client'
-import { flattenObj } from '../../components/utils/responseFlatten'
-import { Col, Row } from 'react-bootstrap'
-import Card from 'react-bootstrap/Card'
-import CardDeck from 'react-bootstrap/CardDeck'
-import DisplayImage from '../../components/DisplayImage'
-import { Button } from 'react-bootstrap'
-import ClientDetailsCard from './ClientDetails'
-import OfferingDetails from './OfferingDetails'
-import { UPDATE_OFFERING_INVENTORY } from '../../builders/package-builder/fitness/graphQL/mutations'
-import AuthContext from '../../context/auth-context'
-import { UPDATE_BOOKING_STATUS } from '../booking/GraphQL/mutation'
-import moment from 'moment'
-import { CREATE_USER_PACKAGE } from '../booking/GraphQL/mutation'
-import axios from 'axios'
-import { useHistory } from 'react-router-dom'
-import './summary.css'
+} from './queries';
+import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
+import { flattenObj } from '../../components/utils/responseFlatten';
+import { Col, Row } from 'react-bootstrap';
+import Card from 'react-bootstrap/Card';
+import CardDeck from 'react-bootstrap/CardDeck';
+import DisplayImage from '../../components/DisplayImage';
+import { Button } from 'react-bootstrap';
+import ClientDetailsCard from './ClientDetails';
+import OfferingDetails from './OfferingDetails';
+import { UPDATE_OFFERING_INVENTORY } from '../../builders/package-builder/fitness/graphQL/mutations';
+import AuthContext from '../../context/auth-context';
+import { UPDATE_BOOKING_STATUS } from '../booking/GraphQL/mutation';
+import moment from 'moment';
+import { CREATE_USER_PACKAGE } from '../booking/GraphQL/mutation';
+import axios from 'axios';
+import { useHistory } from 'react-router-dom';
+import './summary.css';
 // import QRCode from 'react-qr-code';
-import API_END_POINTS from '../../components/utils/integration'
-import { PackageDetails } from './Interface'
-import { CREATE_TAG } from './queries'
+import API_END_POINTS from '../../components/utils/integration';
+import { PackageDetails } from './Interface';
+import { CREATE_TAG } from './queries';
 
 interface PackagePricing {
-    duration: number
-    foodPrice?: number
-    mrp: string
-    privateRoomPrice?: number
-    sapienPricing: number
-    suggestedPrice: number
-    threeSharingPrice?: number
-    twoSharingPrice?: number
-    voucher?: number
+    duration: number;
+    foodPrice?: number;
+    mrp: string;
+    privateRoomPrice?: number;
+    sapienPricing: number;
+    suggestedPrice: number;
+    threeSharingPrice?: number;
+    twoSharingPrice?: number;
+    voucher?: number;
 }
 
 interface UserPackageResponse {
-    id: string
+    id: string;
     users_permissions_user: {
-        id: string
-        username: string
-        __typename: string
-    }
+        id: string;
+        username: string;
+        __typename: string;
+    };
     fitnesspackages: {
-        id: string
-        packagename: string
-        __typename: string
-    }[]
-    __typename: string
+        id: string;
+        packagename: string;
+        __typename: string;
+    }[];
+    __typename: string;
 }
 
 const Summary: React.FC = () => {
-    const auth = useContext(AuthContext)
-    const [packageDetails, setPackageDetails] = useState<PackageDetails>({} as PackageDetails)
-    const query = window.location.search
-    const params = new URLSearchParams(query)
-    const bookingId = params.get('id')
-    const [linkId, setLinkId] = useState<string | null>(null)
-    const [timer, setTimer] = useState<number>(600)
-    const [isLinkSent, setIsLinkSent] = useState<boolean>(false)
-    const [redirect, setRedirect] = useState<string | null>(null)
-    const [packagePricing, setPackagePricing] = useState<PackagePricing[]>([])
+    const auth = useContext(AuthContext);
+    const [packageDetails, setPackageDetails] = useState<PackageDetails>({} as PackageDetails);
+    const query = window.location.search;
+    const params = new URLSearchParams(query);
+    const bookingId = params.get('id');
+    const [linkId, setLinkId] = useState<string | null>(null);
+    const [timer, setTimer] = useState<number>(600);
+    const [isLinkSent, setIsLinkSent] = useState<boolean>(false);
+    const [redirect, setRedirect] = useState<string | null>(null);
+    const [packagePricing, setPackagePricing] = useState<PackagePricing[]>([]);
     const [clientPackage, setClientPackage] = useState<UserPackageResponse>(
         {} as UserPackageResponse
-    )
+    );
 
-    const history = useHistory()
+    const history = useHistory();
 
     const config = {
         headers: { Authorization: `Bearer ${auth.token}` }
-    }
+    };
 
     useQuery(GET_CLIENT_BOOKING, {
         variables: { id: Number(bookingId) },
         onCompleted: (response) => {
-            const flattenBookingResponse: PackageDetails = flattenObj(response.clientBooking)
+            const flattenBookingResponse: PackageDetails = flattenObj(response.clientBooking);
 
-            setPackageDetails(flattenBookingResponse)
-            setPackagePricing(flattenBookingResponse.fitnesspackages[0].fitnesspackagepricing)
+            setPackageDetails(flattenBookingResponse);
+            setPackagePricing(flattenBookingResponse.fitnesspackages[0].fitnesspackagepricing);
 
             // const mrp = flattenBookingResponse.fitnesspackages[0].fitnesspackagepricing.find(
             //   (currentValue) => currentValue.duration === flattenBookingResponse.package_duration
@@ -114,15 +114,15 @@ const Summary: React.FC = () => {
             //       });
             //   });
         }
-    })
+    });
 
     const mrp = packagePricing.find(
         (currentValue) => currentValue.duration === packageDetails.package_duration
-    )
+    );
 
     const [getTag] = useLazyQuery(GET_TAG, {
         onCompleted: (tagsResponse) => {
-            const flattenTagsResponse = flattenObj(tagsResponse.tags)
+            const flattenTagsResponse = flattenObj(tagsResponse.tags);
 
             updateTag({
                 variables: {
@@ -132,26 +132,26 @@ const Summary: React.FC = () => {
                     }
                 },
                 onCompleted: () => {
-                    history.push(`/success/?bookingid=${bookingId}`)
+                    history.push(`/success/?bookingid=${bookingId}`);
                 }
-            })
+            });
         }
-    })
+    });
 
-    const [offeringInventory] = useLazyQuery(GET_OFFERING_INVENTORIES)
-    const [createTransaction] = useMutation(CREATE_TRANSACTION)
-    const [updateTag] = useMutation(UPDATE_TAG)
-    const [updateOfferingInventory] = useMutation(UPDATE_OFFERING_INVENTORY)
-    const [updateBookingStatus] = useMutation(UPDATE_BOOKING_STATUS)
-    const [createTag] = useMutation(CREATE_TAG)
+    const [offeringInventory] = useLazyQuery(GET_OFFERING_INVENTORIES);
+    const [createTransaction] = useMutation(CREATE_TRANSACTION);
+    const [updateTag] = useMutation(UPDATE_TAG);
+    const [updateOfferingInventory] = useMutation(UPDATE_OFFERING_INVENTORY);
+    const [updateBookingStatus] = useMutation(UPDATE_BOOKING_STATUS);
+    const [createTag] = useMutation(CREATE_TAG);
 
     const [createUserPackage] = useMutation(CREATE_USER_PACKAGE, {
         onCompleted: (response) => {
             const flattenUserPackageResponse: UserPackageResponse = flattenObj(
                 response.createClientPackage
-            )
+            );
 
-            setClientPackage(flattenUserPackageResponse)
+            setClientPackage(flattenUserPackageResponse);
             updateBookingStatus({
                 variables: {
                     id: bookingId,
@@ -181,7 +181,7 @@ const Summary: React.FC = () => {
                             onCompleted: (response) => {
                                 const flattenOfferingInventories = flattenObj(
                                     response.offeringInventories
-                                )
+                                );
 
                                 updateOfferingInventory({
                                     variables: {
@@ -221,18 +221,18 @@ const Summary: React.FC = () => {
                                     onCompleted: (response) => {
                                         const flattenInventoryResponse = flattenObj(
                                             response.updateOfferingInventory
-                                        )
+                                        );
 
                                         getTag({
                                             variables: {
                                                 fitnessPackageId:
                                                     flattenInventoryResponse.fitnesspackage.id
                                             }
-                                        })
+                                        });
                                     }
-                                })
+                                });
                             }
-                        })
+                        });
                     } else {
                         createTag({
                             variables: {
@@ -255,14 +255,14 @@ const Summary: React.FC = () => {
                             },
 
                             onCompleted: () => {
-                                history.push(`/success/?bookingid=${bookingId}`)
+                                history.push(`/success/?bookingid=${bookingId}`);
                             }
-                        })
+                        });
                     }
                 }
-            })
+            });
         }
-    })
+    });
 
     //Free package flow
     const completeBooking = () => {
@@ -277,8 +277,8 @@ const Summary: React.FC = () => {
                     effective_date: packageDetails.effective_date
                 }
             }
-        })
-    }
+        });
+    };
 
     const sendLink = (bookingId: string | null) => {
         axios
@@ -298,11 +298,11 @@ const Summary: React.FC = () => {
                 config
             )
             .then((response) => {
-                startTimer()
-                setLinkId(response.data.cfLink.linkId)
-                setIsLinkSent(true)
-            })
-    }
+                startTimer();
+                setLinkId(response.data.cfLink.linkId);
+                setIsLinkSent(true);
+            });
+    };
 
     // const proceedToPayment = () => {
     //   console.log(paymentOption)
@@ -356,20 +356,20 @@ const Summary: React.FC = () => {
 
     const startTimer = () => {
         const countdown = setInterval(() => {
-            setTimer((prevTimer) => prevTimer - 1)
-        }, 1000)
+            setTimer((prevTimer) => prevTimer - 1);
+        }, 1000);
 
         // Clear the countdown interval and redirect to failure when the timer reaches 0
         if (timer <= 0) {
-            clearInterval(countdown)
-            setRedirect(`/failure/?bookingid=${bookingId}`) // Redirect to failure page
+            clearInterval(countdown);
+            setRedirect(`/failure/?bookingid=${bookingId}`); // Redirect to failure page
         }
 
         // Clean up the countdown interval on component unmount
         return () => {
-            clearInterval(countdown)
-        }
-    }
+            clearInterval(countdown);
+        };
+    };
 
     useEffect(() => {
         // Fetch payment status data from GET API using the linkId
@@ -398,7 +398,7 @@ const Summary: React.FC = () => {
                             onCompleted: (transactionResponse) => {
                                 const flattenTransactionResponse = flattenObj(
                                     transactionResponse.createTransaction
-                                )
+                                );
 
                                 createUserPackage({
                                     variables: {
@@ -412,9 +412,9 @@ const Summary: React.FC = () => {
                                             TransactionID: `${flattenTransactionResponse.id}`
                                         }
                                     }
-                                })
+                                });
                             }
-                        })
+                        });
                     } else if (response.data.cfLink.linkStatus === 'EXPIRED') {
                         createTransaction({
                             variables: {
@@ -448,10 +448,10 @@ const Summary: React.FC = () => {
                                                 : null
                                         }${bookingId}`
                                     }
-                                })
+                                });
                             }
-                        })
-                        setRedirect(`/failure/?bookingid=${bookingId}`)
+                        });
+                        setRedirect(`/failure/?bookingid=${bookingId}`);
                     } else if (response.data.cfLink.linkStatus === 'CANCELLED') {
                         createTransaction({
                             variables: {
@@ -485,30 +485,30 @@ const Summary: React.FC = () => {
                                                 : null
                                         }${bookingId}`
                                     }
-                                })
+                                });
                             }
-                        })
-                        setRedirect(`/failure/?bookingid=${bookingId}`)
+                        });
+                        setRedirect(`/failure/?bookingid=${bookingId}`);
                     } else {
                         // Continue fetching data if not yet successful or failed
-                        setTimeout(fetchData, 5000) // Fetch data every 5 seconds
+                        setTimeout(fetchData, 5000); // Fetch data every 5 seconds
                     }
-                })
-        }
+                });
+        };
 
         // Start fetching data if postId is available
         if (linkId) {
-            fetchData()
+            fetchData();
         }
-    }, [linkId])
+    }, [linkId]);
 
     // Redirect the user to the appropriate page
     if (redirect) {
-        history.push(redirect)
+        history.push(redirect);
     }
 
     // Calculate the percentage of time elapsed
-    const elapsedPercentage = ((300 - timer) / 300) * 100
+    const elapsedPercentage = ((300 - timer) / 300) * 100;
 
     return (
         <div className="col-lg-12">
@@ -973,7 +973,7 @@ const Summary: React.FC = () => {
                 </Row>
             ) : null}
         </div>
-    )
-}
+    );
+};
 
-export default Summary
+export default Summary;

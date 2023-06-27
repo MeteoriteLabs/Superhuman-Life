@@ -1,7 +1,7 @@
-import { Card, Tab, Tabs, TabContent } from 'react-bootstrap'
-import ClientListing from './clientlisting'
-import Leads from './leads/index'
-import Contacts from './contacts/index'
+import { Card, Tab, Tabs, TabContent } from 'react-bootstrap';
+import ClientListing from './clientlisting';
+import Leads from './leads/index';
+import Contacts from './contacts/index';
 
 export default function ClientPage(): JSX.Element {
     return (
@@ -37,5 +37,5 @@ export default function ClientPage(): JSX.Element {
                 </Card.Body>
             </Card>
         </>
-    )
+    );
 }

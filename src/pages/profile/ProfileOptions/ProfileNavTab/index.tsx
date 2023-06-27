@@ -1,13 +1,13 @@
-import React, { useState } from 'react'
-import { Tabs, Tab, Card } from 'react-bootstrap'
-import BasicProfileForm from '../BasicProfileForm'
-import AddressDetails from '../AddressDetails'
-import EducationDetails from '../EducationDetails'
-import SocialAccount from '../SocialAccount'
-import AccountVerification from '../AccountVerification'
+import React, { useState } from 'react';
+import { Tabs, Tab, Card } from 'react-bootstrap';
+import BasicProfileForm from '../BasicProfileForm';
+import AddressDetails from '../AddressDetails';
+import EducationDetails from '../EducationDetails';
+import SocialAccount from '../SocialAccount';
+import AccountVerification from '../AccountVerification';
 
 const ProfileNavTab: React.FC = () => {
-    const [key, setKey] = useState('basicprofile')
+    const [key, setKey] = useState('basicprofile');
 
     return (
         <Card className="shadow-sm mt-2" border="light">
@@ -39,7 +39,7 @@ const ProfileNavTab: React.FC = () => {
                 </Tabs>
             </Card.Body>
         </Card>
-    )
-}
+    );
+};
 
-export default ProfileNavTab
+export default ProfileNavTab;

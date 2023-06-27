@@ -1,8 +1,8 @@
-import Upload from '../../../components/upload/upload'
+import Upload from '../../../components/upload/upload';
 
 export const widgets = {
     upload: Upload
-}
+};
 
 export const schema: any = {
     title: {
@@ -29,7 +29,7 @@ export const schema: any = {
                     onChange={props.onChange}
                     value={props.value}
                 />
-            )
+            );
         }
     }
-}
+};

@@ -1,4 +1,4 @@
-import styles from '../../styles/fitnessTemplate_01.module.css'
+import styles from '../../styles/fitnessTemplate_01.module.css';
 
 function Pages({ setPage }: { setPage: (page: string) => void }): JSX.Element {
     return (
@@ -6,7 +6,7 @@ function Pages({ setPage }: { setPage: (page: string) => void }): JSX.Element {
             <p
                 className={styles.pageTitle}
                 onClick={() => {
-                    setPage('home')
+                    setPage('home');
                 }}
             >
                 Home
@@ -14,7 +14,7 @@ function Pages({ setPage }: { setPage: (page: string) => void }): JSX.Element {
             <p
                 className={styles.pageTitle}
                 onClick={() => {
-                    setPage('classes')
+                    setPage('classes');
                 }}
             >
                 Classes
@@ -22,7 +22,7 @@ function Pages({ setPage }: { setPage: (page: string) => void }): JSX.Element {
             <p
                 className={styles.pageTitle}
                 onClick={() => {
-                    setPage('about')
+                    setPage('about');
                 }}
             >
                 About Us
@@ -31,13 +31,13 @@ function Pages({ setPage }: { setPage: (page: string) => void }): JSX.Element {
             <p
                 className={styles.pageTitle}
                 onClick={() => {
-                    setPage('contact')
+                    setPage('contact');
                 }}
             >
                 Contact
             </p>
         </div>
-    )
+    );
 }
 
-export default Pages
+export default Pages;

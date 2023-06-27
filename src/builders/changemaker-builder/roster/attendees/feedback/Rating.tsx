@@ -1,5 +1,5 @@
-import Slider from 'react-rangeslider'
-import 'react-rangeslider/lib/index.css'
+import Slider from 'react-rangeslider';
+import 'react-rangeslider/lib/index.css';
 
 function Rating(props: any) {
     props.onChange(
@@ -12,7 +12,7 @@ function Rating(props: any) {
             rpm_id: props.rpmId,
             mood_id: props.moodId
         })
-    )
+    );
 
     return (
         <div className="mt-3">
@@ -41,7 +41,7 @@ function Rating(props: any) {
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
-export default Rating
+export default Rating;

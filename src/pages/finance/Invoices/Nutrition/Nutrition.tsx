@@ -1,8 +1,8 @@
-import React from 'react'
-import { Badge, Row, Col, Button } from 'react-bootstrap'
-import { useContext, useMemo, useRef, useState } from 'react'
-import Table from '../../../../components/table/index'
-import ActionButton, { ArrayAction } from '../../../../components/actionbutton'
+import React from 'react';
+import { Badge, Row, Col, Button } from 'react-bootstrap';
+import { useContext, useMemo, useRef, useState } from 'react';
+import Table from '../../../../components/table/index';
+import ActionButton, { ArrayAction } from '../../../../components/actionbutton';
 
 export default function Nutrition() {
     // const financeActionsRef = useRef<any>(null)
@@ -51,7 +51,7 @@ export default function Nutrition() {
             mrp: 50,
             status: 'Processing'
         }
-    ]
+    ];
 
     const columns = useMemo(
         () => [
@@ -78,7 +78,7 @@ export default function Nutrition() {
                                 <p className="mt-3 mb-0">{row.value}</p>
                             )}
                         </>
-                    )
+                    );
                 }
             },
             {
@@ -146,7 +146,7 @@ export default function Nutrition() {
                                 ''
                             )}
                         </div>
-                    )
+                    );
                 }
             },
             { accessor: 'package', Header: 'Package' },
@@ -154,7 +154,7 @@ export default function Nutrition() {
                 accessor: 'duration',
                 Header: 'Duration',
                 Cell: ({ row }: any) => {
-                    return <p className="mb-0">{row.values.duration}</p>
+                    return <p className="mb-0">{row.values.duration}</p>;
                 }
             },
             { accessor: 'effective', Header: 'Start Date' },
@@ -163,26 +163,26 @@ export default function Nutrition() {
                 accessor: 'mrp',
                 Header: 'Mrp',
                 Cell: ({ row }: any) => {
-                    return <p className="mb-0">Rs {row.values.mrp}</p>
+                    return <p className="mb-0">Rs {row.values.mrp}</p>;
                 }
             },
             {
                 accessor: 'status',
                 Header: 'Status',
                 Cell: ({ row }: any) => {
-                    let statusColor = ''
+                    let statusColor = '';
                     switch (row.values.status) {
                         case 'Paid':
-                            statusColor = 'success'
-                            break
+                            statusColor = 'success';
+                            break;
 
                         case 'Cancelled':
-                            statusColor = 'danger'
-                            break
+                            statusColor = 'danger';
+                            break;
 
                         case 'Processing':
-                            statusColor = 'warning'
-                            break
+                            statusColor = 'warning';
+                            break;
                     }
                     return (
                         <>
@@ -194,7 +194,7 @@ export default function Nutrition() {
                                 {row.values.status}
                             </Badge>
                         </>
-                    )
+                    );
                 }
             },
             {
@@ -203,25 +203,25 @@ export default function Nutrition() {
                 Cell: ({ row }: any) => {
                     const actionClick1 = () => {
                         // fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "One-On-One", rowData: "" })
-                    }
+                    };
                     const actionClick2 = () => {
                         // fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "One-On-One", rowData: "" })
-                    }
+                    };
                     const actionClick3 = () => {
                         // fitnessActionRef.current.TriggerForm({ id: row.original.id, actionType: 'manage', type: "One-On-One", rowData: "" })
-                    }
+                    };
                     const arrayAction: ArrayAction[] = [
                         { actionName: 'View', actionClick: actionClick1 },
                         { actionName: 'Edit', actionClick: actionClick2 },
                         { actionName: 'Delete', actionClick: actionClick3 }
-                    ]
+                    ];
 
-                    return <ActionButton arrayAction={arrayAction}></ActionButton>
+                    return <ActionButton arrayAction={arrayAction}></ActionButton>;
                 }
             }
         ],
         []
-    )
+    );
 
     return (
         <div className="mt-5">
@@ -232,5 +232,5 @@ export default function Nutrition() {
                 </Col>
             </Row>
         </div>
-    )
+    );
 }

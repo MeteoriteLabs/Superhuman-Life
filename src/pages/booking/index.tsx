@@ -1,7 +1,7 @@
-import { Card, Tab, Tabs } from 'react-bootstrap'
+import { Card, Tab, Tabs } from 'react-bootstrap';
 // import { useHistory } from "react-router-dom";
-import Movement from './Movement/Movement'
-import Sessions from './Sessions'
+import Movement from './Movement/Movement';
+import Sessions from './Sessions';
 
 export default function BookingPage() {
     // const history = useHistory();
@@ -53,5 +53,5 @@ export default function BookingPage() {
                 </Card.Body>
             </Card>
         </div>
-    )
+    );
 }

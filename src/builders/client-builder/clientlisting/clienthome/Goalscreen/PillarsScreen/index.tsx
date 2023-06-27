@@ -1,31 +1,31 @@
-import React, { useState } from 'react'
-import { Row, Col, Button, Card, Tabs, Tab, Spinner } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
-import Slider from 'react-slick'
-import PillarCard from './pillarCard'
-import { useQuery } from '@apollo/client'
-import { GET_USER_GOAL } from './queries'
-import './styles.css'
-import 'slick-carousel/slick/slick.css'
-import 'slick-carousel/slick/slick-theme.css'
+import React, { useState } from 'react';
+import { Row, Col, Button, Card, Tabs, Tab, Spinner } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import Slider from 'react-slick';
+import PillarCard from './pillarCard';
+import { useQuery } from '@apollo/client';
+import { GET_USER_GOAL } from './queries';
+import './styles.css';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 // import { flattenObj } from '../../../../../'
-import { flattenObj } from '../../../../../../components/utils/responseFlatten'
+import { flattenObj } from '../../../../../../components/utils/responseFlatten';
 
 const PillarScreen = () => {
-    const last = window.location.pathname.split('/').pop()
-    const goalId = window.location.pathname.split('/')[2]
+    const last = window.location.pathname.split('/').pop();
+    const goalId = window.location.pathname.split('/')[2];
 
-    const [goalData, setGoalData] = useState<any>([])
-    const [show, setShow] = useState(false)
+    const [goalData, setGoalData] = useState<any>([]);
+    const [show, setShow] = useState(false);
 
     const goalQuery = useQuery(GET_USER_GOAL, {
         variables: { id: goalId },
         onCompleted: (data) => {
-            const flattenData = flattenObj({ ...data })
-            setGoalData(flattenData.userGoals[0])
-            setShow(true)
+            const flattenData = flattenObj({ ...data });
+            setGoalData(flattenData.userGoals[0]);
+            setShow(true);
         }
-    })
+    });
 
     var settings = {
         dots: true,
@@ -53,7 +53,7 @@ const PillarScreen = () => {
                 }
             }
         ]
-    }
+    };
 
     const BasicCard = (props: any) => {
         return (
@@ -107,8 +107,8 @@ const PillarScreen = () => {
                     </Card.Body>
                 </Card>
             </Col>
-        )
-    }
+        );
+    };
 
     const HabitCard = (props: any) => {
         return (
@@ -150,8 +150,8 @@ const PillarScreen = () => {
                     </Card.Body>
                 </Card>
             </Col>
-        )
-    }
+        );
+    };
 
     if (!show) {
         return (
@@ -162,7 +162,7 @@ const PillarScreen = () => {
                     Loading Data...
                 </div>
             </div>
-        )
+        );
     } else
         return (
             <div>
@@ -265,7 +265,7 @@ const PillarScreen = () => {
                     </div>
                 </div>
             </div>
-        )
-}
+        );
+};
 
-export default PillarScreen
+export default PillarScreen;

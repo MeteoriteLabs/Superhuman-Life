@@ -1,8 +1,8 @@
-import TextEditor from '../../../components/customWidgets/textEditor'
-import EquipmentSearch from '../../../components/customWidgets/equipmentListSelect'
-import MuscleGroupSearch from '../../../components/customWidgets/muscleGroupMultiSelect'
-import FitnessMultiSelect from '../../../components/customWidgets/fitnessMultiSelect'
-import Upload from '../../../components/upload/upload'
+import TextEditor from '../../../components/customWidgets/textEditor';
+import EquipmentSearch from '../../../components/customWidgets/equipmentListSelect';
+import MuscleGroupSearch from '../../../components/customWidgets/muscleGroupMultiSelect';
+import FitnessMultiSelect from '../../../components/customWidgets/fitnessMultiSelect';
+import Upload from '../../../components/upload/upload';
 
 export const widgets = {
     fitnessSelect: FitnessMultiSelect,
@@ -10,7 +10,7 @@ export const widgets = {
     muscleGroupSearch: MuscleGroupSearch,
     textEditor: TextEditor,
     upload: Upload
-}
+};
 
 export const schema: any = {
     level: {
@@ -58,8 +58,8 @@ export const schema: any = {
                         onChange={props.onChange}
                         value={props.value}
                     />
-                )
+                );
             }
         }
     }
-}
+};

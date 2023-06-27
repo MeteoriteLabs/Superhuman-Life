@@ -1,5 +1,5 @@
-import { Card, Tab, Tabs } from 'react-bootstrap'
-import FitnessTab from './fitness/Fitness'
+import { Card, Tab, Tabs } from 'react-bootstrap';
+import FitnessTab from './fitness/Fitness';
 
 export default function PackagePage() {
     return (
@@ -21,5 +21,5 @@ export default function PackagePage() {
                 </Card.Body>
             </Card>
         </>
-    )
+    );
 }

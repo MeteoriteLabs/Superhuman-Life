@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const GET_ALL_BOOKINGS = gql`
     query clientBookings($id: ID!, $start: Int, $limit: Int) {
@@ -56,7 +56,7 @@ export const GET_ALL_BOOKINGS = gql`
             }
         }
     }
-`
+`;
 
 export const GET_TAGS = gql`
     query tags($id: ID!) {
@@ -79,7 +79,7 @@ export const GET_TAGS = gql`
             }
         }
     }
-`
+`;
 
 export const FILTER_PACKAGES = gql`
     query userPackages($id: ID!, $sorts: String) {
@@ -106,7 +106,7 @@ export const FILTER_PACKAGES = gql`
             }
         }
     }
-`
+`;
 
 export const BOOKING_CONFIG = gql`
     query bookingConfigs($id: ID!) {
@@ -138,4 +138,4 @@ export const BOOKING_CONFIG = gql`
             }
         }
     }
-`
+`;

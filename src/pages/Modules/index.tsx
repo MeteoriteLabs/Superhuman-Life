@@ -1,5 +1,5 @@
-import React from 'react'
-import { Modal, Button } from 'react-bootstrap'
+import React from 'react';
+import { Modal, Button } from 'react-bootstrap';
 
 const Modules: React.FC<{ show: boolean; onHide: () => void }> = (props) => {
     return (
@@ -15,7 +15,7 @@ const Modules: React.FC<{ show: boolean; onHide: () => void }> = (props) => {
                 <Button variant="primary">Save Changes</Button>
             </Modal.Footer>
         </Modal>
-    )
-}
+    );
+};
 
-export default Modules
+export default Modules;

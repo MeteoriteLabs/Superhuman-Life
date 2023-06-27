@@ -1,7 +1,7 @@
-import { Tab, Tabs } from 'react-bootstrap'
-import MonthlyClientGraph from './MonthlyClientGraph'
-import WeeklyClientGraph from './WeeklyClientGraph'
-import '../Styles/navTabStyles.css'
+import { Tab, Tabs } from 'react-bootstrap';
+import MonthlyClientGraph from './MonthlyClientGraph';
+import WeeklyClientGraph from './WeeklyClientGraph';
+import '../Styles/navTabStyles.css';
 
 function ClientsGraph() {
     return (
@@ -15,7 +15,7 @@ function ClientsGraph() {
                 </Tab>
             </Tabs>
         </div>
-    )
+    );
 }
 
-export default ClientsGraph
+export default ClientsGraph;
