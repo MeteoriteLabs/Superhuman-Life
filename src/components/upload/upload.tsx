@@ -27,7 +27,7 @@ const myBucket = new AWS.S3({
 
 const tus: any = require('tus-js-client');
 
-const UploadImageToS3WithNativeSdk = (props: any) => {
+const UploadImageToS3WithNativeSdk = (props: any): JSX.Element => {
     const [progress, setProgress] = useState<number>(0);
     const [selectedFile, setSelectedFile] = useState<any>(null);
     const [render, setRender] = useState<any>(null);
@@ -376,10 +376,18 @@ const UploadImageToS3WithNativeSdk = (props: any) => {
 
     function handleAspectRatio(data: string) {
         if (data) {
-            return parseInt(data.split(':')[0]) / parseInt(data.split(':')[1]);
-        } else {
-            return 5 / 3;
+            const dimensions = data.split(':');
+            if (dimensions.length === 2) {
+                const width = parseInt(dimensions[0]);
+                const height = parseInt(dimensions[1]);
+                if (!isNaN(width) && !isNaN(height) && height !== 0) {
+                    return width / height;
+                }
+            }
         }
+        // If the data is invalid or empty, you can handle it accordingly
+        // For example, you can set a default aspect ratio or return null/undefined.
+        return 5 / 3;
     }
 
     function videoDelete() {

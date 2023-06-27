@@ -22,49 +22,22 @@ export default async function getCroppedImg(imageSrc: any, pixelCrop: any, rotat
     const canvas = document.createElement('canvas');
     const ctx: any = canvas.getContext('2d');
 
-    const maxSize = Math.max(image.width, image.height);
-    const safeArea = 1 * ((maxSize / 2) * Math.sqrt(2));
-
-    // set each dimensions to double largest dimension to allow for a safe area for the
-    // image to rotate in without being clipped by canvas context
-    canvas.width = safeArea;
-    canvas.height = safeArea;
-
-    // translate canvas context to a central location on image to allow rotating around the center.
-    ctx.translate(safeArea / 2, safeArea / 2);
-    ctx.rotate(getRadianAngle(rotation));
-    ctx.translate(-safeArea / 2, -safeArea / 2);
-
-    // draw rotated image and store data.
-    ctx.drawImage(image, safeArea / 2 - image.width * 0.5, safeArea / 2 - image.height * 0.5);
-    const data = ctx.getImageData(0, 0, safeArea, safeArea);
-
-    // set canvas width to final desired crop size - this will clear existing context
+    // Set canvas size to match the desired crop dimensions
     canvas.width = pixelCrop.width;
     canvas.height = pixelCrop.height;
 
-    // paste generated rotate image with correct offsets for x,y crop values.
-    ctx.putImageData(
-        data,
-        Math.round(0 - safeArea / 2 + image.width * 0.5 - pixelCrop.x),
-        Math.round(0 - safeArea / 2 + image.height * 0.5 - pixelCrop.y)
-    );
+    // Translate canvas context to the center of the canvas
+    ctx.translate(canvas.width / 2, canvas.height / 2);
+    ctx.rotate(getRadianAngle(rotation));
+    ctx.translate(-canvas.width / 2, -canvas.height / 2);
 
-    //As Base64 string
-    //return canvas.toDataURL("image/jpeg");
+    // Draw the image onto the canvas using the pixelCrop coordinates
+    ctx.drawImage(image, -pixelCrop.x, -pixelCrop.y);
+
+    // Convert the cropped image on the canvas to a Blob object
     return new Promise((resolve) => {
         canvas.toBlob((file: any) => {
-            resolve(new File([file], 'cropedimage', { type: 'image/jpeg' }));
-        });
+            resolve(new File([file], 'croppedimage', { type: 'image/jpeg' }));
+        }, 'image/jpeg');
     });
-    //  canvas.toBlob(blob => {
-    //   const file = new File([file], "image.png");
-    // });
-
-    // As a blob
-    //  return new Promise((resolve) => {
-    //       canvas.toBlob((file) => {
-    //            resolve(URL.createObjectURL(file));
-    //       }, "image/jpeg");
-    //  });
 }

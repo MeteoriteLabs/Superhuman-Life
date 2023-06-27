@@ -8,6 +8,7 @@ import authContext from '../../../../../context/auth-context';
 import { useContext, useEffect, useState } from 'react';
 import { ChangeMakerWebsiteContext } from '../../../../../context/changemakerWebsite-context';
 import Toaster from '../../../../../components/Toaster';
+import UploadImageToS3WithNativeSdk from '../../../../../components/upload/upload';
 
 type FormData = {
     title: string;
@@ -24,6 +25,7 @@ function Hero(): JSX.Element {
         image: '',
         sectionId: ''
     });
+    const [change, setChange] = useState<boolean>(false);
 
     const {
         handleSubmit,
@@ -127,20 +129,14 @@ function Hero(): JSX.Element {
                         </Form.Control.Feedback>
                     )}
                 </Form.Group>
-                <Form.Group controlId="hero image">
-                    <Form.Label className={style.label_text}>Hero Image</Form.Label>
-                    <Controller
-                        name="image"
-                        control={control}
-                        render={({ field }) => (
-                            <Form.Control
-                                type="file"
-                                accept="image/*"
-                                className={style.input_text}
-                                as="input"
-                                {...field}
-                            ></Form.Control>
-                        )}
+                <Form.Group controlId="image">
+                    <UploadImageToS3WithNativeSdk
+                        allowImage={true}
+                        allowVideo={false}
+                        onChange={() => setChange(change)}
+                        value={change}
+                        title={'Website Images'}
+                        aspectRatio={'1:1'}
                     />
                     {errors.image && (
                         <Form.Control.Feedback tooltip>
