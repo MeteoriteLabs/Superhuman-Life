@@ -13,56 +13,58 @@ import Payee from './Payee/Payee';
 import './finance.css';
 
 export default function index(): JSX.Element {
-  return (
-    <div>
-      <h2>Finance</h2>
+    return (
+        <div>
+            <h2>Finance</h2>
 
-      <Card className="shadow-sm mt-3" border="light">
-        <Card.Body>
-          <Tabs
-            style={{ borderBottom: '1px solid black' }}
-            className="pb-3 cards"
-            variant="pills"
-            transition={false}
-            defaultActiveKey="summary">
-            <Tab eventKey="summary" title="Summary">
-              <Summary />
-            </Tab>
-
-            <Tab eventKey="earnings" title="Earnings">
-              <Earnings />
-            </Tab>
-
-            <Tab eventKey="expenses" title="Expenses" className="mt-3">
-              <Card className="shadow-sm mt-2" border="light">
+            <Card className="shadow-sm mt-3" border="light">
                 <Card.Body>
-                  <Tabs
-                    style={{ borderBottom: '1px solid black' }}
-                    className="pb-3 cards"
-                    transition={false}
-                    defaultActiveKey="expenses"
-                    variant="pills">
-                    <Tab eventKey="expenses" title="Expenses">
-                      <Expenses />
-                    </Tab>
-                    <Tab eventKey="payee" title="Payee">
-                      <Payee />
-                    </Tab>
-                  </Tabs>
+                    <Tabs
+                        style={{ borderBottom: '1px solid black' }}
+                        className="pb-3 cards"
+                        variant="pills"
+                        transition={false}
+                        defaultActiveKey="summary"
+                    >
+                        <Tab eventKey="summary" title="Summary">
+                            <Summary />
+                        </Tab>
+
+                        <Tab eventKey="earnings" title="Earnings">
+                            <Earnings />
+                        </Tab>
+
+                        <Tab eventKey="expenses" title="Expenses" className="mt-3">
+                            <Card className="shadow-sm mt-2" border="light">
+                                <Card.Body>
+                                    <Tabs
+                                        style={{ borderBottom: '1px solid black' }}
+                                        className="pb-3 cards"
+                                        transition={false}
+                                        defaultActiveKey="expenses"
+                                        variant="pills"
+                                    >
+                                        <Tab eventKey="expenses" title="Expenses">
+                                            <Expenses />
+                                        </Tab>
+                                        <Tab eventKey="payee" title="Payee">
+                                            <Payee />
+                                        </Tab>
+                                    </Tabs>
+                                </Card.Body>
+                            </Card>
+                        </Tab>
+
+                        <Tab eventKey="allTransactions" title="All Transactions">
+                            <AllTransactions />
+                        </Tab>
+
+                        <Tab eventKey="vouchers" title="Vouchers">
+                            <Vouchers />
+                        </Tab>
+                    </Tabs>
                 </Card.Body>
-              </Card>
-            </Tab>
-
-            <Tab eventKey="allTransactions" title="All Transactions">
-              <AllTransactions />
-            </Tab>
-
-            <Tab eventKey="vouchers" title="Vouchers">
-              <Vouchers />
-            </Tab>
-          </Tabs>
-        </Card.Body>
-      </Card>
-    </div>
-  );
+            </Card>
+        </div>
+    );
 }

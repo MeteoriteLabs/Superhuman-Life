@@ -1,121 +1,121 @@
-import PricingTableChannel from "./pricingTableChannel";
-import Upload from "../../../../components/upload/upload";
-import FitnessSelect from "../../../../components/customWidgets/fitnessMultiSelect";
-import EquipmentSelect from "../../../../components/customWidgets/equipmentListSelect";
-import LanguageList from "../../../../components/customWidgets/languageSelect";
-import ChannelConfig from "./channelConfig";
-import LiveBookingConfig from "./bookingConfig";
-import ChannelPrimaryDateConfig from "./primaryDatesConfig";
-import DatesConfig from "./channelDateConfig";
+import PricingTableChannel from './pricingTableChannel';
+import Upload from '../../../../components/upload/upload';
+import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect';
+import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect';
+import LanguageList from '../../../../components/customWidgets/languageSelect';
+import ChannelConfig from './channelConfig';
+import LiveBookingConfig from './bookingConfig';
+import ChannelPrimaryDateConfig from './primaryDatesConfig';
+import DatesConfig from './channelDateConfig';
 
 export const widgets = {
-  pricingTableChannel: PricingTableChannel,
-  datesConfig: DatesConfig,
-  fitnessSelect: FitnessSelect,
-  equipmentSelect: EquipmentSelect,
-  channelConfig: ChannelConfig,
-  liveBookingConfig: LiveBookingConfig,
-  liveChannelLanguageSelect: LanguageList,
+    pricingTableChannel: PricingTableChannel,
+    datesConfig: DatesConfig,
+    fitnessSelect: FitnessSelect,
+    equipmentSelect: EquipmentSelect,
+    channelConfig: ChannelConfig,
+    liveBookingConfig: LiveBookingConfig,
+    liveChannelLanguageSelect: LanguageList
 };
 
 export const schema: any = {
-  tag: {
-    "ui:placeholder": "Enter tag name",
-  },
-  channelName: {
-    "ui:placeholder": "Enter package name",
-  },
-  level: {
-    "ui:widget": "radio",
-    "ui:options": {
-      inline: true,
+    tag: {
+        'ui:placeholder': 'Enter tag name'
     },
-  },
-  intensity: {
-    "ui:widget": "radio",
-    "ui:options": {
-      inline: true,
+    channelName: {
+        'ui:placeholder': 'Enter package name'
     },
-  },
-  discpline: {
-    "ui:widget": "fitnessSelect",
-  },
-  equipment: {
-    "ui:widget": "equipmentSelect",
-  },
-  About: {
-    "ui:widget": "textarea",
-    "ui:options": {
-      rows: 3,
+    level: {
+        'ui:widget': 'radio',
+        'ui:options': {
+            inline: true
+        }
     },
-    "ui:placeholder": "About the program",
-  },
-  Benifits: {
-    "ui:widget": "textarea",
-    "ui:options": {
-      rows: 3,
+    intensity: {
+        'ui:widget': 'radio',
+        'ui:options': {
+            inline: true
+        }
     },
-    "ui:placeholder": "Benefits of the program",
-  },
-  datesConfig: {
-    "ui:widget": "datesConfig",
-  },
-  thumbnail: {
-    "ui:widget": (props: any) => {
-      return (
-        <Upload
-          allowImage={true}
-          allowVideo={false}
-          onChange={props.onChange}
-          value={props.value}
-          title={"Thumbnail"}
-        />
-      );
+    discpline: {
+        'ui:widget': 'fitnessSelect'
     },
-  },
-  VideoUrl: {
-    "ui:placeholder": "https://",
-  },
-  visibility: {
-    "ui:widget": "radio",
-    "ui:options": {
-      inline: true,
+    equipment: {
+        'ui:widget': 'equipmentSelect'
     },
-  },
-  config: {
-    bookingConfig: {
-      "ui:widget": "liveBookingConfig",
+    About: {
+        'ui:widget': 'textarea',
+        'ui:options': {
+            rows: 3
+        },
+        'ui:placeholder': 'About the program'
     },
-  },
-  programSchedule: {
-    "ui:widget": "checkboxes",
-  },
-  channelinstantBooking: {
-    "ui:widget": "channelConfig",
-  },
-  pricing: {
-    "ui:widget": "pricingTableChannel",
-  },
-  languages: {
-    "ui:widget": "liveChannelLanguageSelect",
-  },
-  durationOfOffering: {
-    "ui:widget": "checkboxes",
-    "ui:options": {
-      inline: true,
+    Benifits: {
+        'ui:widget': 'textarea',
+        'ui:options': {
+            rows: 3
+        },
+        'ui:placeholder': 'Benefits of the program'
     },
-  },
-  dates: {
-    "ui:widget": (props: any) => {
-      return (
-        <ChannelPrimaryDateConfig
-          title1={"Start Date"}
-          title2={"End Date"}
-          value={props.value}
-          onChange={props.onChange}
-          type={"Cohort"}
-        />
-      );
+    datesConfig: {
+        'ui:widget': 'datesConfig'
     },
-  },
+    thumbnail: {
+        'ui:widget': (props: any) => {
+            return (
+                <Upload
+                    allowImage={true}
+                    allowVideo={false}
+                    onChange={props.onChange}
+                    value={props.value}
+                    title={'Thumbnail'}
+                />
+            );
+        }
+    },
+    VideoUrl: {
+        'ui:placeholder': 'https://'
+    },
+    visibility: {
+        'ui:widget': 'radio',
+        'ui:options': {
+            inline: true
+        }
+    },
+    config: {
+        bookingConfig: {
+            'ui:widget': 'liveBookingConfig'
+        }
+    },
+    programSchedule: {
+        'ui:widget': 'checkboxes'
+    },
+    channelinstantBooking: {
+        'ui:widget': 'channelConfig'
+    },
+    pricing: {
+        'ui:widget': 'pricingTableChannel'
+    },
+    languages: {
+        'ui:widget': 'liveChannelLanguageSelect'
+    },
+    durationOfOffering: {
+        'ui:widget': 'checkboxes',
+        'ui:options': {
+            inline: true
+        }
+    },
+    dates: {
+        'ui:widget': (props: any) => {
+            return (
+                <ChannelPrimaryDateConfig
+                    title1={'Start Date'}
+                    title2={'End Date'}
+                    value={props.value}
+                    onChange={props.onChange}
+                    type={'Cohort'}
+                />
+            );
+        }
+    }
 };

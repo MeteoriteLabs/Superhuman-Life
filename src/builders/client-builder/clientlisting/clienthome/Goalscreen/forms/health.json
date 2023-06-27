@@ -1,40 +1,40 @@
 {
-     "1": {
-          "type": "object",
-          "required": [],
-          "properties": {
-               "health": {
-                    "type": "string",
-                    "title": "Health",
-                    "enum": ["Glucose", "Blood Glucose"]
-               },
-               "frequency": {
-                    "type": "string",
-                    "title": "Target Frequency",
-                    "enum": ["Daily", "Weekly"]
-               },
-               "value": {
-                    "type": "string",
-                    "title": "Target Value"
-               },
-               "unit": {
-                    "type": "string",
-                    "title": "Unit",
-                    "enum": ["mg/dL"]
-               },
-               "startdate": {
-                    "type": "string",
-                    "title": "Start Date",
-                    "format": "date"
-               },
-               "enddate": {
-                    "type": "string",
-                    "title": "End Date",
-                    "format": "date"
-               },
-               "packagesearch": {
-                    "type": "string"
-               }
-          }
-     }
+    "1": {
+        "type": "object",
+        "required": [],
+        "properties": {
+            "health": {
+                "type": "string",
+                "title": "Health",
+                "enum": ["Glucose", "Blood Glucose"]
+            },
+            "frequency": {
+                "type": "string",
+                "title": "Target Frequency",
+                "enum": ["Daily", "Weekly"]
+            },
+            "value": {
+                "type": "string",
+                "title": "Target Value"
+            },
+            "unit": {
+                "type": "string",
+                "title": "Unit",
+                "enum": ["mg/dL"]
+            },
+            "startdate": {
+                "type": "string",
+                "title": "Start Date",
+                "format": "date"
+            },
+            "enddate": {
+                "type": "string",
+                "title": "End Date",
+                "format": "date"
+            },
+            "packagesearch": {
+                "type": "string"
+            }
+        }
+    }
 }

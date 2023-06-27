@@ -12,455 +12,528 @@ import '../Group/actionButton.css';
 import Loader from '../../../../components/Loader/Loader';
 
 const Scheduler: React.FC = () => {
-  // const auth = useContext(AuthContext);
-  const last = window.location.pathname.split('/').reverse();
-  const tagId = window.location.pathname.split('/').pop();
-  // const [data, setData] = useState<any[]>([]);
-  const [show, setShow] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [userPackage, setUserPackage] = useState<any>([]);
-  // const [tagSeperation, setTagSeperation] = useState<any>([]);
-  const [editDatesModal, setEditdatesModal] = useState(false);
-  const [startDate, setStartDate] = useState('');
-  const [schedulerSessions, setSchedulerSessions] = useState([]);
-  // const [statusDays, setStatusDays] = useState();
-  const [tag, setTag] = useState<any>();
-  // const [restDays, setRestDays] = useState<any>([]);
-  const [totalClasses, setTotalClasses] = useState<any>([]);
-  let programIndex;
+    // const auth = useContext(AuthContext);
+    const last = window.location.pathname.split('/').reverse();
+    const tagId = window.location.pathname.split('/').pop();
+    // const [data, setData] = useState<any[]>([]);
+    const [show, setShow] = useState(false);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [userPackage, setUserPackage] = useState<any>([]);
+    // const [tagSeperation, setTagSeperation] = useState<any>([]);
+    const [editDatesModal, setEditdatesModal] = useState(false);
+    const [startDate, setStartDate] = useState('');
+    const [schedulerSessions, setSchedulerSessions] = useState([]);
+    // const [statusDays, setStatusDays] = useState();
+    const [tag, setTag] = useState<any>();
+    // const [restDays, setRestDays] = useState<any>([]);
+    const [totalClasses, setTotalClasses] = useState<any>([]);
+    let programIndex;
 
-  useEffect(() => {
-    setTimeout(() => {
-      setShow(true);
-    }, 1500);
-  }, [show]);
+    useEffect(() => {
+        setTimeout(() => {
+            setShow(true);
+        }, 1500);
+    }, [show]);
 
-  const handleCloseDatesModal = () => setEditdatesModal(false);
-  const handleShowDatesModal = () => setEditdatesModal(true);
+    const handleCloseDatesModal = () => setEditdatesModal(false);
+    const handleShowDatesModal = () => setEditdatesModal(true);
 
-  const [updateDate] = useMutation(UPDATE_USERPACKAGE_EFFECTIVEDATE);
+    const [updateDate] = useMutation(UPDATE_USERPACKAGE_EFFECTIVEDATE);
 
-  useQuery(GET_TAG_BY_ID, {
-    variables: { id: tagId },
-    onCompleted: (data) => loadTagData(data)
-  });
-
-  function loadTagData(data: any) {
-    setSchedulerSessions(data);
-    const flattenData = flattenObj({ ...data });
-    const total = [0, 0, 0, 0, 0];
-    const values = [...flattenData.tags[0].sessions];
-    for (let i = 0; i < values.length; i++) {
-      if (values[i].tag === 'One-On-One' && values[i].mode === 'Online') {
-        total[0] += 1;
-      } else if (values[i].tag === 'One-On-One' && values[i].mode === 'Offline') {
-        total[1] += 1;
-      } else if (values[i].tag === 'Group Class' && values[i].mode === 'Online') {
-        total[2] += 1;
-      } else if (values[i].tag === 'Group Class' && values[i].mode === 'Offline') {
-        total[3] += 1;
-      } else if (values[i].tag === 'Classic') {
-        total[4] += 1;
-      }
-    }
-    setTotalClasses(total);
-    setTag(flattenData.tags[0]);
-  }
-
-  // const { data: data1 } = useQuery(GET_TABLEDATA, {
-  //     variables: {
-  //         id: last[0]
-  //     }
-  // });
-
-  // const { data: data2 } = useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
-  //     variables: {
-  //         id: auth.userid,
-  //         type: "One-On-One"
-  //     },
-  //     onCompleted: () => console.log()
-  // });
-
-  // function handleEventsSeperation(data: any, rest_days: any){
-  //     var ptonline: number = 0;
-  //     var ptoffline: number = 0;
-  //     var classic: number = 0;
-  //     if(data){
-  //         for(var i=0; i<data.length; i++){
-  //             if(data[i].tag === "One-On-One"){
-  //                 if(data[i].mode === 'Online'){
-  //                     ptonline++;
-  //                 }else{
-  //                     ptoffline++;
-  //                 }
-  //             }else if(data[i].tag === 'Classic'){
-  //                 classic++;
-  //             }
-  //         }
-  //         setTagSeperation([ptonline, ptoffline, classic]);
-  //         var arr: any = [];
-  //         for(var j=0; j<data.length; j++){
-  //             if(arr.includes(parseInt(data[j].day)) === false) arr.push(parseInt(data[j].day));
-  //         }
-
-  //         var restDays = rest_days === null ? 0 : rest_days.length;
-  //         setStatusDays(arr.length + restDays);
-  //     }
-  // }
-
-  // function loadData() {
-  //     const flattenData1 = flattenObj({ ...data1 });
-  //     const flattenData2 = flattenObj({ ...data2 });
-  //     setData(
-  //         [...flattenData1.fitnessprograms].map((detail) => {
-  //             return {
-  //                 id: detail.id,
-  //                 programName: detail.title,
-  //                 discipline: detail.fitnessdisciplines.map((val: any) => {
-  //                     return val.disciplinename;
-  //                 }).join(", "),
-  //                 level: detail.level,
-  //                 events: handleEventsSeperation(detail.events, detail.rest_days),
-  //                 duration: detail.duration_days,
-  //                 details: detail.description,
-  //                 restDays: detail.rest_days
-  //             }
-  //         })
-  //     )
-
-  //     setUserPackage(
-  //         [...flattenData2.clientPackages].map((packageItem) => {
-  //             let renewDay: any = '';
-  //             if (packageItem.fitnesspackages.length !== 0) {
-  //                 renewDay = new Date(packageItem.effective_date);
-  //                 renewDay.setDate(renewDay.getDate() + packageItem.fitnesspackages[0].duration)
-  //             }
-  //             return {
-  //                 userPackageId: packageItem.id,
-  //                 id: packageItem.fitnesspackages[0].id,
-  //                 packageName: packageItem.fitnesspackages[0].packagename,
-  //                 duration: packageItem.fitnesspackages[0].duration,
-  //                 details: [packageItem.fitnesspackages[0].ptonline, packageItem.fitnesspackages[0].ptoffline, packageItem.fitnesspackages[0].grouponline, packageItem.fitnesspackages[0].groupoffline, packageItem.fitnesspackages[0].recordedclasses, packageItem.fitnesspackages[0].restdays],
-  //                 effectiveDate: moment(packageItem.effective_date).format("MMMM DD,YYYY"),
-  //                 packageStatus: packageItem.fitnesspackages[0].Status ? "Active" : "Inactive",
-  //                 packageRenewal: moment(renewDay).format("MMMM DD,YYYY"),
-
-  //                 client: packageItem.users_permissions_user.username,
-  //                 clientId: packageItem.users_permissions_user.id,
-  //                 level: packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].level,
-  //                 discipline: packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].fitnessdisciplines,
-  //                 description: packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].description,
-  //                 programName: packageItem.program_managers.length === 0 ? 'N/A' : packageItem.program_managers[0].fitnessprograms[0].title,
-  //                 programId: packageItem.program_managers.length === 0 ? 'N/A' : packageItem.program_managers[0].fitnessprograms[0].id,
-  //                 programStatus: packageItem.program_managers.length === 0 ? 'N/A' : "Assigned",
-  //                 programRenewal: packageItem.program_managers.length === 0 ? 'N/A' : moment(renewDay).format('MMMM DD,YYYY')
-  //             }
-
-  //         })
-  //     )
-  // }
-
-  if (userPackage.length > 0) {
-    programIndex = userPackage.findIndex(
-      (item) => item.id === last[1] && item.clientId === last[2]
-    );
-  }
-
-  function handleDateEdit() {
-    updateDate({
-      variables: {
-        id: userPackage[programIndex].userPackageId,
-        effectiveDate: moment(startDate).format('YYYY-MM-DD') + 'T00:00:00.000Z'
-      }
+    useQuery(GET_TAG_BY_ID, {
+        variables: { id: tagId },
+        onCompleted: (data) => loadTagData(data)
     });
 
-    handleCloseDatesModal();
-  }
-
-  function handleTimeFormatting(data: any, duration: number) {
-    const digits = duration <= 30 ? 2 : 3;
-    return (data === undefined ? 0 : data).toLocaleString('en-US', {
-      minimumIntegerDigits: digits.toString(),
-      useGrouping: false
-    });
-  }
-  function handleTotalClasses(data: any, duration: number) {
-    let sum = 0;
-    for (let i = 0; i < data.length; i++) {
-      sum += data[i];
+    function loadTagData(data: any) {
+        setSchedulerSessions(data);
+        const flattenData = flattenObj({ ...data });
+        const total = [0, 0, 0, 0, 0];
+        const values = [...flattenData.tags[0].sessions];
+        for (let i = 0; i < values.length; i++) {
+            if (values[i].tag === 'One-On-One' && values[i].mode === 'Online') {
+                total[0] += 1;
+            } else if (values[i].tag === 'One-On-One' && values[i].mode === 'Offline') {
+                total[1] += 1;
+            } else if (values[i].tag === 'Group Class' && values[i].mode === 'Online') {
+                total[2] += 1;
+            } else if (values[i].tag === 'Group Class' && values[i].mode === 'Offline') {
+                total[3] += 1;
+            } else if (values[i].tag === 'Classic') {
+                total[4] += 1;
+            }
+        }
+        setTotalClasses(total);
+        setTag(flattenData.tags[0]);
     }
-    const formattedSum = handleTimeFormatting(sum, duration);
-    return formattedSum;
-  }
 
-  if (!show) return <Loader />;
-  else
-    return (
-      <div className="col-lg-12">
-        <div className="mb-3">
-          <span style={{ fontSize: '30px' }}>
-            <Link to="/session">
-              <i className="fa fa-arrow-circle-left" style={{ color: 'black' }}></i>
-            </Link>
-            <b> back</b>
-          </span>
-        </div>
-        <Row>
-          <Col lg={11} className="p-4 shadow-lg bg-white" style={{ borderRadius: '10px' }}>
-            <Row>
-              <Col lg={7}>
-                <Row>
-                  <h3 className="text-capitalize">{tag?.tag_name}</h3>
-                </Row>
-                <Row>
-                  <span>{tag && tag.fitnesspackage?.packagename}</span>
-                  <div
-                    className="ml-3 mt-1"
-                    style={{ borderLeft: '1px solid black', height: '20px' }}></div>
-                  <span className="ml-4">{tag.fitnesspackage?.duration + ' days'}</span>
-                  <div
-                    className="ml-3"
-                    style={{ borderLeft: '1px solid black', height: '20px' }}></div>
-                  <span className="ml-4">{'Level: ' + tag.fitnesspackage?.level}</span>
-                </Row>
-                <Row>
-                  <Col lg={4} className="pl-0 pr-0">
-                    <Col
-                      className="ml-1 mt-3"
-                      style={{ border: '2px solid gray', borderRadius: '10px' }}>
-                      <Row>
-                        <h5>
-                          <b>Client</b>
-                        </h5>
-                      </Row>
-                      <Col lg={{ offset: 4 }}>
-                        <Row>
-                          <div className="ml-2">
-                            <img
-                              src="https://picsum.photos/200/100"
-                              alt="pic"
-                              style={{
-                                width: '50px',
-                                height: '50px',
-                                borderRadius: '50%'
-                              }}
-                            />
-                          </div>
-                        </Row>
-                        <Row className="mt-1">
-                          <span className="text-capitalize">
-                            <b style={{ color: 'gray' }}>
-                              {tag && tag.client_packages && tag.client_packages.length
-                                ? tag.client_packages[0]?.users_permissions_user?.username
-                                : null}
-                            </b>
-                          </span>
-                        </Row>
-                      </Col>
-                    </Col>
-                  </Col>
-                  <Col lg={7} className="mt-4 ml-2">
-                    <div className="mb-4 mt-4">
-                      <Row>
-                        <Col lg={1}>
-                          <span>Date:</span>
-                        </Col>
-                        <Col lg={5} className="text-center">
-                          <span className="p-1 ml-2 scheduler-badge">
-                            {tag && tag.client_packages && tag.client_packages.length
-                              ? moment(tag.client_packages[0].effective_date).format('DD MMMM, YY')
-                              : null}
-                          </span>
-                        </Col>
-                        to
-                        <Col lg={5} className="text-center">
-                          <span className="p-1 scheduler-badge">
-                            {tag && tag.client_packages && tag.client_packages.length
-                              ? moment(tag.client_packages[0].effective_date)
-                                  .add(tag.fitnesspackage?.duration - 1, 'days')
-                                  .format('DD MMMM, YY')
-                              : null}
-                          </span>
-                        </Col>
-                      </Row>
-                    </div>
-                  </Col>
-                </Row>
-              </Col>
-              <Col lg={4} xs={11} style={{ borderLeft: '2px dashed gray' }}>
-                <div
-                  className="m-2 ml-2 text-center p-2"
-                  style={{ border: '2px solid gray', borderRadius: '10px' }}>
-                  <h4>
-                    <b>Movement</b>
-                  </h4>
-                  <Row>
-                    <Col>
-                      <Row style={{ justifyContent: 'space-around' }}>
-                        <div>
-                          <img src="/assets/custompersonal-training-Online.svg" alt="PT-Online" />
-                          <br />
-                          <span>{tag.fitnesspackage?.ptonline} PT</span>
-                          <br />
-                          <span>
-                            <b>
-                              {handleTimeFormatting(totalClasses[0], tag.fitnesspackage?.duration)}
-                            </b>
-                          </span>
-                        </div>
-                        <div>
-                          <img src="/assets/custompersonal-training-Offline.svg" alt="PT-Offline" />
-                          <br />
-                          <span>{tag.fitnesspackage?.ptoffline} PT</span>
-                          <br />
-                          <span>
-                            <b>
-                              {handleTimeFormatting(totalClasses[1], tag.fitnesspackage?.duration)}
-                            </b>
-                          </span>
-                        </div>
-                        {totalClasses[2] !== 0 && (
-                          <div>
-                            <img src="/assets/customgroup-Online.svg" alt="Group-Online" />
-                            <br />
-                            <span>{tag.fitnesspackage?.grouponline} Group</span>
-                            <br />
-                            <span>
-                              <b>
-                                {handleTimeFormatting(
-                                  totalClasses[2],
-                                  tag?.fitnesspackage?.duration
-                                )}
-                              </b>
-                            </span>
-                          </div>
-                        )}
-                        {totalClasses[3] !== 0 && (
-                          <div>
-                            <img src="/assets/customgroup-Offline.svg" alt="GRoup-Offline" />
-                            <br />
-                            <span>{tag.fitnesspackage?.groupoffline} Group</span>
-                            <br />
-                            <span>
-                              <b>
-                                {handleTimeFormatting(
-                                  totalClasses[3],
-                                  tag.fitnesspackage?.duration
-                                )}
-                              </b>
-                            </span>
-                          </div>
-                        )}
-                        {totalClasses[4] !== 0 && (
-                          <div>
-                            <img src="/assets/customclassic.svg" alt="Classic" />
-                            <br />
-                            <span>{tag.fitnesspackage?.recordedclasses} Recorded</span>
-                            <br />
-                            <span>
-                              <b>
-                                {handleTimeFormatting(
-                                  totalClasses[4],
-                                  tag.fitnesspackage?.duration
-                                )}
-                              </b>
-                            </span>
-                          </div>
-                        )}
-                      </Row>
-                      <Row></Row>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col>
-                      <span>
-                        <b style={{ color: 'gray' }}>Status: </b>{' '}
-                        {handleTotalClasses(totalClasses, tag.fitnesspackage?.duration)}/
-                        {tag.fitnesspackage?.duration}
-                      </span>
-                    </Col>
-                    <Col>
-                      <span>
-                        <b style={{ color: 'gray' }}>Rest-Days: </b>
-                        {tag.fitnesspackage?.restdays} days
-                      </span>
-                    </Col>
-                  </Row>
+    // const { data: data1 } = useQuery(GET_TABLEDATA, {
+    //     variables: {
+    //         id: last[0]
+    //     }
+    // });
+
+    // const { data: data2 } = useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
+    //     variables: {
+    //         id: auth.userid,
+    //         type: "One-On-One"
+    //     },
+    //     onCompleted: () => console.log()
+    // });
+
+    // function handleEventsSeperation(data: any, rest_days: any){
+    //     var ptonline: number = 0;
+    //     var ptoffline: number = 0;
+    //     var classic: number = 0;
+    //     if(data){
+    //         for(var i=0; i<data.length; i++){
+    //             if(data[i].tag === "One-On-One"){
+    //                 if(data[i].mode === 'Online'){
+    //                     ptonline++;
+    //                 }else{
+    //                     ptoffline++;
+    //                 }
+    //             }else if(data[i].tag === 'Classic'){
+    //                 classic++;
+    //             }
+    //         }
+    //         setTagSeperation([ptonline, ptoffline, classic]);
+    //         var arr: any = [];
+    //         for(var j=0; j<data.length; j++){
+    //             if(arr.includes(parseInt(data[j].day)) === false) arr.push(parseInt(data[j].day));
+    //         }
+
+    //         var restDays = rest_days === null ? 0 : rest_days.length;
+    //         setStatusDays(arr.length + restDays);
+    //     }
+    // }
+
+    // function loadData() {
+    //     const flattenData1 = flattenObj({ ...data1 });
+    //     const flattenData2 = flattenObj({ ...data2 });
+    //     setData(
+    //         [...flattenData1.fitnessprograms].map((detail) => {
+    //             return {
+    //                 id: detail.id,
+    //                 programName: detail.title,
+    //                 discipline: detail.fitnessdisciplines.map((val: any) => {
+    //                     return val.disciplinename;
+    //                 }).join(", "),
+    //                 level: detail.level,
+    //                 events: handleEventsSeperation(detail.events, detail.rest_days),
+    //                 duration: detail.duration_days,
+    //                 details: detail.description,
+    //                 restDays: detail.rest_days
+    //             }
+    //         })
+    //     )
+
+    //     setUserPackage(
+    //         [...flattenData2.clientPackages].map((packageItem) => {
+    //             let renewDay: any = '';
+    //             if (packageItem.fitnesspackages.length !== 0) {
+    //                 renewDay = new Date(packageItem.effective_date);
+    //                 renewDay.setDate(renewDay.getDate() + packageItem.fitnesspackages[0].duration)
+    //             }
+    //             return {
+    //                 userPackageId: packageItem.id,
+    //                 id: packageItem.fitnesspackages[0].id,
+    //                 packageName: packageItem.fitnesspackages[0].packagename,
+    //                 duration: packageItem.fitnesspackages[0].duration,
+    //                 details: [packageItem.fitnesspackages[0].ptonline, packageItem.fitnesspackages[0].ptoffline, packageItem.fitnesspackages[0].grouponline, packageItem.fitnesspackages[0].groupoffline, packageItem.fitnesspackages[0].recordedclasses, packageItem.fitnesspackages[0].restdays],
+    //                 effectiveDate: moment(packageItem.effective_date).format("MMMM DD,YYYY"),
+    //                 packageStatus: packageItem.fitnesspackages[0].Status ? "Active" : "Inactive",
+    //                 packageRenewal: moment(renewDay).format("MMMM DD,YYYY"),
+
+    //                 client: packageItem.users_permissions_user.username,
+    //                 clientId: packageItem.users_permissions_user.id,
+    //                 level: packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].level,
+    //                 discipline: packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].fitnessdisciplines,
+    //                 description: packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].description,
+    //                 programName: packageItem.program_managers.length === 0 ? 'N/A' : packageItem.program_managers[0].fitnessprograms[0].title,
+    //                 programId: packageItem.program_managers.length === 0 ? 'N/A' : packageItem.program_managers[0].fitnessprograms[0].id,
+    //                 programStatus: packageItem.program_managers.length === 0 ? 'N/A' : "Assigned",
+    //                 programRenewal: packageItem.program_managers.length === 0 ? 'N/A' : moment(renewDay).format('MMMM DD,YYYY')
+    //             }
+
+    //         })
+    //     )
+    // }
+
+    if (userPackage.length > 0) {
+        programIndex = userPackage.findIndex(
+            (item) => item.id === last[1] && item.clientId === last[2]
+        );
+    }
+
+    function handleDateEdit() {
+        updateDate({
+            variables: {
+                id: userPackage[programIndex].userPackageId,
+                effectiveDate: moment(startDate).format('YYYY-MM-DD') + 'T00:00:00.000Z'
+            }
+        });
+
+        handleCloseDatesModal();
+    }
+
+    function handleTimeFormatting(data: any, duration: number) {
+        const digits = duration <= 30 ? 2 : 3;
+        return (data === undefined ? 0 : data).toLocaleString('en-US', {
+            minimumIntegerDigits: digits.toString(),
+            useGrouping: false
+        });
+    }
+    function handleTotalClasses(data: any, duration: number) {
+        let sum = 0;
+        for (let i = 0; i < data.length; i++) {
+            sum += data[i];
+        }
+        const formattedSum = handleTimeFormatting(sum, duration);
+        return formattedSum;
+    }
+
+    if (!show) return <Loader />;
+    else
+        return (
+            <div className="col-lg-12">
+                <div className="mb-3">
+                    <span style={{ fontSize: '30px' }}>
+                        <Link to="/session">
+                            <i className="fa fa-arrow-circle-left" style={{ color: 'black' }}></i>
+                        </Link>
+                        <b> back</b>
+                    </span>
                 </div>
-              </Col>
-              <Dropdown className="ml-5">
-                <Dropdown.Toggle id="dropdown-basic" as="button" className="actionButtonDropDown">
-                  <i className="fas fa-ellipsis-v"></i>
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <Dropdown.Item onClick={handleShowDatesModal}>Edit Dates</Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </Row>
-          </Col>
-        </Row>
-        <Row>
-          <Col lg={11} className="pl-0 pr-0">
-            <div className="mt-5">
-              <SchedulerPage
-                type="date"
-                days={tag?.fitnesspackage?.duration}
-                classType={'One-On-One'}
-                restDays={tag?.sessions.filter((ses) => ses.type === 'restday')}
-                schedulerSessions={schedulerSessions}
-                programId={tagId}
-                startDate={
-                  tag &&
-                  tag.client_packages &&
-                  tag.client_packages.length &&
-                  tag?.client_packages[0].effective_date
-                }
-                clientId={
-                  tag &&
-                  tag.client_packages &&
-                  tag.client_packages.length &&
-                  tag?.client_packages[0].users_permissions_user.id
-                }
-              />
+                <Row>
+                    <Col
+                        lg={11}
+                        className="p-4 shadow-lg bg-white"
+                        style={{ borderRadius: '10px' }}
+                    >
+                        <Row>
+                            <Col lg={7}>
+                                <Row>
+                                    <h3 className="text-capitalize">{tag?.tag_name}</h3>
+                                </Row>
+                                <Row>
+                                    <span>{tag && tag.fitnesspackage?.packagename}</span>
+                                    <div
+                                        className="ml-3 mt-1"
+                                        style={{ borderLeft: '1px solid black', height: '20px' }}
+                                    ></div>
+                                    <span className="ml-4">
+                                        {tag.fitnesspackage?.duration + ' days'}
+                                    </span>
+                                    <div
+                                        className="ml-3"
+                                        style={{ borderLeft: '1px solid black', height: '20px' }}
+                                    ></div>
+                                    <span className="ml-4">
+                                        {'Level: ' + tag.fitnesspackage?.level}
+                                    </span>
+                                </Row>
+                                <Row>
+                                    <Col lg={4} className="pl-0 pr-0">
+                                        <Col
+                                            className="ml-1 mt-3"
+                                            style={{
+                                                border: '2px solid gray',
+                                                borderRadius: '10px'
+                                            }}
+                                        >
+                                            <Row>
+                                                <h5>
+                                                    <b>Client</b>
+                                                </h5>
+                                            </Row>
+                                            <Col lg={{ offset: 4 }}>
+                                                <Row>
+                                                    <div className="ml-2">
+                                                        <img
+                                                            src="https://picsum.photos/200/100"
+                                                            alt="pic"
+                                                            style={{
+                                                                width: '50px',
+                                                                height: '50px',
+                                                                borderRadius: '50%'
+                                                            }}
+                                                        />
+                                                    </div>
+                                                </Row>
+                                                <Row className="mt-1">
+                                                    <span className="text-capitalize">
+                                                        <b style={{ color: 'gray' }}>
+                                                            {tag &&
+                                                            tag.client_packages &&
+                                                            tag.client_packages.length
+                                                                ? tag.client_packages[0]
+                                                                      ?.users_permissions_user
+                                                                      ?.username
+                                                                : null}
+                                                        </b>
+                                                    </span>
+                                                </Row>
+                                            </Col>
+                                        </Col>
+                                    </Col>
+                                    <Col lg={7} className="mt-4 ml-2">
+                                        <div className="mb-4 mt-4">
+                                            <Row>
+                                                <Col lg={1}>
+                                                    <span>Date:</span>
+                                                </Col>
+                                                <Col lg={5} className="text-center">
+                                                    <span className="p-1 ml-2 scheduler-badge">
+                                                        {tag &&
+                                                        tag.client_packages &&
+                                                        tag.client_packages.length
+                                                            ? moment(
+                                                                  tag.client_packages[0]
+                                                                      .effective_date
+                                                              ).format('DD MMMM, YY')
+                                                            : null}
+                                                    </span>
+                                                </Col>
+                                                to
+                                                <Col lg={5} className="text-center">
+                                                    <span className="p-1 scheduler-badge">
+                                                        {tag &&
+                                                        tag.client_packages &&
+                                                        tag.client_packages.length
+                                                            ? moment(
+                                                                  tag.client_packages[0]
+                                                                      .effective_date
+                                                              )
+                                                                  .add(
+                                                                      tag.fitnesspackage?.duration -
+                                                                          1,
+                                                                      'days'
+                                                                  )
+                                                                  .format('DD MMMM, YY')
+                                                            : null}
+                                                    </span>
+                                                </Col>
+                                            </Row>
+                                        </div>
+                                    </Col>
+                                </Row>
+                            </Col>
+                            <Col lg={4} xs={11} style={{ borderLeft: '2px dashed gray' }}>
+                                <div
+                                    className="m-2 ml-2 text-center p-2"
+                                    style={{ border: '2px solid gray', borderRadius: '10px' }}
+                                >
+                                    <h4>
+                                        <b>Movement</b>
+                                    </h4>
+                                    <Row>
+                                        <Col>
+                                            <Row style={{ justifyContent: 'space-around' }}>
+                                                <div>
+                                                    <img
+                                                        src="/assets/custompersonal-training-Online.svg"
+                                                        alt="PT-Online"
+                                                    />
+                                                    <br />
+                                                    <span>{tag.fitnesspackage?.ptonline} PT</span>
+                                                    <br />
+                                                    <span>
+                                                        <b>
+                                                            {handleTimeFormatting(
+                                                                totalClasses[0],
+                                                                tag.fitnesspackage?.duration
+                                                            )}
+                                                        </b>
+                                                    </span>
+                                                </div>
+                                                <div>
+                                                    <img
+                                                        src="/assets/custompersonal-training-Offline.svg"
+                                                        alt="PT-Offline"
+                                                    />
+                                                    <br />
+                                                    <span>{tag.fitnesspackage?.ptoffline} PT</span>
+                                                    <br />
+                                                    <span>
+                                                        <b>
+                                                            {handleTimeFormatting(
+                                                                totalClasses[1],
+                                                                tag.fitnesspackage?.duration
+                                                            )}
+                                                        </b>
+                                                    </span>
+                                                </div>
+                                                {totalClasses[2] !== 0 && (
+                                                    <div>
+                                                        <img
+                                                            src="/assets/customgroup-Online.svg"
+                                                            alt="Group-Online"
+                                                        />
+                                                        <br />
+                                                        <span>
+                                                            {tag.fitnesspackage?.grouponline} Group
+                                                        </span>
+                                                        <br />
+                                                        <span>
+                                                            <b>
+                                                                {handleTimeFormatting(
+                                                                    totalClasses[2],
+                                                                    tag?.fitnesspackage?.duration
+                                                                )}
+                                                            </b>
+                                                        </span>
+                                                    </div>
+                                                )}
+                                                {totalClasses[3] !== 0 && (
+                                                    <div>
+                                                        <img
+                                                            src="/assets/customgroup-Offline.svg"
+                                                            alt="GRoup-Offline"
+                                                        />
+                                                        <br />
+                                                        <span>
+                                                            {tag.fitnesspackage?.groupoffline} Group
+                                                        </span>
+                                                        <br />
+                                                        <span>
+                                                            <b>
+                                                                {handleTimeFormatting(
+                                                                    totalClasses[3],
+                                                                    tag.fitnesspackage?.duration
+                                                                )}
+                                                            </b>
+                                                        </span>
+                                                    </div>
+                                                )}
+                                                {totalClasses[4] !== 0 && (
+                                                    <div>
+                                                        <img
+                                                            src="/assets/customclassic.svg"
+                                                            alt="Classic"
+                                                        />
+                                                        <br />
+                                                        <span>
+                                                            {tag.fitnesspackage?.recordedclasses}{' '}
+                                                            Recorded
+                                                        </span>
+                                                        <br />
+                                                        <span>
+                                                            <b>
+                                                                {handleTimeFormatting(
+                                                                    totalClasses[4],
+                                                                    tag.fitnesspackage?.duration
+                                                                )}
+                                                            </b>
+                                                        </span>
+                                                    </div>
+                                                )}
+                                            </Row>
+                                            <Row></Row>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col>
+                                            <span>
+                                                <b style={{ color: 'gray' }}>Status: </b>{' '}
+                                                {handleTotalClasses(
+                                                    totalClasses,
+                                                    tag.fitnesspackage?.duration
+                                                )}
+                                                /{tag.fitnesspackage?.duration}
+                                            </span>
+                                        </Col>
+                                        <Col>
+                                            <span>
+                                                <b style={{ color: 'gray' }}>Rest-Days: </b>
+                                                {tag.fitnesspackage?.restdays} days
+                                            </span>
+                                        </Col>
+                                    </Row>
+                                </div>
+                            </Col>
+                            <Dropdown className="ml-5">
+                                <Dropdown.Toggle
+                                    id="dropdown-basic"
+                                    as="button"
+                                    className="actionButtonDropDown"
+                                >
+                                    <i className="fas fa-ellipsis-v"></i>
+                                </Dropdown.Toggle>
+                                <Dropdown.Menu>
+                                    <Dropdown.Item onClick={handleShowDatesModal}>
+                                        Edit Dates
+                                    </Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </Row>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col lg={11} className="pl-0 pr-0">
+                        <div className="mt-5">
+                            <SchedulerPage
+                                type="date"
+                                days={tag?.fitnesspackage?.duration}
+                                classType={'One-On-One'}
+                                restDays={tag?.sessions.filter((ses) => ses.type === 'restday')}
+                                schedulerSessions={schedulerSessions}
+                                programId={tagId}
+                                startDate={
+                                    tag &&
+                                    tag.client_packages &&
+                                    tag.client_packages.length &&
+                                    tag?.client_packages[0].effective_date
+                                }
+                                clientId={
+                                    tag &&
+                                    tag.client_packages &&
+                                    tag.client_packages.length &&
+                                    tag?.client_packages[0].users_permissions_user.id
+                                }
+                            />
+                        </div>
+                    </Col>
+                </Row>
+                <Modal show={editDatesModal} onHide={handleCloseDatesModal}>
+                    <Modal.Body>
+                        <label>Edit Start Date: </label>
+                        <InputGroup className="mb-3">
+                            <FormControl
+                                value={
+                                    startDate === ''
+                                        ? tag &&
+                                          tag.client_packages &&
+                                          tag.client_packages.length &&
+                                          moment(tag?.client_packages[0].effective_date).format(
+                                              'YYYY-MM-DD'
+                                          )
+                                        : startDate
+                                }
+                                onChange={(e) => {
+                                    setStartDate(e.target.value);
+                                }}
+                                type="date"
+                            />
+                        </InputGroup>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="outline-danger" onClick={handleCloseDatesModal}>
+                            Close
+                        </Button>
+                        <Button
+                            variant="outline-success"
+                            disabled={startDate === '' ? true : false}
+                            onClick={() => {
+                                handleDateEdit();
+                            }}
+                        >
+                            Submit
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
             </div>
-          </Col>
-        </Row>
-        <Modal show={editDatesModal} onHide={handleCloseDatesModal}>
-          <Modal.Body>
-            <label>Edit Start Date: </label>
-            <InputGroup className="mb-3">
-              <FormControl
-                value={
-                  startDate === ''
-                    ? tag &&
-                      tag.client_packages &&
-                      tag.client_packages.length &&
-                      moment(tag?.client_packages[0].effective_date).format('YYYY-MM-DD')
-                    : startDate
-                }
-                onChange={(e) => {
-                  setStartDate(e.target.value);
-                }}
-                type="date"
-              />
-            </InputGroup>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="outline-danger" onClick={handleCloseDatesModal}>
-              Close
-            </Button>
-            <Button
-              variant="outline-success"
-              disabled={startDate === '' ? true : false}
-              onClick={() => {
-                handleDateEdit();
-              }}>
-              Submit
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      </div>
-    );
+        );
 };
 
 export default Scheduler;

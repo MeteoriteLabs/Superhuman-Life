@@ -2,12 +2,7 @@
     "1": {
         "title": "",
         "type": "object",
-        "required": [
-            "packagename",
-            "disciplines",
-            "equipmentList",
-            "intensity"
-        ],
+        "required": ["packagename", "disciplines", "equipmentList", "intensity"],
         "properties": {
             "packagename": {
                 "type": "string",
@@ -31,33 +26,17 @@
             "level": {
                 "type": "number",
                 "title": "Level",
-                "enum": [
-                    0,
-                    1,
-                    2
-                ],
+                "enum": [0, 1, 2],
                 "default": 0,
-                "enumNames": [
-                    "Beginner",
-                    "Intermediate",
-                    "Advanced"
-                ],
+                "enumNames": ["Beginner", "Intermediate", "Advanced"],
                 "description": "Select the relevant level for the offering"
             },
             "intensity": {
                 "type": "number",
                 "title": "Intensity",
-                "enum": [
-                    0,
-                    1,
-                    2
-                ],
+                "enum": [0, 1, 2],
                 "default": 0,
-                "enumNames": [
-                    "Low",
-                    "Moderate",
-                    "High"
-                ],
+                "enumNames": ["Low", "Moderate", "High"],
                 "description": "Set the relevant intensity for the level"
             }
         }
@@ -65,13 +44,7 @@
     "2": {
         "title": "",
         "type": "object",
-        "required": [
-            "About",
-            "Benifits",
-            "thumbnail",
-            "VideoUrl",
-            "languages"
-        ],
+        "required": ["About", "Benifits", "thumbnail", "VideoUrl", "languages"],
         "properties": {
             "About": {
                 "type": "string",
@@ -99,9 +72,7 @@
     "3": {
         "title": "Program Details",
         "type": "object",
-        "required": [
-            "programDetails"
-        ],
+        "required": ["programDetails"],
         "properties": {
             "programDetails": {
                 "type": "string"
@@ -111,9 +82,7 @@
     "4": {
         "title": "Pricing Plan",
         "type": "object",
-        "required": [
-            "pricingDetail"
-        ],
+        "required": ["pricingDetail"],
         "properties": {
             "pricingDetail": {
                 "type": "string",
@@ -125,23 +94,14 @@
     "5": {
         "title": "Package Settings",
         "type": "object",
-        "required": [
-            "visibility",
-            "datesConfig"
-        ],
+        "required": ["visibility", "datesConfig"],
         "properties": {
             "visibility": {
                 "type": "number",
                 "title": "Visibility",
-                "enum": [
-                    0,
-                    1
-                ],
-                "default":0,
-                "enumNames": [
-                    "Public",
-                    "Private"
-                ],
+                "enum": [0, 1],
+                "default": 0,
+                "enumNames": ["Public", "Private"],
                 "description": "Public: The Offering will be visible to the user as soon as it is created, Private: The offering will not ve seen by anyone until you share it with them"
             },
             "datesConfig": {

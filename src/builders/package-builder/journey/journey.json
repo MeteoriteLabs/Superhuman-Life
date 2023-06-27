@@ -2,11 +2,7 @@
     "1": {
         "title": "",
         "type": "object",
-        "required": [
-            "name",
-            "discipline",
-            "level"
-        ],
+        "required": ["name", "discipline", "level"],
         "properties": {
             "name": {
                 "type": "string",
@@ -15,12 +11,7 @@
             "discipline": {
                 "type": "string",
                 "title": "Discipline",
-                "enum": [
-                    "Basic",
-                    "Calisthenics",
-                    "Yoga",
-                    "Zumba"
-                ]
+                "enum": ["Basic", "Calisthenics", "Yoga", "Zumba"]
             },
             "tags": {
                 "type": "string",
@@ -29,21 +20,14 @@
             "level": {
                 "type": "string",
                 "title": "Level",
-                "enum": [
-                    "Beginner",
-                    "Intermediate",
-                    "Advance"
-                ]
+                "enum": ["Beginner", "Intermediate", "Advance"]
             }
         }
     },
     "2": {
         "title": "",
         "type": "object",
-        "required": [
-            "about",
-            "benefits"
-        ],
+        "required": ["about", "benefits"],
         "properties": {
             "about": {
                 "type": "string",
@@ -74,11 +58,7 @@
             "mode": {
                 "type": "string",
                 "title": "Mode",
-                "enum": [
-                    "Online",
-                    "Offline",
-                    "Hybrid"
-                ]
+                "enum": ["Online", "Offline", "Hybrid"]
             },
             "set": {
                 "type": "number",
@@ -89,17 +69,13 @@
             }
         },
         "dependencies": {
-            "package": [
-                "mode"
-            ],
+            "package": ["mode"],
             "mode": {
                 "oneOf": [
                     {
                         "properties": {
                             "mode": {
-                                "enum": [
-                                    "Online"
-                                ]
+                                "enum": ["Online"]
                             },
                             "fitness": {
                                 "type": "object",
@@ -152,9 +128,7 @@
                     {
                         "properties": {
                             "mode": {
-                                "enum": [
-                                    "Offline"
-                                ]
+                                "enum": ["Offline"]
                             },
                             "fitness": {
                                 "type": "object",
@@ -163,11 +137,7 @@
                                     "location": {
                                         "type": "string",
                                         "title": "Location",
-                                        "enum": [
-                                            "Others",
-                                            "At My Address",
-                                            "At Client Address"
-                                        ]
+                                        "enum": ["Others", "At My Address", "At Client Address"]
                                     },
                                     "pin": {
                                         "type": "string",
@@ -220,9 +190,7 @@
                     {
                         "properties": {
                             "mode": {
-                                "enum": [
-                                    "Hybrid"
-                                ]
+                                "enum": ["Hybrid"]
                             },
                             "fitness": {
                                 "type": "object",
@@ -231,11 +199,7 @@
                                     "location": {
                                         "type": "string",
                                         "title": "Location",
-                                        "enum": [
-                                            "Others",
-                                            "At My Address",
-                                            "At Client Address"
-                                        ]
+                                        "enum": ["Others", "At My Address", "At Client Address"]
                                     },
                                     "pin": {
                                         "type": "string",

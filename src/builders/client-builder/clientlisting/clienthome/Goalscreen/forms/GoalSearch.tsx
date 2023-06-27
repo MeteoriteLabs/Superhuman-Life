@@ -4,164 +4,167 @@ import { gql, useQuery } from '@apollo/client';
 import { flattenObj } from '../../../../../../components/utils/responseFlatten';
 
 const GoalSearch = (props: any) => {
-  const [packageLists, setPackageLists] = useState<any[]>([]);
-  const [searchInput, setSearchInput] = useState<any>(props.value ? props.value.name : null);
-  const [errorMsg, setErrorMsg] = useState('');
-  const [selected, setSelected] = useState<any[]>([]);
-  const inputField = useRef<any>();
-  let skipval = true;
+    const [packageLists, setPackageLists] = useState<any[]>([]);
+    const [searchInput, setSearchInput] = useState<any>(props.value ? props.value.name : null);
+    const [errorMsg, setErrorMsg] = useState('');
+    const [selected, setSelected] = useState<any[]>([]);
+    const inputField = useRef<any>();
+    let skipval = true;
 
-  const GET_GOALLIST = gql`
-    query GoalsListQuery($filter: String!) {
-      goals(filters: { name: { containsi: $filter } }, sort: ["updatedAt"]) {
-        data {
-          id
-          attributes {
-            name
-          }
+    const GET_GOALLIST = gql`
+        query GoalsListQuery($filter: String!) {
+            goals(filters: { name: { containsi: $filter } }, sort: ["updatedAt"]) {
+                data {
+                    id
+                    attributes {
+                        name
+                    }
+                }
+            }
         }
-      }
+    `;
+
+    function FetchPackageList(_variable: Record<string, unknown> = { filter: ' ' }) {
+        useQuery(GET_GOALLIST, {
+            variables: _variable,
+            onCompleted: loadPackageList,
+            skip: !searchInput
+        });
     }
-  `;
 
-  function FetchPackageList(_variable: Record<string, unknown> = { filter: ' ' }) {
-    useQuery(GET_GOALLIST, {
-      variables: _variable,
-      onCompleted: loadPackageList,
-      skip: !searchInput
-    });
-  }
-
-  function loadPackageList(data: any) {
-    const flattenData = flattenObj({ ...data });
-    setPackageLists(
-      [...flattenData.goals].map((p) => {
-        return {
-          id: p.id,
-          name: p.name
-        };
-      })
-    );
-  }
-
-  function Search(data: any) {
-    if (data.length > 0) {
-      setSearchInput(data);
-      skipval = false;
-    } else {
-      setPackageLists([]);
+    function loadPackageList(data: any) {
+        const flattenData = flattenObj({ ...data });
+        setPackageLists(
+            [...flattenData.goals].map((p) => {
+                return {
+                    id: p.id,
+                    name: p.name
+                };
+            })
+        );
     }
-  }
 
-  function handleSelectedPackageAdd(name: any, id: any) {
-    const values = [...selected];
-    if (values.length === 1) {
-      setErrorMsg('(Only One Goal Allowed)');
-    } else {
-      const a = values.find((e) => e.id === id);
-      if (!a) {
-        values.push({ value: name, id: id });
+    function Search(data: any) {
+        if (data.length > 0) {
+            setSearchInput(data);
+            skipval = false;
+        } else {
+            setPackageLists([]);
+        }
+    }
+
+    function handleSelectedPackageAdd(name: any, id: any) {
+        const values = [...selected];
+        if (values.length === 1) {
+            setErrorMsg('(Only One Goal Allowed)');
+        } else {
+            const a = values.find((e) => e.id === id);
+            if (!a) {
+                values.push({ value: name, id: id });
+                setSelected(values);
+            }
+            props.onChange(
+                values
+                    .map((e) => {
+                        return e.id;
+                    })
+                    .join(',')
+            );
+            inputField.current.value = '';
+            setPackageLists([]);
+            skipval = true;
+        }
+    }
+
+    function handleSelectedPackageRemove(name: any) {
+        const values = [...selected];
+        values.splice(name, 1);
         setSelected(values);
-      }
-      props.onChange(
-        values
-          .map((e) => {
-            return e.id;
-          })
-          .join(',')
-      );
-      inputField.current.value = '';
-      setPackageLists([]);
-      skipval = true;
+        setErrorMsg('');
+        props.onChange(
+            values
+                .map((e) => {
+                    return e.id;
+                })
+                .join(',')
+        );
     }
-  }
 
-  function handleSelectedPackageRemove(name: any) {
-    const values = [...selected];
-    values.splice(name, 1);
-    setSelected(values);
-    setErrorMsg('');
-    props.onChange(
-      values
-        .map((e) => {
-          return e.id;
-        })
-        .join(',')
+    FetchPackageList({ filter: searchInput, skip: skipval });
+
+    return (
+        <>
+            <label style={{ fontSize: 17 }}>Search For Goals</label>
+            {errorMsg && <p className="text-danger">{errorMsg}</p>}
+
+            <InputGroup>
+                <FormControl
+                    aria-describedby="basic-addon1"
+                    placeholder="Search"
+                    id="package"
+                    ref={inputField}
+                    onChange={(e) => {
+                        e.preventDefault();
+                        Search(e.target.value);
+                    }}
+                    autoComplete="off"
+                />
+            </InputGroup>
+            <>
+                {packageLists.slice(0, 5).map((p, index) => {
+                    return (
+                        <Container className="pl-0" key={index}>
+                            <option
+                                style={{ cursor: 'pointer' }}
+                                className="m-2 p-1 shadow-sm rounded bg-white"
+                                value={p.id}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    handleSelectedPackageAdd(p.name, p.id);
+                                }}
+                            >
+                                {p.name}
+                            </option>
+                        </Container>
+                    );
+                })}
+            </>
+            <>
+                {selected.map((val, index) => {
+                    return (
+                        <div
+                            key={index}
+                            className="text-center mt-2 mr-2"
+                            style={{
+                                display: 'inline-block',
+                                height: '32px',
+                                padding: '0px 12px',
+                                fontSize: '14px',
+                                lineHeight: '32px',
+                                borderRadius: '16px',
+                                color: 'rgba(0,0,0,0.8)',
+                                backgroundColor: '#bebdb8'
+                            }}
+                        >
+                            {val.value}
+                            <i
+                                className="close fas fa-times"
+                                style={{
+                                    fontSize: '14px',
+                                    cursor: 'pointer',
+                                    float: 'right',
+                                    paddingLeft: '8px',
+                                    lineHeight: '32px',
+                                    height: '32px'
+                                }}
+                                onClick={() => handleSelectedPackageRemove(val.value)}
+                            ></i>
+                        </div>
+                    );
+                })}
+            </>
+        </>
     );
-  }
-
-  FetchPackageList({ filter: searchInput, skip: skipval });
-
-  return (
-    <>
-      <label style={{ fontSize: 17 }}>Search For Goals</label>
-      {errorMsg && <p className="text-danger">{errorMsg}</p>}
-
-      <InputGroup>
-        <FormControl
-          aria-describedby="basic-addon1"
-          placeholder="Search"
-          id="package"
-          ref={inputField}
-          onChange={(e) => {
-            e.preventDefault();
-            Search(e.target.value);
-          }}
-          autoComplete="off"
-        />
-      </InputGroup>
-      <>
-        {packageLists.slice(0, 5).map((p, index) => {
-          return (
-            <Container className="pl-0" key={index}>
-              <option
-                style={{ cursor: 'pointer' }}
-                className="m-2 p-1 shadow-sm rounded bg-white"
-                value={p.id}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleSelectedPackageAdd(p.name, p.id);
-                }}>
-                {p.name}
-              </option>
-            </Container>
-          );
-        })}
-      </>
-      <>
-        {selected.map((val, index) => {
-          return (
-            <div
-              key={index}
-              className="text-center mt-2 mr-2"
-              style={{
-                display: 'inline-block',
-                height: '32px',
-                padding: '0px 12px',
-                fontSize: '14px',
-                lineHeight: '32px',
-                borderRadius: '16px',
-                color: 'rgba(0,0,0,0.8)',
-                backgroundColor: '#bebdb8'
-              }}>
-              {val.value}
-              <i
-                className="close fas fa-times"
-                style={{
-                  fontSize: '14px',
-                  cursor: 'pointer',
-                  float: 'right',
-                  paddingLeft: '8px',
-                  lineHeight: '32px',
-                  height: '32px'
-                }}
-                onClick={() => handleSelectedPackageRemove(val.value)}></i>
-            </div>
-          );
-        })}
-      </>
-    </>
-  );
 };
 
 export default GoalSearch;

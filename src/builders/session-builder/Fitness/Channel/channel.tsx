@@ -1,210 +1,202 @@
-import { useQuery } from "@apollo/client";
-import { useContext, useMemo, useRef, useState } from "react";
-import { Badge, Row, Col, Form } from "react-bootstrap";
-import Table from "../../../../components/table";
-import AuthContext from "../../../../context/auth-context";
-import { GET_TAGS_FOR_CHANNEL } from "../../graphQL/queries";
-import FitnessAction from "../FitnessAction";
-import ActionButton from "../../../../components/actionbutton";
-import { flattenObj } from "../../../../components/utils/responseFlatten";
-import moment from "moment";
+import { useQuery } from '@apollo/client';
+import { useContext, useMemo, useRef, useState } from 'react';
+import { Badge, Row, Col, Form } from 'react-bootstrap';
+import Table from '../../../../components/table';
+import AuthContext from '../../../../context/auth-context';
+import { GET_TAGS_FOR_CHANNEL } from '../../graphQL/queries';
+import FitnessAction from '../FitnessAction';
+import ActionButton from '../../../../components/actionbutton';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import moment from 'moment';
 
 export default function Channel() {
-  const auth = useContext(AuthContext);
-  const [userPackage, setUserPackage] = useState<any>([]);
-  const [showHistory, setShowHistory] = useState<boolean>(false);
-  const fitnessActionRef = useRef<any>(null);
+    const auth = useContext(AuthContext);
+    const [userPackage, setUserPackage] = useState<any>([]);
+    const [showHistory, setShowHistory] = useState<boolean>(false);
+    const fitnessActionRef = useRef<any>(null);
 
-  const mainQuery = useQuery(GET_TAGS_FOR_CHANNEL, {
-    variables: { id: auth.userid },
-    onCompleted: (data) => loadData(data),
-  });
+    const mainQuery = useQuery(GET_TAGS_FOR_CHANNEL, {
+        variables: { id: auth.userid },
+        onCompleted: (data) => loadData(data)
+    });
 
-  const loadData = (data: any) => {
-    const flattenData = flattenObj({ ...data });
+    const loadData = (data: any) => {
+        const flattenData = flattenObj({ ...data });
 
-    setUserPackage([
-      ...flattenData.tags.map((packageItem) => {
-        return {
-          tagId: packageItem.id,
-          id: packageItem.id,
-          packageName: packageItem.fitnesspackage.packagename,
-          duration: packageItem.fitnesspackage.duration,
-          expiry: moment(packageItem.fitnesspackage.expiry_date).format(
-            "MMMM DD,YYYY"
-          ),
-          client:
-            packageItem.client_packages.length > 0
-              ? packageItem.client_packages.length
-              : null,
-          programName: packageItem.tag_name ? packageItem.tag_name : "N/A",
-          programStatus:
-            packageItem.fitnesspackage.Status === true ? "Assigned" : "N/A",
-          renewal: calculateProgramRenewal(packageItem.sessions),
-        };
-      }),
-    ]);
-  };
+        setUserPackage([
+            ...flattenData.tags.map((packageItem) => {
+                return {
+                    tagId: packageItem.id,
+                    id: packageItem.id,
+                    packageName: packageItem.fitnesspackage.packagename,
+                    duration: packageItem.fitnesspackage.duration,
+                    expiry: moment(packageItem.fitnesspackage.expiry_date).format('MMMM DD,YYYY'),
+                    client:
+                        packageItem.client_packages.length > 0
+                            ? packageItem.client_packages.length
+                            : null,
+                    programName: packageItem.tag_name ? packageItem.tag_name : 'N/A',
+                    programStatus: packageItem.fitnesspackage.Status === true ? 'Assigned' : 'N/A',
+                    renewal: calculateProgramRenewal(packageItem.sessions)
+                };
+            })
+        ]);
+    };
 
-  function calculateProgramRenewal(sessions) {
-    if (sessions.length === 0) {
-      return "N/A";
+    function calculateProgramRenewal(sessions) {
+        if (sessions.length === 0) {
+            return 'N/A';
+        }
+
+        const moments = sessions.map((d) => moment(d.session_date));
+        const maxDate = moment.max(moments);
+
+        return maxDate.format('MMM Do,YYYY');
     }
 
-    const moments = sessions.map((d) => moment(d.session_date));
-    const maxDate = moment.max(moments);
-
-    return maxDate.format("MMM Do,YYYY");
-  }
-
-  function handleRedirect(id: any) {
-    window.location.href = `/channel/session/scheduler/${id}`;
-  }
-
-  const columns = useMemo(
-    () => [
-      {
-        Header: "Channel",
-        columns: [
-          { accessor: "packageName", Header: "Name", enableRowSpan: true },
-        ],
-      },
-      { accessor: " ", Header: "" },
-      {
-        Header: "Program",
-        columns: [
-          {
-            accessor: "client",
-            Header: "Client",
-          },
-          { accessor: "programName", Header: "Class Name" },
-          {
-            accessor: "programStatus",
-            Header: "Status",
-            Cell: (row: any) => {
-              return (
-                <>
-                  {row.value === "Assigned" ? (
-                    <Badge
-                      className="px-3 py-1"
-                      style={{ fontSize: "1rem", borderRadius: "10px" }}
-                      variant="success"
-                    >
-                      {row.value}
-                    </Badge>
-                  ) : (
-                    <Badge
-                      className="px-3 py-1"
-                      style={{ fontSize: "1rem", borderRadius: "10px" }}
-                      variant="danger"
-                    >
-                      {row.value}
-                    </Badge>
-                  )}
-                </>
-              );
-            },
-          },
-          { accessor: "renewal", Header: "Last Session Date" },
-          {
-            id: "edit",
-            Header: "Actions",
-            Cell: ({ row }: any) => {
-              const manageHandler = () => {
-                handleRedirect(row.original.tagId);
-              };
-              const detailsHandler = () => {
-                fitnessActionRef.current.TriggerForm({
-                  id: row.original.id,
-                  actionType: "details",
-                  type: "Classic Class",
-                  rowData: row.original,
-                });
-              };
-
-              const clientsHandler = () => {
-                fitnessActionRef.current.TriggerForm({
-                  id: row.original.id,
-                  actionType: "allClients",
-                  type: "Classic Class",
-                });
-              };
-
-              const arrayAction = [
-                { actionName: "Manage", actionClick: manageHandler },
-                { actionName: "Details", actionClick: detailsHandler },
-                { actionName: "All Clients", actionClick: clientsHandler },
-              ];
-              return <ActionButton arrayAction={arrayAction}></ActionButton>;
-            },
-          },
-        ],
-      },
-    ],
-    []
-  );
-
-  function handleHistoryPackage(data: any) {
-    const flattenData = flattenObj({ ...data });
-    setUserPackage([
-      ...flattenData.tags.map((packageItem) => {
-        return {
-          tagId: packageItem.id,
-          id: packageItem.id,
-          packageName: packageItem.fitnesspackage.packagename,
-          duration: packageItem.fitnesspackage.duration,
-          expiry: moment(packageItem.fitnesspackage.expiry_date).format(
-            "MMMM DD,YYYY"
-          ),
-          client:
-            packageItem.client_packages.length > 0
-              ? packageItem.client_packages.length
-              : null,
-          programName: packageItem.tag_name ? packageItem.tag_name : "N/A",
-          programStatus:
-            packageItem.fitnesspackage.Status === true ? "Assigned" : "N/A",
-          renewal: calculateProgramRenewal(packageItem.sessions),
-        };
-      }),
-    ]);
-  }
-
-  if (!showHistory) {
-    if (userPackage.length > 0) {
-      userPackage.filter((item: any, index: any) =>
-        moment(item.endDate).isBefore(moment()) === true
-          ? userPackage.splice(index, 1)
-          : null
-      );
+    function handleRedirect(id: any) {
+        window.location.href = `/channel/session/scheduler/${id}`;
     }
-  }
 
-  return (
-    <div className="mt-5">
-      <Row>
-        <div className="mb-3">
-          <Form>
-            <Form.Check
-              type="switch"
-              id="switchEnabled1"
-              label="Show History"
-              defaultChecked={showHistory}
-              onClick={() => {
-                setShowHistory(!showHistory);
-                mainQuery.refetch().then((res: any) => {
-                  handleHistoryPackage(res.data);
-                });
-              }}
-            />
-          </Form>
+    const columns = useMemo(
+        () => [
+            {
+                Header: 'Channel',
+                columns: [{ accessor: 'packageName', Header: 'Name', enableRowSpan: true }]
+            },
+            { accessor: ' ', Header: '' },
+            {
+                Header: 'Program',
+                columns: [
+                    {
+                        accessor: 'client',
+                        Header: 'Client'
+                    },
+                    { accessor: 'programName', Header: 'Class Name' },
+                    {
+                        accessor: 'programStatus',
+                        Header: 'Status',
+                        Cell: (row: any) => {
+                            return (
+                                <>
+                                    {row.value === 'Assigned' ? (
+                                        <Badge
+                                            className="px-3 py-1"
+                                            style={{ fontSize: '1rem', borderRadius: '10px' }}
+                                            variant="success"
+                                        >
+                                            {row.value}
+                                        </Badge>
+                                    ) : (
+                                        <Badge
+                                            className="px-3 py-1"
+                                            style={{ fontSize: '1rem', borderRadius: '10px' }}
+                                            variant="danger"
+                                        >
+                                            {row.value}
+                                        </Badge>
+                                    )}
+                                </>
+                            );
+                        }
+                    },
+                    { accessor: 'renewal', Header: 'Last Session Date' },
+                    {
+                        id: 'edit',
+                        Header: 'Actions',
+                        Cell: ({ row }: any) => {
+                            const manageHandler = () => {
+                                handleRedirect(row.original.tagId);
+                            };
+                            const detailsHandler = () => {
+                                fitnessActionRef.current.TriggerForm({
+                                    id: row.original.id,
+                                    actionType: 'details',
+                                    type: 'Classic Class',
+                                    rowData: row.original
+                                });
+                            };
+
+                            const clientsHandler = () => {
+                                fitnessActionRef.current.TriggerForm({
+                                    id: row.original.id,
+                                    actionType: 'allClients',
+                                    type: 'Classic Class'
+                                });
+                            };
+
+                            const arrayAction = [
+                                { actionName: 'Manage', actionClick: manageHandler },
+                                { actionName: 'Details', actionClick: detailsHandler },
+                                { actionName: 'All Clients', actionClick: clientsHandler }
+                            ];
+                            return <ActionButton arrayAction={arrayAction}></ActionButton>;
+                        }
+                    }
+                ]
+            }
+        ],
+        []
+    );
+
+    function handleHistoryPackage(data: any) {
+        const flattenData = flattenObj({ ...data });
+        setUserPackage([
+            ...flattenData.tags.map((packageItem) => {
+                return {
+                    tagId: packageItem.id,
+                    id: packageItem.id,
+                    packageName: packageItem.fitnesspackage.packagename,
+                    duration: packageItem.fitnesspackage.duration,
+                    expiry: moment(packageItem.fitnesspackage.expiry_date).format('MMMM DD,YYYY'),
+                    client:
+                        packageItem.client_packages.length > 0
+                            ? packageItem.client_packages.length
+                            : null,
+                    programName: packageItem.tag_name ? packageItem.tag_name : 'N/A',
+                    programStatus: packageItem.fitnesspackage.Status === true ? 'Assigned' : 'N/A',
+                    renewal: calculateProgramRenewal(packageItem.sessions)
+                };
+            })
+        ]);
+    }
+
+    if (!showHistory) {
+        if (userPackage.length > 0) {
+            userPackage.filter((item: any, index: any) =>
+                moment(item.endDate).isBefore(moment()) === true
+                    ? userPackage.splice(index, 1)
+                    : null
+            );
+        }
+    }
+
+    return (
+        <div className="mt-5">
+            <Row>
+                <div className="mb-3">
+                    <Form>
+                        <Form.Check
+                            type="switch"
+                            id="switchEnabled1"
+                            label="Show History"
+                            defaultChecked={showHistory}
+                            onClick={() => {
+                                setShowHistory(!showHistory);
+                                mainQuery.refetch().then((res: any) => {
+                                    handleHistoryPackage(res.data);
+                                });
+                            }}
+                        />
+                    </Form>
+                </div>
+            </Row>
+            <Row>
+                <Col>
+                    <Table columns={columns} data={userPackage} />
+                    <FitnessAction ref={fitnessActionRef} callback={() => mainQuery} />
+                </Col>
+            </Row>
         </div>
-      </Row>
-      <Row>
-        <Col>
-          <Table columns={columns} data={userPackage} />
-          <FitnessAction ref={fitnessActionRef} callback={() => mainQuery}/>
-        </Col>
-      </Row>
-    </div>
-  );
+    );
 }

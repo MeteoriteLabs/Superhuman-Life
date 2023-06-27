@@ -1,358 +1,290 @@
 {
-     "1": {
-         "title": "",
-         "type": "object",
-         "required": [
-            "day",
-            "time"
-         ],
-         "properties": {
-          "tag": {
-               "type": "string"
-          },
-             "day": {
-                 "type": "string"
-             },
-             "time": {
-                 "type": "string"
-             }
-         }
-     },
-    "2": {
-            "title": "",
-            "type": "object",
-            "required": [
-                "workout",
-                "intensity",
-                "level",
-                "discipline",
-                "about",
-                "benefits",
-                "equipment",
-                "muscleGroup"
-            ],
-            "properties": {
-                "workout": {
-                    "type": "string",
-                    "title": "Workout name"
-                },
-                "level": {
-                    "type": "number",
-                    "title": "Level",
-                    "enum": [
-                        0,
-                        1,
-                        2
-                    ],
-                    "default": 0,
-                    "enumNames": [
-                        "Beginner",
-                        "Intermediate",
-                        "Advanced"
-                    ]
-                },
-                "intensity": {
-                    "type": "number",
-                    "title": "Intensity",
-                    "enum": [
-                        0,
-                        1,
-                        2
-                    ],
-                    "default": 0,
-                    "enumNames": [
-                        "Low",
-                        "Medium",
-                        "High"
-                    ]
-                },
-                "discipline": {
-                    "type": "string"
-                },
-                "about": {
-                    "type": "string",
-                    "title": "About",
-                    "description" : "Explain in detail about the workout"
-                },
-                "benefits": {
-                    "type": "string",
-                    "title": "Benefits",
-                    "description": "Explain the benefits of this workout"
-                },
-                "addWorkout": {
-                    "title": "Workout Agenda",
-                    "$ref": "#/definitions/addWorkout"
-                },
-                "calories": {
-                    "type": "number",
-                    "title": "Total calories",
-                    "minimum": 0
-                },
-                "equipment": {
-                    "type": "string"
-                },
-                "muscleGroup": {
-                    "type": "string"
-                }
+    "1": {
+        "title": "",
+        "type": "object",
+        "required": ["day", "time"],
+        "properties": {
+            "tag": {
+                "type": "string"
             },
-            "definitions": {
-                "addWorkout": {
-                    "title": "Add Workout",
-                    "type": "object",
-                    "properties": {
-                        "AddWorkout": {
-                            "type": "string",
-                            "title": "Add workout",
-                            "enum": [
-                                "Build",
-                                "Add URL",
-                                "Text",
-                                "Upload"
-                            ],
-                            "default": "Build"
-                        }
-                    },
-                    "required": [
-                        "AddWorkout"
-                    ],
-                    "dependencies": {
-                        "AddWorkout": {
-                            "oneOf": [
-                                {
-                                    "properties": {
-                                        "AddWorkout": {
-                                            "enum": [
-                                                "Add URL"
-                                            ]
-                                        },
-                                        "AddURL": {
-                                            "type": "string",
-                                            "title": "Add URL",
-                                            "format": "uri",
-                                            "description": "upload link of the workout. You can add a youtube URL. Can be  used for Group, PT, Custom and Classic offerings."
-                                        }
+            "day": {
+                "type": "string"
+            },
+            "time": {
+                "type": "string"
+            }
+        }
+    },
+    "2": {
+        "title": "",
+        "type": "object",
+        "required": [
+            "workout",
+            "intensity",
+            "level",
+            "discipline",
+            "about",
+            "benefits",
+            "equipment",
+            "muscleGroup"
+        ],
+        "properties": {
+            "workout": {
+                "type": "string",
+                "title": "Workout name"
+            },
+            "level": {
+                "type": "number",
+                "title": "Level",
+                "enum": [0, 1, 2],
+                "default": 0,
+                "enumNames": ["Beginner", "Intermediate", "Advanced"]
+            },
+            "intensity": {
+                "type": "number",
+                "title": "Intensity",
+                "enum": [0, 1, 2],
+                "default": 0,
+                "enumNames": ["Low", "Medium", "High"]
+            },
+            "discipline": {
+                "type": "string"
+            },
+            "about": {
+                "type": "string",
+                "title": "About",
+                "description": "Explain in detail about the workout"
+            },
+            "benefits": {
+                "type": "string",
+                "title": "Benefits",
+                "description": "Explain the benefits of this workout"
+            },
+            "addWorkout": {
+                "title": "Workout Agenda",
+                "$ref": "#/definitions/addWorkout"
+            },
+            "calories": {
+                "type": "number",
+                "title": "Total calories",
+                "minimum": 0
+            },
+            "equipment": {
+                "type": "string"
+            },
+            "muscleGroup": {
+                "type": "string"
+            }
+        },
+        "definitions": {
+            "addWorkout": {
+                "title": "Add Workout",
+                "type": "object",
+                "properties": {
+                    "AddWorkout": {
+                        "type": "string",
+                        "title": "Add workout",
+                        "enum": ["Build", "Add URL", "Text", "Upload"],
+                        "default": "Build"
+                    }
+                },
+                "required": ["AddWorkout"],
+                "dependencies": {
+                    "AddWorkout": {
+                        "oneOf": [
+                            {
+                                "properties": {
+                                    "AddWorkout": {
+                                        "enum": ["Add URL"]
                                     },
-                                    "required": [
-                                        "AddURL"
-                                    ]
+                                    "AddURL": {
+                                        "type": "string",
+                                        "title": "Add URL",
+                                        "format": "uri",
+                                        "description": "upload link of the workout. You can add a youtube URL. Can be  used for Group, PT, Custom and Classic offerings."
+                                    }
                                 },
-                                {
-                                    "properties": {
-                                        "AddWorkout": {
-                                            "enum": [
-                                                "Text"
-                                            ]
-                                        },
-                                        "AddText": {
-                                            "type": "string",
-                                            "title": "Add Text",
-                                            "description": "Explain in detail about the workout. Used for PT and Group"
-                                        }
+                                "required": ["AddURL"]
+                            },
+                            {
+                                "properties": {
+                                    "AddWorkout": {
+                                        "enum": ["Text"]
                                     },
-                                    "required": [
-                                        "AddText"
-                                    ]
+                                    "AddText": {
+                                        "type": "string",
+                                        "title": "Add Text",
+                                        "description": "Explain in detail about the workout. Used for PT and Group"
+                                    }
                                 },
-                                {
-                                    "properties": {
-                                        "AddWorkout": {
-                                            "enum": [
-                                                "Upload"
-                                            ]
-                                        },
-                                        "Upload": {
-                                            "type": "string",
-                                            "description": "Add video of the Workout."
-                                        }
+                                "required": ["AddText"]
+                            },
+                            {
+                                "properties": {
+                                    "AddWorkout": {
+                                        "enum": ["Upload"]
                                     },
-                                    "required": [
-                                        "Upload"
-                                    ]
+                                    "Upload": {
+                                        "type": "string",
+                                        "description": "Add video of the Workout."
+                                    }
                                 },
-                                {
-                                    "required": [
-                                        "warmup",
-                                        "mainmovement",
-                                        "cooldown"
-                                    ],
-                                    "properties": {
-                                        "AddWorkout": {
-                                            "enum": [
-                                                "Build"
-                                            ]
-                                        },
-                                        "warmup": {
-                                            "type": "object",
-                                            "title": "Warmup",
-                                            "oneOf": [
-                                                 {
-                                                 "title": "Exercise",
-                                                 "properties": {
-                                                      "exercise": {
-                                                           "type": "string",
-                                                           "title": "Exercise",
-                                                           "additionalProperties": {
-                                                                "ui:label": false
-                                                            }
-                                                      }
-                                                 },
-                                                 "required": [
-                                                      "exercise"
-                                                 ]
-                                                 },
-                                                 {
-                                                 "title": "Text",
-                                                 "properties": {
-                                                      "text": {
-                                                           "type": "string",
-                                                           "title": "Text"
-                                                      }
-                                                 },
-                                                 "required": [
-                                                     "text"
-                                                 ]
-                                                 },
-                                                 {
-                                                      "title": "Url",
-                                                      "properties": {
-                                                           "url": {
-                                                                "type": "string",
-                                                                "title": "URL",
-                                                                "format": "uri"
-                                                           }
-                                                      },
-                                                      "required": [
-                                                          "url"
-                                                      ]
-                                                 },
-                                                 {
-                                                      "title": "Upload",
-                                                      "properties": {
-                                                           "upload": {
-                                                                "type": "string",
-                                                                "title": "Upload"
-                                                           }
-                                                      },
-                                                      "required": [
-                                                          "upload"
-                                                      ]
-                                                 }
-                                            ]
-                                       },
-                                       "mainmovement": {
-                                            "type": "object",
-                                            "title": "Mainmovement",
-                                            "oneOf": [
-                                                 {
-                                                 "title": "Exercise",
-                                                 "properties": {
-                                                      "exercise": {
-                                                           "type": "string",
-                                                           "title": "Exercise"
-                                                      }
-                                                 },
-                                                 "required": [
-                                                      "exercise"
-                                                 ]
-                                                 },
-                                                 {
-                                                 "title": "Text",
-                                                 "properties": {
-                                                      "text": {
-                                                           "type": "string",
-                                                           "title": "Text"
-                                                      }
-                                                 },
-                                                 "required": [
-                                                     "text"
-                                                 ]
-                                                 },
-                                                 {
-                                                      "title": "Url",
-                                                      "properties": {
-                                                           "url": {
-                                                                "type": "string",
-                                                                "title": "URL"
-                                                           }
-                                                      },
-                                                      "required": [
-                                                          "url"
-                                                      ]
-                                                 },
-                                                 {
-                                                      "title": "Upload",
-                                                      "properties": {
-                                                           "upload": {
-                                                                "type": "string",
-                                                                "title": "Upload"
-                                                           }
-                                                      },
-                                                      "required": [
-                                                          "upload"
-                                                      ]
-                                                 }
-                                            ]
-                                       },
-                                       "cooldown": {
-                                            "type": "object",
-                                            "title": "Cooldown",
-                                            "oneOf": [
-                                                 {
-                                                 "title": "Exercise",
-                                                 "properties": {
-                                                      "exercise": {
-                                                           "type": "string",
-                                                           "title": "Exercise"
-                                                      }
-                                                 },
-                                                 "required": [
-                                                      "exercise"
-                                                 ]
-                                                 },
-                                                 {
-                                                 "title": "Text",
-                                                 "properties": {
-                                                      "text": {
-                                                           "type": "string",
-                                                           "title": "Text"
-                                                      }
-                                                 },
-                                                 "required": [
-                                                     "text"
-                                                 ]
-                                                 },
-                                                 {
-                                                      "title": "Url",
-                                                      "properties": {
-                                                           "url": {
-                                                                "type": "string",
-                                                                "title": "URL"
-                                                           }
-                                                      },
-                                                      "required": [
-                                                          "url"
-                                                      ]
-                                                 },
-                                                 {
-                                                      "title": "Upload",
-                                                      "properties": {
-                                                           "upload": {
-                                                                "type": "string",
-                                                                "title": "Upload"
-                                                           }
-                                                      },
-                                                      "required": [
-                                                          "upload"
-                                                      ]
-                                                 }
-                                            ]
-                                       }
+                                "required": ["Upload"]
+                            },
+                            {
+                                "required": ["warmup", "mainmovement", "cooldown"],
+                                "properties": {
+                                    "AddWorkout": {
+                                        "enum": ["Build"]
+                                    },
+                                    "warmup": {
+                                        "type": "object",
+                                        "title": "Warmup",
+                                        "oneOf": [
+                                            {
+                                                "title": "Exercise",
+                                                "properties": {
+                                                    "exercise": {
+                                                        "type": "string",
+                                                        "title": "Exercise",
+                                                        "additionalProperties": {
+                                                            "ui:label": false
+                                                        }
+                                                    }
+                                                },
+                                                "required": ["exercise"]
+                                            },
+                                            {
+                                                "title": "Text",
+                                                "properties": {
+                                                    "text": {
+                                                        "type": "string",
+                                                        "title": "Text"
+                                                    }
+                                                },
+                                                "required": ["text"]
+                                            },
+                                            {
+                                                "title": "Url",
+                                                "properties": {
+                                                    "url": {
+                                                        "type": "string",
+                                                        "title": "URL",
+                                                        "format": "uri"
+                                                    }
+                                                },
+                                                "required": ["url"]
+                                            },
+                                            {
+                                                "title": "Upload",
+                                                "properties": {
+                                                    "upload": {
+                                                        "type": "string",
+                                                        "title": "Upload"
+                                                    }
+                                                },
+                                                "required": ["upload"]
+                                            }
+                                        ]
+                                    },
+                                    "mainmovement": {
+                                        "type": "object",
+                                        "title": "Mainmovement",
+                                        "oneOf": [
+                                            {
+                                                "title": "Exercise",
+                                                "properties": {
+                                                    "exercise": {
+                                                        "type": "string",
+                                                        "title": "Exercise"
+                                                    }
+                                                },
+                                                "required": ["exercise"]
+                                            },
+                                            {
+                                                "title": "Text",
+                                                "properties": {
+                                                    "text": {
+                                                        "type": "string",
+                                                        "title": "Text"
+                                                    }
+                                                },
+                                                "required": ["text"]
+                                            },
+                                            {
+                                                "title": "Url",
+                                                "properties": {
+                                                    "url": {
+                                                        "type": "string",
+                                                        "title": "URL"
+                                                    }
+                                                },
+                                                "required": ["url"]
+                                            },
+                                            {
+                                                "title": "Upload",
+                                                "properties": {
+                                                    "upload": {
+                                                        "type": "string",
+                                                        "title": "Upload"
+                                                    }
+                                                },
+                                                "required": ["upload"]
+                                            }
+                                        ]
+                                    },
+                                    "cooldown": {
+                                        "type": "object",
+                                        "title": "Cooldown",
+                                        "oneOf": [
+                                            {
+                                                "title": "Exercise",
+                                                "properties": {
+                                                    "exercise": {
+                                                        "type": "string",
+                                                        "title": "Exercise"
+                                                    }
+                                                },
+                                                "required": ["exercise"]
+                                            },
+                                            {
+                                                "title": "Text",
+                                                "properties": {
+                                                    "text": {
+                                                        "type": "string",
+                                                        "title": "Text"
+                                                    }
+                                                },
+                                                "required": ["text"]
+                                            },
+                                            {
+                                                "title": "Url",
+                                                "properties": {
+                                                    "url": {
+                                                        "type": "string",
+                                                        "title": "URL"
+                                                    }
+                                                },
+                                                "required": ["url"]
+                                            },
+                                            {
+                                                "title": "Upload",
+                                                "properties": {
+                                                    "upload": {
+                                                        "type": "string",
+                                                        "title": "Upload"
+                                                    }
+                                                },
+                                                "required": ["upload"]
+                                            }
+                                        ]
                                     }
                                 }
-                            ]
-                        }
+                            }
+                        ]
                     }
                 }
             }
         }
+    }
 }

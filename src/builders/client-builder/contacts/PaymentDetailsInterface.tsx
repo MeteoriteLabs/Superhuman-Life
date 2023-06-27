@@ -17,4 +17,4 @@ export interface PaymentDetails {
     country: string;
     zipcode: string;
     organisationEmail: string;
-  }
+}

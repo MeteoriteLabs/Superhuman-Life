@@ -1,21 +1,20 @@
-
-.navContainer{
+.navContainer {
     position: relative;
 }
-.pageTitle{
+.pageTitle {
     margin-block: 0;
-    padding-block: .5rem;
+    padding-block: 0.5rem;
     padding-inline: 35px;
     cursor: pointer;
     font-size: 14px;
 }
-.pageTitle:hover{
-   background-color: #3f3f3f;
+.pageTitle:hover {
+    background-color: #3f3f3f;
 }
 
-.backButton{
+.backButton {
     margin-block: 0;
-    padding-block: .5rem;
+    padding-block: 0.5rem;
     margin-inline: 35px;
     cursor: pointer;
     font-size: 14px;
@@ -23,37 +22,36 @@
     bottom: 80px;
     margin-bottom: 5px;
     border-bottom: 1px solid #242424;
-    transition: all .1s ease-in-out;
+    transition: all 0.1s ease-in-out;
 }
 
-.backButton:hover{
-   border-bottom: 1px solid #fff;
+.backButton:hover {
+    border-bottom: 1px solid #fff;
 }
 
-
-.sectionBackButton{
+.sectionBackButton {
     margin-block: 0;
-    padding-block: .5rem;
+    padding-block: 0.5rem;
     margin-inline: 35px;
     cursor: pointer;
     font-size: 14px;
     margin-top: 10px;
     border-bottom: 1px solid #242424;
     width: fit-content;
-    transition: all .1s ease-in-out;
+    transition: all 0.1s ease-in-out;
 }
 
-.sectionBackButton:hover{
-   border-bottom: 1px solid #fff;
+.sectionBackButton:hover {
+    border-bottom: 1px solid #fff;
 }
 
-.breadCrumb{
+.breadCrumb {
     padding-inline: 35px;
     display: flex;
     padding-bottom: 5px;
 }
-.breadCrumbText{
-    font-size: 16px; 
+.breadCrumbText {
+    font-size: 16px;
     font-weight: 600;
     font-style: italic;
     cursor: pointer;

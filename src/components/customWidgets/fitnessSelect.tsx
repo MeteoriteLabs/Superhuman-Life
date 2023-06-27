@@ -5,52 +5,56 @@ import { FETCH_FITNESSDISCPLINES } from '../../builders/program-builder/exercise
 import { useQuery } from '@apollo/client';
 import { flattenObj } from '../utils/responseFlatten';
 
-const FitnessSelect: React.FC<{onChange: (args: string) => void; value: string[]; uiSchema: any;}> = (props) => {
-  const [singleSelections, setSingleSelections] = useState<any[]>(
-    props.value?.length > 0 ? props.value : []
-  );
-  const [fitnessdisciplines, setFitnessDisciplines] = useState<any[]>([]);
-
-  function FetchData() {
-    useQuery(FETCH_FITNESSDISCPLINES, { onCompleted: loadData });
-  }
-
-  function loadData(data: any) {
-    const flattenedData = flattenObj({ ...data });
-
-    setFitnessDisciplines(
-      [...flattenedData.fitnessdisciplines].map((discipline) => {
-        return {
-          id: discipline.id,
-          disciplinename: discipline.disciplinename,
-          updatedAt: discipline.updatedAt
-        };
-      })
+const FitnessSelect: React.FC<{
+    onChange: (args: string) => void;
+    value: string[];
+    uiSchema: any;
+}> = (props) => {
+    const [singleSelections, setSingleSelections] = useState<any[]>(
+        props.value?.length > 0 ? props.value : []
     );
-  }
+    const [fitnessdisciplines, setFitnessDisciplines] = useState<any[]>([]);
 
-  function OnChange(e) {
-    setSingleSelections(e);
-  }
+    function FetchData() {
+        useQuery(FETCH_FITNESSDISCPLINES, { onCompleted: loadData });
+    }
 
-  props.onChange(JSON.stringify(singleSelections));
+    function loadData(data: any) {
+        const flattenedData = flattenObj({ ...data });
 
-  FetchData();
+        setFitnessDisciplines(
+            [...flattenedData.fitnessdisciplines].map((discipline) => {
+                return {
+                    id: discipline.id,
+                    disciplinename: discipline.disciplinename,
+                    updatedAt: discipline.updatedAt
+                };
+            })
+        );
+    }
 
-  return (
-    <div>
-      <label>Fitness Discplines</label>
-      <Typeahead
-        id="basic-typeahead-multiple"
-        labelKey="disciplinename"
-        onChange={OnChange}
-        options={fitnessdisciplines}
-        placeholder="Choose Discpline..."
-        selected={singleSelections}
-        disabled={props.uiSchema.readonly ? true : false}
-      />
-    </div>
-  );
+    function OnChange(e) {
+        setSingleSelections(e);
+    }
+
+    props.onChange(JSON.stringify(singleSelections));
+
+    FetchData();
+
+    return (
+        <div>
+            <label>Fitness Discplines</label>
+            <Typeahead
+                id="basic-typeahead-multiple"
+                labelKey="disciplinename"
+                onChange={OnChange}
+                options={fitnessdisciplines}
+                placeholder="Choose Discpline..."
+                selected={singleSelections}
+                disabled={props.uiSchema.readonly ? true : false}
+            />
+        </div>
+    );
 };
 
 export default FitnessSelect;

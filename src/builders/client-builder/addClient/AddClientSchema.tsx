@@ -3,43 +3,43 @@ import ClientContactLeadList from '../../../components/customWidgets/ClientConta
 import classBasedOffering from '../../../components/customWidgets/classBasedOffering';
 
 export const widgets = {
-  offerings: OfferingsList,
-  contactList: ClientContactLeadList,
-  classBasedOffering: classBasedOffering
+    offerings: OfferingsList,
+    contactList: ClientContactLeadList,
+    classBasedOffering: classBasedOffering
 };
 
 export const schema: any = {
-  existingEmail: {
-    'ui:widget': 'contactList'
-  },
-  firstname: {
-    'ui:placeholder': 'Enter First Name'
-  },
-  lastname: {
-    'ui:placeholder': 'Enter Last Name'
-  },
-  phone: {
-    'ui:placeholder': 'Enter Phone Number'
-  },
-  email: {
-    'ui:placeholder': 'Enter Email address'
-  },
-  offerings: {
-    'ui:widget': 'offerings'
-  },
-  type: {
-    'ui:widget': 'radio',
-    'ui:options': {
-      inline: true
+    existingEmail: {
+        'ui:widget': 'contactList'
+    },
+    firstname: {
+        'ui:placeholder': 'Enter First Name'
+    },
+    lastname: {
+        'ui:placeholder': 'Enter Last Name'
+    },
+    phone: {
+        'ui:placeholder': 'Enter Phone Number'
+    },
+    email: {
+        'ui:placeholder': 'Enter Email address'
+    },
+    offerings: {
+        'ui:widget': 'offerings'
+    },
+    type: {
+        'ui:widget': 'radio',
+        'ui:options': {
+            inline: true
+        }
+    },
+    offeringFilter: {
+        'ui:widget': 'radio',
+        'ui:options': {
+            inline: true
+        }
+    },
+    classBasedOfferings: {
+        'ui:widget': 'classBasedOffering'
     }
-  },
-  offeringFilter:{
-    'ui:widget': 'radio',
-    'ui:options': {
-      inline: true
-    }
-  },
-  classBasedOfferings: {
-    'ui:widget': 'classBasedOffering'
-  }
 };

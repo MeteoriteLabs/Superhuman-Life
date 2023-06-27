@@ -5,19 +5,13 @@
         "upi": {
             "type": "boolean",
             "title": " UPI",
-            "enum": [
-                true,
-                false
-            ],
+            "enum": [true, false],
             "default": true
         },
         "bankAccount": {
             "type": "boolean",
             "title": " Bank Account",
-            "enum": [
-                true,
-                false
-            ],
+            "enum": [true, false],
             "default": false
         }
     },
@@ -44,10 +38,7 @@
                         "format": "phone-in"
                     }
                 },
-                "required": [
-                    "UPI_ID",
-                    "upiPhoneNumber"
-                ]
+                "required": ["UPI_ID", "upiPhoneNumber"]
             }
         },
         {
@@ -82,20 +73,11 @@
                     "accountType": {
                         "type": "string",
                         "title": "Account Type",
-                        "enum": [
-                            "Current",
-                            "Savings"
-                        ],
+                        "enum": ["Current", "Savings"],
                         "default": "Current"
                     }
                 },
-                "required": [
-                    "AccountNumber",
-                    "ifscCode",
-                    "BankName",
-                    "Branch",
-                    "accountType"
-                ]
+                "required": ["AccountNumber", "ifscCode", "BankName", "Branch", "accountType"]
             }
         }
     ]

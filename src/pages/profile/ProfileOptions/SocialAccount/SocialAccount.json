@@ -1,37 +1,36 @@
 {
     "title": "Social Login",
-    "type":"object",
-    "properties":{
-    
-    "instagram_url": {
-        "type": "string",
-        "title": "Instagram URL",
-        "format": "url"
-    },
-    "Facebook_URL": {
-        "type": "string",
-        "title": "Facebook URL",
-        "format": "url"
-    },
-    "Youtube_URL": {
-        "type": "string",
-        "title": "Youtube URL",
-        "format": "url"
-    },
-    "LinkedIn_URL": {
-        "type": "string",
-        "title": "LinkedIn URL",
-        "format": "url"
-    },
-    "Clubhouse_URL": {
-        "type": "string",
-        "title": "Clubhouse URL",
-        "format": "url"
-    },
-    "Twitter_URL": {
-        "type": "string",
-        "title": "Twitter URL",
-        "format": "url"
+    "type": "object",
+    "properties": {
+        "instagram_url": {
+            "type": "string",
+            "title": "Instagram URL",
+            "format": "url"
+        },
+        "Facebook_URL": {
+            "type": "string",
+            "title": "Facebook URL",
+            "format": "url"
+        },
+        "Youtube_URL": {
+            "type": "string",
+            "title": "Youtube URL",
+            "format": "url"
+        },
+        "LinkedIn_URL": {
+            "type": "string",
+            "title": "LinkedIn URL",
+            "format": "url"
+        },
+        "Clubhouse_URL": {
+            "type": "string",
+            "title": "Clubhouse URL",
+            "format": "url"
+        },
+        "Twitter_URL": {
+            "type": "string",
+            "title": "Twitter URL",
+            "format": "url"
+        }
     }
-}
 }

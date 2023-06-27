@@ -5,36 +5,36 @@ interface FitnessPackages {
     Thumbnail_ID: string;
     SubscriptionDuration: string[];
     fitnesspackagepricing: {
-      classes: number;
-      duration: number;
-      mrp: string;
-      sapienPricing: number;
-      suggestedPrice: number;
-      voucher: number;
+        classes: number;
+        duration: number;
+        mrp: string;
+        sapienPricing: number;
+        suggestedPrice: number;
+        voucher: number;
     }[];
     fitnessdisciplines: {
-      disciplinename: string;
-      id: string;
-      __typename: string;
+        disciplinename: string;
+        id: string;
+        __typename: string;
     }[];
     fitness_package_type: {
-      id: string;
-      type: string;
-      __typename: string;
+        id: string;
+        type: string;
+        __typename: string;
     };
     address: {
-      id: string;
-      address1: string;
-      city: string;
-      state: string;
-      __typename: string;
+        id: string;
+        address1: string;
+        city: string;
+        state: string;
+        __typename: string;
     };
     bookingleadday: string | null;
     bookingleadtime: string;
     duration: number;
     groupinstantbooking: boolean;
-    groupoffline: number|null;
-    grouponline: number|null;
+    groupoffline: number | null;
+    grouponline: number | null;
     id: string;
     is_private: boolean;
     level: string;
@@ -45,18 +45,18 @@ interface FitnessPackages {
     publishing_date: string;
     recordedclasses: number | null;
     __typename: string;
-  }
-  
-  interface ClientUser {
+}
+
+interface ClientUser {
     First_Name: string;
     Last_Name: string;
     Phone_Number: string;
     email: string;
     id: string;
     __typename: string;
-  }
-  
-  export interface PackageDetails {
+}
+
+export interface PackageDetails {
     id: string;
     package_duration: number;
     effective_date: Date;
@@ -64,4 +64,4 @@ interface FitnessPackages {
     fitnesspackages: FitnessPackages[];
     __typename: string;
     booking_date: string;
-  }
+}

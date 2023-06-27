@@ -1,33 +1,33 @@
-.form_container{
+.form_container {
     margin-block: 0;
-    padding-block: .5rem;
+    padding-block: 0.5rem;
     padding-inline: 35px;
     font-size: 14px;
 }
 
-.form{
-    width: 257px
+.form {
+    width: 257px;
 }
 
-.label_text{
+.label_text {
     font-weight: 600;
-    margin-bottom: 8px; 
-    color: 'white'; 
-    font-size: 16px
+    margin-bottom: 8px;
+    color: 'white';
+    font-size: 16px;
 }
 
-.input_text{
+.input_text {
     font-size: 14px;
 }
 
-.break_line{
+.break_line {
     color: '#fff';
-    background-color: '#fff'
+    background-color: '#fff';
 }
 
-.submit_button{
+.submit_button {
     padding-block: 4px;
-   float: right;
+    float: right;
     margin-block: 20px;
-    margin-bottom: 70px
+    margin-bottom: 70px;
 }

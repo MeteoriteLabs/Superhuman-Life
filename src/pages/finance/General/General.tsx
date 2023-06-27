@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 export default function General() {
     return (
@@ -9,5 +9,5 @@ export default function General() {
             <p>Total Bookings</p>
             <p>Total Bookings</p>
         </div>
-    )
+    );
 }

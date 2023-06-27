@@ -4,23 +4,23 @@ export const phoneCustomFormats = {
 };
 
 export const phoneTransformErrors = (errors: any[]): any[] => {
-    return errors.map(error => {
-        if (error.name === "format") {
-            error.message = "Phone number must be valid and contains 10 digits"
+    return errors.map((error) => {
+        if (error.name === 'format') {
+            error.message = 'Phone number must be valid and contains 10 digits';
         }
         return error;
     });
-}
+};
 
 //zipcode
 export const zipcodeCustomFormats = {
-    'zipcode': /^(\d{5}|\d{6})$/
+    zipcode: /^(\d{5}|\d{6})$/
 };
 
 export function zipcodeTransformErrors(errors) {
-    return errors.map(error => {
-        if (error.name === "format") {
-            error.message = "Enter correct zipcode of 6 digits"
+    return errors.map((error) => {
+        if (error.name === 'format') {
+            error.message = 'Enter correct zipcode of 6 digits';
         }
         return error;
     });
@@ -28,13 +28,13 @@ export function zipcodeTransformErrors(errors) {
 
 // year validation
 export const yearCustomFormats = {
-    'year': /^(\d{4})$/
+    year: /^(\d{4})$/
 };
 
 export function yearTransformErrors(errors) {
-    return errors.map(error => {
-        if (error.name === "format") {
-            error.message = "Enter correct year in YYYY format"
+    return errors.map((error) => {
+        if (error.name === 'format') {
+            error.message = 'Enter correct year in YYYY format';
         }
         return error;
     });
@@ -43,13 +43,13 @@ export function yearTransformErrors(errors) {
 // URL validation
 export const urlCustomFormats = {
     // eslint-disable-next-line
-    'url': /^(|https?:\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?)$/
+    url: /^(|https?:\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?)$/
 };
 
 export function urlTransformErrors(errors) {
-    return errors.map(error => {
-        if (error.name === "format") {
-            error.message = "Enter correct URL eg: https://www.abc.com"
+    return errors.map((error) => {
+        if (error.name === 'format') {
+            error.message = 'Enter correct URL eg: https://www.abc.com';
         }
         return error;
     });
@@ -58,13 +58,14 @@ export function urlTransformErrors(errors) {
 // Youtube URL validation
 export const youtubeUrlCustomFormats = {
     // eslint-disable-next-line
-    'youtubeurl': /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/
+    youtubeurl:
+        /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/
 };
 
 export function youtubeUrlTransformErrors(errors) {
-    return errors.map(error => {
-        if (error.name === "format") {
-            error.message = "Enter correct youtube video URL"
+    return errors.map((error) => {
+        if (error.name === 'format') {
+            error.message = 'Enter correct youtube video URL';
         }
         return error;
     });

@@ -1,12 +1,7 @@
 {
     "title": "",
     "type": "object",
-    "required": [
-        "voucher_name",
-        "Start_date",
-        "expiry_date",
-        "Usage_restriction"
-    ],
+    "required": ["voucher_name", "Start_date", "expiry_date", "Usage_restriction"],
     "properties": {
         "voucher_name": {
             "type": "string",
@@ -27,51 +22,40 @@
             "title": "Usage Limit"
         },
         "discount": {
-          "title": "Discount type",
-          "type": "string",
-          "enum": [
-             "Percentage",
-             "Flat"
-          ]
-       }
+            "title": "Discount type",
+            "type": "string",
+            "enum": ["Percentage", "Flat"]
+        }
     },
     "dependencies": {
-      "discount": {
-         "oneOf": [
-            {
-               "properties": {
-                  "discount": {
-                     "title": "Percentage discount",
-                     "type": "string",
-                     "enum": [
-                        "Percentage"
-                     ]
-                  },
-                  "percentage_discount": {
-                     "type": "string"
-                     
-                  }
-                 
-               }
-            },
-            {
-               "properties": {
-                  "discount": {
-                     "title": "discount",
-                     "type": "string",
-                     "enum": [
-                        "Flat"
-                     ]
-                  },
-                  "flat_discount": {
-                     "type": "string",
-                     "title": "Flat discount"
-                  }
-               }
-            }
-         ]
-      }
-   }
-   
-    
+        "discount": {
+            "oneOf": [
+                {
+                    "properties": {
+                        "discount": {
+                            "title": "Percentage discount",
+                            "type": "string",
+                            "enum": ["Percentage"]
+                        },
+                        "percentage_discount": {
+                            "type": "string"
+                        }
+                    }
+                },
+                {
+                    "properties": {
+                        "discount": {
+                            "title": "discount",
+                            "type": "string",
+                            "enum": ["Flat"]
+                        },
+                        "flat_discount": {
+                            "type": "string",
+                            "title": "Flat discount"
+                        }
+                    }
+                }
+            ]
+        }
+    }
 }

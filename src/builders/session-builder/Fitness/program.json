@@ -1,15 +1,13 @@
 {
-     "1": {
-         "title": "",
-         "type": "object",
-         "required": [
-             "batchName"
-         ],
-         "properties": {
-             "batchName": {
-                 "type": "string",
-                 "title": "Batch Name"
-             }
-         }
-     }
- }
+    "1": {
+        "title": "",
+        "type": "object",
+        "required": ["batchName"],
+        "properties": {
+            "batchName": {
+                "type": "string",
+                "title": "Batch Name"
+            }
+        }
+    }
+}

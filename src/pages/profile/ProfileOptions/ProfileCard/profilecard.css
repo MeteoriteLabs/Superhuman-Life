@@ -1,17 +1,15 @@
-.profile_picture{
-  border: 4px solid white;
+.profile_picture {
+    border: 4px solid white;
 }
-.icons{
-  height: 24px;
-  width: 24px;
+.icons {
+    height: 24px;
+    width: 24px;
 }
 
 @media (max-width: 500px) {
-  .profile_picture{
-    border: 4px solid white;
-    height: 100%;
-    width: 100%;
-  }
+    .profile_picture {
+        border: 4px solid white;
+        height: 100%;
+        width: 100%;
+    }
 }
-
-

@@ -1,20 +1,20 @@
 #dropdown-basic::after {
-     display: none;
+    display: none;
 }
 .dropdown {
-     position: static !important;
+    position: static !important;
 }
 .dropDown {
-     border: none;
-     padding-top: 5px;
-     padding-bottom: 5px;
-     padding-left: 15px;
-     padding-right: 15px;
-     background-color: white;
-     border-radius: 50px;
+    border: none;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+    background-color: white;
+    border-radius: 50px;
 }
 
 button.dropdown-toggle.table-dropdown {
-     border: none;
-     background-color: #fff;
+    border: none;
+    background-color: #fff;
 }

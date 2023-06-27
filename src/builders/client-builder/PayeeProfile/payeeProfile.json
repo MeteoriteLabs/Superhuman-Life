@@ -1,12 +1,6 @@
 {
     "type": "object",
-    "required": [
-        "firstname",
-        "lastname",
-        "phone",
-        "email",
-        "type"
-    ],
+    "required": ["firstname", "lastname", "phone", "email", "type"],
     "properties": {
         "firstname": {
             "type": "string",
@@ -30,40 +24,25 @@
         "type": {
             "title": "Type of contact",
             "type": "string",
-            "enum": [
-                "Client",
-                "Organization",
-                "Community",
-                "Service Provider",
-                "Vendor"
-            ],
+            "enum": ["Client", "Organization", "Community", "Service Provider", "Vendor"],
             "default": "Client"
         },
         "appDownloadStatus": {
             "type": "boolean",
             "title": "Send invite to download the app, website link and social channels ?",
-            "enum": [
-                true,
-                false
-            ],
+            "enum": [true, false],
             "default": false
         },
         "isPayee": {
             "type": "boolean",
             "title": "Do you want to add Payment settings?",
-            "enum": [
-                true,
-                false
-            ],
+            "enum": [true, false],
             "default": false
         },
         "organisationDetails": {
             "type": "boolean",
             "title": "Is this contact representing an organisation?",
-            "enum": [
-                true,
-                false
-            ],
+            "enum": [true, false],
             "default": false
         }
     },
@@ -119,11 +98,7 @@
                         "max-length": 6
                     }
                 },
-                "required": [
-                    "organisationName",
-                    "gst",
-                    "organisationEmail"
-                ]
+                "required": ["organisationName", "gst", "organisationEmail"]
             }
         }
     ]

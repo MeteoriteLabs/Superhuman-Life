@@ -1,68 +1,68 @@
-import { useState } from "react";
-import { Typeahead } from "react-bootstrap-typeahead";
-import "react-bootstrap-typeahead/css/Typeahead.css";
-import { GET_EQUIPMENTLIST } from "./queries";
-import { useQuery } from "@apollo/client";
-import { flattenObj } from "../utils/responseFlatten";
+import { useState } from 'react';
+import { Typeahead } from 'react-bootstrap-typeahead';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
+import { GET_EQUIPMENTLIST } from './queries';
+import { useQuery } from '@apollo/client';
+import { flattenObj } from '../utils/responseFlatten';
 
 const MultiSelect = (props: any) => {
-  function handleReturnType(value) {
-    if (typeof value === "string") {
-      return JSON.parse(value);
-    } else {
-      return value;
+    function handleReturnType(value) {
+        if (typeof value === 'string') {
+            return JSON.parse(value);
+        } else {
+            return value;
+        }
     }
-  }
 
-  const [multiSelections, setMultiSelections] = useState<any[]>(
-    props.value?.length > 0 ? handleReturnType(props.value) : []
-  );
-  const [equipmentList, setEquipmentList] = useState<any[]>([]);
-
-  function FetchData() {
-    useQuery(GET_EQUIPMENTLIST, { onCompleted: loadData });
-  }
-
-  function loadData(data: any) {
-    const flattenedData = flattenObj({ ...data });
-    setEquipmentList(
-      [...flattenedData.equipmentLists].map((equipment) => {
-        return {
-          id: equipment.id,
-          name: equipment.name,
-        };
-      })
+    const [multiSelections, setMultiSelections] = useState<any[]>(
+        props.value?.length > 0 ? handleReturnType(props.value) : []
     );
-  }
+    const [equipmentList, setEquipmentList] = useState<any[]>([]);
 
-  function OnChange(e) {
-    const unique = [...new Map(e.map((m) => [m.id, m])).values()];
-    setMultiSelections(unique);
-  }
+    function FetchData() {
+        useQuery(GET_EQUIPMENTLIST, { onCompleted: loadData });
+    }
 
-  if (multiSelections.length > 0) {
-    props.onChange(JSON.stringify(multiSelections));
-  } else {
-    props.onChange(undefined);
-  }
+    function loadData(data: any) {
+        const flattenedData = flattenObj({ ...data });
+        setEquipmentList(
+            [...flattenedData.equipmentLists].map((equipment) => {
+                return {
+                    id: equipment.id,
+                    name: equipment.name
+                };
+            })
+        );
+    }
 
-  FetchData();
+    function OnChange(e) {
+        const unique = [...new Map(e.map((m) => [m.id, m])).values()];
+        setMultiSelections(unique);
+    }
 
-  return (
-    <div>
-      <label>Things you Need</label>
-      <Typeahead
-        id="basic-typeahead-multiple"
-        labelKey="name"
-        onChange={OnChange}
-        options={equipmentList}
-        placeholder="Choose Equipments..."
-        selected={multiSelections}
-        multiple
-        disabled={props.uiSchema.readonly}
-      />
-    </div>
-  );
+    if (multiSelections.length > 0) {
+        props.onChange(JSON.stringify(multiSelections));
+    } else {
+        props.onChange(undefined);
+    }
+
+    FetchData();
+
+    return (
+        <div>
+            <label>Things you Need</label>
+            <Typeahead
+                id="basic-typeahead-multiple"
+                labelKey="name"
+                onChange={OnChange}
+                options={equipmentList}
+                placeholder="Choose Equipments..."
+                selected={multiSelections}
+                multiple
+                disabled={props.uiSchema.readonly}
+            />
+        </div>
+    );
 };
 
 export default MultiSelect;

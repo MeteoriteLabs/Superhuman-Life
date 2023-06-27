@@ -1,86 +1,72 @@
 {
-   "title": "",
-   "type": "object",
-   "required": [
-      "Full_Name",
-      "Account_Number",
-      "Bank_Name",
-      "IFSC_Code",
-      "PAN_Number",
-      "GST"
-   ],
-   "properties": {
-      "Full_Name": {
-         "type": "string",
-         "title": "Full Name"
-      },
-      "Account_Number": {
-         "type": "string",
-         "title": "Account Number"
-      },
-      "Bank_Name": {
-         "type": "string",
-         "title": "Bank Name"
-      },
-      "IFSC_Code": {
-         "type": "string",
-         "title": "ifsc"
-      },
-      "PAN_Number": {
-         "type": "string",
-         "title": "PAN CARD"
-      },
-      "Is_Primary": {
-         "type": "boolean",
-         "title": "Primary"
-      },
-      "GST": {
-         "title": "",
-         "type": "string",
-         "enum": [
-            "GST",
-            "None"
-         ]
-      }
-   },
-   "dependencies": {
-      "GST": {
-         "oneOf": [
-            {
-               "properties": {
-                  "GST": {
-                     "title": "GST",
-                     "type": "string",
-                     "enum": [
-                        "GST"
-                     ]
-                  },
-                  "GST_Number": {
-                     "type": "string",
-                     "title": "GST Number"
-                  },
-                  "Company_Name": {
-                     "type": "string",
-                     "title": "Company Name"
-                  },
-                  "Company_Address": {
-                     "type": "string",
-                     "title": "Company Address"
-                  }
-               }
-            },
-            {
-               "properties": {
-                  "GST": {
-                     "title": "GST",
-                     "type": "string",
-                     "enum": [
-                        "none"
-                     ]
-                  }
-               }
-            }
-         ]
-      }
-   }
+    "title": "",
+    "type": "object",
+    "required": ["Full_Name", "Account_Number", "Bank_Name", "IFSC_Code", "PAN_Number", "GST"],
+    "properties": {
+        "Full_Name": {
+            "type": "string",
+            "title": "Full Name"
+        },
+        "Account_Number": {
+            "type": "string",
+            "title": "Account Number"
+        },
+        "Bank_Name": {
+            "type": "string",
+            "title": "Bank Name"
+        },
+        "IFSC_Code": {
+            "type": "string",
+            "title": "ifsc"
+        },
+        "PAN_Number": {
+            "type": "string",
+            "title": "PAN CARD"
+        },
+        "Is_Primary": {
+            "type": "boolean",
+            "title": "Primary"
+        },
+        "GST": {
+            "title": "",
+            "type": "string",
+            "enum": ["GST", "None"]
+        }
+    },
+    "dependencies": {
+        "GST": {
+            "oneOf": [
+                {
+                    "properties": {
+                        "GST": {
+                            "title": "GST",
+                            "type": "string",
+                            "enum": ["GST"]
+                        },
+                        "GST_Number": {
+                            "type": "string",
+                            "title": "GST Number"
+                        },
+                        "Company_Name": {
+                            "type": "string",
+                            "title": "Company Name"
+                        },
+                        "Company_Address": {
+                            "type": "string",
+                            "title": "Company Address"
+                        }
+                    }
+                },
+                {
+                    "properties": {
+                        "GST": {
+                            "title": "GST",
+                            "type": "string",
+                            "enum": ["none"]
+                        }
+                    }
+                }
+            ]
+        }
+    }
 }

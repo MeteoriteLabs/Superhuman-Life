@@ -1,19 +1,19 @@
 export type Data = {
     websiteSections: {
-      data: {
-        id: number;
-        attributes: {
-          sectionData: SectionData;
-        };
-      }[];
+        data: {
+            id: number;
+            attributes: {
+                sectionData: SectionData;
+            };
+        }[];
     };
-  };
+};
 
-  export type SectionData = {
-        title: string;
-        plans: ServerPlans;
-        currency: string;
-  }
+export type SectionData = {
+    title: string;
+    plans: ServerPlans;
+    currency: string;
+};
 
 export type ServerPlans = {
     actual: string;
@@ -23,7 +23,7 @@ export type ServerPlans = {
     price: string;
     recurring: string;
     title: string;
-  }[];
+}[];
 
 export type ClientPlans = {
     actual: string;
@@ -34,16 +34,16 @@ export type ClientPlans = {
     price: string;
     recurring: string;
     title: string;
-}
-  
- export type FormData = {
+};
+
+export type FormData = {
     sectionId: number;
     title: string;
     currency: string;
     plans: ClientPlans[];
-  };
-  
- export type InputProps =
+};
+
+export type InputProps =
     | 'actual'
     | 'buttonLink'
     | 'buttonText'

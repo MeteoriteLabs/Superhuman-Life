@@ -1,33 +1,33 @@
 {
-     "1": {
-          "type": "object",
-          "required": ["firstname", "lastname", "phonenumber", "email"],
-          "properties": {
-               "firstname": {
-                    "type": "string",
-                    "title": "First Name"
-               },
-               "lastname": {
-                    "type": "string",
-                    "title": "Last Name"
-               },
-               "phonenumber": {
-                    "type": "string",
-                    "title": "Phone Number",
-                    "minLength": 10
-               },
-               "email": {
-                    "type": "string",
-                    "title": "Email ID"
-               },
-               "clienttype": {
-                    "type": "string",
-                    "title": "What's type of client?",
-                    "enum": ["New", "Existing"]
-               },
-               "packagesearch": {
-                    "type": "string"
-               }
-          }
-     }
+    "1": {
+        "type": "object",
+        "required": ["firstname", "lastname", "phonenumber", "email"],
+        "properties": {
+            "firstname": {
+                "type": "string",
+                "title": "First Name"
+            },
+            "lastname": {
+                "type": "string",
+                "title": "Last Name"
+            },
+            "phonenumber": {
+                "type": "string",
+                "title": "Phone Number",
+                "minLength": 10
+            },
+            "email": {
+                "type": "string",
+                "title": "Email ID"
+            },
+            "clienttype": {
+                "type": "string",
+                "title": "What's type of client?",
+                "enum": ["New", "Existing"]
+            },
+            "packagesearch": {
+                "type": "string"
+            }
+        }
+    }
 }

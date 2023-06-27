@@ -16,4 +16,4 @@ export const LobbyColors = [
     '#00A4EF',
     '#FFB900',
     '#737373'
-]
+];

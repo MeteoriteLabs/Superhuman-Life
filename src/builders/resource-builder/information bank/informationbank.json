@@ -1,38 +1,38 @@
 {
-     "1": {
-          "title": "Information Bank",
-          "type": "object",
-          "required": ["title", "infomessagetype", "description"],
-          "properties": {
-               "title": {
-                    "type": "string",
-                    "title": "Message Title"
-               },
-               "infomessagetype": {
-                    "type": "string",
-                    "title": "Type",
-                    "enum": [],
-                    "enumNames": []
-               },
-               "tags": {
-                    "type": "string",
-                    "title": "Tags"
-               },
-               "description": {
-                    "type": "string",
-                    "title": "Description"
-               },
-               "minidesc": {
-                    "type": "string",
-                    "title": "Mini Description"
-               },
-               "mediaurl": {
-                    "type": "string",
-                    "title": "Url (Picture or Video)"
-               },
-               "upload": {
-                    "type": "string"
-               }
-          }
-     }
+    "1": {
+        "title": "Information Bank",
+        "type": "object",
+        "required": ["title", "infomessagetype", "description"],
+        "properties": {
+            "title": {
+                "type": "string",
+                "title": "Message Title"
+            },
+            "infomessagetype": {
+                "type": "string",
+                "title": "Type",
+                "enum": [],
+                "enumNames": []
+            },
+            "tags": {
+                "type": "string",
+                "title": "Tags"
+            },
+            "description": {
+                "type": "string",
+                "title": "Description"
+            },
+            "minidesc": {
+                "type": "string",
+                "title": "Mini Description"
+            },
+            "mediaurl": {
+                "type": "string",
+                "title": "Url (Picture or Video)"
+            },
+            "upload": {
+                "type": "string"
+            }
+        }
+    }
 }

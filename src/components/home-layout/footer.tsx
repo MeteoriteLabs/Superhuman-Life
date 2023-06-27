@@ -1,4 +1,4 @@
-import { Row, Container, Col, ListGroup } from "react-bootstrap";
+import { Row, Container, Col, ListGroup } from 'react-bootstrap';
 
 export default function HomeFooter() {
     return (
@@ -12,7 +12,10 @@ export default function HomeFooter() {
                             className="d-inline-block align-top"
                             alt="Sapien"
                         />
-                        <p>To empower changemakers to learn, collabrate, build integrative experineces and smoothen processes to impact peoples lives effectively.</p>
+                        <p>
+                            To empower changemakers to learn, collabrate, build integrative
+                            experineces and smoothen processes to impact peoples lives effectively.
+                        </p>
                     </Col>
                     <Col>
                         <ListGroup variant="flush">
@@ -32,5 +35,5 @@ export default function HomeFooter() {
                 </Row>
             </Container>
         </footer>
-    )
+    );
 }

@@ -1,36 +1,31 @@
 {
-     "1": {
-          "type": "object",
-          "required": [
-               "title",
-               "prerecordedtype",
-               "prerecordedtrigger",
-               "minidesc"
-          ],
-          "properties": {
-               "title": {
-                    "type": "string",
-                    "title": "Notification Title"
-               },
-               "prerecordedtype": {
-                    "type": "string",
-                    "title": "Type",
-                    "enum": [],
-                    "enumNames": [],
-                    "description": " Choose category"
-               },
-               "prerecordedtrigger": {
-                    "type": "string",
-                    "title": "Trigger Notification",
-                    "enum": [],
-                    "enumNames": [],
-                    "description": "Select when to activate notification"
-               },
-               "minidesc": {
-                    "type": "string",
-                    "title": "Mini Description",
-                    "description": "Write summary"
-               }
-          }
-     }
+    "1": {
+        "type": "object",
+        "required": ["title", "prerecordedtype", "prerecordedtrigger", "minidesc"],
+        "properties": {
+            "title": {
+                "type": "string",
+                "title": "Notification Title"
+            },
+            "prerecordedtype": {
+                "type": "string",
+                "title": "Type",
+                "enum": [],
+                "enumNames": [],
+                "description": " Choose category"
+            },
+            "prerecordedtrigger": {
+                "type": "string",
+                "title": "Trigger Notification",
+                "enum": [],
+                "enumNames": [],
+                "description": "Select when to activate notification"
+            },
+            "minidesc": {
+                "type": "string",
+                "title": "Mini Description",
+                "description": "Write summary"
+            }
+        }
+    }
 }

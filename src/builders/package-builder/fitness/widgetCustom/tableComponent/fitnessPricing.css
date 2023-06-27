@@ -1,4 +1,4 @@
-.table .table-bordered td, .table-bordered th{
+.table .table-bordered td,
+.table-bordered th {
     border: none !important;
 }
-

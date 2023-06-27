@@ -2,9 +2,7 @@
     "1": {
         "title": "",
         "type": "object",
-        "required": [
-            "workoutEvent"
-        ],
+        "required": ["workoutEvent"],
         "properties": {
             "workoutEvent": {
                 "type": "string"

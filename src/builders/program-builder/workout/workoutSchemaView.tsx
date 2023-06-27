@@ -15,133 +15,167 @@ export const widgets = {
 };
 
 export const schemaView: any = {
-        "workout":{
-            "ui:readonly": true
+    workout: {
+        'ui:readonly': true
+    },
+    level: {
+        'ui:widget': 'radio',
+        'ui:options': {
+            inline: true
         },
-        "level": {
-            "ui:widget": "radio",
-            "ui:options": {
-                "inline": true
-            },
-            "ui:readonly": true
+        'ui:readonly': true
+    },
+    intensity: {
+        'ui:widget': 'radio',
+        'ui:options': {
+            inline: true
         },
-        "intensity": {
-            "ui:widget": "radio",
-            "ui:options": {
-                "inline": true
-            },
-            "ui:readonly": true
+        'ui:readonly': true
+    },
+    about: {
+        'ui:widget': 'textarea',
+        'ui:options': {
+            rows: 3
         },
-        "about": {
-            "ui:widget": "textarea",
-            "ui:options": {
-                "rows": 3
-            },
-            "ui:readonly": true
+        'ui:readonly': true
+    },
+    benefits: {
+        'ui:widget': 'textarea',
+        'ui:options': {
+            rows: 1
         },
-        "benefits": {
-            "ui:widget": "textarea",
-            "ui:options": {
-                "rows": 1
-            },
-            "ui:readonly": true
+        'ui:readonly': true
+    },
+    calories: {
+        'ui:readonly': true
+    },
+    equipment: {
+        readonly: true,
+        'ui:widget': 'equipmentSearch',
+        'ui:help':
+            'Add all equipments required to perform the exercise. Example - Pullup you can add a pullup bar and resistance bands.It is required field'
+    },
+    muscleGroup: {
+        readonly: true,
+        'ui:widget': 'muscleGroupSearch',
+        'ui:help':
+            ' Add all equipments required to perform the exercises in the workout.It is required field'
+    },
+    discipline: {
+        readonly: true,
+        'ui:widget': 'fitnessSelect',
+        'ui:help': 'Choose the relevant  discipline for the workout .It is required field'
+    },
+    addWorkout: {
+        AddText: {
+            'ui:widget': 'textEditor',
+            readonly: true
         },
-        "calories":{
-            "ui:readonly": true
+        Upload: {
+            'ui:widget': (props: any) => {
+                return (
+                    <Upload
+                        allowImage={false}
+                        allowVideo={true}
+                        onChange={props.onChange}
+                        value={props.value}
+                        readonly={true}
+                    />
+                );
+            }
         },
-        "equipment": {
-            "readonly": true,
-            "ui:widget": "equipmentSearch",
-            "ui:help": "Add all equipments required to perform the exercise. Example - Pullup you can add a pullup bar and resistance bands.It is required field"
+        AddURL: {
+            'ui:readonly': true
         },
-        "muscleGroup": {
-            "readonly": true,
-            "ui:widget": "muscleGroupSearch",
-            "ui:help": " Add all equipments required to perform the exercises in the workout.It is required field"
+        build: {
+            'ui:widget': 'buildWorkout'
         },
-        "discipline": {
-            "readonly": true,
-            "ui:widget": "fitnessSelect",
-            "ui:help": "Choose the relevant  discipline for the workout .It is required field"
-        },
-        "addWorkout": {
-            "AddText": {
-                "ui:widget": "textEditor",
-                "readonly": true
-            },
-            "Upload": {
-                "ui:widget": (props: any) => {
-                    return <Upload allowImage={false} allowVideo={true} onChange={props.onChange} value={props.value} readonly={true}/>;
+        warmup: {
+            exercise: {
+                'ui:widget': 'exerciseList',
+                'ui:options': {
+                    label: false
                 },
+                'ui:readonly': true
             },
-            "AddURL": {
-                "ui:readonly": true
+            text: {
+                'ui:widget': 'textEditor',
+                readonly: true
             },
-            "build": {
-                "ui:widget": "buildWorkout"
+            url: {
+                'ui:placeholder': 'https://',
+                'ui:readonly': true
             },
-            "warmup": {
-                "exercise": {
-                    "ui:widget": "exerciseList",
-                    "ui:options": {
-                     label: false
-                    },
-                    "ui:readonly": true
-                },
-                "text": {
-                    "ui:widget": "textEditor",
-                    "readonly": true
-                }, 
-                "url": {
-                    "ui:placeholder": "https://",
-                    "ui:readonly": true
-                },
-                "upload": {
-                    "ui:widget": (props: any) => {
-                        return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} readonly={true}/>;
-                    },
+            upload: {
+                'ui:widget': (props: any) => {
+                    return (
+                        <Upload
+                            allowImage={true}
+                            allowVideo={true}
+                            onChange={props.onChange}
+                            value={props.value}
+                            readonly={true}
+                        />
+                    );
                 }
+            }
+        },
+        mainmovement: {
+            exercise: {
+                'ui:widget': 'exerciseList',
+                'ui:options': {
+                    color: 'yellow'
+                },
+                'ui:readonly': true
             },
-            "mainmovement": {
-                "exercise": {
-                    "ui:widget": "exerciseList",
-                    "ui:options": {
-                        color: "yellow"
-                    },
-                    "ui:readonly": true
-                },
-                "text": {
-                     "ui:widget": "textEditor",
-                     "readonly": true
-                }, 
-                "url": {
-                    "ui:placeholder": "https://",
-                    "ui:readonly": true
-                },
-                "upload": {
-                    "ui:widget": (props: any) => {
-                        return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} readonly={true}/>;
-                    }
+            text: {
+                'ui:widget': 'textEditor',
+                readonly: true
+            },
+            url: {
+                'ui:placeholder': 'https://',
+                'ui:readonly': true
+            },
+            upload: {
+                'ui:widget': (props: any) => {
+                    return (
+                        <Upload
+                            allowImage={true}
+                            allowVideo={true}
+                            onChange={props.onChange}
+                            value={props.value}
+                            readonly={true}
+                        />
+                    );
                 }
-           },
-           "cooldown": {
-                "exercise": {
-                    "ui:widget": "exerciseList",
-                    "ui:readonly": true
-                },
-                "text": {
-                    "ui:widget": "textEditor",
-                    "readonly": true
-                }, 
-                "url": {
-                    "ui:placeholder": "https://",
-                    "ui:readonly": true
-                },
-                "upload": {
-                    "ui:widget": (props: any) => {
-                        return <Upload allowImage={true} allowVideo={true} onChange={props.onChange} value={props.value} readonly={true}/>;
-                    }
+            }
+        },
+        cooldown: {
+            exercise: {
+                'ui:widget': 'exerciseList',
+                'ui:readonly': true
+            },
+            text: {
+                'ui:widget': 'textEditor',
+                readonly: true
+            },
+            url: {
+                'ui:placeholder': 'https://',
+                'ui:readonly': true
+            },
+            upload: {
+                'ui:widget': (props: any) => {
+                    return (
+                        <Upload
+                            allowImage={true}
+                            allowVideo={true}
+                            onChange={props.onChange}
+                            value={props.value}
+                            readonly={true}
+                        />
+                    );
                 }
-           },
-       },
+            }
+        }
     }
+};

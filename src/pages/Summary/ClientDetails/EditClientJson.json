@@ -1,11 +1,6 @@
 {
     "type": "object",
-    "required": [
-        "firstname",
-        "lastname",
-        "phone",
-        "email"
-    ],
+    "required": ["firstname", "lastname", "phone", "email"],
     "properties": {
         "firstname": {
             "type": "string",

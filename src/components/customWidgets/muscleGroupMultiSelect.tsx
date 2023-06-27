@@ -1,69 +1,69 @@
-import { useState } from "react";
-import { Typeahead } from "react-bootstrap-typeahead";
-import "react-bootstrap-typeahead/css/Typeahead.css";
-import { GET_MUSCLEGROUPS } from "./queries";
-import { useQuery } from "@apollo/client";
-import { flattenObj } from "../utils/responseFlatten";
+import { useState } from 'react';
+import { Typeahead } from 'react-bootstrap-typeahead';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
+import { GET_MUSCLEGROUPS } from './queries';
+import { useQuery } from '@apollo/client';
+import { flattenObj } from '../utils/responseFlatten';
 
 const MuscleGroupMultiSelect = (props: any) => {
-  function handleReturnType(value) {
-    if (typeof value === "string") {
-      return JSON.parse(value);
-    } else {
-      return value;
+    function handleReturnType(value) {
+        if (typeof value === 'string') {
+            return JSON.parse(value);
+        } else {
+            return value;
+        }
     }
-  }
 
-  const [multiSelections, setMultiSelections] = useState<any[]>(
-    props.value?.length > 0 ? handleReturnType(props.value) : []
-  );
-  const [muscleList, setMuscleList] = useState<any[]>([]);
-
-  function FetchData() {
-    useQuery(GET_MUSCLEGROUPS, { onCompleted: loadData });
-  }
-
-  function loadData(data: any) {
-    const flattenedData = flattenObj({ ...data });
-    setMuscleList(
-      [...flattenedData.muscleGroups].map((muscles) => {
-        return {
-          id: muscles.id,
-          name: muscles.name,
-        };
-      })
+    const [multiSelections, setMultiSelections] = useState<any[]>(
+        props.value?.length > 0 ? handleReturnType(props.value) : []
     );
-  }
+    const [muscleList, setMuscleList] = useState<any[]>([]);
 
-  function OnChange(e) {
-    const unique = [...new Map(e.map((m) => [m.id, m])).values()];
-    setMultiSelections(unique);
-  }
+    function FetchData() {
+        useQuery(GET_MUSCLEGROUPS, { onCompleted: loadData });
+    }
 
-  // props.onChange(multiSelections.map((d) => {
-  //     return d.id;
-  //     }).join(",").toString()
-  // );
+    function loadData(data: any) {
+        const flattenedData = flattenObj({ ...data });
+        setMuscleList(
+            [...flattenedData.muscleGroups].map((muscles) => {
+                return {
+                    id: muscles.id,
+                    name: muscles.name
+                };
+            })
+        );
+    }
 
-  props.onChange(JSON.stringify(multiSelections));
+    function OnChange(e) {
+        const unique = [...new Map(e.map((m) => [m.id, m])).values()];
+        setMultiSelections(unique);
+    }
 
-  FetchData();
+    // props.onChange(multiSelections.map((d) => {
+    //     return d.id;
+    //     }).join(",").toString()
+    // );
 
-  return (
-    <div>
-      <label>Muscle Group</label>
-      <Typeahead
-        id="basic-typeahead-multiple"
-        labelKey="name"
-        onChange={OnChange}
-        options={muscleList}
-        placeholder="Choose Discpline..."
-        selected={multiSelections}
-        multiple
-        disabled={props.uiSchema.readonly}
-      />
-    </div>
-  );
+    props.onChange(JSON.stringify(multiSelections));
+
+    FetchData();
+
+    return (
+        <div>
+            <label>Muscle Group</label>
+            <Typeahead
+                id="basic-typeahead-multiple"
+                labelKey="name"
+                onChange={OnChange}
+                options={muscleList}
+                placeholder="Choose Discpline..."
+                selected={multiSelections}
+                multiple
+                disabled={props.uiSchema.readonly}
+            />
+        </div>
+    );
 };
 
 export default MuscleGroupMultiSelect;

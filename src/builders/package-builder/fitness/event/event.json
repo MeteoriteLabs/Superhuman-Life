@@ -2,11 +2,7 @@
     "1": {
         "title": "",
         "type": "object",
-        "required": [
-            "packageName",
-            "equipment",
-            "dates"
-        ],
+        "required": ["packageName", "equipment", "dates"],
         "properties": {
             "packageName": {
                 "type": "string",
@@ -30,14 +26,7 @@
     "2": {
         "title": "",
         "type": "object",
-        "required": [
-            "About",
-            "Benifits",
-            "languages",
-            "classSize",
-            "thumbnail",
-            "VideoUrl"
-        ],
+        "required": ["About", "Benifits", "languages", "classSize", "thumbnail", "VideoUrl"],
         "properties": {
             "About": {
                 "type": "string",
@@ -74,10 +63,7 @@
     "3": {
         "title": "",
         "type": "object",
-        "required": [
-            "programDetails",
-            "courseDetails"
-        ],
+        "required": ["programDetails", "courseDetails"],
         "properties": {
             "programDetails": {
                 "type": "string"
@@ -85,9 +71,7 @@
             "courseDetails": {
                 "title": "Course Details",
                 "type": "object",
-                "required": [
-                    "details"
-                ],
+                "required": ["details"],
                 "properties": {
                     "details": {
                         "type": "string"
@@ -99,9 +83,7 @@
     "4": {
         "title": "",
         "type": "object",
-        "required": [
-            "pricing"
-        ],
+        "required": ["pricing"],
         "properties": {
             "pricing": {
                 "type": "string"
@@ -111,22 +93,13 @@
     "5": {
         "title": "Package Settings",
         "type": "object",
-        "required": [
-            "visibility",
-            "datesConfig"
-        ],
+        "required": ["visibility", "datesConfig"],
         "properties": {
             "visibility": {
                 "type": "number",
                 "title": "Visibility",
-                "enum": [
-                    0,
-                    1
-                ],
-                "enumNames": [
-                    "Public",
-                    "Private"
-                ],
+                "enum": [0, 1],
+                "enumNames": ["Public", "Private"],
                 "default": 0,
                 "description": "Public: The Offering will be visible to the user as soon as it is created, Private: The offering will not ve seen by anyone until you share it with them"
             },

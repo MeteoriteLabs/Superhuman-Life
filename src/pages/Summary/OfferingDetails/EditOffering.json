@@ -1,10 +1,6 @@
 {
     "type": "object",
-    "required": [
-        "offerings",
-        "effectiveDate",
-        "packageDuration"
-    ],
+    "required": ["offerings", "effectiveDate", "packageDuration"],
     "properties": {
         "offerings": {
             "title": "Select offering",

@@ -1,34 +1,34 @@
-.customButton{
-    background-color: #339B31;
+.customButton {
+    background-color: #339b31;
     padding: 0 7rem;
     border-radius: 20px;
     border: none;
     outline: none;
 }
 
-.customButton:focus{
+.customButton:focus {
     box-shadow: none;
 }
-.carousel .carousel-indicators{
+.carousel .carousel-indicators {
     display: none !important;
 }
 
-.carousel-control-prev-icon{
+.carousel-control-prev-icon {
     background-image: url('../../../../../img/left.svg');
 }
 
-.carousel-control-next-icon{
+.carousel-control-next-icon {
     background-image: url('../../../../../img/right.svg');
 }
 
 .beginnerTag {
-    background-color: #04BEBD;
+    background-color: #04bebd;
 }
 
-.intermediateTag{
-    background-color: #D7A72E;
+.intermediateTag {
+    background-color: #d7a72e;
 }
 
-.advancedTag{
-    background-color: #DB5461;
+.advancedTag {
+    background-color: #db5461;
 }

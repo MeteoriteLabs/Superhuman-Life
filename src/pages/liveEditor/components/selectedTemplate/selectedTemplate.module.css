@@ -6,9 +6,9 @@
     position: relative;
     margin-left: 30vw;
     background-color: #fff;
-  }
-  
-  .iframeContainer iframe {
+}
+
+.iframeContainer iframe {
     position: absolute;
     top: 0;
     left: 0;
@@ -16,14 +16,12 @@
     height: 100%;
     border: none;
     outline: none;
-    
-  }
-  
-  .zoomControl {
+}
+
+.zoomControl {
     margin-top: 20px;
-  }
-  
-  .zoomControl input {
+}
+
+.zoomControl input {
     width: 100%;
-  }
-  
+}

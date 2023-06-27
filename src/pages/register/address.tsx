@@ -1,211 +1,198 @@
-import React, { useEffect, useState } from "react";
-import { Form } from "react-bootstrap";
-import Geocode from "react-geocode";
+import React, { useEffect, useState } from 'react';
+import { Form } from 'react-bootstrap';
+import Geocode from 'react-geocode';
 import GooglePlacesAutocomplete, {
-  geocodeByAddress,
-  getLatLng,
-} from "react-google-places-autocomplete";
+    geocodeByAddress,
+    getLatLng
+} from 'react-google-places-autocomplete';
 
-const Address: React.FC<{value: string; onChange: (args: string) => void;}> = (props) => {
-  const [address1, setAddress1] = useState<string>(
-    props.value ? JSON.parse(props.value).address1 : ""
-  );
-  const [address2, setAddress2] = useState<string>(
-    props.value ? JSON.parse(props.value).address2 : ""
-  );
-  const [city, setCity] = useState<string>(
-    props.value ? JSON.parse(props.value).city : ""
-  );
-  const [state, setState] = useState<string>(
-    props.value ? JSON.parse(props.value).state : ""
-  );
-  const [zip, setZip] = useState<string>(
-    props.value ? JSON.parse(props.value).zip : ""
-  );
-  const [country, setCountry] = useState<string>(
-    props.value ? JSON.parse(props.value).country : ""
-  );
-  const [addressTitle, setAddressTitle] = useState<string>(
-    props.value ? JSON.parse(props.value).addressTitle : ""
-  );
-  
-  const [googleAddressShow, setGoogleAddressShow] = useState<boolean>(false);
-  // eslint-disable-next-line 
-  const [value, setValue] = useState<any>(null);
-
-  if (value !== null) {
-    geocodeByAddress(value.label)
-      .then((results) => getLatLng(results[0]))
-      .then(({ lat, lng }) => {
-        getAddressFromCoordinates(lat.toString(), lng.toString());
-      });
-  }
-
-  Geocode.setApiKey("AIzaSyDDvAlVrvbBYMW08BBosDFM_x2inY-XQ-w");
-  Geocode.setLanguage("en");
-
-  function getAddressFromCoordinates(lat: string, lng: string) {
-    Geocode.fromLatLng(lat, lng).then(
-      (response) => {
-        const address = response.results[0].formatted_address;
-        let city, state, country, zip;
-        for (
-          let i = 0;
-          i < response.results[0].address_components.length;
-          i++
-        ) {
-          for (
-            let j = 0;
-            j < response.results[0].address_components[i].types.length;
-            j++
-          ) {
-            switch (response.results[0].address_components[i].types[j]) {
-              case "locality":
-                city = response.results[0].address_components[i].long_name;
-                break;
-              case "administrative_area_level_1":
-                state = response.results[0].address_components[i].long_name;
-                break;
-              case "country":
-                country = response.results[0].address_components[i].long_name;
-                break;
-              case "postal_code":
-                zip = response.results[0].address_components[i].long_name;
-                break;
-            }
-          }
-        }
-        setCity(city);
-        setState(state);
-        setZip(zip);
-        setCountry(country);
-        setAddress1(address);
-      },
-      (error) => {
-        console.error(error);
-      }
+const Address: React.FC<{ value: string; onChange: (args: string) => void }> = (props) => {
+    const [address1, setAddress1] = useState<string>(
+        props.value ? JSON.parse(props.value).address1 : ''
     );
-  }
+    const [address2, setAddress2] = useState<string>(
+        props.value ? JSON.parse(props.value).address2 : ''
+    );
+    const [city, setCity] = useState<string>(props.value ? JSON.parse(props.value).city : '');
+    const [state, setState] = useState<string>(props.value ? JSON.parse(props.value).state : '');
+    const [zip, setZip] = useState<string>(props.value ? JSON.parse(props.value).zip : '');
+    const [country, setCountry] = useState<string>(
+        props.value ? JSON.parse(props.value).country : ''
+    );
+    const [addressTitle, setAddressTitle] = useState<string>(
+        props.value ? JSON.parse(props.value).addressTitle : ''
+    );
 
-  function getLocation() {
-    if (!navigator.geolocation) {
-      console.log("Geolocation API not supported by this browser.");
-    } else {
-      console.log("Checking location...");
-      navigator.geolocation.getCurrentPosition(success, error);
+    const [googleAddressShow, setGoogleAddressShow] = useState<boolean>(false);
+    // eslint-disable-next-line
+    const [value, setValue] = useState<any>(null);
+
+    if (value !== null) {
+        geocodeByAddress(value.label)
+            .then((results) => getLatLng(results[0]))
+            .then(({ lat, lng }) => {
+                getAddressFromCoordinates(lat.toString(), lng.toString());
+            });
     }
-  }
 
-  function success(position) {
-    getAddressFromCoordinates(
-      position.coords.latitude,
-      position.coords.longitude
+    Geocode.setApiKey('AIzaSyDDvAlVrvbBYMW08BBosDFM_x2inY-XQ-w');
+    Geocode.setLanguage('en');
+
+    function getAddressFromCoordinates(lat: string, lng: string) {
+        Geocode.fromLatLng(lat, lng).then(
+            (response) => {
+                const address = response.results[0].formatted_address;
+                let city, state, country, zip;
+                for (let i = 0; i < response.results[0].address_components.length; i++) {
+                    for (
+                        let j = 0;
+                        j < response.results[0].address_components[i].types.length;
+                        j++
+                    ) {
+                        switch (response.results[0].address_components[i].types[j]) {
+                            case 'locality':
+                                city = response.results[0].address_components[i].long_name;
+                                break;
+                            case 'administrative_area_level_1':
+                                state = response.results[0].address_components[i].long_name;
+                                break;
+                            case 'country':
+                                country = response.results[0].address_components[i].long_name;
+                                break;
+                            case 'postal_code':
+                                zip = response.results[0].address_components[i].long_name;
+                                break;
+                        }
+                    }
+                }
+                setCity(city);
+                setState(state);
+                setZip(zip);
+                setCountry(country);
+                setAddress1(address);
+            },
+            (error) => {
+                console.error(error);
+            }
+        );
+    }
+
+    function getLocation() {
+        if (!navigator.geolocation) {
+            console.log('Geolocation API not supported by this browser.');
+        } else {
+            console.log('Checking location...');
+            navigator.geolocation.getCurrentPosition(success, error);
+        }
+    }
+
+    function success(position) {
+        getAddressFromCoordinates(position.coords.latitude, position.coords.longitude);
+    }
+
+    function error() {
+        console.log('Geolocation error!');
+        setGoogleAddressShow(true);
+    }
+
+    useEffect(() => {
+        getLocation();
+    }, []);
+
+    props.onChange(
+        JSON.stringify({
+            address1: address1,
+            address2: address2,
+            city: city,
+            state: state,
+            zip: zip,
+            country: country,
+            addressTitle: addressTitle
+        })
     );
-  }
 
-  function error() {
-    console.log("Geolocation error!");
-    setGoogleAddressShow(true);
-  }
-
-  useEffect(() => {
-    getLocation();
-  }, []);
-
-  props.onChange(
-    JSON.stringify({
-      address1: address1,
-      address2: address2,
-      city: city,
-      state: state,
-      zip: zip,
-      country: country,
-      addressTitle: addressTitle
-    })
-  );
-
-  return (
-    <div>
-      <Form.Group controlId="formBasicEmail">
-        <Form.Label>Address 1</Form.Label>
-        {!googleAddressShow && (
-          <Form.Control
-            value={address1}
-            onChange={(e) => setAddress1(e.target.value)}
-            type="text"
-            placeholder=""
-          />
-        )}
-        {googleAddressShow && (
-          <GooglePlacesAutocomplete
-            apiKey="AIzaSyDDvAlVrvbBYMW08BBosDFM_x2inY-XQ-w"
-            selectProps={{
-              value,
-              // eslint-disable-next-line
-              onChange: (e: any) => {
-                setValue(e);
-                setAddress1(e.label);
-              },
-            }}
-          />
-        )}
-      </Form.Group>
-      <Form.Group controlId="formBasicEmail">
-        <Form.Label>Address 2</Form.Label>
-        <Form.Control
-          value={address2}
-          onChange={(e) => setAddress2(e.target.value)}
-          type="text"
-          placeholder=""
-        />
-      </Form.Group>
-      <Form.Group controlId="formBasicEmail">
-        <Form.Label>City</Form.Label>
-        <Form.Control
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-          type="text"
-          placeholder=""
-        />
-      </Form.Group>
-      <Form.Group controlId="formBasicEmail">
-        <Form.Label>State</Form.Label>
-        <Form.Control
-          value={state}
-          onChange={(e) => setState(e.target.value)}
-          type="text"
-          placeholder=""
-        />
-      </Form.Group>
-      <Form.Group controlId="formBasicEmail">
-        <Form.Label>Country</Form.Label>
-        <Form.Control
-          value={country}
-          onChange={(e) => setCountry(e.target.value)}
-          type="text"
-          placeholder=""
-        />
-      </Form.Group>
-      <Form.Group controlId="formBasicEmail">
-        <Form.Label>Zip</Form.Label>
-        <Form.Control
-          value={zip}
-          onChange={(e) => setZip(e.target.value)}
-          type="text"
-          placeholder=""
-        />
-      </Form.Group>
-      <Form.Group controlId="formBasicEmail">
-        <Form.Label>Address Title</Form.Label>
-        <Form.Control
-          value={addressTitle}
-          onChange={(e) => setAddressTitle(e.target.value)}
-          type="text"
-          placeholder=""
-        />
-      </Form.Group>
-    </div>
-  );
+    return (
+        <div>
+            <Form.Group controlId="formBasicEmail">
+                <Form.Label>Address 1</Form.Label>
+                {!googleAddressShow && (
+                    <Form.Control
+                        value={address1}
+                        onChange={(e) => setAddress1(e.target.value)}
+                        type="text"
+                        placeholder=""
+                    />
+                )}
+                {googleAddressShow && (
+                    <GooglePlacesAutocomplete
+                        apiKey="AIzaSyDDvAlVrvbBYMW08BBosDFM_x2inY-XQ-w"
+                        selectProps={{
+                            value,
+                            // eslint-disable-next-line
+                            onChange: (e: any) => {
+                                setValue(e);
+                                setAddress1(e.label);
+                            }
+                        }}
+                    />
+                )}
+            </Form.Group>
+            <Form.Group controlId="formBasicEmail">
+                <Form.Label>Address 2</Form.Label>
+                <Form.Control
+                    value={address2}
+                    onChange={(e) => setAddress2(e.target.value)}
+                    type="text"
+                    placeholder=""
+                />
+            </Form.Group>
+            <Form.Group controlId="formBasicEmail">
+                <Form.Label>City</Form.Label>
+                <Form.Control
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    type="text"
+                    placeholder=""
+                />
+            </Form.Group>
+            <Form.Group controlId="formBasicEmail">
+                <Form.Label>State</Form.Label>
+                <Form.Control
+                    value={state}
+                    onChange={(e) => setState(e.target.value)}
+                    type="text"
+                    placeholder=""
+                />
+            </Form.Group>
+            <Form.Group controlId="formBasicEmail">
+                <Form.Label>Country</Form.Label>
+                <Form.Control
+                    value={country}
+                    onChange={(e) => setCountry(e.target.value)}
+                    type="text"
+                    placeholder=""
+                />
+            </Form.Group>
+            <Form.Group controlId="formBasicEmail">
+                <Form.Label>Zip</Form.Label>
+                <Form.Control
+                    value={zip}
+                    onChange={(e) => setZip(e.target.value)}
+                    type="text"
+                    placeholder=""
+                />
+            </Form.Group>
+            <Form.Group controlId="formBasicEmail">
+                <Form.Label>Address Title</Form.Label>
+                <Form.Control
+                    value={addressTitle}
+                    onChange={(e) => setAddressTitle(e.target.value)}
+                    type="text"
+                    placeholder=""
+                />
+            </Form.Group>
+        </div>
+    );
 };
 
 export default Address;

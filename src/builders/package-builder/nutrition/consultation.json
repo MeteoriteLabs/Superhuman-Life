@@ -2,12 +2,7 @@
     "1": {
         "title": "",
         "type": "object",
-        "required": [
-            "name",
-            "cuisine",
-            "mode",
-            "status"
-        ],
+        "required": ["name", "cuisine", "mode", "status"],
         "properties": {
             "name": {
                 "type": "string",
@@ -16,12 +11,7 @@
             "cuisine": {
                 "type": "string",
                 "title": "Cuisine",
-                "enum": [
-                    "Chinese",
-                    "Italian",
-                    "Mexican",
-                    "Thai"
-                ]
+                "enum": ["Chinese", "Italian", "Mexican", "Thai"]
             },
             "tags": {
                 "type": "string",
@@ -31,30 +21,19 @@
                 "type": "string",
                 "title": "Mode",
                 "description": "Meal Plans can be given only through mobile application",
-                "enum": [
-                    "Online",
-                    "Offline",
-                    "Hybrid"
-                ]
+                "enum": ["Online", "Offline", "Hybrid"]
             },
             "status": {
                 "type": "string",
                 "title": "Status",
-                "enum": [
-                    "Active",
-                    "Inactive",
-                    "Pending"
-                ]
+                "enum": ["Active", "Inactive", "Pending"]
             }
         }
     },
     "2": {
         "title": "",
         "type": "object",
-        "required": [
-            "about",
-            "benefits"
-        ],
+        "required": ["about", "benefits"],
         "properties": {
             "about": {
                 "type": "string",
@@ -67,11 +46,7 @@
             "consult": {
                 "type": "string",
                 "title": "Conuslt Type",
-                "enum": [
-                    "Solo",
-                    "Couple",
-                    "Family"
-                ]
+                "enum": ["Solo", "Couple", "Family"]
             },
             "video": {
                 "type": "string",
@@ -89,17 +64,12 @@
     "3": {
         "title": "Program Details",
         "type": "object",
-        "required": [
-            "typo"
-        ],
+        "required": ["typo"],
         "properties": {
             "typo": {
                 "type": "string",
                 "title": "Type of Package",
-                "enum": [
-                    "Instant",
-                    "Program"
-                ]
+                "enum": ["Instant", "Program"]
             }
         },
         "dependencies": {
@@ -108,9 +78,7 @@
                     {
                         "properties": {
                             "typo": {
-                                "enum": [
-                                    "Instant"
-                                ]
+                                "enum": ["Instant"]
                             },
                             "schedule": {
                                 "type": "number",
@@ -122,9 +90,7 @@
                     {
                         "properties": {
                             "typo": {
-                                "enum": [
-                                    "Program"
-                                ]
+                                "enum": ["Program"]
                             },
                             "set": {
                                 "type": "number",
@@ -177,12 +143,7 @@
             "plan": {
                 "type": "string",
                 "title": "Nutrition Plan",
-                "enum": [
-                    "Monthly",
-                    "Quaterly",
-                    "Half Yearly",
-                    "Yearly"
-                ]
+                "enum": ["Monthly", "Quaterly", "Half Yearly", "Yearly"]
             },
             "price": {
                 "type": "number",

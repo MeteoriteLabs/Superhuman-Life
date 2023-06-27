@@ -7,368 +7,390 @@ import OfferingPricingAssist from '../../../../components/customWidgets/offering
 import moment from 'moment';
 
 interface Props {
-  readonly: boolean;
-  value: string;
-  onChange: (args: string | null) => void;
-  formContext: any;
+    readonly: boolean;
+    value: string;
+    onChange: (args: string | null) => void;
+    formContext: any;
 }
 
 const PricingTable: React.FC<Props> = (props) => {
-  const inputDisabled = props.readonly;
+    const inputDisabled = props.readonly;
 
-  function handleReturnType(val: any) {
-    if (typeof val === 'string') {
-      return JSON.parse(val);
-    } else {
-      return val;
-    }
-  }
-
-  const classDetails = JSON.parse(props.formContext.programDetails);
-
-  const classMode =
-    classDetails.mode === '0' ? 'Online' : classDetails.mode === '1' ? 'Offline' : 'Hybrid';
-  const onlineClasses = classDetails.online;
-  const offlineClasses = classDetails.offline;
-
-  const auth = useContext(AuthContext);
-  const [vouchers, setVouchers] = useState<any>([]);
-  const [pricing, setPricing] = useState<any>(
-    props.value !== undefined && props.value !== 'free'
-      ? handleReturnType(props.value)
-      : [
-          {
-            mrp: null,
-            suggestedPrice: null,
-            voucher: 0,
-            duration: 30,
-            sapienPricing: null
-          },
-          {
-            mrp: null,
-            suggestedPrice: null,
-            voucher: 0,
-            duration: 90,
-            sapienPricing: null
-          },
-          {
-            mrp: null,
-            suggestedPrice: null,
-            voucher: 0,
-            duration: 180,
-            sapienPricing: null
-          },
-          {
-            mrp: null,
-            suggestedPrice: null,
-            voucher: 0,
-            duration: 360,
-            sapienPricing: null
-          }
-        ]
-  );
-  const [modalShow, setModalShow] = useState(false);
-
-  const GET_VOUCHERS = gql`
-    query fetchVouchers($expiry: DateTime!, $id: ID!, $start: DateTime!, $status: String!) {
-      vouchers(
-        filters: {
-          expiry_date: { gte: $expiry }
-          Start_date: { lte: $start }
-          Status: { eq: $status }
-          users_permissions_user: { id: { eq: $id } }
+    function handleReturnType(val: any) {
+        if (typeof val === 'string') {
+            return JSON.parse(val);
+        } else {
+            return val;
         }
-      ) {
-        data {
-          id
-          attributes {
-            voucher_name
-            discount_percentage
-            Status
-            Start_date
-            expiry_date
-          }
-        }
-      }
     }
-  `;
 
-  const [getVouchers] = useLazyQuery(GET_VOUCHERS, {
-    onCompleted: (data) => {
-      const flattenData = flattenObj({ ...data });
-      setVouchers(flattenData.vouchers);
-    }
-  });
-  React.useEffect(() => {
-    getVouchers({
-      variables: {
-        expiry: moment().toISOString(),
-        id: auth.userid,
-        start: moment().toISOString(),
-        status: 'Active'
-      }
+    const classDetails = JSON.parse(props.formContext.programDetails);
+
+    const classMode =
+        classDetails.mode === '0' ? 'Online' : classDetails.mode === '1' ? 'Offline' : 'Hybrid';
+    const onlineClasses = classDetails.online;
+    const offlineClasses = classDetails.offline;
+
+    const auth = useContext(AuthContext);
+    const [vouchers, setVouchers] = useState<any>([]);
+    const [pricing, setPricing] = useState<any>(
+        props.value !== undefined && props.value !== 'free'
+            ? handleReturnType(props.value)
+            : [
+                  {
+                      mrp: null,
+                      suggestedPrice: null,
+                      voucher: 0,
+                      duration: 30,
+                      sapienPricing: null
+                  },
+                  {
+                      mrp: null,
+                      suggestedPrice: null,
+                      voucher: 0,
+                      duration: 90,
+                      sapienPricing: null
+                  },
+                  {
+                      mrp: null,
+                      suggestedPrice: null,
+                      voucher: 0,
+                      duration: 180,
+                      sapienPricing: null
+                  },
+                  {
+                      mrp: null,
+                      suggestedPrice: null,
+                      voucher: 0,
+                      duration: 360,
+                      sapienPricing: null
+                  }
+              ]
+    );
+    const [modalShow, setModalShow] = useState(false);
+
+    const GET_VOUCHERS = gql`
+        query fetchVouchers($expiry: DateTime!, $id: ID!, $start: DateTime!, $status: String!) {
+            vouchers(
+                filters: {
+                    expiry_date: { gte: $expiry }
+                    Start_date: { lte: $start }
+                    Status: { eq: $status }
+                    users_permissions_user: { id: { eq: $id } }
+                }
+            ) {
+                data {
+                    id
+                    attributes {
+                        voucher_name
+                        discount_percentage
+                        Status
+                        Start_date
+                        expiry_date
+                    }
+                }
+            }
+        }
+    `;
+
+    const [getVouchers] = useLazyQuery(GET_VOUCHERS, {
+        onCompleted: (data) => {
+            const flattenData = flattenObj({ ...data });
+            setVouchers(flattenData.vouchers);
+        }
     });
-  }, []);
+    React.useEffect(() => {
+        getVouchers({
+            variables: {
+                expiry: moment().toISOString(),
+                id: auth.userid,
+                start: moment().toISOString(),
+                status: 'Active'
+            }
+        });
+    }, []);
 
-  useEffect(() => {
-    // eslint-disable-next-line
-    pricing.map((item, index: number) => {
-      if (item.mrp === 0 || item.mrp === '') {
+    useEffect(() => {
+        // eslint-disable-next-line
+        pricing.map((item, index: number) => {
+            if (item.mrp === 0 || item.mrp === '') {
+                const values = [...pricing];
+                values[index].mrp = null;
+                setPricing(values);
+            }
+        });
+    }, [pricing]);
+
+    const SUGGESTED_PRICING = gql`
+        query fetchSapienPricing($id: ID!) {
+            suggestedPricings(
+                filters: {
+                    fitness_package_type: { type: { eq: "One-On-One" } }
+                    users_permissions_users: { id: { eq: $id } }
+                }
+            ) {
+                data {
+                    id
+                    attributes {
+                        mrp
+                        Mode
+                        fitness_package_type {
+                            data {
+                                id
+                                attributes {
+                                    type
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            sapienPricings(filters: { fitness_package_type: { type: { eq: "One-On-One" } } }) {
+                data {
+                    id
+                    attributes {
+                        mrp
+                        mode
+                        fitness_package_type {
+                            data {
+                                id
+                                attributes {
+                                    type
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    `;
+
+    function FetchData() {
+        useQuery(SUGGESTED_PRICING, {
+            variables: { id: auth.userid },
+            onCompleted: (data) => {
+                loadData(data);
+            }
+        });
+    }
+
+    function loadData(data) {
+        const flattenData = flattenObj({ ...data });
+        const newValue = [...pricing];
+        if (classMode === 'Online') {
+            flattenData.suggestedPricings = flattenData.suggestedPricings.filter(
+                (item) => item.Mode === classMode
+            );
+            flattenData.sapienPricings = flattenData.sapienPricings.filter(
+                (item) => item.mode === classMode
+            );
+            newValue.forEach((item, index) => {
+                if (item.voucher !== 0 && item.price !== null) {
+                    item.suggestedPrice = parseInt(
+                        ((item.sapienPricing * 100) / (100 - item.voucher)).toFixed(2)
+                    );
+                } else {
+                    item.suggestedPrice =
+                        flattenData.suggestedPricings[0]?.mrp *
+                        onlineClasses *
+                        (item.duration / 30);
+                }
+                item.sapienPricing =
+                    flattenData.sapienPricings[0]?.mrp * onlineClasses * (item.duration / 30);
+            });
+        } else if (classMode === 'Offline') {
+            flattenData.suggestedPricings = flattenData.suggestedPricings.filter(
+                (item) => item.Mode === classMode
+            );
+            flattenData.sapienPricings = flattenData.sapienPricings.filter(
+                (item) => item.mode === classMode
+            );
+            newValue.forEach((item, index) => {
+                if (item.voucher !== 0 && item.price !== null) {
+                    item.suggestedPrice = parseInt(
+                        ((item.sapienPricing * 100) / (100 - item.voucher)).toFixed(2)
+                    );
+                } else {
+                    item.suggestedPrice =
+                        flattenData.suggestedPricings[0]?.mrp *
+                        offlineClasses *
+                        (item.duration / 30);
+                }
+                item.sapienPricing =
+                    flattenData.sapienPricings[0]?.mrp * offlineClasses * (item.duration / 30);
+            });
+        } else if (classMode === 'Hybrid') {
+            newValue.forEach((item, index) => {
+                if (item.voucher !== 0 && item.price !== null) {
+                    item.suggestedPrice = parseInt(
+                        ((item.sapienPricing * 100) / (100 - item.voucher)).toFixed(2)
+                    );
+                } else {
+                    const onlinePrice =
+                        flattenData.suggestedPricings[0]?.mrp *
+                        onlineClasses *
+                        (item.duration / 30);
+                    const offlinePrice =
+                        flattenData.suggestedPricings[1]?.mrp *
+                        offlineClasses *
+                        (item.duration / 30);
+                    item.suggestedPrice = onlinePrice + offlinePrice;
+                }
+                const onlinePrice =
+                    flattenData.sapienPricings[0]?.mrp * onlineClasses * (item.duration / 30);
+                const offlinePrice =
+                    flattenData.sapienPricings[1]?.mrp * offlineClasses * (item.duration / 30);
+                item.sapienPricing = onlinePrice + offlinePrice;
+            });
+        }
+
+        setPricing(newValue);
+    }
+
+    function handlePricingUpdate(value: any, id: any) {
+        const newPricing = [...pricing];
+        newPricing[id].mrp = value;
+        setPricing(newPricing);
+    }
+
+    function handleValidation() {
         const values = [...pricing];
-        values[index].mrp = null;
-        setPricing(values);
-      }
-    });
-  }, [pricing]);
-
-  const SUGGESTED_PRICING = gql`
-    query fetchSapienPricing($id: ID!) {
-      suggestedPricings(
-        filters: {
-          fitness_package_type: { type: { eq: "One-On-One" } }
-          users_permissions_users: { id: { eq: $id } }
-        }
-      ) {
-        data {
-          id
-          attributes {
-            mrp
-            Mode
-            fitness_package_type {
-              data {
-                id
-                attributes {
-                  type
-                }
-              }
+        let res = false;
+        // eslint-disable-next-line
+        values.map((item: any) => {
+            if (item.mrp !== null && item.mrp >= parseInt(item.sapienPricing)) {
+                res = true;
             }
-          }
-        }
-      }
-      sapienPricings(filters: { fitness_package_type: { type: { eq: "One-On-One" } } }) {
-        data {
-          id
-          attributes {
-            mrp
-            mode
-            fitness_package_type {
-              data {
-                id
-                attributes {
-                  type
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  `;
-
-  function FetchData() {
-    useQuery(SUGGESTED_PRICING, {
-      variables: { id: auth.userid },
-      onCompleted: (data) => {
-        loadData(data);
-      }
-    });
-  }
-
-  function loadData(data) {
-    const flattenData = flattenObj({ ...data });
-    const newValue = [...pricing];
-    if (classMode === 'Online') {
-      flattenData.suggestedPricings = flattenData.suggestedPricings.filter(
-        (item) => item.Mode === classMode
-      );
-      flattenData.sapienPricings = flattenData.sapienPricings.filter(
-        (item) => item.mode === classMode
-      );
-      newValue.forEach((item, index) => {
-        if (item.voucher !== 0 && item.price !== null) {
-          item.suggestedPrice = parseInt(
-            ((item.sapienPricing * 100) / (100 - item.voucher)).toFixed(2)
-          );
-        } else {
-          item.suggestedPrice =
-            flattenData.suggestedPricings[0]?.mrp * onlineClasses * (item.duration / 30);
-        }
-        item.sapienPricing =
-          flattenData.sapienPricings[0]?.mrp * onlineClasses * (item.duration / 30);
-      });
-    } else if (classMode === 'Offline') {
-      flattenData.suggestedPricings = flattenData.suggestedPricings.filter(
-        (item) => item.Mode === classMode
-      );
-      flattenData.sapienPricings = flattenData.sapienPricings.filter(
-        (item) => item.mode === classMode
-      );
-      newValue.forEach((item, index) => {
-        if (item.voucher !== 0 && item.price !== null) {
-          item.suggestedPrice = parseInt(
-            ((item.sapienPricing * 100) / (100 - item.voucher)).toFixed(2)
-          );
-        } else {
-          item.suggestedPrice =
-            flattenData.suggestedPricings[0]?.mrp * offlineClasses * (item.duration / 30);
-        }
-        item.sapienPricing =
-          flattenData.sapienPricings[0]?.mrp * offlineClasses * (item.duration / 30);
-      });
-    } else if (classMode === 'Hybrid') {
-      newValue.forEach((item, index) => {
-        if (item.voucher !== 0 && item.price !== null) {
-          item.suggestedPrice = parseInt(
-            ((item.sapienPricing * 100) / (100 - item.voucher)).toFixed(2)
-          );
-        } else {
-          const onlinePrice =
-            flattenData.suggestedPricings[0]?.mrp * onlineClasses * (item.duration / 30);
-          const offlinePrice =
-            flattenData.suggestedPricings[1]?.mrp * offlineClasses * (item.duration / 30);
-          item.suggestedPrice = onlinePrice + offlinePrice;
-        }
-        const onlinePrice =
-          flattenData.sapienPricings[0]?.mrp * onlineClasses * (item.duration / 30);
-        const offlinePrice =
-          flattenData.sapienPricings[1]?.mrp * offlineClasses * (item.duration / 30);
-        item.sapienPricing = onlinePrice + offlinePrice;
-      });
+        });
+        return res;
     }
 
-    setPricing(newValue);
-  }
-
-  function handlePricingUpdate(value: any, id: any) {
-    const newPricing = [...pricing];
-    newPricing[id].mrp = value;
-    setPricing(newPricing);
-  }
-
-  function handleValidation() {
-    const values = [...pricing];
-    let res = false;
-    // eslint-disable-next-line
-    values.map((item: any) => {
-      if (item.mrp !== null && item.mrp >= parseInt(item.sapienPricing)) {
-        res = true;
-      }
-    });
-    return res;
-  }
-
-  if (handleValidation()) {
-    props.onChange(JSON.stringify(pricing));
-  } else {
-    props.onChange(null);
-  }
-
-  function handleUpdatePricing(id: any, value: any) {
-    if (parseInt(value) !== 0) {
-      const newValue = [...pricing];
-      newValue[id].voucher = parseInt(value);
-      newValue[id].suggestedPrice = parseInt(
-        ((newValue[id].sapienPricing * 100) / (100 - value)).toFixed(0)
-      );
-      setPricing(newValue);
+    if (handleValidation()) {
+        props.onChange(JSON.stringify(pricing));
     } else {
-      const newValue = [...pricing];
-      newValue[id].voucher = parseInt(value);
-      newValue[id].suggestedPrice = newValue[id].sapienPricing;
-      setPricing(newValue);
+        props.onChange(null);
     }
-  }
 
-  FetchData();
+    function handleUpdatePricing(id: any, value: any) {
+        if (parseInt(value) !== 0) {
+            const newValue = [...pricing];
+            newValue[id].voucher = parseInt(value);
+            newValue[id].suggestedPrice = parseInt(
+                ((newValue[id].sapienPricing * 100) / (100 - value)).toFixed(0)
+            );
+            setPricing(newValue);
+        } else {
+            const newValue = [...pricing];
+            newValue[id].voucher = parseInt(value);
+            newValue[id].suggestedPrice = newValue[id].sapienPricing;
+            setPricing(newValue);
+        }
+    }
 
-  return (
-    <>
-      {
-        <div>
-          <div className="d-flex justify-content-end p-2">
-            <OfferingPricingAssist
-              show={modalShow}
-              type={'Personal Training'}
-              imageURL={
-                classMode === 'Online'
-                  ? '/assets/personal-training-online.svg'
-                  : '/assets/personal-training-offline.svg'
-              }
-              onHide={() => setModalShow(false)}
-            />
-          </div>
-          <Table responsive>
-            <thead>
-              <tr className="text-center">
-                <th></th>
-                <th>Monthly</th>
-                <th>Quaterly</th>
-                <th>Half Yearly</th>
-                <th>Yearly</th>
-              </tr>
-            </thead>
-            <tbody>
-              {(classMode === 'Online' || classMode === 'Hybrid') && (
-                <tr className="text-center">
-                  <td>
-                    <img
-                      src="/assets/personal-training-online.svg"
-                      alt="personal-training-online"
-                    />
-                  </td>
-                  {pricing.map((item, index: number) => {
-                    return <td key={index}>{onlineClasses * (item.duration / 30)} Classes</td>;
-                  })}
-                </tr>
-              )}
-              {(classMode === 'Offline' || classMode === 'Hybrid') && (
-                <tr className="text-center">
-                  <td>
-                    {' '}
-                    <img
-                      src="/assets/personal-training-offline.svg"
-                      alt="personal-training-offline"
-                    />
-                  </td>
-                  {pricing.map((item, index: number) => {
-                    return <td key={index}>{offlineClasses * (item.duration / 30)} Classes</td>;
-                  })}
-                </tr>
-              )}
-              <tr className="text-center">
-                <td>
-                  <b>Vouchers</b>
-                </td>
-                {pricing.map((item, index: number) => {
-                  return (
-                    <td key={index}>
-                      <Form.Control
-                        as="select"
-                        disabled={inputDisabled}
-                        value={item.voucher}
-                        onChange={(e) => handleUpdatePricing(index, e.target.value)}>
-                        <option value={0}>Choose voucher</option>
-                        {vouchers.map((voucher, index: number) => {
-                          return (
-                            <option key={index} value={voucher.discount_percentage}>
-                              {voucher.voucher_name}
-                            </option>
-                          );
-                        })}
-                      </Form.Control>
-                    </td>
-                  );
-                })}
-              </tr>
-              <tr className="text-center">
-                <td>
-                  <b>Total days</b>
-                </td>
-                {pricing.map((item, index: number) => {
-                  return <td key={index}>{item.duration} days</td>;
-                })}
-              </tr>
-              {/* <tr className="text-center">
+    FetchData();
+
+    return (
+        <>
+            {
+                <div>
+                    <div className="d-flex justify-content-end p-2">
+                        <OfferingPricingAssist
+                            show={modalShow}
+                            type={'Personal Training'}
+                            imageURL={
+                                classMode === 'Online'
+                                    ? '/assets/personal-training-online.svg'
+                                    : '/assets/personal-training-offline.svg'
+                            }
+                            onHide={() => setModalShow(false)}
+                        />
+                    </div>
+                    <Table responsive>
+                        <thead>
+                            <tr className="text-center">
+                                <th></th>
+                                <th>Monthly</th>
+                                <th>Quaterly</th>
+                                <th>Half Yearly</th>
+                                <th>Yearly</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {(classMode === 'Online' || classMode === 'Hybrid') && (
+                                <tr className="text-center">
+                                    <td>
+                                        <img
+                                            src="/assets/personal-training-online.svg"
+                                            alt="personal-training-online"
+                                        />
+                                    </td>
+                                    {pricing.map((item, index: number) => {
+                                        return (
+                                            <td key={index}>
+                                                {onlineClasses * (item.duration / 30)} Classes
+                                            </td>
+                                        );
+                                    })}
+                                </tr>
+                            )}
+                            {(classMode === 'Offline' || classMode === 'Hybrid') && (
+                                <tr className="text-center">
+                                    <td>
+                                        {' '}
+                                        <img
+                                            src="/assets/personal-training-offline.svg"
+                                            alt="personal-training-offline"
+                                        />
+                                    </td>
+                                    {pricing.map((item, index: number) => {
+                                        return (
+                                            <td key={index}>
+                                                {offlineClasses * (item.duration / 30)} Classes
+                                            </td>
+                                        );
+                                    })}
+                                </tr>
+                            )}
+                            <tr className="text-center">
+                                <td>
+                                    <b>Vouchers</b>
+                                </td>
+                                {pricing.map((item, index: number) => {
+                                    return (
+                                        <td key={index}>
+                                            <Form.Control
+                                                as="select"
+                                                disabled={inputDisabled}
+                                                value={item.voucher}
+                                                onChange={(e) =>
+                                                    handleUpdatePricing(index, e.target.value)
+                                                }
+                                            >
+                                                <option value={0}>Choose voucher</option>
+                                                {vouchers.map((voucher, index: number) => {
+                                                    return (
+                                                        <option
+                                                            key={index}
+                                                            value={voucher.discount_percentage}
+                                                        >
+                                                            {voucher.voucher_name}
+                                                        </option>
+                                                    );
+                                                })}
+                                            </Form.Control>
+                                        </td>
+                                    );
+                                })}
+                            </tr>
+                            <tr className="text-center">
+                                <td>
+                                    <b>Total days</b>
+                                </td>
+                                {pricing.map((item, index: number) => {
+                                    return <td key={index}>{item.duration} days</td>;
+                                })}
+                            </tr>
+                            {/* <tr className="text-center">
                 <td>
                   <b>Suggested</b>
                 </td>
@@ -382,53 +404,60 @@ const PricingTable: React.FC<Props> = (props) => {
                   );
                 })}
               </tr> */}
-              <tr>
-                <td className="text-center">
-                  <b>Set MRP</b>
-                </td>
-                {pricing.map((item, index: number) => {
-                  return (
-                    <td key={index}>
-                      <InputGroup style={{ minWidth: '200px' }}>
-                        <InputGroup.Prepend>
-                          <InputGroup.Text id="basic-addon1">{'\u20B9'}</InputGroup.Text>
-                        </InputGroup.Prepend>
-                        <FormControl
-                          className={`${
-                            pricing[index]?.mrp < pricing[index]?.sapienPricing &&
-                            pricing[index]?.mrp !== null
-                              ? 'is-invalid'
-                              : pricing[index]?.mrp >= pricing[index]?.sapienPricing
-                              ? 'is-valid'
-                              : ''
-                          }`}
-                          aria-label="Default"
-                          type="number"
-                          min={0}
-                          aria-describedby="inputGroup-sizing-default"
-                          disabled={inputDisabled}
-                          value={pricing[index]?.mrp}
-                          onChange={(e) => {
-                            handlePricingUpdate(e.target.value, index);
-                          }}
-                        />
-                      </InputGroup>
-                      {pricing[index]?.mrp < pricing[index]?.sapienPricing &&
-                        pricing[index]?.mrp !== null && (
-                          <span style={{ fontSize: '12px', color: 'red' }}>
-                            cannot be less than ₹ {pricing[index]?.sapienPricing}
-                          </span>
-                        )}
-                    </td>
-                  );
-                })}
-              </tr>
-            </tbody>
-          </Table>
-        </div>
-      }
-    </>
-  );
+                            <tr>
+                                <td className="text-center">
+                                    <b>Set MRP</b>
+                                </td>
+                                {pricing.map((item, index: number) => {
+                                    return (
+                                        <td key={index}>
+                                            <InputGroup style={{ minWidth: '200px' }}>
+                                                <InputGroup.Prepend>
+                                                    <InputGroup.Text id="basic-addon1">
+                                                        {'\u20B9'}
+                                                    </InputGroup.Text>
+                                                </InputGroup.Prepend>
+                                                <FormControl
+                                                    className={`${
+                                                        pricing[index]?.mrp <
+                                                            pricing[index]?.sapienPricing &&
+                                                        pricing[index]?.mrp !== null
+                                                            ? 'is-invalid'
+                                                            : pricing[index]?.mrp >=
+                                                              pricing[index]?.sapienPricing
+                                                            ? 'is-valid'
+                                                            : ''
+                                                    }`}
+                                                    aria-label="Default"
+                                                    type="number"
+                                                    min={0}
+                                                    aria-describedby="inputGroup-sizing-default"
+                                                    disabled={inputDisabled}
+                                                    value={pricing[index]?.mrp}
+                                                    onChange={(e) => {
+                                                        handlePricingUpdate(e.target.value, index);
+                                                    }}
+                                                />
+                                            </InputGroup>
+                                            {pricing[index]?.mrp < pricing[index]?.sapienPricing &&
+                                                pricing[index]?.mrp !== null && (
+                                                    <span
+                                                        style={{ fontSize: '12px', color: 'red' }}
+                                                    >
+                                                        cannot be less than ₹{' '}
+                                                        {pricing[index]?.sapienPricing}
+                                                    </span>
+                                                )}
+                                        </td>
+                                    );
+                                })}
+                            </tr>
+                        </tbody>
+                    </Table>
+                </div>
+            }
+        </>
+    );
 };
 
 export default PricingTable;

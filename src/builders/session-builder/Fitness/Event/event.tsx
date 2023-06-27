@@ -1,220 +1,195 @@
-import { useQuery } from "@apollo/client";
-import React,{ useContext, useMemo, useRef, useState } from "react";
-import { Badge, Row, Col, Form } from "react-bootstrap";
-import Table from "../../../../components/table";
-import AuthContext from "../../../../context/auth-context";
-import { GET_TAGS_FOR_EVENT } from "../../graphQL/queries";
-import FitnessAction from "../FitnessAction";
-import ActionButton from "../../../../components/actionbutton";
-import { flattenObj } from "../../../../components/utils/responseFlatten";
-import moment from "moment";
+import { useQuery } from '@apollo/client';
+import React, { useContext, useMemo, useRef, useState } from 'react';
+import { Badge, Row, Col, Button } from 'react-bootstrap';
+import Table from '../../../../components/table';
+import AuthContext from '../../../../context/auth-context';
+import { GET_TAGS_FOR_EVENT } from '../../graphQL/queries';
+import FitnessAction from '../FitnessAction';
+import ActionButton from '../../../../components/actionbutton';
+import { flattenObj } from '../../../../components/utils/responseFlatten';
+import moment from 'moment';
+import { Tag, TableContent } from '../Interfaces';
 
-const Event: React.FC = () =>  {
-  const auth = useContext(AuthContext);
-  const [userPackage, setUserPackage] = useState<any>([]);
-  const [showHistory, setShowHistory] = useState<boolean>(false);
-  const fitnessActionRef = useRef<any>(null);
+const Event: React.FC = () => {
+    const auth = useContext(AuthContext);
+    const [userPackage, setUserPackage] = useState<TableContent[]>([]);
+    const fitnessActionRef = useRef<any>(null);
+    const [page, setPage] = useState<number>(1);
+    const [totalRecords, setTotalRecords] = useState<number>(0);
 
-  const mainQuery = useQuery(GET_TAGS_FOR_EVENT, {
-    variables: { id: auth.userid },
-    onCompleted: (data) => loadData(data),
-  });
+    const mainQuery = useQuery(GET_TAGS_FOR_EVENT, {
+        variables: { id: auth.userid, start: page * 10 - 10, limit: 10 },
+        onCompleted: (data) => {
+            loadData(data);
+            setTotalRecords(data.tags.meta.pagination.total);
+        }
+    });
 
-  const loadData = (data: any) => {
-    const flattenData = flattenObj({ ...data });
-     
-    setUserPackage([
-      ...flattenData.tags.map((packageItem) => {
-        return {
-          tagId: packageItem.id,
-          id: packageItem.id,
-          packageName: packageItem.fitnesspackage.packagename,
-          duration: packageItem.fitnesspackage.duration,
-          start: moment(packageItem.fitnesspackage.Start_date).format(
-            "MMM Do,YYYY"
-          ),
-          end: moment(packageItem.fitnesspackage.End_date).format(
-            "MMM Do,YYYY"
-          ),
-          client:
-            packageItem.client_packages.length > 0
-              ? packageItem.client_packages.length
-              : null,
-          programName: packageItem.tag_name ? packageItem.tag_name : "N/A",
-          programStatus:
-            packageItem.fitnesspackage.Status === true ? "Assigned" : "N/A",
-          renewal: calculateProgramRenewal(packageItem?.sessions),
-        };
-      }),
-    ]);
-  };
+    const loadData = (data) => {
+        const flattenData: Tag[] = flattenObj({ ...data.tags });
 
-  const calculateProgramRenewal = (sessions) => {
-    if (sessions.length === 0) {
-      return "N/A";
-    }
+        setUserPackage(
+            flattenData.map((packageItem) => {
+                return {
+                    tagId: packageItem.id,
+                    id: packageItem.id,
+                    packageName: packageItem.fitnesspackage.packagename,
+                    duration: packageItem.fitnesspackage.duration,
+                    start: moment(packageItem.fitnesspackage.Start_date).format('MMM Do,YYYY'),
+                    end: moment(packageItem.fitnesspackage.End_date).format('MMM Do,YYYY'),
+                    client:
+                        packageItem.client_packages && packageItem.client_packages.length
+                            ? packageItem.client_packages.length
+                            : null,
+                    programName: packageItem.tag_name ? packageItem.tag_name : 'N/A',
+                    programStatus: packageItem.fitnesspackage.Status === true ? 'Assigned' : 'N/A',
+                    renewal: calculateProgramRenewal(packageItem?.sessions)
+                };
+            })
+        );
+    };
 
-    const moments = sessions.map((d) => moment(d.session_date));
-    const maxDate = moment.max(moments);
+    const calculateProgramRenewal = (sessions) => {
+        if (sessions.length === 0) {
+            return 'N/A';
+        }
 
-    return maxDate.format("MMM Do,YYYY");
-  }
+        const moments = sessions.map((d) => moment(d.session_date));
+        const maxDate = moment.max(moments);
 
-  const handleRedirect = (id: any) => {
-    window.location.href = `/cohort/session/scheduler/${id}`;
-  }
+        return maxDate.format('MMM Do,YYYY');
+    };
 
-  const columns = useMemo(
-    () => [
-      {
-        Header: "Cohort",
-        columns: [
-          { accessor: "packageName", Header: "Name" },
-          { accessor: "start", Header: "Start" },
-          { accessor: "end", Header: "End" },
-        ],
-      },
+    const handleRedirect = (id: string) => {
+        window.location.href = `/cohort/session/scheduler/${id}`;
+    };
 
-      { accessor: " ", Header: "" },
-
-      {
-        Header: "Program",
-        columns: [
-          {
-            accessor: "client",
-            Header: "Client",
-          },
-          { accessor: "programName", Header: "Class Name" },
-          {
-            accessor: "programStatus",
-            Header: "Status",
-            Cell: (row: any) => {
-              return (
-                <>
-                  {row.value === "Assigned" ? (
-                    <Badge
-                      className="px-3 py-1"
-                      style={{ fontSize: "1rem", borderRadius: "10px" }}
-                      variant="success"
-                    >
-                      {row.value}
-                    </Badge>
-                  ) : (
-                    <Badge
-                      className="px-3 py-1"
-                      style={{ fontSize: "1rem", borderRadius: "10px" }}
-                      variant="danger"
-                    >
-                      {row.value}
-                    </Badge>
-                  )}
-                </>
-              );
+    const columns = useMemo(
+        () => [
+            {
+                Header: 'Event',
+                columns: [
+                    { accessor: 'packageName', Header: 'Name' },
+                    { accessor: 'start', Header: 'Start' },
+                    { accessor: 'end', Header: 'End' }
+                ]
             },
-          },
-          { accessor: "renewal", Header: "Last Session Date" },
-          {
-            id: "edit",
-            Header: "Actions",
-            Cell: ({ row }: any) => {
-              const manageHandler = () => {
-                handleRedirect(row.original.tagId);
-              };
-              const detailsHandler = () => {
-                fitnessActionRef.current.TriggerForm({
-                  id: row.original.id,
-                  actionType: "details",
-                  type: "Classic Class",
-                  rowData: row.original,
-                });
-              };
 
-              const clientsHandler = () => {
-                fitnessActionRef.current.TriggerForm({
-                  id: row.original.id,
-                  actionType: "allClients",
-                  type: "Classic Class",
-                });
-              };
+            { accessor: ' ', Header: '' },
 
-              const arrayAction = [
-                { actionName: "Manage", actionClick: manageHandler },
-                { actionName: "Details", actionClick: detailsHandler },
-                { actionName: "All Clients", actionClick: clientsHandler },
-              ];
-              return <ActionButton arrayAction={arrayAction}></ActionButton>;
-            },
-          },
+            {
+                Header: 'Program',
+                columns: [
+                    {
+                        accessor: 'client',
+                        Header: 'Client'
+                    },
+                    { accessor: 'programName', Header: 'Class Name' },
+                    {
+                        accessor: 'programStatus',
+                        Header: 'Status',
+                        Cell: (row: any) => {
+                            return (
+                                <>
+                                    {row.value === 'Assigned' ? (
+                                        <Badge
+                                            className="px-3 py-1"
+                                            style={{ fontSize: '1rem', borderRadius: '10px' }}
+                                            variant="success"
+                                        >
+                                            {row.value}
+                                        </Badge>
+                                    ) : (
+                                        <Badge
+                                            className="px-3 py-1"
+                                            style={{ fontSize: '1rem', borderRadius: '10px' }}
+                                            variant="danger"
+                                        >
+                                            {row.value}
+                                        </Badge>
+                                    )}
+                                </>
+                            );
+                        }
+                    },
+                    { accessor: 'renewal', Header: 'Last Session Date' },
+                    {
+                        id: 'edit',
+                        Header: 'Actions',
+                        Cell: ({ row }: any) => {
+                            const manageHandler = () => {
+                                handleRedirect(row.original.tagId);
+                            };
+                            const detailsHandler = () => {
+                                fitnessActionRef.current.TriggerForm({
+                                    id: row.original.id,
+                                    actionType: 'details',
+                                    type: 'Classic Class',
+                                    rowData: row.original
+                                });
+                            };
+
+                            const clientsHandler = () => {
+                                fitnessActionRef.current.TriggerForm({
+                                    id: row.original.id,
+                                    actionType: 'allClients',
+                                    type: 'Classic Class'
+                                });
+                            };
+
+                            const arrayAction = [
+                                { actionName: 'Manage', actionClick: manageHandler },
+                                { actionName: 'Details', actionClick: detailsHandler },
+                                { actionName: 'All Clients', actionClick: clientsHandler }
+                            ];
+                            return <ActionButton arrayAction={arrayAction}></ActionButton>;
+                        }
+                    }
+                ]
+            }
         ],
-      },
-    ],
-    []
-  );
+        []
+    );
 
-  function handleHistoryPackage(data: any) {
-    const flattenData = flattenObj({ ...data });
-    setUserPackage([
-      ...flattenData.tags.map((packageItem) => {
-        return {
-          tagId: packageItem.id,
-          id: packageItem.id,
-          packageName: packageItem.fitnesspackage.packagename,
-          duration: packageItem.fitnesspackage.duration,
-          start: moment(packageItem.fitnesspackage.Start_date).format(
-            "MMM Do,YYYY"
-          ),
-          end: moment(packageItem.fitnesspackage.End_date).format(
-            "MMM Do,YYYY"
-          ),
-          client:
-            packageItem.client_packages.length > 0
-              ? packageItem.client_packages.length
-              : null,
-          programName: packageItem.tag_name ? packageItem.tag_name : "N/A",
-          programStatus:
-            packageItem.fitnesspackage.Status === true ? "Assigned" : "N/A",
-          renewal: calculateProgramRenewal(packageItem.sessions),
-        };
-      }),
-    ]);
-  }
+    const pageHandler = (selectedPageNumber: number) => {
+        setPage(selectedPageNumber);
+    };
 
-  if (!showHistory) {
-    if (userPackage.length > 0) {
-      userPackage.filter((item: any, index: any) =>
-        moment(item.end, "MMM Do,YYYY").isBefore(moment()) === true
-          ? userPackage.splice(index, 1)
-          : null
-      );
-    }
-  }
+    return (
+        <div className="mt-5">
+            <Row>
+                <Col>
+                    <Table columns={columns} data={userPackage} />
+                    <FitnessAction ref={fitnessActionRef} callback={() => mainQuery} />
+                </Col>
+            </Row>
+            {/* Pagination */}
+            {userPackage && userPackage.length ? (
+                <Row className="justify-content-end">
+                    <Button
+                        variant="outline-dark"
+                        className="m-2"
+                        onClick={() => pageHandler(page - 1)}
+                        disabled={page === 1 ? true : false}
+                    >
+                        Previous
+                    </Button>
 
-  return (
-    <div className="mt-5">
-      <div className="mb-3">
-        <Form>
-          <Form.Check
-            type="switch"
-            id="switchEnabled2"
-            label="Show History"
-            defaultChecked={showHistory}
-            onClick={() => {
-              setShowHistory(!showHistory);
-              mainQuery.refetch().then((res: any) => {
-                handleHistoryPackage(res.data);
-              });
-            }}
-          />
-        </Form>
-      </div>
-      <Row>
-        <Col>
-          <Table columns={columns} data={userPackage} />
-          <FitnessAction ref={fitnessActionRef} callback={() => mainQuery}/>
-        </Col>
-      </Row>
-    </div>
-  );
-}
+                    <Button
+                        variant="outline-dark"
+                        className="m-2"
+                        onClick={() => pageHandler(page + 1)}
+                        disabled={totalRecords > page * 10 - 10 + userPackage.length ? false : true}
+                    >
+                        Next
+                    </Button>
+                    <span className="m-2 bold pt-2">{`${page * 10 - 10 + 1} - ${
+                        page * 10 - 10 + userPackage.length
+                    }`}</span>
+                </Row>
+            ) : null}
+        </div>
+    );
+};
 
 export default Event;

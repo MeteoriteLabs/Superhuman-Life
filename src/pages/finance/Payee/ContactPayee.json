@@ -7,16 +7,12 @@
                 "type": "string"
             }
         },
-        "required": [
-            "searchContact"
-        ]
+        "required": ["searchContact"]
     },
     "2": {
         "title": "",
         "type": "object",
-        "required": [
-            "PaymentCategory"
-        ],
+        "required": ["PaymentCategory"],
         "properties": {
             "PaymentCategory": {
                 "title": "Payment Category",
@@ -35,14 +31,8 @@
             "FrequencyOfPayment": {
                 "title": "Frequency of Payment",
                 "type": "number",
-                "enum": [
-                    0,
-                    1
-                ],
-                "enumNames": [
-                    "One Time",
-                    "Monthly"
-                ],
+                "enum": [0, 1],
+                "enumNames": ["One Time", "Monthly"],
                 "default": 0
             }
         },
@@ -72,11 +62,7 @@
                             "format": "date-time"
                         }
                     },
-                    "required": [
-                        "amountToBePaid",
-                        "paymentDueOn",
-                        "setReminder"
-                    ]
+                    "required": ["amountToBePaid", "paymentDueOn", "setReminder"]
                 }
             },
             {
@@ -101,13 +87,7 @@
                         "paymentCycle": {
                             "type": "number",
                             "title": "Payment Cycle",
-                            "enum": [
-                                1,
-                                2,
-                                3,
-                                4,
-                                5
-                            ],
+                            "enum": [1, 2, 3, 4, 5],
                             "enumNames": [
                                 "1st of every month",
                                 "2nd of every month",
@@ -120,10 +100,7 @@
                         "payFromNextPaymentCycle": {
                             "type": "boolean",
                             "title": "Pay from next payment cycle",
-                            "enum": [
-                                true,
-                                false
-                            ],
+                            "enum": [true, false],
                             "default": false
                         },
                         "setReminder": {
@@ -134,10 +111,7 @@
                         "provideBreakdown": {
                             "type": "string",
                             "title": "Provide Breakdown",
-                            "enum": [
-                                "Yes",
-                                "No"
-                            ]
+                            "enum": ["Yes", "No"]
                         }
                     },
                     "allOf": [
@@ -156,9 +130,7 @@
                                         "title": "First Payment"
                                     }
                                 },
-                                "required": [
-                                    "firstPayment"
-                                ]
+                                "required": ["firstPayment"]
                             }
                         },
                         {
@@ -219,22 +191,14 @@
                             }
                         },
                         {
-                            "required": [
-                                "provideBreakdown",
-                                "payFromNextPaymentCycle"
-                            ]
+                            "required": ["provideBreakdown", "payFromNextPaymentCycle"]
                         }
                     ],
-                    "required": [
-                        "amountToBePaid",
-                        "effectiveDate"
-                    ]
+                    "required": ["amountToBePaid", "effectiveDate"]
                 }
             },
             {
-                "required": [
-                    "FrequencyOfPayment"
-                ]
+                "required": ["FrequencyOfPayment"]
             }
         ]
     },
@@ -245,19 +209,13 @@
             "upi": {
                 "type": "boolean",
                 "title": " UPI",
-                "enum": [
-                    true,
-                    false
-                ],
+                "enum": [true, false],
                 "default": true
             },
             "bankAccount": {
                 "type": "boolean",
                 "title": " Bank Account",
-                "enum": [
-                    true,
-                    false
-                ],
+                "enum": [true, false],
                 "default": false
             }
         },
@@ -284,10 +242,7 @@
                             "format": "phone-in"
                         }
                     },
-                    "required": [
-                        "UPI_ID",
-                        "upiPhoneNumber"
-                    ]
+                    "required": ["UPI_ID", "upiPhoneNumber"]
                 }
             },
             {
@@ -322,20 +277,11 @@
                         "accountType": {
                             "type": "string",
                             "title": "Account Type",
-                            "enum": [
-                                "Current",
-                                "Savings"
-                            ],
+                            "enum": ["Current", "Savings"],
                             "default": "Current"
                         }
                     },
-                    "required": [
-                        "AccountNumber",
-                        "ifscCode",
-                        "BankName",
-                        "Branch",
-                        "accountType"
-                    ]
+                    "required": ["AccountNumber", "ifscCode", "BankName", "Branch", "accountType"]
                 }
             }
         ]

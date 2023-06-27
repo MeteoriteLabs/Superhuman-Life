@@ -1,10 +1,10 @@
 {
     "title": "Account Verification",
-    "type":"object",
-    "properties":{
-    "Verification_ID": {
-        "type": "string",
-        "title": "Verification"
+    "type": "object",
+    "properties": {
+        "Verification_ID": {
+            "type": "string",
+            "title": "Verification"
+        }
     }
 }
-}      

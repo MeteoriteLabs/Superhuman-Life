@@ -11,102 +11,106 @@ import { useQuery } from '@apollo/client';
 import { flattenObj } from '../../../../../components/utils/responseFlatten';
 
 const Goals: React.FC = () => {
-  const CreateGoalComponent = useRef<any>(null);
-  const [goals, setGoals] = useState<any>([]);
-  const last = window.location.pathname.split('/').pop();
+    const CreateGoalComponent = useRef<any>(null);
+    const [goals, setGoals] = useState<any>([]);
+    const last = window.location.pathname.split('/').pop();
 
-  const settings = {
-    dots: true,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 3,
-    initialSlide: 0,
-    responsive: [
-      {
-        breakpoint: 1350,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-          infinite: true,
-          dots: true
-        }
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          initialSlide: 1
-        }
-      }
-    ]
-  };
+    const settings = {
+        dots: true,
+        infinite: false,
+        speed: 500,
+        slidesToShow: 3,
+        slidesToScroll: 3,
+        initialSlide: 0,
+        responsive: [
+            {
+                breakpoint: 1350,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 2,
+                    infinite: true,
+                    dots: true
+                }
+            },
+            {
+                breakpoint: 600,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                    initialSlide: 1
+                }
+            }
+        ]
+    };
 
-  function getDate(time: any) {
-    const dateObj = new Date(time);
-    const month = dateObj.getMonth() + 1;
-    const year = dateObj.getFullYear();
-    const date = dateObj.getDate();
+    function getDate(time: any) {
+        const dateObj = new Date(time);
+        const month = dateObj.getMonth() + 1;
+        const year = dateObj.getFullYear();
+        const date = dateObj.getDate();
 
-    return `${date}-${month}-${year}`;
-  }
+        return `${date}-${month}-${year}`;
+    }
 
-  const fetchData = useQuery(GET_GOALS_NEW, { variables: { id: last }, onCompleted: loadData });
+    const fetchData = useQuery(GET_GOALS_NEW, { variables: { id: last }, onCompleted: loadData });
 
-  function loadData(data: any) {
-    const flattenData = flattenObj({ ...data });
-    setGoals(flattenData);
-  }
+    function loadData(data: any) {
+        const flattenData = flattenObj({ ...data });
+        setGoals(flattenData);
+    }
 
-  function refetchQueryCallback() {
-    fetchData.refetch();
-  }
+    function refetchQueryCallback() {
+        fetchData.refetch();
+    }
 
-  return (
-    <div>
-      <div>
-        <div className="border rounded border-dark bg-secondary pt-1 mb-2">
-          <Row className="d-flex justify-content-between mr-4 ml-1">
-            <h5 className="text-white font-weight-bold ml-3 p-1 ">Goals</h5>
+    return (
+        <div>
             <div>
-              <Button
-                variant="outline-light"
-                size="sm"
-                onClick={() => {
-                  CreateGoalComponent.current.TriggerForm({
-                    id: null,
-                    type: 'create'
-                  });
-                }}>
-                <i className="fas fa-plus-circle"></i> New Goal
-              </Button>
-              <CreateGoal ref={CreateGoalComponent} callback={refetchQueryCallback}></CreateGoal>
+                <div className="border rounded border-dark bg-secondary pt-1 mb-2">
+                    <Row className="d-flex justify-content-between mr-4 ml-1">
+                        <h5 className="text-white font-weight-bold ml-3 p-1 ">Goals</h5>
+                        <div>
+                            <Button
+                                variant="outline-light"
+                                size="sm"
+                                onClick={() => {
+                                    CreateGoalComponent.current.TriggerForm({
+                                        id: null,
+                                        type: 'create'
+                                    });
+                                }}
+                            >
+                                <i className="fas fa-plus-circle"></i> New Goal
+                            </Button>
+                            <CreateGoal
+                                ref={CreateGoalComponent}
+                                callback={refetchQueryCallback}
+                            ></CreateGoal>
+                        </div>
+                    </Row>
+                </div>
+                <div className="w-95 ml-5 mr-5 mt-3">
+                    <Slider {...settings}>
+                        {goals.userGoals.length > 0 &&
+                            [...goals.userGoals].map((Detail, index) => {
+                                return (
+                                    <GoalCard
+                                        key={index}
+                                        click={() => {
+                                            window.location.href = `/pillar/${Detail.id}/${last}`;
+                                        }}
+                                        goalName={Detail?.goals[0]?.name}
+                                        startDate={getDate(Date.parse(Detail?.start))}
+                                        endDate={getDate(Date.parse(Detail?.end))}
+                                        updatedBy={Detail?.assigned_by[0]?.username}
+                                        updatedOn={getDate(Date.parse(Detail?.updatedAt))}
+                                    />
+                                );
+                            })}
+                    </Slider>
+                </div>
             </div>
-          </Row>
-        </div>
-        <div className="w-95 ml-5 mr-5 mt-3">
-          <Slider {...settings}>
-            {goals.userGoals.length > 0 &&
-              [...goals.userGoals].map((Detail, index) => {
-                return (
-                  <GoalCard
-                    key={index}
-                    click={() => {
-                      window.location.href = `/pillar/${Detail.id}/${last}`;
-                    }}
-                    goalName={Detail?.goals[0]?.name}
-                    startDate={getDate(Date.parse(Detail?.start))}
-                    endDate={getDate(Date.parse(Detail?.end))}
-                    updatedBy={Detail?.assigned_by[0]?.username}
-                    updatedOn={getDate(Date.parse(Detail?.updatedAt))}
-                  />
-                );
-              })}
-          </Slider>
-        </div>
-      </div>
-      {/* <div className="mt-4">
+            {/* <div className="mt-4">
                     <div className="border rounded border-dark bg-secondary pt-1 mb-2">
                          <Row className="d-flex justify-content-between mr-4 ml-1">
                               <h5 className="text-white font-weight-bold ml-3 p-1 ">Milestones</h5>
@@ -170,8 +174,8 @@ const Goals: React.FC = () => {
                          </Slider>
                     </div>
                </div> */}
-    </div>
-  );
+        </div>
+    );
 };
 
 export default Goals;

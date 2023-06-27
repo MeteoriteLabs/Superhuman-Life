@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo } from 'react';
 import {
     Badge,
     Button,
@@ -8,9 +8,9 @@ import {
     OverlayTrigger,
     Popover,
     TabContent
-} from "react-bootstrap";
-import CreateFitnessPackageModal from "../../../components/CreateFitnessPackageModal/CreateFitnessPackageModal";
-import Table from "../../../components/table";
+} from 'react-bootstrap';
+import CreateFitnessPackageModal from '../../../components/CreateFitnessPackageModal/CreateFitnessPackageModal';
+import Table from '../../../components/table';
 
 function PaymentWidget({ formData }: any) {
     return (
@@ -19,9 +19,7 @@ function PaymentWidget({ formData }: any) {
                 <Form.Group>
                     <Form.Label>Apply Voucher?</Form.Label>
                     <Form.Control />
-                    <Form.Text className="text-muted">
-                        This voucher can be stored by you.
-                    </Form.Text>
+                    <Form.Text className="text-muted">This voucher can be stored by you.</Form.Text>
                 </Form.Group>
                 <Card.Title>Pricing Plans</Card.Title>
                 <hr />
@@ -66,10 +64,18 @@ function PaymentWidget({ formData }: any) {
                         </tr>
                         <tr>
                             <th>Set Prices</th>
-                            <td><Form.Control /></td>
-                            <td><Form.Control /></td>
-                            <td><Form.Control /></td>
-                            <td><Form.Control /></td>
+                            <td>
+                                <Form.Control />
+                            </td>
+                            <td>
+                                <Form.Control />
+                            </td>
+                            <td>
+                                <Form.Control />
+                            </td>
+                            <td>
+                                <Form.Control />
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -79,117 +85,122 @@ function PaymentWidget({ formData }: any) {
 }
 
 export default function JourneyTab() {
-    const columns = useMemo<any>(() => [
-        { accessor: "id", Header: "#" },
-        {
-            accessor: "image",
-            Header: "-",
-            Cell: (v: any) => <img src={v.value} height="32" alt="thumbnail" />
-        },
-        { accessor: "name", Header: "Name" },
-        { accessor: "type", Header: "Type" },
-        { accessor: "details", Header: "Details" },
-        { accessor: "duration", Header: "Duration" },
-        { accessor: "price", Header: "Price" },
-        {
-            accessor: "status",
-            Header: "Status",
-            Cell: (v: any) => <Badge variant="success">{v.value}</Badge>
-        },
-        {
-            id: "edit",
-            Header: "Actions",
-            Cell: ({ row }: any) => (
-                <OverlayTrigger
-                    trigger="click"
-                    placement="bottom"
-                    overlay={
-                        <Popover id="action-popover">
-                            <Popover.Content>
-                                <Dropdown.Item>View</Dropdown.Item>
-                                <Dropdown.Item>Status</Dropdown.Item>
-                                <Dropdown.Item>Edit</Dropdown.Item>
-                                <Dropdown.Item>Delete</Dropdown.Item>
-                            </Popover.Content>
-                        </Popover>
-                    }
-                >
-                    <Button variant="white">
-                        <i className="fas fa-ellipsis-v"></i>
-                    </Button>
-                </OverlayTrigger>
-            ),
-        }
-    ], []);
-    const data = useMemo<any>(() => [
-        {
-            "id": 1,
-            "image": "/assets/journey-1.jpeg",
-            "name": "Journey-1",
-            "type": "Marathon",
-            "details": "Marathon Details",
-            "duration": "4 Hours",
-            "price": "Free",
-            "status": "Active"
-        },
-        {
-            "id": 2,
-            "image": "/assets/journey-1.jpeg",
-            "name": "Journey-2",
-            "type": "Marathon",
-            "details": "Marathon Details",
-            "duration": "4 Hours",
-            "price": "Free",
-            "status": "Active"
-        }
-    ], []);
-    const journeySchema: any = require("./journey.json");
+    const columns = useMemo<any>(
+        () => [
+            { accessor: 'id', Header: '#' },
+            {
+                accessor: 'image',
+                Header: '-',
+                Cell: (v: any) => <img src={v.value} height="32" alt="thumbnail" />
+            },
+            { accessor: 'name', Header: 'Name' },
+            { accessor: 'type', Header: 'Type' },
+            { accessor: 'details', Header: 'Details' },
+            { accessor: 'duration', Header: 'Duration' },
+            { accessor: 'price', Header: 'Price' },
+            {
+                accessor: 'status',
+                Header: 'Status',
+                Cell: (v: any) => <Badge variant="success">{v.value}</Badge>
+            },
+            {
+                id: 'edit',
+                Header: 'Actions',
+                Cell: ({ row }: any) => (
+                    <OverlayTrigger
+                        trigger="click"
+                        placement="bottom"
+                        overlay={
+                            <Popover id="action-popover">
+                                <Popover.Content>
+                                    <Dropdown.Item>View</Dropdown.Item>
+                                    <Dropdown.Item>Status</Dropdown.Item>
+                                    <Dropdown.Item>Edit</Dropdown.Item>
+                                    <Dropdown.Item>Delete</Dropdown.Item>
+                                </Popover.Content>
+                            </Popover>
+                        }
+                    >
+                        <Button variant="white">
+                            <i className="fas fa-ellipsis-v"></i>
+                        </Button>
+                    </OverlayTrigger>
+                )
+            }
+        ],
+        []
+    );
+    const data = useMemo<any>(
+        () => [
+            {
+                id: 1,
+                image: '/assets/journey-1.jpeg',
+                name: 'Journey-1',
+                type: 'Marathon',
+                details: 'Marathon Details',
+                duration: '4 Hours',
+                price: 'Free',
+                status: 'Active'
+            },
+            {
+                id: 2,
+                image: '/assets/journey-1.jpeg',
+                name: 'Journey-2',
+                type: 'Marathon',
+                details: 'Marathon Details',
+                duration: '4 Hours',
+                price: 'Free',
+                status: 'Active'
+            }
+        ],
+        []
+    );
+    const journeySchema: any = require('./journey.json');
     const uiSchema: any = {
-        "1": {
-            "level": {
-                "ui:widget": "radio",
-                "ui:options": {
-                    "inline": true
+        '1': {
+            level: {
+                'ui:widget': 'radio',
+                'ui:options': {
+                    inline: true
                 }
             }
         },
-        "2": {
-            "about": {
-                "ui:widget": "textarea",
-                "ui:autofocus": true,
-                "ui:options": {
-                    "rows": 3
+        '2': {
+            about: {
+                'ui:widget': 'textarea',
+                'ui:autofocus': true,
+                'ui:options': {
+                    rows: 3
                 }
             },
-            "benefits": {
-                "ui:widget": "textarea",
-                "ui:options": {
-                    "rows": 3
+            benefits: {
+                'ui:widget': 'textarea',
+                'ui:options': {
+                    rows: 3
                 }
             }
         },
-        "3": {
-            "mode": {
-                "ui:widget": "radio",
-                "ui:options": {
-                    "inline": true
+        '3': {
+            mode: {
+                'ui:widget': 'radio',
+                'ui:options': {
+                    inline: true
                 }
             }
-        }
-        ,
-        "4": {
-            "schedule": {
-                "ui:placeholder": "Number of days",
+        },
+        '4': {
+            schedule: {
+                'ui:placeholder': 'Number of days'
             }
         },
-        "5": {
-            "ui:field": "payment"
+        '5': {
+            'ui:field': 'payment'
         }
-    }
-    const fields = { payment: PaymentWidget }
+    };
+    const fields = { payment: PaymentWidget };
 
     function onSubmit(formData: any) {
-        alert("Values submitted: " + JSON.stringify(formData, null, 2));
+        alert('Values submitted: ' + JSON.stringify(formData, null, 2));
     }
 
     return (

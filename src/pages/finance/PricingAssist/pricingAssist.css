@@ -1,25 +1,27 @@
-.card-body .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+.card-body .nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
     background-color: white;
     color: black;
     font-weight: bold;
 }
 
 .card-body .card-body {
-    padding: 0.1rem 1.25rem 1.25rem !important; ;
+    padding: 0.1rem 1.25rem 1.25rem !important;
 }
 
-.card-body .card-body .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
-    background-color: #647A8C;
+.card-body .card-body .nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+    background-color: #647a8c;
     border-radius: 20px;
     color: white;
     padding: 0.5rem 3rem;
-    transition: all 0.5s
+    transition: all 0.5s;
 }
 
-.card-body .card-body .nav-link{
+.card-body .card-body .nav-link {
     padding: 0.5rem 3rem;
 }
 
 .nav-pills a {
-    color: #929292 ;
+    color: #929292;
 }

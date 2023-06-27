@@ -1,21 +1,19 @@
-.websiteNav{
-    
+.websiteNav {
     padding-block: 20px;
 }
-.websiteNav_h{
+.websiteNav_h {
     font-size: 14px;
     font-weight: 600;
     padding-inline: 35px;
     padding-top: 35px;
-    
 }
-.websiteNav_ul{
+.websiteNav_ul {
     display: flex;
     gap: 0px;
     flex-direction: column;
 }
 
-.links{
+.links {
     color: #fff;
     width: 100%;
     padding-block: 9px;
@@ -23,7 +21,7 @@
     font-size: 13px;
     text-decoration: none;
 }
-.links:hover{
+.links:hover {
     background-color: #343434;
     color: #fff;
     text-decoration: none;

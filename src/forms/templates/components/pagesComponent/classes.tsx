@@ -1,11 +1,11 @@
 function Classes({
-  section,
-  setSection
+    section,
+    setSection
 }: {
-  section: string;
-  setSection: (param: string) => void;
+    section: string;
+    setSection: (param: string) => void;
 }): JSX.Element {
-  return <div>Classes</div>;
+    return <div>Classes</div>;
 }
 
 export default Classes;

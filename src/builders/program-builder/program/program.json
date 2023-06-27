@@ -1,46 +1,35 @@
 {
-     "1": {
-         "title": "",
-         "type": "object",
-         "required": [
-            "programName",
-            "duration",
-            "level",
-            "discipline",
-            "details"
-         ],
-         "properties": {
-             "programName": {
-                 "type": "string",
-                 "title": "Program Name"
-             },
-             "duration": {
+    "1": {
+        "title": "",
+        "type": "object",
+        "required": ["programName", "duration", "level", "discipline", "details"],
+        "properties": {
+            "programName": {
+                "type": "string",
+                "title": "Program Name"
+            },
+            "duration": {
                 "type": "number",
                 "title": "Duration",
                 "minimum": 1,
                 "maximum": 30,
                 "description": "Define the number of days"
-             },
-             "level": {
-                 "type": "number",
-                 "title": "Level",
-                 "enum": [0, 1, 2, 3],
-                 "enumNames": [
-                     "Beginner",
-                     "Intermediate",
-                     "Advance",
-                     "None"
-                 ]
-             },
-             "discipline": {
+            },
+            "level": {
+                "type": "number",
+                "title": "Level",
+                "enum": [0, 1, 2, 3],
+                "enumNames": ["Beginner", "Intermediate", "Advance", "None"]
+            },
+            "discipline": {
                 "type": "string",
                 "description": "Choose the relevant discipline for the program template"
-             },
+            },
             "details": {
                 "type": "string",
                 "title": "Details",
                 "description": "Summary of the program template"
             }
-         }
-     }
- }
+        }
+    }
+}
