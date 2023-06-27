@@ -672,13 +672,13 @@ const WorkHours = () => {
   function handleAddHoliday(date: any, event: any) {
     const values = availability.find((item: any) => item.date === date);
     if (values) {
-      if (values.AllSlots.length > 0) {
+      if (values.AllSlots && values.AllSlots.length) {
         // set a modal to display the error
         setHolidayConflicts([values]);
         setHolidayErr(true);
       }
     } else {
-      if (values.Is_holiday === false) {
+      if (!values.Is_holiday) {
         updateChangemakerAvailabilityHoliday({
           variables: {
             id: values.id,

@@ -764,7 +764,7 @@ const Schedular = (props: any) => {
       (x: any) =>
         moment(x.date).format('YYYY-MM-DD') === moment(addedEventDate).format('YYYY-MM-DD')
     );
-    const availabilitySlots = availability ? [...availability.booking_slots] : [];
+    const availabilitySlots = availability ? [...availability.AllSlots] : [];
     if (availabilitySlots.length > 0) {
       for (let x = 0; x < availabilitySlots.length; x++) {
         if (
@@ -942,7 +942,7 @@ const Schedular = (props: any) => {
       (x: any) =>
         moment(x.date).format('YYYY-MM-DD') === moment(addedEventDate).format('YYYY-MM-DD')
     );
-    const availabilitySlots = availability ? [...availability.booking_slots] : [];
+    const availabilitySlots = availability ? [...availability.AllSlots] : [];
     if (availabilitySlots.length > 0) {
       for (let x = 0; x < availabilitySlots.length; x++) {
         if (
@@ -1408,7 +1408,7 @@ const Schedular = (props: any) => {
       (x: any) =>
         moment(x.date).format('YYYY-MM-DD') === moment(addedEventDate).format('YYYY-MM-DD')
     );
-    const availabilitySlots = availability ? [...availability.booking_slots] : [];
+    const availabilitySlots = availability ? [...availability.AllSlots] : [];
     if (availabilitySlots.length > 0) {
       for (let x = 0; x < availabilitySlots.length; x++) {
         if (
