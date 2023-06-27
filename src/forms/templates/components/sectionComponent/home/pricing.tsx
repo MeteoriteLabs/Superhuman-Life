@@ -9,7 +9,7 @@ import { ChangeMakerWebsiteContext } from '../../../../../context/changemakerWeb
 import { useMutation, useQuery } from '@apollo/client';
 import { ArrowDownShort } from 'react-bootstrap-icons';
 import { Data, FormData, InputProps } from './@types/pricingType';
-import { InputComponent } from './components/pricingComponents';
+import { InputComponent } from './components/PricingComponents';
 import { FormatStateToServerData, SetReceivingDataAndReset } from './libs/pricing';
 import Toaster from '../../../../../components/Toaster';
 
