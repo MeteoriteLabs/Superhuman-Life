@@ -1,103 +1,69 @@
-import { useContext, useState } from 'react';
-import { Form, InputGroup, Tooltip, Button, OverlayTrigger } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
+import { useContext } from 'react';
 import { ChangeMakerWebsiteContext } from '../../../context/changemakerWebsite-context';
+import { ThreeDots } from 'react-bootstrap-icons';
 
 function WebsiteBuilder_settings(): JSX.Element {
-  const [edit, setEdit] = useState({
-    subdomain: false,
-    domain: false
-  });
-  const navigate = useHistory();
-
-  const { setChangemakerWebsiteState, changemakerWebsiteState } =
-    useContext(ChangeMakerWebsiteContext);
+  const { changemakerWebsiteState } = useContext(ChangeMakerWebsiteContext);
 
   return (
     <>
       <h1>Website Builder</h1>
       <hr />
       <div>
-        <div className="mt-5">
-          <div className="mb-4">
-            <h4 className="mb-2" style={{ fontSize: 16, fontWeight: 600 }}>
-              Community Website
-            </h4>
-            <InputGroup className="mb-3" style={{ cursor: 'pointer' }}>
-              <Form.Control
-                placeholder="example-domain.sapien.systems"
-                aria-label="subdomain"
-                disabled={!edit.subdomain}
-                value={changemakerWebsiteState.subdomain ? changemakerWebsiteState.subdomain : ''}
-                onChange={(e) =>
-                  setChangemakerWebsiteState({
-                    ...changemakerWebsiteState,
-                    subdomain: e.target.value
-                  })
-                }
-              />
-              <Button
-                className="btn-light ml-1"
-                onClick={() => setEdit({ ...edit, subdomain: !edit.subdomain })}>
-                🖋️
-              </Button>
-            </InputGroup>
+        <div className="mt-5 d-flex" style={{ width: '100%', gap: '60px' }}>
+          <div
+            className="mb-4"
+            style={{
+              width: '100%',
+              background: '#000',
+              padding: 20,
+              borderRadius: 10,
+              boxShadow:
+                'rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px'
+            }}>
+            <div className="d-flex justify-content-between align-items-center">
+              <h4 className="mb-2" style={{ fontSize: 18, fontWeight: 800, color: '#fff' }}>
+                Community Website
+              </h4>
+              <ThreeDots color="#fff" fill="#fff" fontSize={22} />
+            </div>
+            <div
+              style={{
+                color: '#fff',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: '20px 0px'
+              }}>
+              {changemakerWebsiteState.subdomain ? changemakerWebsiteState.subdomain : ''}
+            </div>
           </div>
-          <div className="mb-4">
-            <h4 style={{ fontSize: 16, fontWeight: 600 }} className="mb-2">
-              Personal Website
-            </h4>
-            <InputGroup className="mb-3" style={{ cursor: 'pointer' }}>
-              <Form.Control
-                placeholder="www.example-domain.com"
-                aria-label="subdomain"
-                disabled={!edit.domain}
-                value={changemakerWebsiteState.domain ? changemakerWebsiteState.domain : ''}
-                onChange={(e) =>
-                  setChangemakerWebsiteState({
-                    ...changemakerWebsiteState,
-                    domain: e.target.value
-                  })
-                }
-              />
-              <Button
-                className="btn-light ml-1"
-                onClick={() => setEdit({ ...edit, domain: !edit.domain })}>
-                🖋️
-              </Button>
-            </InputGroup>
-          </div>
-          <div className="mb-4">
-            <h4 style={{ fontSize: 16, fontWeight: 600 }} className="mb-2">
-              Selected Template
-            </h4>
-            <InputGroup className="mb-3" style={{ cursor: 'pointer' }}>
-              <Form.Control
-                placeholder="example-domain.sapien.systems"
-                aria-label="subdomain"
-                disabled
-                value={
-                  changemakerWebsiteState.selectedTemplate
-                    ? changemakerWebsiteState.selectedTemplate
-                    : ''
-                }
-                onChange={(e) =>
-                  setChangemakerWebsiteState({
-                    ...changemakerWebsiteState,
-                    selectedTemplate: e.target.value
-                  })
-                }
-              />
-              <OverlayTrigger
-                placement="top"
-                overlay={<Tooltip id="overlay-example">Browse Templates</Tooltip>}>
-                <Button
-                  className="btn-light ml-1"
-                  onClick={() => navigate.push('/website/templates')}>
-                  →
-                </Button>
-              </OverlayTrigger>
-            </InputGroup>
+          <div
+            className="mb-4"
+            style={{
+              width: '100%',
+              background: '#000',
+              padding: 20,
+              borderRadius: 10,
+              boxShadow:
+                'rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px'
+            }}>
+            <div className="d-flex justify-content-between align-items-center">
+              <h4 className="mb-2" style={{ fontSize: 18, fontWeight: 800, color: '#fff' }}>
+                Personal Website
+              </h4>
+              <ThreeDots color="#fff" fill="#fff" fontSize={22} />
+            </div>
+            <div
+              style={{
+                color: '#fff',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: '20px 0px'
+              }}>
+              {changemakerWebsiteState.domain ? changemakerWebsiteState.domain : 'Not Selected'}
+            </div>
           </div>
         </div>
       </div>
