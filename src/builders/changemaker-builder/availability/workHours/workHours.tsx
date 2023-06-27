@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   Row,
   Col,
@@ -10,8 +10,7 @@ import {
   Alert,
   FormControl,
   InputGroup,
-  Spinner,
-  
+  Spinner
 } from "react-bootstrap";
 import moment from "moment";
 import Calendar from "react-calendar";
@@ -36,7 +35,6 @@ import TimePicker from "rc-time-picker";
 import "rc-time-picker/assets/index.css";
 import "./styles.css";
 import Toaster from '../../../../components/Toaster';
-
 import { flattenObj } from "../../../../components/utils/responseFlatten";
 
 const configTemplate: any = {
@@ -77,7 +75,7 @@ const configTemplate: any = {
   },
 };
 
-const WorkHours = () => {
+const WorkHours: React.FC = () => {
   const auth = useContext(AuthContext);
   const [value, onChange] = useState(new Date());
   const [holidays, setHolidays] = useState<any>([]);
@@ -111,6 +109,7 @@ const WorkHours = () => {
   const [disableAdd, setDisableAdd] = useState<boolean>(false);
   const [classMode, setClassMode] = useState<string>("");
   const [errMsg, setErrMsg] = useState<string | null>();
+  const [slotErr, setSlotErr] = useState(false);
 
   useEffect(() => {
     setDate(moment(value).format("YYYY-MM-DD"));
@@ -406,8 +405,6 @@ const WorkHours = () => {
     }
     return result;
   }
-
-  const [slotErr, setSlotErr] = useState(false);
 
   function handleWorkTime(
     fromTime: any,
@@ -1176,13 +1173,7 @@ const WorkHours = () => {
           </Row>
           <Row>
             <Col lg={{ span: 8, offset: 4 }}>
-              {/* <div
-                className="mt-2"
-                style={{ display: `${toast ? "block" : "none"}` }}
-              > */}
-                {/* <Alert variant={"success"}>Successfully Added Slot!</Alert> */}
                { toast ?  (<Toaster handleCallback={() =>  setErrMsg("Successfully Added Slot!")} type={'success'} msg="Successfully Added Slot!" />) : null }
-              {/* </div> */}
             </Col>
           </Row>
           <Row className="mt-4" style={{ textAlign: "start" }}>
