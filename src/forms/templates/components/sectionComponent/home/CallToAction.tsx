@@ -1,40 +1,41 @@
 import { useForm, Controller } from 'react-hook-form';
 import style from '../style.module.css';
 import { Button, Form } from 'react-bootstrap';
-import { useMutation, useQuery } from '@apollo/client';
-import { UPDATE_WEBSITE_SECTION } from './queries/hero';
-import { GET_WEBSITE_SECTION } from './queries';
 import authContext from '../../../../../context/auth-context';
 import { useContext, useEffect, useState } from 'react';
 import { ChangeMakerWebsiteContext } from '../../../../../context/changemakerWebsite-context';
+import { GET_WEBSITE_SECTION } from './queries';
+import { useMutation, useQuery } from '@apollo/client';
+import { UPDATE_WEBSITE_SECTION } from './queries/cta';
 import Toaster from '../../../../../components/Toaster';
 
 type FormData = {
+  sectionId: number;
   title: string;
-  description: string;
-  image: string;
+  buttonText: string;
+  link: string;
 };
 
-function Hero(): JSX.Element {
+function CallToAction(): JSX.Element {
   const auth = useContext(authContext);
   const [errorMsg, setErrorMsg] = useState<string>('');
-  const [initialValues, setInitialValues] = useState({
+  const [initialValues, setInitialValues] = useState<FormData>({
+    sectionId: 0,
     title: '',
-    description: '',
-    image: '',
-    sectionId: ''
+    buttonText: '',
+    link: '/'
   });
 
   const {
     handleSubmit,
     control,
-    formState: { errors },
-    reset
+    reset,
+    formState: { errors }
   } = useForm<FormData>({
     defaultValues: {
       title: initialValues.title,
-      description: initialValues.description,
-      image: initialValues.image
+      buttonText: initialValues.buttonText,
+      link: initialValues.link
     }
   });
 
@@ -45,20 +46,21 @@ function Hero(): JSX.Element {
     variables: {
       id: auth.userid,
       sectionPage: 'Home',
-      sectionType: 'Hero'
+      sectionType: 'CTA'
     },
     onCompleted: (data) => {
       setInitialValues({
         ...initialValues,
         sectionId: data.websiteSections.data[0].id,
         title: data.websiteSections.data[0].attributes.sectionData.title,
-        description: data.websiteSections.data[0].attributes.sectionData.description,
-        image: data.websiteSections.data[0].attributes.sectionData.image
+        buttonText: data.websiteSections.data[0].attributes.sectionData.button.text,
+        link: data.websiteSections.data[0].attributes.sectionData.button.link
       });
+
       reset({
         title: data.websiteSections.data[0].attributes.sectionData.title,
-        description: data.websiteSections.data[0].attributes.sectionData.description,
-        image: data.websiteSections.data[0].attributes.sectionData.image
+        buttonText: data.websiteSections.data[0].attributes.sectionData.button.text,
+        link: data.websiteSections.data[0].attributes.sectionData.button.link
       });
     }
   });
@@ -67,14 +69,14 @@ function Hero(): JSX.Element {
 
   const onSubmit = handleSubmit(async (formData) => {
     // ! Need to add image upload
-    const { title, description, image } = formData;
+    const { title, buttonText, link } = formData;
 
     await mutateFunction({
       variables: {
         id: initialValues.sectionId,
         title: title ? title : initialValues.title,
-        desc: description ? description : initialValues.description,
-        image: image ? image : initialValues.image
+        buttonText: buttonText ? buttonText : initialValues.buttonText,
+        link: link ? link : initialValues.link
       }
     });
   });
@@ -89,7 +91,7 @@ function Hero(): JSX.Element {
   return (
     <div className={style.form_container}>
       <Form onSubmit={onSubmit} className={style.form}>
-        <Form.Group controlId="title">
+        <Form.Group controlId="home_cta">
           <Form.Label className={style.label_text}>Title</Form.Label>
           <Controller
             name="title"
@@ -105,10 +107,10 @@ function Hero(): JSX.Element {
 
           {errors.title && <p>{errors.title.message}</p>}
         </Form.Group>
-        <Form.Group controlId="description">
-          <Form.Label className={style.label_text}>Description</Form.Label>
+        <Form.Group controlId="home_cta">
+          <Form.Label>Button </Form.Label>
           <Controller
-            name="description"
+            name="buttonText"
             control={control}
             render={({ field }) => (
               <Form.Control
@@ -119,29 +121,28 @@ function Hero(): JSX.Element {
             )}
           />
 
-          {errors.description && (
-            <Form.Control.Feedback tooltip>{errors.description.message}</Form.Control.Feedback>
+          {errors.buttonText && (
+            <Form.Control.Feedback tooltip>{errors.buttonText.message}</Form.Control.Feedback>
           )}
         </Form.Group>
-        <Form.Group controlId="hero image">
-          <Form.Label className={style.label_text}>Hero Image</Form.Label>
+        <Form.Group controlId="home_cta">
+          <Form.Label>Button Link </Form.Label>
           <Controller
-            name="image"
+            name="link"
             control={control}
             render={({ field }) => (
               <Form.Control
-                type="file"
-                accept="image/*"
+                type="textarea"
                 className={style.input_text}
                 as="input"
                 {...field}></Form.Control>
             )}
           />
-          {errors.image && (
-            <Form.Control.Feedback tooltip>{errors.image.message}</Form.Control.Feedback>
+
+          {errors.link && (
+            <Form.Control.Feedback tooltip>{errors.link.message}</Form.Control.Feedback>
           )}
         </Form.Group>
-        {/* add */}
         {errorMsg ? (
           <Toaster type="error" msg={errorMsg} handleCallback={() => setErrorMsg('')} />
         ) : null}
@@ -153,4 +154,4 @@ function Hero(): JSX.Element {
   );
 }
 
-export default Hero;
+export default CallToAction;

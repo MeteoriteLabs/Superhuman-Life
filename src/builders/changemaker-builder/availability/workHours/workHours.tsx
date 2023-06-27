@@ -171,6 +171,7 @@ const WorkHours: React.FC = () => {
 
   function handleTodaysSlots(todaysEvents: any, changeMakerAvailability: any) {
     const currentDateWorkHours =
+
     changeMakerAvailability && changeMakerAvailability.length && changeMakerAvailability[0].AllSlots && changeMakerAvailability[0].AllSlots.length > 0
         ? [...changeMakerAvailability[0].AllSlots]
         : [];

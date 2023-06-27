@@ -28,6 +28,7 @@ import API_END_POINTS from '../../components/utils/integration';
 import { PackageDetails } from './Interface';
 import { CREATE_TAG } from './queries';
 
+
 interface PackagePricing {
   duration: number;
   foodPrice?: number;

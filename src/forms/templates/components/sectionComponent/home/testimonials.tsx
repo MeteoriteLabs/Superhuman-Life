@@ -1,47 +1,112 @@
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import style from '../style.module.css';
-import { Button, Form } from 'react-bootstrap';
-
-type FormData = {
-  title: string;
-  testimonial1_name: '';
-  testimonial1_message: '';
-  testimonial1_designation: '';
-  testimonial1_image: '';
-  testimonial2_name: '';
-  testimonial2_message: '';
-  testimonial2_designation: '';
-  testimonial2_image: '';
-  testimonial3_name: '';
-  testimonial3_message: '';
-  testimonial3_designation: '';
-  testimonial3_image: '';
-};
+import { Accordion, Button, Card, Form } from 'react-bootstrap';
+import { useContext, useEffect, useState } from 'react';
+import { useMutation, useQuery } from '@apollo/client';
+import { UPDATE_WEBSITE_SECTION } from './queries/testimonials';
+import authContext from '../../../../../context/auth-context';
+import { SetReceivingDataAndReset } from './libs/testimonials';
+import { Data, FormData, InputProps } from './@types/testimonialsType';
+import { ChangeMakerWebsiteContext } from '../../../../../context/changemakerWebsite-context';
+import { GET_WEBSITE_SECTION } from './queries';
+import { InputComponent } from './components/TestimonialsComponents';
+import { ArrowDownShort } from 'react-bootstrap-icons';
+import Toaster from '../../../../../components/Toaster';
 
 function Hero(): JSX.Element {
+  const auth = useContext(authContext);
+  const [errorMsg, setErrorMsg] = useState<string>('');
+  const [activeKey, setActiveKey] = useState('');
+
+  const handleToggle = (val: string) => {
+    setActiveKey((prev) => (prev === val ? '' : val));
+  };
+
+  // * --------------------- Initial Values ---------------------
+
+  const [initialValues, setInitialValues] = useState<FormData>({
+    title: '',
+    sectionId: 0,
+    testimonials: []
+  });
+  const testimonials: InputProps[] = ['name', 'designation', 'image', 'text'];
+
+  const { setChangemakerWebsiteState, changemakerWebsiteState } =
+    useContext(ChangeMakerWebsiteContext);
+
+  // * --------------------- Form Configuration ---------------------
+
   const {
     handleSubmit,
     control,
+    reset,
     formState: { errors }
   } = useForm<FormData>({
     defaultValues: {
-      title: ''
+      title: '',
+      testimonials: []
     }
   });
-  const onSubmit = handleSubmit((data) => console.log(data));
+
+  const { fields } = useFieldArray<FormData>({
+    control,
+    name: 'testimonials'
+  });
+
+  // * --------------------- Get the Website Section Data ---------------------
+
+  useQuery(GET_WEBSITE_SECTION, {
+    variables: {
+      id: auth.userid,
+      sectionPage: 'Home',
+      sectionType: 'Testimonials'
+    },
+
+    onCompleted: (data: Data) => {
+      const sectionData = data.websiteSections.data[0].attributes.sectionData;
+      console.log('sectionData', sectionData.testimonials[0].text);
+      SetReceivingDataAndReset({ sectionData, reset, setInitialValues, data, initialValues });
+    }
+  });
+
+  // * --------------------- Form Submission ---------------------
+
+  const [mutateFunction, { loading, error }] = useMutation(UPDATE_WEBSITE_SECTION);
+
+  const onSubmit = handleSubmit(async (formData) => {
+    // ! Need to add image upload
+    const { title, testimonials } = formData;
+
+    await mutateFunction({
+      variables: {
+        id: initialValues.sectionId,
+        data: JSON.stringify({
+          title: title ? title : initialValues.title,
+          testimonials: testimonials.length > 0 ? testimonials : initialValues.testimonials
+        })
+      }
+    });
+  });
+
+  useEffect(() => {
+    loading
+      ? setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: true })
+      : setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: false });
+    error ? setErrorMsg(`${error.name}: ${error.message}`) : setErrorMsg('');
+  }, [loading, error]);
 
   return (
-    <div className={style.form}>
-      <Form onSubmit={onSubmit} style={{ width: 257 }}>
+    <div className={style.form_container}>
+      <Form onSubmit={onSubmit} className={style.form}>
         <Form.Group controlId="formBasicEmail">
-          <Form.Label>Title</Form.Label>
+          <Form.Label className={style.label_text}>Title</Form.Label>
           <Controller
             name="title"
             control={control}
             render={({ field }) => (
               <Form.Control
                 type="text"
-                style={{ fontSize: 14 }}
+                className={style.input_text}
                 as="input"
                 {...field}></Form.Control>
             )}
@@ -50,209 +115,53 @@ function Hero(): JSX.Element {
           {errors.title && <p>{errors.title.message}</p>}
         </Form.Group>
 
-        <div style={{ marginTop: 25 }}>
-          <p style={{ fontWeight: 600, marginBottom: 8 }}>Testimonial 1</p>
-          <Form.Group controlId="testimonial1_name">
-            <Form.Label>Title</Form.Label>
-            <Controller
-              name="testimonial1_name"
-              control={control}
-              render={({ field }) => (
-                <Form.Control
-                  type="text"
-                  style={{ fontSize: 14 }}
-                  as="input"
-                  {...field}></Form.Control>
-              )}
-            />
-            {errors.testimonial1_name && <p>{errors.testimonial1_name.message}</p>}
-          </Form.Group>
-          <Form.Group controlId="testimonial1_designation">
-            <Form.Label>Designation</Form.Label>
-            <Controller
-              name="testimonial1_designation"
-              control={control}
-              render={({ field }) => (
-                <Form.Control
-                  type="text"
-                  style={{ fontSize: 14 }}
-                  as="input"
-                  {...field}></Form.Control>
-              )}
-            />
-            {errors.testimonial1_designation && <p>{errors.testimonial1_designation.message}</p>}
-          </Form.Group>
-          <Form.Group controlId="testimonial1_message">
-            <Form.Label>Message</Form.Label>
-            <Controller
-              name="testimonial1_message"
-              control={control}
-              render={({ field }) => (
-                <Form.Control
-                  type="text"
-                  style={{ fontSize: 14 }}
-                  as="input"
-                  {...field}></Form.Control>
-              )}
-            />
-            {errors.testimonial1_message && <p>{errors.testimonial1_message.message}</p>}
-          </Form.Group>
+        {fields.length
+          ? fields.map((item, index) => (
+              <Accordion style={{ padding: 0 }} key={index}>
+                <Accordion style={{ padding: 0 }} key={index}>
+                  <Card style={{ backgroundColor: 'transparent', border: 'none' }}>
+                    <Accordion.Toggle
+                      variant="text"
+                      as={Button}
+                      onClick={() => handleToggle(`${index}`)}
+                      className="text-left d-flex justify-content-between align-items-center"
+                      eventKey={`${index}`}
+                      style={{ padding: '8px 0px' }}>
+                      <p style={{ fontWeight: 600, marginBottom: 8, color: 'white' }}>
+                        Testimonials {index + 1}
+                      </p>
 
-          <Form.Group controlId="testimonial1_image">
-            <Form.Label>Image</Form.Label>
-            <Controller
-              name="testimonial1_image"
-              control={control}
-              render={({ field }) => (
-                <Form.Control
-                  type="file"
-                  style={{ fontSize: 14 }}
-                  as="input"
-                  {...field}></Form.Control>
-              )}
-            />
-            {errors.testimonial1_image && <p>{errors.testimonial1_image.message}</p>}
-          </Form.Group>
-        </div>
+                      <ArrowDownShort
+                        fill="#fff"
+                        size="20"
+                        style={{
+                          rotate: activeKey === `${index}` ? '180deg' : '0deg',
+                          transition: 'all .3s ease-in-out'
+                        }}
+                      />
+                    </Accordion.Toggle>
 
-        <div style={{ marginTop: 25 }}>
-          <p style={{ fontWeight: 600, marginBottom: 8 }}>Testimonial 2</p>
-          <Form.Group controlId="testimonial2_name">
-            <Form.Label>Title</Form.Label>
-            <Controller
-              name="testimonial2_name"
-              control={control}
-              render={({ field }) => (
-                <Form.Control
-                  type="text"
-                  style={{ fontSize: 14 }}
-                  as="input"
-                  {...field}></Form.Control>
-              )}
-            />
-            {errors.testimonial2_name && <p>{errors.testimonial2_name.message}</p>}
-          </Form.Group>
-          <Form.Group controlId="testimonial2_designation">
-            <Form.Label>Designation</Form.Label>
-            <Controller
-              name="testimonial2_designation"
-              control={control}
-              render={({ field }) => (
-                <Form.Control
-                  type="text"
-                  style={{ fontSize: 14 }}
-                  as="input"
-                  {...field}></Form.Control>
-              )}
-            />
-            {errors.testimonial2_designation && <p>{errors.testimonial2_designation.message}</p>}
-          </Form.Group>
-          <Form.Group controlId="testimonial2_message">
-            <Form.Label>Message</Form.Label>
-            <Controller
-              name="testimonial2_message"
-              control={control}
-              render={({ field }) => (
-                <Form.Control
-                  type="text"
-                  style={{ fontSize: 14 }}
-                  as="input"
-                  {...field}></Form.Control>
-              )}
-            />
-            {errors.testimonial2_message && <p>{errors.testimonial2_message.message}</p>}
-          </Form.Group>
+                    <Accordion.Collapse eventKey={`${index}`}>
+                      <Card.Body>
+                        {testimonials.map((input: InputProps, id) => (
+                          <span key={id + index}>
+                            <InputComponent input={input} index={index} control={control} />
+                          </span>
+                        ))}
+                      </Card.Body>
+                    </Accordion.Collapse>
+                  </Card>
+                </Accordion>
+              </Accordion>
+            ))
+          : null}
 
-          <Form.Group controlId="testimonial2_image">
-            <Form.Label>Image</Form.Label>
-            <Controller
-              name="testimonial2_image"
-              control={control}
-              render={({ field }) => (
-                <Form.Control
-                  type="file"
-                  style={{ fontSize: 14 }}
-                  as="input"
-                  {...field}></Form.Control>
-              )}
-            />
-            {errors.testimonial2_image && <p>{errors.testimonial2_image.message}</p>}
-          </Form.Group>
-        </div>
-        <div style={{ marginTop: 25 }}>
-          <p style={{ fontWeight: 600, marginBottom: 8 }}>Testimonial 3</p>
-          <Form.Group controlId="testimonial3_name">
-            <Form.Label>Title</Form.Label>
-            <Controller
-              name="testimonial3_name"
-              control={control}
-              render={({ field }) => (
-                <Form.Control
-                  type="text"
-                  style={{ fontSize: 14 }}
-                  as="input"
-                  {...field}></Form.Control>
-              )}
-            />
-            {errors.testimonial3_name && <p>{errors.testimonial3_name.message}</p>}
-          </Form.Group>
-          <Form.Group controlId="testimonial3_designation">
-            <Form.Label>Designation</Form.Label>
-            <Controller
-              name="testimonial3_designation"
-              control={control}
-              render={({ field }) => (
-                <Form.Control
-                  type="text"
-                  style={{ fontSize: 14 }}
-                  as="input"
-                  {...field}></Form.Control>
-              )}
-            />
-            {errors.testimonial3_designation && <p>{errors.testimonial3_designation.message}</p>}
-          </Form.Group>
-          <Form.Group controlId="testimonial3_message">
-            <Form.Label>Message</Form.Label>
-            <Controller
-              name="testimonial3_message"
-              control={control}
-              render={({ field }) => (
-                <Form.Control
-                  type="text"
-                  style={{ fontSize: 14 }}
-                  as="input"
-                  {...field}></Form.Control>
-              )}
-            />
-            {errors.testimonial3_message && <p>{errors.testimonial3_message.message}</p>}
-          </Form.Group>
-
-          <Form.Group controlId="testimonial3_image">
-            <Form.Label>Image</Form.Label>
-            <Controller
-              name="testimonial3_image"
-              control={control}
-              render={({ field }) => (
-                <Form.Control
-                  type="file"
-                  style={{ fontSize: 14 }}
-                  as="input"
-                  {...field}></Form.Control>
-              )}
-            />
-            {errors.testimonial3_image && <p>{errors.testimonial3_image.message}</p>}
-          </Form.Group>
-        </div>
-
-        <Button
-          variant="primary"
-          type="submit"
-          style={{
-            paddingBlock: 4,
-            float: 'right',
-            marginBlock: 20,
-            marginBottom: 70
-          }}>
+        <hr className={style.break_line} />
+        {/* add */}
+        {errorMsg ? (
+          <Toaster type="error" msg={errorMsg} handleCallback={() => setErrorMsg('')} />
+        ) : null}
+        <Button variant="primary" type="submit" className={style.submit_button}>
           Submit
         </Button>
       </Form>

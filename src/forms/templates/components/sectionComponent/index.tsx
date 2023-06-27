@@ -1,4 +1,4 @@
-import Cta from './home/cta';
+import CallToAction from './home/CallToAction';
 import Features from './home/features';
 import Hero from './home/hero';
 import Pricing from './home/pricing';
@@ -8,7 +8,7 @@ function Index({ section }: { section: string }): JSX.Element {
   const Section = {
     'Home: Hero': <Hero />,
     'Home: Features': <Features />,
-    'Home: Cta': <Cta />,
+    'Home: Cta': <CallToAction />,
     'Home: Pricing': <Pricing />,
     'Home: Testimonials': <Testimonials />
   };
