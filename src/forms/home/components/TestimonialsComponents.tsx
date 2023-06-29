@@ -1,10 +1,7 @@
 import { Control, Controller } from 'react-hook-form';
-import {
-    SetFirstLetterToUpperCase,
-    SplitAtUpperCase
-} from './../../../../../../lib/StringManipulation';
+import { SetFirstLetterToUpperCase, SplitAtUpperCase } from '../../../lib/StringManipulation';
 import { Form } from 'react-bootstrap';
-import { FormData, InputProps } from '../@types/pricingType';
+import { FormData, InputProps } from '../@types/testimonialsType';
 
 export const InputComponent = ({
     input,
@@ -19,7 +16,7 @@ export const InputComponent = ({
         <Form.Group>
             <Form.Label>{SetFirstLetterToUpperCase(SplitAtUpperCase(input))}</Form.Label>
             <Controller
-                name={`plans.${index}.${input}`}
+                name={`testimonials.${index}.${input}`}
                 control={control}
                 render={({ field }) => (
                     <Form.Control

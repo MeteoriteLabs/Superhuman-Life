@@ -1,32 +1,33 @@
 .topTabs {
-    gap: 45px;
+    gap: 40px;
     border-bottom: 0.2px solid #ffffff60;
     display: flex;
     text-align: center;
-    padding: 15px 50px 10px 50px;
+    padding: 15px 30px 10px 20px;
     position: relative;
 }
+
 .borderHeilight {
     position: absolute;
     bottom: -0.5px;
     left: 0;
-    width: 80px;
+    width: 50px;
     height: 2px;
-
     background-color: #704dff;
     transition: all 0.18s ease-in-out;
 }
+
 .tabsCont {
     cursor: pointer;
 }
 .websitePos {
-    left: 33px;
+    left: 16px;
 }
 .themePos {
-    left: 120px;
+    left: 100px;
 }
 .settingsPos {
-    left: 212px;
+    left: 185px;
 }
 .hText {
     margin-bottom: 0;

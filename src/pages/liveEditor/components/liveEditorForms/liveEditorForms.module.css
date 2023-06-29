@@ -5,6 +5,8 @@
     background-color: #242424;
     padding: 0;
     overflow-y: scroll;
-    width:260px;
+    right: 0;
+    top:50px;
+    width: 260px;
     max-width: 260px;
 }

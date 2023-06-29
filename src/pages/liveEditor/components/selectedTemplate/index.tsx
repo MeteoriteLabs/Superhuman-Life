@@ -9,18 +9,19 @@ function Index(): JSX.Element {
         <div
             style={{
                 color: 'white',
-                marginLeft: '115px',
+                width: '90%',
                 overflow: 'hidden',
-                padding: '20px 20px 0 20px'
+                paddingTop: '10px',
+                margin: 'auto'
             }}
         >
-            <div style={{ width: '100vw', height: '89vh' }}>
+            <div style={{ width: '100%', height: '92vh' }}>
                 {changemakerWebsiteState.loading ? (
                     <div
                         style={{
                             background: 'white',
                             width: '100%',
-                            height: '140%',
+                            height: '142%',
                             borderRadius: '10px 10px 0 0',
                             transform: 'scale(.7)',
                             transformOrigin: 'top center'
@@ -35,7 +36,7 @@ function Index(): JSX.Element {
                         style={{
                             background: 'white',
                             width: '100%',
-                            height: '140%',
+                            height: '142%',
                             borderRadius: '10px 10px 0 0',
                             transform: 'scale(.7)',
                             transformOrigin: 'top center'

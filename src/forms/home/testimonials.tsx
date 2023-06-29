@@ -1,17 +1,17 @@
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
-import style from '../style.module.css';
 import { Accordion, Button, Card, Form } from 'react-bootstrap';
 import { useContext, useEffect, useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import { UPDATE_WEBSITE_SECTION } from './queries/testimonials';
-import authContext from '../../../../../context/auth-context';
+import authContext from '../../context/auth-context';
 import { SetReceivingDataAndReset } from './libs/testimonials';
 import { Data, FormData, InputProps } from './@types/testimonialsType';
-import { ChangeMakerWebsiteContext } from '../../../../../context/changemakerWebsite-context';
+import { ChangeMakerWebsiteContext } from '../../context/changemakerWebsite-context';
 import { GET_WEBSITE_SECTION } from './queries';
 import { InputComponent } from './components/TestimonialsComponents';
 import { ArrowDownShort } from 'react-bootstrap-icons';
-import Toaster from '../../../../../components/Toaster';
+import Toaster from '../../components/Toaster';
+import style from '../style.module.css';
 
 function Hero(): JSX.Element {
     const auth = useContext(authContext);
@@ -132,7 +132,7 @@ function Hero(): JSX.Element {
                                       >
                                           <p
                                               style={{
-                                                  fontWeight: 600,
+                                                  fontSize: 14,
                                                   marginBottom: 8,
                                                   color: 'white'
                                               }}

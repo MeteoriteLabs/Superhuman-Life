@@ -34,15 +34,15 @@ function CustomTabs({
         <div>
             <div className={style.topTabs}>
                 <div onClick={() => setActiveTab('website')} className={style.tabsCont}>
-                    <WindowFullscreen fontSize={20} className="mb-2" />
+                    <WindowFullscreen fontSize={15} className="mb-2" />
                     <p className={style.hText}>Website</p>
                 </div>
                 <div onClick={() => setActiveTab('theme')} className={style.tabsCont}>
-                    <img src="/assets/colour 1.png" width={20} className="mb-2" />
+                    <img src="/assets/colour 1.png" width={15} className="mb-2" />
                     <p className={style.hText}>Theme</p>
                 </div>
                 <div onClick={() => setActiveTab('settings')} className={style.tabsCont}>
-                    <Gear fontSize={20} className="mb-2" />
+                    <Gear fontSize={15} className="mb-2" />
                     <p className={style.hText}>Settings</p>
                 </div>
                 <div
