@@ -641,6 +641,14 @@ export const GET_TAG_BY_ID = gql`
                         data {
                             id
                             attributes {
+                                fitness_package_type{
+                                    data{
+                                        id
+                                        attributes{
+                                            type
+                                        }
+                                    }
+                                }
                                 packagename
                                 duration
                                 mode
@@ -706,6 +714,7 @@ export const GET_TAG_BY_ID = gql`
                                             username
                                             First_Name
                                             Last_Name
+                                            Photo_ID
                                         }
                                     }
                                 }

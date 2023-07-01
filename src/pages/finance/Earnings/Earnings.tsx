@@ -170,9 +170,9 @@ export default function Earnings(): JSX.Element {
 
                         amount: `${Detail.Currency} ${Detail.TransactionAmount}`,
                         remark: Detail.TransactionRemarks,
-                        transactionDate: moment(Detail.TransactionDateTime).format(
+                        transactionDate: Detail.TransactionDateTime ? moment(Detail.TransactionDateTime).format(
                             'DD/MM/YYYY, hh:mm'
-                        ),
+                        ) : 'N/A',
                         status: Detail.TransactionStatus,
                         paymentMode: Detail.PaymentMode
                     };

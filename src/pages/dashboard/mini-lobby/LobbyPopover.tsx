@@ -7,7 +7,7 @@ import { LobbyData } from './LobbyData';
 import AuthContext from '../../../context/auth-context';
 import { LobbyColors } from '../dashboard-data/colors';
 import './miniLobby.css';
-import { NavLink, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 export const MiniLobbyComponent = () => {
     const history = useHistory();

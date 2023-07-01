@@ -2,7 +2,19 @@ import { useState, useEffect } from 'react';
 import { GET_TAG_BY_ID } from '../../graphQL/queries';
 import { UPDATE_USERPACKAGE_EFFECTIVEDATE } from '../../graphQL/mutation';
 import { useQuery, useMutation } from '@apollo/client';
-import { Row, Col, Dropdown, Button, Modal, InputGroup, FormControl } from 'react-bootstrap';
+import {
+    Row,
+    Col,
+    Dropdown,
+    Button,
+    Modal,
+    InputGroup,
+    FormControl,
+    Card,
+    CardDeck,
+    Badge,
+    Table
+} from 'react-bootstrap';
 import SchedulerPage from '../../../program-builder/program-template/scheduler';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
@@ -10,22 +22,20 @@ import { flattenObj } from '../../../../components/utils/responseFlatten';
 import '../fitness.css';
 import '../Group/actionButton.css';
 import Loader from '../../../../components/Loader/Loader';
+import DisplayImage from '../../../../components/DisplayImage';
 
 const Scheduler: React.FC = () => {
-    // const auth = useContext(AuthContext);
     const last = window.location.pathname.split('/').reverse();
     const tagId = window.location.pathname.split('/').pop();
-    // const [data, setData] = useState<any[]>([]);
     const [show, setShow] = useState(false);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [userPackage, setUserPackage] = useState<any>([]);
-    // const [tagSeperation, setTagSeperation] = useState<any>([]);
     const [editDatesModal, setEditdatesModal] = useState(false);
     const [startDate, setStartDate] = useState('');
     const [schedulerSessions, setSchedulerSessions] = useState([]);
-    // const [statusDays, setStatusDays] = useState();
+
     const [tag, setTag] = useState<any>();
-    // const [restDays, setRestDays] = useState<any>([]);
+
     const [totalClasses, setTotalClasses] = useState<any>([]);
     let programIndex;
 
@@ -67,100 +77,7 @@ const Scheduler: React.FC = () => {
         setTag(flattenData.tags[0]);
     }
 
-    // const { data: data1 } = useQuery(GET_TABLEDATA, {
-    //     variables: {
-    //         id: last[0]
-    //     }
-    // });
-
-    // const { data: data2 } = useQuery(GET_ALL_CLIENT_PACKAGE_BY_TYPE, {
-    //     variables: {
-    //         id: auth.userid,
-    //         type: "One-On-One"
-    //     },
-    //     onCompleted: () => console.log()
-    // });
-
-    // function handleEventsSeperation(data: any, rest_days: any){
-    //     var ptonline: number = 0;
-    //     var ptoffline: number = 0;
-    //     var classic: number = 0;
-    //     if(data){
-    //         for(var i=0; i<data.length; i++){
-    //             if(data[i].tag === "One-On-One"){
-    //                 if(data[i].mode === 'Online'){
-    //                     ptonline++;
-    //                 }else{
-    //                     ptoffline++;
-    //                 }
-    //             }else if(data[i].tag === 'Classic'){
-    //                 classic++;
-    //             }
-    //         }
-    //         setTagSeperation([ptonline, ptoffline, classic]);
-    //         var arr: any = [];
-    //         for(var j=0; j<data.length; j++){
-    //             if(arr.includes(parseInt(data[j].day)) === false) arr.push(parseInt(data[j].day));
-    //         }
-
-    //         var restDays = rest_days === null ? 0 : rest_days.length;
-    //         setStatusDays(arr.length + restDays);
-    //     }
-    // }
-
-    // function loadData() {
-    //     const flattenData1 = flattenObj({ ...data1 });
-    //     const flattenData2 = flattenObj({ ...data2 });
-    //     setData(
-    //         [...flattenData1.fitnessprograms].map((detail) => {
-    //             return {
-    //                 id: detail.id,
-    //                 programName: detail.title,
-    //                 discipline: detail.fitnessdisciplines.map((val: any) => {
-    //                     return val.disciplinename;
-    //                 }).join(", "),
-    //                 level: detail.level,
-    //                 events: handleEventsSeperation(detail.events, detail.rest_days),
-    //                 duration: detail.duration_days,
-    //                 details: detail.description,
-    //                 restDays: detail.rest_days
-    //             }
-    //         })
-    //     )
-
-    //     setUserPackage(
-    //         [...flattenData2.clientPackages].map((packageItem) => {
-    //             let renewDay: any = '';
-    //             if (packageItem.fitnesspackages.length !== 0) {
-    //                 renewDay = new Date(packageItem.effective_date);
-    //                 renewDay.setDate(renewDay.getDate() + packageItem.fitnesspackages[0].duration)
-    //             }
-    //             return {
-    //                 userPackageId: packageItem.id,
-    //                 id: packageItem.fitnesspackages[0].id,
-    //                 packageName: packageItem.fitnesspackages[0].packagename,
-    //                 duration: packageItem.fitnesspackages[0].duration,
-    //                 details: [packageItem.fitnesspackages[0].ptonline, packageItem.fitnesspackages[0].ptoffline, packageItem.fitnesspackages[0].grouponline, packageItem.fitnesspackages[0].groupoffline, packageItem.fitnesspackages[0].recordedclasses, packageItem.fitnesspackages[0].restdays],
-    //                 effectiveDate: moment(packageItem.effective_date).format("MMMM DD,YYYY"),
-    //                 packageStatus: packageItem.fitnesspackages[0].Status ? "Active" : "Inactive",
-    //                 packageRenewal: moment(renewDay).format("MMMM DD,YYYY"),
-
-    //                 client: packageItem.users_permissions_user.username,
-    //                 clientId: packageItem.users_permissions_user.id,
-    //                 level: packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].level,
-    //                 discipline: packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].fitnessdisciplines,
-    //                 description: packageItem.program_managers.length === 0 ? "" : packageItem?.program_managers[0]?.fitnessprograms[0].description,
-    //                 programName: packageItem.program_managers.length === 0 ? 'N/A' : packageItem.program_managers[0].fitnessprograms[0].title,
-    //                 programId: packageItem.program_managers.length === 0 ? 'N/A' : packageItem.program_managers[0].fitnessprograms[0].id,
-    //                 programStatus: packageItem.program_managers.length === 0 ? 'N/A' : "Assigned",
-    //                 programRenewal: packageItem.program_managers.length === 0 ? 'N/A' : moment(renewDay).format('MMMM DD,YYYY')
-    //             }
-
-    //         })
-    //     )
-    // }
-
-    if (userPackage.length > 0) {
+    if (userPackage.length) {
         programIndex = userPackage.findIndex(
             (item) => item.id === last[1] && item.clientId === last[2]
         );
@@ -192,7 +109,7 @@ const Scheduler: React.FC = () => {
         const formattedSum = handleTimeFormatting(sum, duration);
         return formattedSum;
     }
-
+    console.log(tag);
     if (!show) return <Loader />;
     else
         return (
@@ -205,7 +122,159 @@ const Scheduler: React.FC = () => {
                         <b> back</b>
                     </span>
                 </div>
-                <Row>
+                {/* <CardDeck> */}
+                    <Card style={{ width: '90%' }}>
+                        <Card.Body>
+                            <Row>
+                                <Col lg={10} sm={8}>
+                                    <Card.Title>
+                                        {tag && tag.fitnesspackage?.packagename}
+                                    </Card.Title>
+                                </Col>
+                                <Col>
+                                    <Row className="justify-content-end">
+                                        <Dropdown>
+                                            <Dropdown.Toggle variant="bg-light" id="dropdown-basic">
+                                                <img
+                                                    src="/assets/kebabcase.svg"
+                                                    alt="notification"
+                                                    className="img-responsive "
+                                                    style={{ height: '20px', width: '20px' }}
+                                                />
+                                            </Dropdown.Toggle>
+
+                                            <Dropdown.Menu>
+                                                <Dropdown.Item
+                                                    key={1}
+                                                    // onClick={() => deleteUserAddress(currValue)}
+                                                >
+                                                    Renew subscription
+                                                </Dropdown.Item>
+
+                                                <Dropdown.Item
+                                                    key={2}
+                                                    // onClick={() => updateAddress(currValue)}
+                                                >
+                                                    Edit Program Name
+                                                </Dropdown.Item>
+                                            </Dropdown.Menu>
+                                        </Dropdown>
+                                    </Row>
+                                </Col>
+                            </Row>
+
+                            <Card.Text>
+                                <Badge pill variant="dark" className="p-2">
+                                    {tag.fitnesspackage?.level}
+                                </Badge>
+                                
+                                <br />
+                                <Row>
+                                    <Col lg={9} sm={5}>
+                                        
+                                        <b>Start Date:</b>{' '}
+                                        {tag && tag.client_packages && tag.client_packages.length
+                                            ? moment(tag.client_packages[0].effective_date).format(
+                                                  'DD MMMM, YY'
+                                              )
+                                            : null}
+                                        <br />
+                                        <b>End Date: </b>
+                                        {tag && tag.client_packages && tag.client_packages.length
+                                            ? moment(tag.client_packages[0].effective_date)
+                                                  .add(tag.fitnesspackage?.duration - 1, 'days')
+                                                  .format('DD MMMM, YY')
+                                            : null}
+                                    </Col>
+                                    <Col>
+                                        <DisplayImage
+                                            imageName={
+                                                'Photo_ID' in tag.client_packages &&
+                                                tag.client_packages.length &&
+                                                tag.client_packages[0].users_permissions_user &&
+                                                tag.client_packages[0].users_permissions_user
+                                                    .Photo_ID
+                                                    ? tag.client_packages[0].users_permissions_user
+                                                          .Photo_ID
+                                                    : null
+                                            }
+                                            defaultImageUrl="assets/image_placeholder.svg"
+                                            imageCSS="rounded-circle display_pic text-center img-fluid ml-4 "
+                                        />
+                                        <br />
+                                        <b>
+                                            {tag.client_packages.length &&
+                                            tag.client_packages[0].users_permissions_user &&
+                                            tag.client_packages[0].users_permissions_user.First_Name
+                                                ? tag.client_packages[0].users_permissions_user
+                                                      .First_Name
+                                                : null}{' '}
+                                            {tag.client_packages.length &&
+                                            tag.client_packages[0].users_permissions_user &&
+                                            tag.client_packages[0].users_permissions_user.Last_Name
+                                                ? tag.client_packages[0].users_permissions_user
+                                                      .Last_Name
+                                                : null}
+                                        </b>
+                                    </Col>
+                                </Row>
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
+                    <Card style={{ width: '90%' }} className='mt-3'>
+                        <Card.Body>
+                            <Card.Title>Movement Sessions</Card.Title>
+                            <Card.Text>Last planned session 25 may 2023</Card.Text>
+                            <Row>
+                                <Col lg={8}>
+                            <Table striped bordered hover size="sm">
+                                <thead>
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Total</th>
+                                        <th>Plan Online</th>
+                                        <th>Plan Offline</th>
+                                        <th>Plan Rest</th>
+                                        <th>Completed Online</th>
+                                        <th>Completed Offline</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{tag &&
+                                        tag.fitnesspackage &&
+                                        tag.fitnesspackage.fitness_package_type
+                                            ? tag.fitnesspackage.fitness_package_type.type
+                                            : null}</td>
+                                        <td>365</td>
+                                        <td>{tag &&
+                                        tag.fitnesspackage &&
+                                        tag.fitnesspackage
+                                            ? tag.fitnesspackage?.ptonline
+                                            : null}</td>
+                                        <td>{tag &&
+                                        tag.fitnesspackage &&
+                                        tag.fitnesspackage
+                                            ? tag.fitnesspackage?.ptoffline
+                                            : null}</td>
+                                        <td>365</td>
+                                        <td>Otto</td>
+                                        <td>@mdo</td>
+                                    </tr>
+                                </tbody>
+                            </Table>
+                            </Col>
+                            </Row>
+                            <small className="text-muted">
+                                Note: Plan all the sessions in advance
+                            </small>
+                        </Card.Body>
+
+                        {/* <Card.Footer> */}
+                        {/* </Card.Footer> */}
+                    </Card>
+                {/* </CardDeck> */}
+                {/* <Row>
                     <Col
                         lg={11}
                         className="p-4 shadow-lg bg-white"
@@ -468,7 +537,7 @@ const Scheduler: React.FC = () => {
                             </Dropdown>
                         </Row>
                     </Col>
-                </Row>
+                </Row> */}
                 <Row>
                     <Col lg={11} className="pl-0 pr-0">
                         <div className="mt-5">

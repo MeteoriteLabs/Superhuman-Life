@@ -171,7 +171,7 @@ const Group: React.FC = () => {
                             return (
                                 <>
                                     <Button
-                                        variant="info"
+                                        variant="outline-dark"
                                         size="sm"
                                         className="text-nowrap"
                                         onClick={() => {
