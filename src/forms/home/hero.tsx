@@ -25,7 +25,6 @@ function Hero(): JSX.Element {
         image: '',
         sectionId: ''
     });
-    const [change, setChange] = useState<boolean>(false);
 
     const {
         handleSubmit,
@@ -59,8 +58,7 @@ function Hero(): JSX.Element {
             });
             reset({
                 title: data.websiteSections.data[0].attributes.sectionData.title,
-                description: data.websiteSections.data[0].attributes.sectionData.description,
-                image: data.websiteSections.data[0].attributes.sectionData.image
+                description: data.websiteSections.data[0].attributes.sectionData.description
             });
         }
     });
@@ -68,7 +66,6 @@ function Hero(): JSX.Element {
     const [mutateFunction, { loading, error }] = useMutation(UPDATE_WEBSITE_SECTION);
 
     const onSubmit = handleSubmit(async (formData) => {
-        // ! Need to add image upload
         const { title, description, image } = formData;
 
         await mutateFunction({
@@ -129,26 +126,33 @@ function Hero(): JSX.Element {
                         </Form.Control.Feedback>
                     )}
                 </Form.Group>
-                <Form.Group controlId="image">
-                    <UploadImageToS3WithNativeSdk
-                        allowImage={true}
-                        allowVideo={false}
-                        onChange={() => setChange(change)}
-                        value={change}
-                        title={'Website Images'}
-                        aspectRatio={'1:1'}
+                <Form.Group controlId="description">
+                    <Form.Label className={style.label_text}>Image</Form.Label>
+                    <Controller
+                        name="image"
+                        control={control}
+                        render={({ field }) => (
+                            <UploadImageToS3WithNativeSdk
+                                allowImage={true}
+                                allowVideo={false}
+                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                    field.onChange(event);
+                                }}
+                                value={field.value}
+                                aspectRatio={'1:1'}
+                            />
+                        )}
                     />
-                    {errors.image && (
-                        <Form.Control.Feedback tooltip>
-                            {errors.image.message}
-                        </Form.Control.Feedback>
-                    )}
                 </Form.Group>
+                {errors.image && (
+                    <Form.Control.Feedback tooltip>{errors.image.message}</Form.Control.Feedback>
+                )}
+
                 {/* add */}
                 {errorMsg ? (
                     <Toaster type="error" msg={errorMsg} handleCallback={() => setErrorMsg('')} />
                 ) : null}
-                <Button variant="primary" type="submit" className={style.submit_button}>
+                <Button variant="light" type="submit" className={style.submit_button}>
                     Submit
                 </Button>
             </Form>

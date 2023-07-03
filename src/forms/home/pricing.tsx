@@ -199,7 +199,7 @@ function Hero(): JSX.Element {
                 {errorMsg ? (
                     <Toaster type="error" msg={errorMsg} handleCallback={() => setErrorMsg('')} />
                 ) : null}
-                <Button variant="primary" type="submit" className={style.submit_button}>
+                <Button variant="light" type="submit" className={style.submit_button}>
                     Submit
                 </Button>
             </Form>

@@ -4,25 +4,24 @@
     padding-inline: 15px;
     font-size: 14px;
 }
-
 .label_text {
     margin-bottom: 8px;
     color: 'white';
     font-size: 14px;
 }
-
 .input_text {
     font-size: 14px;
 }
-
 .break_line {
     color: '#fff';
     background-color: '#fff';
 }
-
 .submit_button {
-    padding-block: 4px;
-    float: right;
-    margin-block: 20px;
+    padding-block: 7px;
+    margin-block: 10px;
     margin-bottom: 70px;
+    font-size: 14px;
+    font-weight: 600;
+    position: relative;
+    width: 100%;
 }

@@ -12,6 +12,7 @@ import { InputComponent } from './components/TestimonialsComponents';
 import { ArrowDownShort } from 'react-bootstrap-icons';
 import Toaster from '../../components/Toaster';
 import style from '../style.module.css';
+import UploadImageToS3WithNativeSdk from '../../components/upload/upload';
 
 function Hero(): JSX.Element {
     const auth = useContext(authContext);
@@ -64,7 +65,6 @@ function Hero(): JSX.Element {
 
         onCompleted: (data: Data) => {
             const sectionData = data.websiteSections.data[0].attributes.sectionData;
-            console.log('sectionData', sectionData.testimonials[0].text);
             SetReceivingDataAndReset({ sectionData, reset, setInitialValues, data, initialValues });
         }
     });
@@ -76,7 +76,7 @@ function Hero(): JSX.Element {
     const onSubmit = handleSubmit(async (formData) => {
         // ! Need to add image upload
         const { title, testimonials } = formData;
-
+        console.log('formData', formData);
         await mutateFunction({
             variables: {
                 id: initialValues.sectionId,
@@ -155,11 +155,32 @@ function Hero(): JSX.Element {
                                           <Card.Body>
                                               {testimonials.map((input: InputProps, id) => (
                                                   <span key={id + index}>
-                                                      <InputComponent
-                                                          input={input}
-                                                          index={index}
-                                                          control={control}
-                                                      />
+                                                      {input !== 'image' ? (
+                                                          <InputComponent
+                                                              input={input}
+                                                              index={index}
+                                                              control={control}
+                                                          />
+                                                      ) : (
+                                                          <Controller
+                                                              name={`testimonials.${index}.${input}`}
+                                                              control={control}
+                                                              render={({ field }) => (
+                                                                  <UploadImageToS3WithNativeSdk
+                                                                      {...field}
+                                                                      allowImage={true}
+                                                                      allowVideo={false}
+                                                                      title={'Website Images'}
+                                                                      aspectRatio={'1:1'}
+                                                                      onChange={(
+                                                                          event: React.ChangeEvent<HTMLInputElement>
+                                                                      ) => {
+                                                                          field.onChange(event);
+                                                                      }}
+                                                                  />
+                                                              )}
+                                                          />
+                                                      )}
                                                   </span>
                                               ))}
                                           </Card.Body>
@@ -170,12 +191,10 @@ function Hero(): JSX.Element {
                       ))
                     : null}
 
-                <hr className={style.break_line} />
-                {/* add */}
                 {errorMsg ? (
                     <Toaster type="error" msg={errorMsg} handleCallback={() => setErrorMsg('')} />
                 ) : null}
-                <Button variant="primary" type="submit" className={style.submit_button}>
+                <Button variant="light" type="submit" className={style.submit_button}>
                     Submit
                 </Button>
             </Form>

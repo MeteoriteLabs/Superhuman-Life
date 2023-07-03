@@ -4,6 +4,19 @@
     background-color: #242424;
     height: 50px;
 }
+.topNavCol{
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        color:#fff;
+        transition: all 300ms ease-in-out;
+
+    }
+
+.topNavCol:hover{
+    text-decoration: none;
+    color: #cccccc;
+}
 .svgCont {
     margin-bottom: -15px;
 }
@@ -11,8 +24,4 @@
     margin-bottom: 0;
     font-size: 12px;
 }
-.topNavCol {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
+
