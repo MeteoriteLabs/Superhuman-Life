@@ -68,7 +68,7 @@ const Scheduler: React.FC = () => {
 
         const total = [0];
         const clientValues = [...clientIds];
-        const values = [...flattenData.tags[0].sessions];
+        const values = flattenData.tags ? [...flattenData.tags[0].sessions] : [];
         const ids = [...sessionIds];
         for (let i = 0; i < values.length; i++) {
             ids.push(values[i].id);

@@ -842,7 +842,7 @@ export default function FitnessTab() {
                         </div>
                     ) : (
                         <div>
-                            {value.row.original.status ? (
+                            {value.row.original && value.row.original.status ? (
                                 <Badge
                                     className="px-3 py-1"
                                     style={{ fontSize: '1rem', borderRadius: '10px' }}

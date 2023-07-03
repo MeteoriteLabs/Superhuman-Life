@@ -45,6 +45,7 @@ const Scheduler = () => {
                 total[1] += 1;
             } else if (values[i].tag === 'Group Class' && values[i].mode === 'Online') {
                 total[2] += 1;
+                // eslint-disable-next-line
             } else if (values[i].tag === 'Group Class' && values[i].mode === 'Offline') {
                 total[3] += 1;
             } else {

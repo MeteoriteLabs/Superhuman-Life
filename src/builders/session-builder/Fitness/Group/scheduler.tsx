@@ -91,6 +91,7 @@ const Scheduler = () => {
         }
         for (let i = 0; i < values.length; i++) {
             ids.push(values[i].id);
+            // eslint-disable-next-line
             if (values[i].mode === 'Online') {
                 total[0] += 1;
             } else if (values[i].mode === 'Offline') {
@@ -173,6 +174,7 @@ const Scheduler = () => {
                     level: detail.level,
                     sdate: detail.start_dt,
                     events: handleEventsSeperation(detail.events, detail.rest_days),
+                    // eslint-disable-next-line
                     edate: detail.end_dt,
                     duration: detail.duration_days,
                     details: detail.description,

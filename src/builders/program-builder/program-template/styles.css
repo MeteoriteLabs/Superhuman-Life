@@ -185,8 +185,11 @@
   .icon-text {
     font-size: 20px;
     vertical-align: middle;
-    color: "#fff"
+    color: "#fff";
+    position: relative;
+    bottom:12px;
   }
+  
   
   /* main .sidebar {
     position: absolute;
@@ -221,3 +224,6 @@
     }
   }
    */
+
+
+  

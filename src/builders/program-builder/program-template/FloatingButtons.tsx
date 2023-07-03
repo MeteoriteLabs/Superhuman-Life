@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useRef, useState } from 'react';
-import { Row, Col, Dropdown, DropdownButton, Accordion, Card } from 'react-bootstrap';
+import React, { useEffect, useRef, useState } from 'react';
+import { Row, Col, Dropdown, DropdownButton, Accordion, Card, Collapse } from 'react-bootstrap';
 import CreateEditProgramManager from './create-edit/createoredit-workoutTemplate';
 import CreateEditNewWorkout from './create-edit/createoredit-newWorkout';
 import CreateEditNewActivity from './create-edit/createoredit-newActivity';
@@ -16,6 +16,8 @@ import { flattenObj } from '../../../components/utils/responseFlatten';
 import Icons from '../../../components/Icons';
 import './styles.css';
 import Event from '../../../pages/finance/Invoices/Event/Event';
+import arrowDown from 'public/assets/downarrow.svg';
+import left from 'public/assets/left.svg';
 
 const FloatingButton = (props: any) => {
     const createEditWorkoutTemplateComponent = useRef<any>(null);
@@ -31,23 +33,28 @@ const FloatingButton = (props: any) => {
     const [mini, setMini] = useState(true);
     const [width, setWidth] = useState('250px');
     const [event, setEvent] = useState('');
+    const [open, setOpen] = useState(false);
+    //toggle accordion function
+    const toggleHandler = () => {
+      //switch state
+      setOpen(!open);
+    };
 
     function toggleSidebar() {
         if (mini) {
             console.log('opening sidebar');
-            // document.getElementById("mySidebar").style.width = "250px";
-            // document.getElementById("main").style.marginLeft = "250px";
             setWidth('250px');
             setMini(false);
         } else {
             console.log('closing sidebar');
-            // document.getElementById("mySidebar").style.width = "85px";
-            // document.getElementById("main").style.marginLeft = "85px";
             setWidth('55px');
             setMini(true);
             setEvent('');
         }
     }
+
+    console.log(event);
+   
 
     return (
         <>
@@ -59,16 +66,42 @@ const FloatingButton = (props: any) => {
                 onMouseOver={() => toggleSidebar()}
                 onMouseOut={() => toggleSidebar()}
             >
+                <div className="accordion__item" >
+      <div className="accordion__header" onClick={toggleHandler}>
+        <h4 >Question</h4>
+        <i>
+          {/* <ExpandMoreIcon /> */}
+          <img
+                            // style={{ position: 'relative', bottom: '11px', left: '20px' }}
+                            src="/assets/downarrow.svg"
+                            alt="downarrow"
+                        />
+        </i>
+      </div>
+      <p className="accordion__content">answer</p>
+    </div>
+
+
+
                 <Accordion defaultActiveKey="">
                     {/* AI */}
                     <Accordion.Toggle
                         as={Card.Header}
-                        eventKey="ai"
+                        eventKey='ai'
                         className="bg-dark text-white border-dark"
                         onClick={() => setEvent('ai')}
                     >
                         <Icons name="ai" height={25} width={25} style={{ marginRight: '10px' }} />
-                        <b>AI</b>
+                        <span style={{ position: 'relative', bottom: '12px' }}>AI</span>
+                        {
+                            event === 'ai' ? <Icons name='expandless'/> : 
+                        
+                        <img
+                            style={{ position: 'relative', bottom: '11px', left: '20px' }}
+                            src="/assets/downarrow.svg"
+                            alt="downarrow"
+                        />
+}
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="ai">
                         <Card.Body>
@@ -94,7 +127,12 @@ const FloatingButton = (props: any) => {
                             width={25}
                             style={{ marginRight: '10px' }}
                         />
-                        Create
+                        <span style={{ position: 'relative', bottom: '12px' }}>Create</span>
+                        <img
+                            style={{ position: 'relative', bottom: '11px', left: '20px' }}
+                            src="/assets/downarrow.svg"
+                            alt="downarrow"
+                        />
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="create">
                         <Card.Body className="bg-dark">
@@ -141,29 +179,76 @@ const FloatingButton = (props: any) => {
                             width={25}
                             style={{ marginRight: '10px' }}
                         />
-                        Library
+                        <span style={{ position: 'relative', bottom: '12px' }}>Library</span>
+                        <img
+                            style={{ position: 'relative', bottom: '11px', left: '20px' }}
+                            src="/assets/downarrow.svg"
+                            alt="downarrow"
+                        />
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="library">
-                        <Card.Body>Hello! I am another body</Card.Body>
+                        <Card.Body>
+                            {/* import workout */}
+                            <a
+                                href="#"
+                                onClick={() => {
+                                    createEditWorkoutTemplateComponent.current.TriggerForm({
+                                        id: null,
+                                        type: 'create'
+                                    });
+
+                                    setEvent('');
+                                }}
+                            >
+                                <span className="icon-text">Import Workout</span>
+                            </a>
+                            {/* import template */}
+                            <a
+                                href="#"
+                                onClick={() => {
+                                    props.callback('block');
+                                    setEvent('');
+                                }}
+                            >
+                                <span className="icon-text">Import Template</span>
+                            </a>
+                        </Card.Body>
                     </Accordion.Collapse>
 
                     {/* Active programs */}
                     <Accordion.Toggle
                         as={Card.Header}
-                        eventKey="3"
-                        className="bg-dark text-white"
+                        eventKey="activeprograms"
+                        className="bg-dark text-white "
                         onClick={() => setEvent('activeprograms')}
                     >
                         <Icons
                             name="activeprograms"
-                            height={25}
+                            height={20}
                             width={25}
                             style={{ marginRight: '10px' }}
                         />
-                        Active Programs
+                        <span style={{ position: 'relative', bottom: '12px' }}>
+                            Active Programs
+                        </span>
+                        <img
+                            style={{ position: 'relative', bottom: '11px', left: '20px' }}
+                            src="/assets/downarrow.svg"
+                            alt="downarrow"
+                        />
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="activeprograms">
-                        <Card.Body>Hello! I am another body</Card.Body>
+                        <Card.Body>
+                            <a
+                                href="#"
+                                onClick={() => {
+                                    props.callback2('block');
+                                    setEvent('');
+                                }}
+                            >
+                                <span className="icon-text">Import Sessions</span>
+                            </a>
+                        </Card.Body>
                     </Accordion.Collapse>
 
                     {/* Mark day */}
@@ -179,7 +264,12 @@ const FloatingButton = (props: any) => {
                             width={25}
                             style={{ marginRight: '10px' }}
                         />
-                        Mark Day
+                        <span style={{ position: 'relative', bottom: '11px' }}>Mark Day</span>
+                        <img
+                            style={{ position: 'relative', bottom: '11px', left: '20px' }}
+                            src="/assets/downarrow.svg"
+                            alt="downarrow"
+                        />
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="markday">
                         <Card.Body>
@@ -207,10 +297,28 @@ const FloatingButton = (props: any) => {
                             width={25}
                             style={{ marginRight: '10px', marginTop: '5px' }}
                         />
-                        <span className="ml-1">Views</span>
+                        <span style={{ position: 'relative', bottom: '12px' }}>Views</span>
+                        <img
+                            style={{ position: 'relative', bottom: '11px', left: '20px' }}
+                            src="/assets/downarrow.svg"
+                            alt="downarrow"
+                        />
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="views">
-                        <Card.Body>Hello! I am another body</Card.Body>
+                        <Card.Body>
+                        <a
+                                href="#"
+                                
+                            >
+                                <span className="icon-text">Availability</span>
+                            </a>
+                            <a
+                                href="#"
+                               
+                            >
+                                <span className="icon-text">Routine</span>
+                            </a>
+                        </Card.Body>
                     </Accordion.Collapse>
                 </Accordion>
             </div>
