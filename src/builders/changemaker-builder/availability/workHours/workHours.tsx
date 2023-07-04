@@ -877,7 +877,6 @@ const WorkHours: React.FC = () => {
                             >
                                 {slots[0] !== null &&
                                     slots?.map((item, index: number) => {
-                                        console.log('item is ', item);
                                         return (
                                             <Row
                                                 id={item.id}
