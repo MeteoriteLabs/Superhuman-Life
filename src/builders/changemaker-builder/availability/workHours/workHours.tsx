@@ -36,6 +36,7 @@ import 'rc-time-picker/assets/index.css';
 import './styles.css';
 import Toaster from '../../../../components/Toaster';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
+import { ButtonToolbar } from 'react-bootstrap';
 
 const configTemplate: any = {
     Sunday: {
@@ -789,49 +790,44 @@ const WorkHours: React.FC = () => {
                     </Col>
                     <Col lg={6}>
                         <div style={{ textAlign: 'end' }}>
-                            <DropdownButton variant="info" title="Master Settings" drop="left">
-                                <Dropdown.Item
-                                    eventKey="1"
-                                    onClick={() => {
-                                        setShowDaysModal(true);
-                                    }}
-                                >
-                                    Work Hours
-                                </Dropdown.Item>
-                                <Dropdown.Item
-                                    eventKey="2"
-                                    onClick={() => {
-                                        setShowDatesModal(true);
-                                    }}
-                                >
-                                    Booking Time
-                                </Dropdown.Item>
-                                <Dropdown.Item
-                                    eventKey="2"
+                            <ButtonToolbar style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                <Button
                                     onClick={() => {
                                         setShowDatesRangeModal(true);
                                     }}
+                                    variant="outline-dark"
                                 >
-                                    Dates
-                                </Dropdown.Item>
-                            </DropdownButton>
+                                    Add Holidays
+                                </Button>
+                                <Button
+                                    onClick={() => {
+                                        setShowDaysModal(true);
+                                    }}
+                                    style={{ marginLeft: '15px' }}
+                                    variant="outline-dark"
+                                >
+                                    Add Bulk Slots
+                                </Button>
+                            </ButtonToolbar>
                         </div>
                     </Col>
                 </Row>
-                <div style={{ borderRadius: '20px' }} className="text-center mt-3 p-5 shadow-lg">
-                    <Row style={{ borderBottom: '3px solid gray' }}>
-                        <Col lg={4}>
-                            <h5>Calendar</h5>
-                        </Col>
-                        <Col lg={5}>
-                            <h5>Slots</h5>
-                        </Col>
-                        <Col lg={2}>
-                            <h5>Mode</h5>
-                        </Col>
-                        <Col lg={1}>
-                            <h5>Edit</h5>
-                        </Col>
+                <div style={{ borderRadius: '20px' }} className="text-center mt-3 p-5 ">
+                    <Row
+                        style={{
+                            borderBottom: '3px solid gray',
+                            width: '65%',
+                            marginLeft: '27vw',
+                            letterSpacing: '2px',
+                            fontSize: '24px',
+                            fontFamily: 'Inter',
+                            fontStyle: 'normal',
+                            fontWeight: '700',
+                            display: 'flex',
+                            justifyContent: 'center'
+                        }}
+                    >
+                        {moment(date).format('Do MMMM YYYY, dddd')}
                     </Row>
                     <Row className="mt-3">
                         <Col lg={4}>
@@ -887,61 +883,72 @@ const WorkHours: React.FC = () => {
                                                 id={item.id}
                                                 key={index}
                                                 className="mt-3 pt-1 pb-1 items-center"
+                                                style={{ fontWeight: '600', letterSpacing: '2px' }}
                                             >
-                                                <Col lg={8}>
-                                                    <Row>
-                                                        <Col lg={5}>
+                                                <Col
+                                                    style={{
+                                                        borderRadius: '10px',
+                                                        backgroundColor: '#E5E5E5',
+                                                        overflow: 'hidden' // Add overflow: hidden to contain the background color
+                                                    }}
+                                                    md={10}
+                                                    className="shadow p-1 mb-0 bg-white"
+                                                >
+                                                    <Row className="align-items-center">
+                                                        <Col
+                                                            className="bg-success p-2"
+                                                            style={{
+                                                                flex: '0 0 140px', // Increase the width of the column
+                                                                color: 'white'
+                                                            }}
+                                                        >
+                                                            Available
+                                                        </Col>
+                                                        <Col className="p-2" style={{ flex: '1' }}>
                                                             <div
-                                                                className="shadow-sm"
                                                                 style={{
-                                                                    border: '1px solid gray',
-                                                                    backgroundColor: 'whitesmoke',
-                                                                    padding: '5px',
-                                                                    borderRadius: '10px'
+                                                                    display: 'flex',
+                                                                    justifyContent: 'center'
                                                                 }}
                                                             >
                                                                 <span>
                                                                     {moment(
                                                                         item.start_time,
                                                                         'HH:mm'
-                                                                    ).format('HH:mm')}
+                                                                    ).format('HH:mm A')}
+                                                                    &nbsp;&nbsp;&nbsp;
                                                                 </span>
-                                                            </div>
-                                                        </Col>
-                                                        <Col lg={2}>To</Col>
-                                                        <Col lg={5}>
-                                                            <div
-                                                                className="shadow-sm"
-                                                                style={{
-                                                                    border: '1px solid gray',
-                                                                    backgroundColor: 'whitesmoke',
-                                                                    padding: '5px',
-                                                                    borderRadius: '10px'
-                                                                }}
-                                                            >
+                                                                <span>To&nbsp;&nbsp;&nbsp;</span>
                                                                 <span>
                                                                     {moment(
                                                                         item.end_time,
                                                                         'HH:mm'
-                                                                    ).format('HH:mm')}
+                                                                    ).format('hh:mm A')}
                                                                 </span>
                                                             </div>
                                                         </Col>
+                                                        <Col
+                                                            className="p-2"
+                                                            style={{ flex: '0 0 100px' }}
+                                                        >
+                                                            <span
+                                                                style={{
+                                                                    color:
+                                                                        item.mode === 'Hybrid'
+                                                                            ? '#B79C0C'
+                                                                            : item.mode === 'Online'
+                                                                            ? '#339B31'
+                                                                            : '#D33325'
+                                                                }}
+                                                            >
+                                                                {item.mode}
+                                                            </span>
+                                                        </Col>
                                                     </Row>
                                                 </Col>
-                                                <Col lg={2} className="ml-3">
-                                                    <div
-                                                        style={{
-                                                            border: '1px solid gray',
-                                                            backgroundColor: 'whitesmoke',
-                                                            padding: '5px',
-                                                            borderRadius: '10px'
-                                                        }}
-                                                    >
-                                                        <span>{item.mode}</span>
-                                                    </div>
-                                                </Col>
-                                                <Col lg={1}>
+
+                                                <Col className="p-2">
+                                                    {' '}
                                                     <img
                                                         style={{
                                                             cursor: 'pointer',
@@ -966,7 +973,14 @@ const WorkHours: React.FC = () => {
                     </Row>
                     <Row className="mt-3">
                         <Col>
-                            <Row style={{ borderTop: '3px solid gray' }}></Row>
+                            <Row
+                                style={{
+                                    borderTop: '3px solid gray',
+                                    width: '65%',
+                                    marginLeft: '27vw',
+                                    marginTop: '15px'
+                                }}
+                            ></Row>
                         </Col>
                     </Row>
                     {checkState && (
@@ -1081,8 +1095,8 @@ const WorkHours: React.FC = () => {
                                     }}
                                 >
                                     <option value="none">Select Mode</option>
-                                    <option value="Offline">Online</option>
-                                    <option value="Online">Offline</option>
+                                    <option value="Online">Online</option>
+                                    <option value="Offline">Offline</option>
                                     <option value="Hybrid">Hybrid</option>
                                 </Form.Control>
                             </Col>
@@ -1096,7 +1110,7 @@ const WorkHours: React.FC = () => {
                                     }
                                     disabled={disableAdd || classMode === ''}
                                     style={{ borderRadius: '10px' }}
-                                    variant="info"
+                                    variant="outline-dark"
                                     onClick={() => {
                                         handleWorkTime(fromTime, toTime, classMode, date, holidays);
                                         handleToast();
@@ -1126,48 +1140,6 @@ const WorkHours: React.FC = () => {
                                     msg="Successfully Added Slot!"
                                 />
                             ) : null}
-                        </Col>
-                    </Row>
-                    <Row className="mt-4" style={{ textAlign: 'start' }}>
-                        <Col lg={4}>
-                            <span>
-                                <b>Clients can book session time prior to?</b>
-                            </span>
-                            <br />
-                        </Col>
-                    </Row>
-                    <Row className="mt-3" style={{ textAlign: 'start' }}>
-                        <Col lg={2}>
-                            <span>Online</span>
-                            <div
-                                className="p-2 shadow-sm mt-2"
-                                style={{
-                                    backgroundColor: 'whitesmoke',
-                                    borderRadius: '10px',
-                                    border: '1px solid gray'
-                                }}
-                            >
-                                {handleTimeConversion(
-                                    masterSettings[0]?.booking_lead_time_online_mins
-                                )}{' '}
-                                mins
-                            </div>
-                        </Col>
-                        <Col lg={2}>
-                            <span>Offline</span>
-                            <div
-                                className="p-2 shadow-sm mt-2"
-                                style={{
-                                    backgroundColor: 'whitesmoke',
-                                    borderRadius: '10px',
-                                    border: '1px solid gray'
-                                }}
-                            >
-                                {handleTimeConversion(
-                                    masterSettings[0]?.booking_lead_time_offline_mins
-                                )}{' '}
-                                mins
-                            </div>
                         </Col>
                     </Row>
                 </div>
@@ -1238,24 +1210,24 @@ const WorkHours: React.FC = () => {
                                     {daysOfWeek.map((item: any, index: number) => {
                                         return (
                                             <div key={index}>
-                                                <Col
+                                                <div
                                                     onClick={(e) => {
                                                         setDayIndex(index);
                                                     }}
                                                     key={index}
-                                                    lg={1}
                                                     style={{
                                                         cursor: 'pointer',
                                                         backgroundColor: `${
                                                             dayIndex === index ? '#647a8c' : ''
                                                         }`,
                                                         border: '1px solid black',
-                                                        borderRadius: '20px'
+                                                        borderRadius: '15px',
+                                                        width: '60px'
                                                     }}
-                                                    className="p-0 m-2"
+                                                    className="p-1 m-2"
                                                 >
                                                     {moment(item, 'ddd').format('ddd')}
-                                                </Col>
+                                                </div>
                                             </div>
                                         );
                                     })}
@@ -1526,86 +1498,6 @@ const WorkHours: React.FC = () => {
                                 variant="success"
                                 onClick={() => {
                                     handleUserConfigSubmit(userConfig);
-                                }}
-                            >
-                                Save
-                            </Button>
-                        </Modal.Footer>
-                    </Modal>
-                }
-                {
-                    <Modal
-                        size="lg"
-                        aria-labelledby="contained-modal-title-vcenter"
-                        show={showDatesModal}
-                        centered
-                    >
-                        <Modal.Header
-                            closeButton
-                            onHide={() => {
-                                setShowDatesModal(false);
-                            }}
-                        >
-                            <Modal.Title id="contained-modal-title-vcenter">
-                                Booking Time
-                            </Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <div className="text-center">
-                                <h4>
-                                    <b>Client can book session time prior to?</b>
-                                </h4>
-                                <Form.Group>
-                                    <label>Online Mode</label>
-                                    <div>
-                                        <Form.Control
-                                            as="select"
-                                            onChange={(e) => {
-                                                setUserOnlineTime(e.target.value);
-                                            }}
-                                        >
-                                            <option value={45}>45 min</option>
-                                            <option value={90}>90 min</option>
-                                            <option value={120}>120 min</option>
-                                            <option value={180}>180 min</option>
-                                        </Form.Control>
-                                    </div>
-                                </Form.Group>
-                                <Form.Group>
-                                    <label>Offline Mode</label>
-                                    <div>
-                                        <Form.Control
-                                            as="select"
-                                            onChange={(e) => {
-                                                setUserOfflineTime(e.target.value);
-                                            }}
-                                        >
-                                            <option value={45}>45 min</option>
-                                            <option value={90}>90 min</option>
-                                            <option value={120}>120 min</option>
-                                            <option value={180}>180 min</option>
-                                        </Form.Control>
-                                    </div>
-                                </Form.Group>
-                            </div>
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <Button
-                                variant="danger"
-                                onClick={() => {
-                                    setShowDatesModal(false);
-                                }}
-                            >
-                                Close
-                            </Button>
-                            <Button
-                                variant="success"
-                                onClick={() => {
-                                    handleBookingTimeUpdate(
-                                        parseInt(userOnlineTime),
-                                        parseInt(userOfflineTime)
-                                    );
-                                    setShowDatesModal(false);
                                 }}
                             >
                                 Save
