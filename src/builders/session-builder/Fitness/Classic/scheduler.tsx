@@ -7,7 +7,7 @@ import {
     GET_TAG_BY_ID
 } from '../../graphQL/queries';
 import { useQuery } from '@apollo/client';
-import { Row, Col, Button } from 'react-bootstrap';
+import { Row, Col, Table, Card, Dropdown, Badge } from 'react-bootstrap';
 import SchedulerPage from '../../../program-builder/program-template/scheduler';
 import moment from 'moment';
 import FitnessAction from '../FitnessAction';
@@ -15,6 +15,9 @@ import AuthContext from '../../../../context/auth-context';
 import { Link } from 'react-router-dom';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
 import Loader from '../../../../components/Loader/Loader';
+import DisplayImage from '../../../../components/DisplayImage';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 
 const Scheduler: React.FC = () => {
     const auth = useContext(AuthContext);
@@ -91,8 +94,7 @@ const Scheduler: React.FC = () => {
         variables: {
             id: auth.userid,
             type: 'Classic'
-        },
-        onCompleted: (data) => console.log()
+        }
     });
 
     function handleEventsSeperation(data: any, rest_days: any) {
@@ -251,7 +253,153 @@ const Scheduler: React.FC = () => {
                         <b> back</b>
                     </span>
                 </div>
-                <Row>
+                <Card style={{ width: '90%' }} className='shadow-lg bg-white'>
+                    <Card.Body>
+                        <Row>
+                            <Col lg={10} sm={8}>
+                                <Card.Title>{tag && tag.fitnesspackage?.packagename}</Card.Title>
+                            </Col>
+                            <Col>
+                                <Row className="justify-content-end">
+                                    <Dropdown>
+                                        <Dropdown.Toggle variant="bg-light" id="dropdown-basic">
+                                            <img
+                                                src="/assets/cardsKebab.svg"
+                                                alt="edit"
+                                                className="img-responsive "
+                                                style={{ height: '20px', width: '20px' }}
+                                            />
+                                        </Dropdown.Toggle>
+
+                                        <Dropdown.Menu>
+                                            <Dropdown.Item
+                                                key={2}
+                                                // onClick={() => updateAddress(currValue)}
+                                            >
+                                                Edit Program Name
+                                            </Dropdown.Item>
+                                            <Dropdown.Item
+                                                key={1}
+                                                // onClick={() => deleteUserAddress(currValue)}
+                                            >
+                                                Send notification to subscribers
+                                            </Dropdown.Item>
+                                        </Dropdown.Menu>
+                                    </Dropdown>
+                                </Row>
+                            </Col>
+                        </Row>
+
+                        <Card.Text>
+                            <Badge pill variant="dark" className="p-2">
+                                {tag.fitnesspackage?.level}
+                            </Badge>
+
+                            <br />
+                            <Row className="mt-2">
+                                <Col lg={9} sm={5}>
+                                    <b>
+                                        {tag.fitnesspackage.duration === 1
+                                            ? `${tag.fitnesspackage.duration} day program`
+                                            : `${tag.fitnesspackage.duration} days program`}
+                                    </b>
+                                </Col>
+                                <Col>
+                                    <DisplayImage
+                                        imageName={
+                                            'Photo_ID' in tag.client_packages &&
+                                            tag.client_packages.length &&
+                                            tag.client_packages[0].users_permissions_user &&
+                                            tag.client_packages[0].users_permissions_user.Photo_ID
+                                                ? tag.client_packages[0].users_permissions_user
+                                                      .Photo_ID
+                                                : null
+                                        }
+                                        defaultImageUrl="assets/image_placeholder.svg"
+                                        imageCSS="rounded-circle display_pic text-center img-fluid ml-4 "
+                                    />
+                                    <br />
+                                    <Badge
+                                        pill
+                                        variant="dark"
+                                        className="py-2 px-4 ml-1 mt-2"
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={() => {
+                                            fitnessActionRef.current.TriggerForm({
+                                                id: last[1],
+                                                actionType: 'allClients',
+                                                type: 'Classic'
+                                            });
+                                        }}
+                                    >
+                                        View all
+                                    </Badge>
+                                    <p className="ml-3">{tag.client_packages.length} people</p>
+                                </Col>
+                            </Row>
+                        </Card.Text>
+                    </Card.Body>
+                </Card>
+                <Card style={{ width: '90%' }} className="mt-3 shadow-lg bg-white">
+                    <Card.Body>
+                        <Card.Title>Movement Sessions</Card.Title>
+                        <Card.Text>Last planned session 25 may 2023</Card.Text>
+                        <Row>
+                            <Col lg={8}>
+                                <Table striped bordered hover size="sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Type</th>
+                                            <th>Total</th>
+                                            <th>Plan Recorded</th>
+                                            <th>Plan Rest</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Recorded</td>
+                                            <td>{tag.fitnesspackage.recordedclasses}</td>
+                                            <td>
+                                                {handleTimeFormatting(
+                                                    totalClasses[0],
+                                                    tag.fitnesspackage.duration
+                                                )}
+                                                /{tag.fitnesspackage.duration}
+                                            </td>
+                                            <td>
+                                                {tag && tag.fitnesspackage && tag.fitnesspackage
+                                                    ? tag.fitnesspackage.restdays
+                                                    : null}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </Table>
+                            </Col>
+                            <Col>
+                            <Calendar
+                                    className="disabled"
+                                    // tileClassName={tileContent}
+                                    // onChange={onChange}
+                                    // onActiveStartDateChange={({ action }) => {
+                                    //     action === 'next'
+                                    //         ? setMonth(month + 1)
+                                    //         : setMonth(month - 1);
+                                    // }}
+                                    // value={value}
+                                    minDate={moment().startOf('month').toDate()}
+                                    maxDate={moment().add(2, 'months').toDate()}
+                                    maxDetail="month"
+                                    minDetail="month"
+                                    next2Label={null}
+                                    prev2Label={null}
+                                />
+                            </Col>
+                        </Row>
+                        <p>Note: Plan all the sessions in advance</p>
+                    </Card.Body>
+                </Card>
+
+                {/* <Row>
                     <Col
                         lg={11}
                         className="p-4 shadow-lg bg-white"
@@ -401,7 +549,7 @@ const Scheduler: React.FC = () => {
                             </Col>
                         </Row>
                     </Col>
-                </Row>
+                </Row> */}
                 {/* Scheduler */}
                 <Row>
                     <Col lg={11} className="pl-0 pr-0">

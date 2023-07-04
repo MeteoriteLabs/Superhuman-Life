@@ -8,7 +8,18 @@ import {
 } from '../../graphQL/queries';
 import { UPDATE_STARTDATE } from '../../graphQL/mutation';
 import { useQuery, useMutation } from '@apollo/client';
-import { Row, Col, Button, Dropdown, Modal, InputGroup, FormControl } from 'react-bootstrap';
+import {
+    Row,
+    Col,
+    Button,
+    Dropdown,
+    Modal,
+    InputGroup,
+    FormControl,
+    Table,
+    Card,
+    Badge
+} from 'react-bootstrap';
 import SchedulerPage from '../../../program-builder/program-template/scheduler';
 import moment from 'moment';
 import '../fitness.css';
@@ -20,6 +31,9 @@ import { flattenObj } from '../../../../components/utils/responseFlatten';
 import 'rc-time-picker/assets/index.css';
 import './actionButton.css';
 import Loader from '../../../../components/Loader/Loader';
+import DisplayImage from '../../../../components/DisplayImage';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 
 const Scheduler = () => {
     const auth = useContext(AuthContext);
@@ -45,7 +59,7 @@ const Scheduler = () => {
     const [tagSeperation, setTagSeperation] = useState<any>([]);
     const [statusDays, setStatusDays] = useState();
     const [tag, setTag] = useState<any>();
-
+console.log(last);
     let programIndex;
 
     const fitnessActionRef = useRef<any>(null);
@@ -347,7 +361,7 @@ const Scheduler = () => {
         const days = moment(ed).diff(moment(sd), 'days');
         return days + 1;
     }
-
+console.log(tag);
     if (!show) return <Loader />;
     else
         return (
@@ -360,6 +374,210 @@ const Scheduler = () => {
                         <b> back</b>
                     </span>
                 </div>
+
+                <Card style={{ width: '90%' }} className=' shadow-lg bg-white'>
+                    <Card.Body>
+                        <Row>
+                            <Col lg={10} sm={8}>
+                                <Card.Title>{tag && tag.fitnesspackage?.packagename}{tag?.tag_name ? ` (${tag?.tag_name})` : null}</Card.Title>
+                            </Col>
+                            <Col>
+                                <Row className="justify-content-end">
+                                    <Dropdown>
+                                        <Dropdown.Toggle variant="bg-light" id="dropdown-basic">
+                                            <img
+                                                src="/assets/cardsKebab.svg"
+                                                alt="edit"
+                                                className="img-responsive "
+                                                style={{ height: '20px', width: '20px' }}
+                                            />
+                                        </Dropdown.Toggle>
+
+                                        <Dropdown.Menu>
+                                            
+
+                                            <Dropdown.Item
+                                                key={2}
+                                                // onClick={() => updateAddress(currValue)}
+                                            >
+                                                Edit Program Name
+                                            </Dropdown.Item>
+                                            <Dropdown.Item
+                                                key={1}
+                                                // onClick={() => deleteUserAddress(currValue)}
+                                            >
+                                                Extend program and offering
+                                            </Dropdown.Item>
+                                            <Dropdown.Item
+                                                key={1}
+                                                // onClick={() => deleteUserAddress(currValue)}
+                                            >
+                                                Send notification to subscribers
+                                            </Dropdown.Item>
+                                            <Dropdown.Item
+                                                key={1}
+                                                // onClick={() => deleteUserAddress(currValue)}
+                                            >
+                                                Request Renewal
+                                            </Dropdown.Item>
+                                        </Dropdown.Menu>
+                                    </Dropdown>
+                                </Row>
+                            </Col>
+                        </Row>
+
+                        <Card.Text>
+                            <Badge pill variant="dark" className="p-2">
+                                {tag && tag.fitnesspackage ? tag.fitnesspackage.level : null}
+                            </Badge>
+
+                            <br />
+                            <Row>
+                                <Col lg={9} sm={5}>
+                                <b>Capacity: {tag && tag.fitnesspackage ? tag.fitnesspackage.classsize : null} people</b>
+                                            <br/>
+                                <b>{moment(groupEndDate).diff(moment(groupStartDate), 'days') +
+                                            ' days'}</b>
+                                            <br/>
+                                    <b>Start Date:</b>{' '}
+                                    
+                                    {moment(groupStartDate).format('DD MMMM, YY')}
+                                    <br />
+                                    <b>End Date: </b>
+                                    {moment(groupEndDate).format('DD MMMM, YY')}
+                                </Col>
+                                <Col>
+                                    <DisplayImage
+                                        imageName={
+                                            'Photo_ID' in tag.client_packages &&
+                                            tag.client_packages.length &&
+                                            tag.client_packages[0].users_permissions_user &&
+                                            tag.client_packages[0].users_permissions_user.Photo_ID
+                                                ? tag.client_packages[0].users_permissions_user
+                                                      .Photo_ID
+                                                : null
+                                        }
+                                        defaultImageUrl="assets/image_placeholder.svg"
+                                        imageCSS="rounded-circle display_pic text-center img-fluid ml-4 "
+                                    />
+                                    <br />
+                                    <br />
+                                    <Badge
+                                        pill
+                                        variant="dark"
+                                        className="py-2 px-4 ml-1 mt-2"
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={() => {
+                                            fitnessActionRef.current.TriggerForm(
+                                                {
+                                                    id: tagId,
+                                                    actionType: 'allClients',
+                                                    type: 'Group Class'
+                                                }
+                                            );
+                                        }}
+                                    >
+                                        View all
+                                    </Badge>
+                                    <p className="ml-3">{tag.client_packages.length} people</p>
+                                    
+                                </Col>
+                            </Row>
+                        </Card.Text>
+                    </Card.Body>
+                </Card>
+                <Card style={{ width: '90%' }} className="mt-3  shadow-lg bg-white">
+                    <Card.Body>
+                        <Card.Title>Movement Sessions</Card.Title>
+                        <Card.Text>Last planned session 25 may 2023</Card.Text>
+                        <Row>
+                            <Col lg={8}>
+                                <Table striped bordered hover size="sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Type</th>
+                                            <th>Total</th>
+                                            <th>Plan Online</th>
+                                            <th>Plan Offline</th>
+                                            <th>Plan Rest</th>
+                                            <th>Completed Online</th>
+                                            <th>Completed Offline</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                {tag &&
+                                                tag.fitnesspackage &&
+                                                tag.fitnesspackage.fitness_package_type
+                                                    ? tag.fitnesspackage.fitness_package_type.type
+                                                    : null}
+                                            </td>
+                                            <td>{moment(groupEndDate).diff(moment(groupStartDate), 'days')
+                                            }</td>
+                                            <td>
+                                            {(tag.fitnesspackage.mode === 'Online' ||
+                                                    tag.fitnesspackage.mode === 'Hybrid') && (
+                                                    <div>
+                                                         {handleTimeFormatting(
+                                                                    totalClasses[0],
+                                                                    tag.fitnesspackage.duration
+                                                                )}/
+                                                      
+                                                            {tag.fitnesspackage.grouponline} 
+                                                       
+                                                       
+                                                               
+                                                            
+                                                    </div>
+                                                )}
+                                                {tag && tag.fitnesspackage && tag.fitnesspackage
+                                                    ? tag.fitnesspackage?.ptonline
+                                                    : null}
+                                            </td>
+                                            <td>
+                                            {(tag && tag.fitnesspackage && tag.fitnesspackage.mode === 'Offline' ||
+                                                    tag.fitnesspackage.mode === 'Hybrid') && (
+                                                   
+                                                            tag.fitnesspackage.groupoffline
+                                                    )
+                                                        
+                                                }
+                                               
+                                            </td>
+                                            <td>{tag.fitnesspackage.restdays}</td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </Table>
+                            </Col>
+                            <Col>
+                            <Calendar
+                                    className="disabled"
+                                    // tileClassName={tileContent}
+                                    // onChange={onChange}
+                                    // onActiveStartDateChange={({ action }) => {
+                                    //     action === 'next'
+                                    //         ? setMonth(month + 1)
+                                    //         : setMonth(month - 1);
+                                    // }}
+                                    // value={value}
+                                    minDate={moment().startOf('month').toDate()}
+                                    maxDate={moment().add(2, 'months').toDate()}
+                                    maxDetail="month"
+                                    minDetail="month"
+                                    next2Label={null}
+                                    prev2Label={null}
+                                />
+                            </Col>
+                        </Row>
+                        <p className="text-dark">Note: Create atleast 3 sessions to start accepting bookings</p>
+                    </Card.Body>
+
+                   
+                </Card>
+
                 <Row>
                     <Col
                         lg={11}

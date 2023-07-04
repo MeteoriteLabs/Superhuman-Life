@@ -1,23 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useEffect, useRef, useState } from 'react';
-import { Row, Col, Dropdown, DropdownButton, Accordion, Card, Collapse } from 'react-bootstrap';
+import { useRef, useState } from 'react';
+import { Accordion, Card } from 'react-bootstrap';
 import CreateEditProgramManager from './create-edit/createoredit-workoutTemplate';
 import CreateEditNewWorkout from './create-edit/createoredit-newWorkout';
 import CreateEditNewActivity from './create-edit/createoredit-newActivity';
 import CreateEditRestDay from './create-edit/createoredit-restDay';
-import FitnessSvg from './assets/fitness.svg';
-import NutritionSvg from './assets/nutrition.svg';
-import ResourceSvg from './assets/resources.svg';
-import UpdateSvg from './assets/update.svg';
-import SettingSvg from './assets/settings.svg';
-import { GET_SCHEDULEREVENTS } from './queries';
-import { useQuery } from '@apollo/client';
-import { flattenObj } from '../../../components/utils/responseFlatten';
+// import { GET_SCHEDULEREVENTS } from './queries';
+// import { useQuery } from '@apollo/client';
+// import { flattenObj } from '../../../components/utils/responseFlatten';
 import Icons from '../../../components/Icons';
 import './styles.css';
-import Event from '../../../pages/finance/Invoices/Event/Event';
-import arrowDown from 'public/assets/downarrow.svg';
-import left from 'public/assets/left.svg';
 
 const FloatingButton = (props: any) => {
     const createEditWorkoutTemplateComponent = useRef<any>(null);
@@ -29,32 +20,20 @@ const FloatingButton = (props: any) => {
     const [renewalDate, setRenewalDate] = useState('');
     const program_id = window.location.pathname.split('/').pop();
 
-    // var mini = true;
     const [mini, setMini] = useState(true);
     const [width, setWidth] = useState('250px');
     const [event, setEvent] = useState('');
-    const [open, setOpen] = useState(false);
-    //toggle accordion function
-    const toggleHandler = () => {
-      //switch state
-      setOpen(!open);
-    };
 
     function toggleSidebar() {
         if (mini) {
-            console.log('opening sidebar');
             setWidth('250px');
             setMini(false);
         } else {
-            console.log('closing sidebar');
             setWidth('55px');
             setMini(true);
             setEvent('');
         }
     }
-
-    console.log(event);
-   
 
     return (
         <>
@@ -66,42 +45,30 @@ const FloatingButton = (props: any) => {
                 onMouseOver={() => toggleSidebar()}
                 onMouseOut={() => toggleSidebar()}
             >
-                <div className="accordion__item" >
-      <div className="accordion__header" onClick={toggleHandler}>
-        <h4 >Question</h4>
-        <i>
-          {/* <ExpandMoreIcon /> */}
-          <img
-                            // style={{ position: 'relative', bottom: '11px', left: '20px' }}
-                            src="/assets/downarrow.svg"
-                            alt="downarrow"
-                        />
-        </i>
-      </div>
-      <p className="accordion__content">answer</p>
-    </div>
-
-
-
                 <Accordion defaultActiveKey="">
                     {/* AI */}
                     <Accordion.Toggle
                         as={Card.Header}
-                        eventKey='ai'
-                        className="bg-dark text-white border-dark"
+                        eventKey="ai"
+                        className={
+                          
+                               
+                                ' bg-dark text-white '
+                        }
                         onClick={() => setEvent('ai')}
                     >
                         <Icons name="ai" height={25} width={25} style={{ marginRight: '10px' }} />
                         <span style={{ position: 'relative', bottom: '12px' }}>AI</span>
-                        {
-                            event === 'ai' ? <Icons name='expandless'/> : 
-                        
-                        <img
-                            style={{ position: 'relative', bottom: '11px', left: '20px' }}
-                            src="/assets/downarrow.svg"
-                            alt="downarrow"
-                        />
-}
+                        {event === 'ai' ? (
+                            <Icons name="expandless" />
+                        ) : (
+                            <img
+                                style={{ position: 'relative', bottom: '11px', left: '20px' }}
+                                src="/assets/downarrow.svg"
+                                alt="downarrow"
+                                className="accordion-arrow"
+                            />
+                        )}
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="ai">
                         <Card.Body>
@@ -306,16 +273,10 @@ const FloatingButton = (props: any) => {
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="views">
                         <Card.Body>
-                        <a
-                                href="#"
-                                
-                            >
+                            <a href="#">
                                 <span className="icon-text">Availability</span>
                             </a>
-                            <a
-                                href="#"
-                               
-                            >
+                            <a href="#">
                                 <span className="icon-text">Routine</span>
                             </a>
                         </Card.Body>

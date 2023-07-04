@@ -11,7 +11,6 @@ import {
     InputGroup,
     FormControl,
     Card,
-    CardDeck,
     Badge,
     Table
 } from 'react-bootstrap';
@@ -23,6 +22,9 @@ import '../fitness.css';
 import '../Group/actionButton.css';
 import Loader from '../../../../components/Loader/Loader';
 import DisplayImage from '../../../../components/DisplayImage';
+import "../../profilepicture.css";
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 
 const Scheduler: React.FC = () => {
     const last = window.location.pathname.split('/').reverse();
@@ -93,7 +95,7 @@ const Scheduler: React.FC = () => {
 
         handleCloseDatesModal();
     }
-
+console.log(tag);
     function handleTimeFormatting(data: any, duration: number) {
         const digits = duration <= 30 ? 2 : 3;
         return (data === undefined ? 0 : data).toLocaleString('en-US', {
@@ -122,7 +124,7 @@ const Scheduler: React.FC = () => {
                         <b> back</b>
                     </span>
                 </div>
-                {/* <CardDeck> */}
+               
                     <Card style={{ width: '90%' }}>
                         <Card.Body>
                             <Row>
@@ -136,7 +138,7 @@ const Scheduler: React.FC = () => {
                                         <Dropdown>
                                             <Dropdown.Toggle variant="bg-light" id="dropdown-basic">
                                                 <img
-                                                    src="/assets/kebabcase.svg"
+                                                    src="/assets/cardsKebab.svg"
                                                     alt="notification"
                                                     className="img-responsive "
                                                     style={{ height: '20px', width: '20px' }}
@@ -171,8 +173,16 @@ const Scheduler: React.FC = () => {
                                 <br />
                                 <Row>
                                     <Col lg={9} sm={5}>
+                                        {
+                                            tag && tag.fitnesspackage && tag.fitnesspackage.fitness_package_type.type ===
+                                            "On-Demand PT" ? <b>Date of session: {tag && tag.client_packages && tag.client_packages.length
+                                                ? moment(tag.client_packages[0].effective_date).format(
+                                                      'DD MMMM, YY'
+                                                  )
+                                                : null} </b> : 
                                         
-                                        <b>Start Date:</b>{' '}
+                                        <>
+                                        <b>Start Date:</b>
                                         {tag && tag.client_packages && tag.client_packages.length
                                             ? moment(tag.client_packages[0].effective_date).format(
                                                   'DD MMMM, YY'
@@ -181,10 +191,11 @@ const Scheduler: React.FC = () => {
                                         <br />
                                         <b>End Date: </b>
                                         {tag && tag.client_packages && tag.client_packages.length
-                                            ? moment(tag.client_packages[0].effective_date)
-                                                  .add(tag.fitnesspackage?.duration - 1, 'days')
+                                            ? moment.utc(tag.client_packages[0].effective_date)
+                                                  .add(tag.client_packages[0].effective_date.package_duration, 'days')
                                                   .format('DD MMMM, YY')
                                             : null}
+                                        </>}
                                     </Col>
                                     <Col>
                                         <DisplayImage
@@ -199,7 +210,7 @@ const Scheduler: React.FC = () => {
                                                     : null
                                             }
                                             defaultImageUrl="assets/image_placeholder.svg"
-                                            imageCSS="rounded-circle display_pic text-center img-fluid ml-4 "
+                                            imageCSS="rounded-circle profile_pic text-center img-fluid ml-4 "
                                         />
                                         <br />
                                         <b>
@@ -232,11 +243,35 @@ const Scheduler: React.FC = () => {
                                     <tr>
                                         <th>Type</th>
                                         <th>Total</th>
-                                        <th>Plan Online</th>
-                                        <th>Plan Offline</th>
+                                        {tag &&
+                                        tag.fitnesspackage &&
+                                        tag.fitnesspackage
+                                            && tag.fitnesspackage?.ptonline  ? 
+                                            <th>Plan Online</th>
+                                            : null}
+                                        {tag &&
+                                        tag.fitnesspackage &&
+                                        tag.fitnesspackage
+                                            && tag.fitnesspackage?.ptoffline  ? 
+                                            <th>Plan Offline</th>
+                                            : null}
+                                        
                                         <th>Plan Rest</th>
-                                        <th>Completed Online</th>
-                                        <th>Completed Offline</th>
+                                        {tag &&
+                                        tag.fitnesspackage &&
+                                        tag.fitnesspackage
+                                            && tag.fitnesspackage?.ptonline  ? 
+                                            <th>Completed Online</th>
+                                            : null}
+                                            {tag &&
+                                        tag.fitnesspackage &&
+                                        tag.fitnesspackage
+                                            && tag.fitnesspackage?.ptoffline  ? 
+                                            <th>Completed Offline</th>
+                                            : null}
+                                        
+                                       
+                                        
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -247,22 +282,54 @@ const Scheduler: React.FC = () => {
                                             ? tag.fitnesspackage.fitness_package_type.type
                                             : null}</td>
                                         <td>365</td>
-                                        <td>{tag &&
+
+                                        {tag &&
                                         tag.fitnesspackage &&
                                         tag.fitnesspackage
-                                            ? tag.fitnesspackage?.ptonline
-                                            : null}</td>
-                                        <td>{tag &&
+                                            && tag.fitnesspackage.ptonline ? <td>{`${handleTimeFormatting(
+                                                totalClasses[0],
+                                                tag.fitnesspackage?.duration
+                                            )}/${tag.fitnesspackage.ptonline}`}</td>
+                                            : null}
+                                        {tag &&
                                         tag.fitnesspackage &&
                                         tag.fitnesspackage
-                                            ? tag.fitnesspackage?.ptoffline
-                                            : null}</td>
-                                        <td>365</td>
-                                        <td>Otto</td>
-                                        <td>@mdo</td>
+                                            && tag.fitnesspackage.ptoffline ? <td>{tag.fitnesspackage.ptoffline }</td>
+                                            : null}
+                                        <td>{tag.fitnesspackage?.restdays}</td>
+                                        {tag &&
+                                        tag.fitnesspackage &&
+                                        tag.fitnesspackage
+                                            && tag.fitnesspackage.ptonline ? <td>{tag.fitnesspackage.ptonline}</td>
+                                            : null}
+                                             {tag &&
+                                        tag.fitnesspackage &&
+                                        tag.fitnesspackage
+                                            && tag.fitnesspackage.ptoffline ? <td>{tag.fitnesspackage.ptoffline}</td>
+                                            : null}
+                                        
                                     </tr>
                                 </tbody>
                             </Table>
+                            </Col>
+                            <Col>
+                                <Calendar
+                                    className="disabled"
+                                    // tileClassName={tileContent}
+                                    // onChange={onChange}
+                                    // onActiveStartDateChange={({ action }) => {
+                                    //     action === 'next'
+                                    //         ? setMonth(month + 1)
+                                    //         : setMonth(month - 1);
+                                    // }}
+                                    // value={value}
+                                    minDate={moment().startOf('month').toDate()}
+                                    maxDate={moment().add(2, 'months').toDate()}
+                                    maxDetail="month"
+                                    minDetail="month"
+                                    next2Label={null}
+                                    prev2Label={null}
+                                />
                             </Col>
                             </Row>
                             <small className="text-muted">
@@ -270,10 +337,9 @@ const Scheduler: React.FC = () => {
                             </small>
                         </Card.Body>
 
-                        {/* <Card.Footer> */}
-                        {/* </Card.Footer> */}
+                       
                     </Card>
-                {/* </CardDeck> */}
+               
                 {/* <Row>
                     <Col
                         lg={11}

@@ -4,7 +4,7 @@ import FitnessTab from './fitness/Fitness';
 export default function PackagePage() {
     return (
         <>
-            <h2>Offerings</h2>
+            <h2>Services</h2>
             <Card className="shadow-sm mt-3" border="light">
                 <Card.Body>
                     <Tabs

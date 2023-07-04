@@ -665,6 +665,7 @@ export const GET_TAG_BY_ID = gql`
                                 End_date
                                 Status
                                 residential_type
+                                classsize
                             }
                         }
                     }
@@ -707,6 +708,7 @@ export const GET_TAG_BY_ID = gql`
                             attributes {
                                 effective_date
                                 accepted_date
+                                package_duration
                                 users_permissions_user {
                                     data {
                                         id

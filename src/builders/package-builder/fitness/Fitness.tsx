@@ -127,7 +127,7 @@ export default function FitnessTab() {
 
     const columns = useMemo<any>(
         () => [
-            { accessor: 'packagename', Header: 'Offering Name' },
+            { accessor: 'packagename', Header: 'Service Name' },
             {
                 accessor: 'type',
                 Header: 'Type',

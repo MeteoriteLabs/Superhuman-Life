@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { GET_TAG_BY_ID } from '../../graphQL/queries';
 import { UPDATE_USERPACKAGE_EFFECTIVEDATE } from '../../graphQL/mutation';
 import { useQuery, useMutation } from '@apollo/client';
-import { Row, Col, Dropdown, Modal, InputGroup, FormControl, Button } from 'react-bootstrap';
+import { Row, Col, Dropdown, Modal, InputGroup, FormControl, Button, Table, Card, Badge } from 'react-bootstrap';
 import SchedulerPage from '../../../program-builder/program-template/scheduler';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
@@ -10,6 +10,7 @@ import '../Group/actionButton.css';
 import '../fitness.css';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
 import Loader from '../../../../components/Loader/Loader';
+import DisplayImage from '../../../../components/DisplayImage';
 
 const Scheduler = () => {
     const last = window.location.pathname.split('/').reverse();
@@ -107,6 +108,158 @@ const Scheduler = () => {
                         <b> back</b>
                     </span>
                 </div>
+
+                <Card style={{ width: '90%' }}>
+                        <Card.Body>
+                            <Row>
+                                <Col lg={10} sm={8}>
+                                    <Card.Title>
+                                        {tag && tag.fitnesspackage?.packagename}
+                                    </Card.Title>
+                                </Col>
+                                <Col>
+                                    <Row className="justify-content-end">
+                                        <Dropdown>
+                                            <Dropdown.Toggle variant="bg-light" id="dropdown-basic">
+                                                <img
+                                                    src="/assets/kebabcase.svg"
+                                                    alt="notification"
+                                                    className="img-responsive "
+                                                    style={{ height: '20px', width: '20px' }}
+                                                />
+                                            </Dropdown.Toggle>
+
+                                            <Dropdown.Menu>
+                                                <Dropdown.Item
+                                                    key={1}
+                                                    // onClick={() => deleteUserAddress(currValue)}
+                                                >
+                                                    Renew subscription
+                                                </Dropdown.Item>
+
+                                                <Dropdown.Item
+                                                    key={2}
+                                                    // onClick={() => updateAddress(currValue)}
+                                                >
+                                                    Edit Program Name
+                                                </Dropdown.Item>
+                                            </Dropdown.Menu>
+                                        </Dropdown>
+                                    </Row>
+                                </Col>
+                            </Row>
+
+                            <Card.Text>
+                                <Badge pill variant="dark" className="p-2">
+                                    {tag.fitnesspackage?.level}
+                                </Badge>
+                                
+                                <br />
+                                <Row>
+                                    <Col lg={9} sm={5}>
+                                        
+                                        <b>Start Date:</b>{' '}
+                                        {tag && tag.client_packages && tag.client_packages.length
+                                            ? moment(tag.client_packages[0].effective_date).format(
+                                                  'DD MMMM, YY'
+                                              )
+                                            : null}
+                                        <br />
+                                        <b>End Date: </b>
+                                        {tag && tag.client_packages && tag.client_packages.length
+                                            ? moment(tag.client_packages[0].effective_date)
+                                                  .add(tag.fitnesspackage?.duration - 1, 'days')
+                                                  .format('DD MMMM, YY')
+                                            : null}
+                                    </Col>
+                                    <Col>
+                                        <DisplayImage
+                                            imageName={
+                                                'Photo_ID' in tag.client_packages &&
+                                                tag.client_packages.length &&
+                                                tag.client_packages[0].users_permissions_user &&
+                                                tag.client_packages[0].users_permissions_user
+                                                    .Photo_ID
+                                                    ? tag.client_packages[0].users_permissions_user
+                                                          .Photo_ID
+                                                    : null
+                                            }
+                                            defaultImageUrl="assets/image_placeholder.svg"
+                                            imageCSS="rounded-circle display_pic text-center img-fluid ml-4 "
+                                        />
+                                        <br />
+                                        <b>
+                                            {tag.client_packages.length &&
+                                            tag.client_packages[0].users_permissions_user &&
+                                            tag.client_packages[0].users_permissions_user.First_Name
+                                                ? tag.client_packages[0].users_permissions_user
+                                                      .First_Name
+                                                : null}{' '}
+                                            {tag.client_packages.length &&
+                                            tag.client_packages[0].users_permissions_user &&
+                                            tag.client_packages[0].users_permissions_user.Last_Name
+                                                ? tag.client_packages[0].users_permissions_user
+                                                      .Last_Name
+                                                : null}
+                                        </b>
+                                    </Col>
+                                </Row>
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
+                    <Card style={{ width: '90%' }} className='mt-3'>
+                        <Card.Body>
+                            <Card.Title>Movement Sessions</Card.Title>
+                            <Card.Text>Last planned session 25 may 2023</Card.Text>
+                            <Row>
+                                <Col lg={8}>
+                            <Table striped bordered hover size="sm">
+                                <thead>
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Total</th>
+                                        <th>Plan Online</th>
+                                        <th>Plan Offline</th>
+                                        <th>Plan Rest</th>
+                                        <th>Completed Online</th>
+                                        <th>Completed Offline</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{tag &&
+                                        tag.fitnesspackage &&
+                                        tag.fitnesspackage.fitness_package_type
+                                            ? tag.fitnesspackage.fitness_package_type.type
+                                            : null}</td>
+                                        <td>365</td>
+                                        <td>{tag &&
+                                        tag.fitnesspackage &&
+                                        tag.fitnesspackage
+                                            ? tag.fitnesspackage?.ptonline
+                                            : null}</td>
+                                        <td>{tag &&
+                                        tag.fitnesspackage &&
+                                        tag.fitnesspackage
+                                            ? tag.fitnesspackage?.ptoffline
+                                            : null}</td>
+                                        <td>365</td>
+                                        <td>Otto</td>
+                                        <td>@mdo</td>
+                                    </tr>
+                                </tbody>
+                            </Table>
+                            </Col>
+                            </Row>
+                            <small className="text-muted">
+                                Note: Plan all the sessions in advance
+                            </small>
+                        </Card.Body>
+
+                        {/* <Card.Footer> */}
+                        {/* </Card.Footer> */}
+                    </Card>
+
                 <Row>
                     <Col
                         lg={11}
