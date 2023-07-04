@@ -22,7 +22,10 @@
     bottom: 0%;
     transform: translate(-50%, -50%);
 }
-
+.modal-content{
+    margin-top: 15vh;
+    height: 70vh;
+}
 .uploadButton {
     position: absolute;
     bottom: -20%;
@@ -33,6 +36,18 @@
     align-items: center;
     border-radius: 6px;
 }
+.modal-controls {
+    width: 8%;
+    position: absolute;
+    left: 10%;
+    bottom: 0%;
+    transform: translate(-50%, -50%);
+}
+.modal-btn{
+    bottom: 0px;
+    transform: translate(-50%, -50%);
+}
+
 
 @media (max-width: 500px) {
     .dropArea {

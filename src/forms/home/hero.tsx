@@ -135,6 +135,7 @@ function Hero(): JSX.Element {
                             <UploadImageToS3WithNativeSdk
                                 allowImage={true}
                                 allowVideo={false}
+                                uploadInterface="modal"
                                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                     field.onChange(event);
                                 }}
