@@ -2,15 +2,14 @@ import React, { useState, useContext, useEffect } from 'react';
 import {
     Row,
     Col,
-    Dropdown,
-    DropdownButton,
     Modal,
     Button,
     Form,
     Alert,
     FormControl,
     InputGroup,
-    Spinner
+    Spinner,
+    ButtonToolbar
 } from 'react-bootstrap';
 import moment from 'moment';
 import Calendar from 'react-calendar';
@@ -36,7 +35,7 @@ import 'rc-time-picker/assets/index.css';
 import './styles.css';
 import Toaster from '../../../../components/Toaster';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
-import { ButtonToolbar } from 'react-bootstrap';
+
 
 const configTemplate: any = {
     Sunday: {
@@ -878,6 +877,7 @@ const WorkHours: React.FC = () => {
                             >
                                 {slots[0] !== null &&
                                     slots?.map((item, index: number) => {
+                                        console.log('item is ', item);
                                         return (
                                             <Row
                                                 id={item.id}
@@ -889,21 +889,32 @@ const WorkHours: React.FC = () => {
                                                     style={{
                                                         borderRadius: '10px',
                                                         backgroundColor: '#E5E5E5',
-                                                        overflow: 'hidden' // Add overflow: hidden to contain the background color
+                                                        overflow: 'hidden'
                                                     }}
                                                     md={10}
                                                     className="shadow p-1 mb-0 bg-white"
                                                 >
                                                     <Row className="align-items-center">
                                                         <Col
-                                                            className="bg-success p-2"
+                                                            className="p-2"
                                                             style={{
-                                                                flex: '0 0 140px', // Increase the width of the column
-                                                                color: 'white'
+                                                                flex: '0 0 140px',
+                                                                color: 'white',
+                                                                borderRadius: '10px',
+                                                                marginLeft: '5px',
+                                                                fontSize: item.SessionTitle
+                                                                    ? '14px'
+                                                                    : 'inherit',
+                                                                backgroundColor: item.SessionTitle
+                                                                    ? '#0D6EBA'
+                                                                    : '#339B31'
                                                             }}
                                                         >
-                                                            Available
+                                                            {item.SessionTitle
+                                                                ? item.SessionTitle
+                                                                : 'Available'}
                                                         </Col>
+
                                                         <Col className="p-2" style={{ flex: '1' }}>
                                                             <div
                                                                 style={{

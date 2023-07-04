@@ -1,19 +1,15 @@
 import { Link } from 'react-router-dom';
-import { Card, Form } from 'react-bootstrap';
+import { Card, Form, Row, Col, Button, Modal } from 'react-bootstrap';
 import WorkHours from './workHours/workHours';
-import { Row } from 'react-bootstrap';
-import { Col } from 'react-bootstrap';
-import { Button } from 'react-bootstrap';
 import { useContext, useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { UPDATE_USER_BOOKING_TIME } from '../graphql/mutations';
 import AuthContext from '../../../context/auth-context';
-import { Modal } from 'react-bootstrap';
 
 const Availability = () => {
     const auth = useContext(AuthContext);
-    const [userOfflineTime, setUserOfflineTime]: any = useState(45);
-    const [userOnlineTime, setUserOnlineTime]: any = useState(45);
+    const [userOfflineTime, setUserOfflineTime] = useState<number>(45);
+    const [userOnlineTime, setUserOnlineTime] = useState<number>(45);
     const [updateUserBookingTime] = useMutation(UPDATE_USER_BOOKING_TIME);
     const [showDatesModal, setShowDatesModal] = useState<boolean>(false);
 
@@ -92,7 +88,7 @@ const Availability = () => {
                                 <Form.Control
                                     as="select"
                                     onChange={(e) => {
-                                        setUserOnlineTime(e.target.value);
+                                        setUserOnlineTime(parseInt(e.target.value, 10));
                                     }}
                                     className="p-2 shadow-sm mt-2"
                                     style={{
@@ -129,7 +125,7 @@ const Availability = () => {
                                 <Form.Control
                                     as="select"
                                     onChange={(e) => {
-                                        setUserOfflineTime(e.target.value);
+                                        setUserOfflineTime(parseInt(e.target.value, 10));
                                     }}
                                     className="p-2 shadow-sm mt-2"
                                     style={{
@@ -175,7 +171,7 @@ const Availability = () => {
                                 <Form.Control
                                     as="select"
                                     onChange={(e) => {
-                                        setUserOnlineTime(e.target.value);
+                                        setUserOnlineTime(parseInt(e.target.value, 10));
                                     }}
                                 >
                                     <option value={45}>45 min</option>
@@ -191,7 +187,7 @@ const Availability = () => {
                                 <Form.Control
                                     as="select"
                                     onChange={(e) => {
-                                        setUserOfflineTime(e.target.value);
+                                        setUserOfflineTime(parseInt(e.target.value, 10));
                                     }}
                                 >
                                     <option value={45}>45 min</option>
@@ -216,8 +212,8 @@ const Availability = () => {
                         variant="success"
                         onClick={() => {
                             handleBookingTimeUpdate(
-                                parseInt(userOnlineTime),
-                                parseInt(userOfflineTime)
+                                Number(userOnlineTime),
+                                Number(userOfflineTime)
                             );
                             setShowDatesModal(false);
                         }}
