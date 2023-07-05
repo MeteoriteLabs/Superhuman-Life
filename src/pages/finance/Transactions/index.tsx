@@ -205,9 +205,9 @@ export default function Transactions(): JSX.Element {
                                 ? `-${Detail.Currency} ${Detail.TransactionAmount}`
                                 : null,
                         remark: Detail.TransactionRemarks,
-                        transactionDate: moment(Detail.TransactionDateTime).format(
+                        transactionDate: Detail.TransactionDateTime ? moment(Detail.TransactionDateTime).format(
                             'DD/MM/YYYY, hh:mm'
-                        ),
+                        ): "N/A",
                         status: Detail.TransactionStatus,
                         type: Detail.ReceiverID === auth.userid ? 'Credited' : 'Debited'
                     };

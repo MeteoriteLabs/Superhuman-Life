@@ -22,7 +22,7 @@ const BasicProfileForm: React.FC = () => {
     const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
     const formRef = useRef<any>(null);
     const auth = useContext(AuthContext);
-    const profileJson: any = require('./BasicProfile.json');
+    const profileJson: Record<string, unknown> = require('./BasicProfile.json');
     const [webpageDetails, setWebPageDetails] = useState<UsersPermissionsUser>(
         {} as UsersPermissionsUser
     );

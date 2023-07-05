@@ -127,7 +127,7 @@ export default function FitnessTab() {
 
     const columns = useMemo<any>(
         () => [
-            { accessor: 'packagename', Header: 'Offering Name' },
+            { accessor: 'packagename', Header: 'Service Name' },
             {
                 accessor: 'type',
                 Header: 'Type',
@@ -842,7 +842,7 @@ export default function FitnessTab() {
                         </div>
                     ) : (
                         <div>
-                            {value.row.original.status ? (
+                            {value.row.original && value.row.original.status ? (
                                 <Badge
                                     className="px-3 py-1"
                                     style={{ fontSize: '1rem', borderRadius: '10px' }}

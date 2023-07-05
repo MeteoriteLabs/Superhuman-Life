@@ -222,8 +222,11 @@ const classBasedOffering: React.FC<{
 
         setOfferingList(
             [
+                // eslint-disable-next-line
                 ...flattenedRecordedOffering.fitnesspackages,
+                // eslint-disable-next-line
                 ...flattenedLivestreamAndGroupOffering.fitnesspackages,
+                // eslint-disable-next-line
                 ...flattenedOnDemandOffering.fitnesspackages
             ].map((currValue) => {
                 return {

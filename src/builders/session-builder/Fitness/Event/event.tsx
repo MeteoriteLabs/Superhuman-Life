@@ -61,7 +61,7 @@ const Event: React.FC = () => {
     };
 
     const handleRedirect = (id: string) => {
-        window.location.href = `/cohort/session/scheduler/${id}`;
+        window.location.href = `/event/session/scheduler/${id}`;
     };
 
     const columns = useMemo(

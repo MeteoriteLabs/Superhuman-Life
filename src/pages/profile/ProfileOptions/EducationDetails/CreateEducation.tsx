@@ -35,7 +35,7 @@ interface BasicEducationDetails {
 
 // eslint-disable-next-line
 const CreateEducation = (props: { callback: () => void }, ref: any) => {
-    const educationJson: unknown = require('./Education.json');
+    const educationJson: Record<string, unknown> = require('./Education.json');
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [educationID, setEducationID] = useState<string[]>([]);
     const [educationDetails, setEducationDetails] = useState({} as BasicEducationDetails);
@@ -169,15 +169,15 @@ const CreateEducation = (props: { callback: () => void }, ref: any) => {
     }
 
     // Update Education Details
-    function UpdateUserEducation(frm) {
+    function UpdateUserEducation(form) {
         updateEducationalDetail({
             variables: {
                 id: operation.id,
                 data: {
-                    Institute_Name: frm.Institute_Name,
-                    Specialization: frm.Specialization,
-                    Type_of_degree: frm.Type_of_degree,
-                    Year: frm.Year
+                    Institute_Name: form.Institute_Name,
+                    Specialization: form.Specialization,
+                    Type_of_degree: form.Type_of_degree,
+                    Year: form.Year
                 }
             }
         });
@@ -187,13 +187,13 @@ const CreateEducation = (props: { callback: () => void }, ref: any) => {
         deleteEducationData({ variables: { id: id } });
     }
 
-    function OnSubmit(frm) {
+    function OnSubmit(form) {
         switch (operation.type) {
             case 'create':
-                CreateUserEducation(frm);
+                CreateUserEducation(form);
                 break;
             case 'edit':
-                UpdateUserEducation(frm);
+                UpdateUserEducation(form);
                 break;
         }
     }
@@ -211,8 +211,8 @@ const CreateEducation = (props: { callback: () => void }, ref: any) => {
                 formUISchema={schema}
                 formSchema={educationJson}
                 showing={operation.modal_status}
-                formSubmit={(frm) => {
-                    OnSubmit(frm);
+                formSubmit={(form) => {
+                    OnSubmit(form);
                 }}
                 widgets={widgets}
                 modalTrigger={modalTrigger}
