@@ -96,7 +96,7 @@ const Scheduler = () => {
         return formattedSum;
     }
 
-    if (!show) return <Loader />;
+    if (!show) return <Loader msg="loading scheduler..."/>;
     else
         return (
             <div className="col-lg-12">
@@ -256,8 +256,7 @@ const Scheduler = () => {
                             </small>
                         </Card.Body>
 
-                        {/* <Card.Footer> */}
-                        {/* </Card.Footer> */}
+                       
                     </Card>
 
                 <Row>
