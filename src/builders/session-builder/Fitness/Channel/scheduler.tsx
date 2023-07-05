@@ -66,7 +66,7 @@ const Scheduler: React.FC = () => {
     function loadTagData(data: any) {
         setSchedulerSessions(data);
         const flattenData = flattenObj({ ...data });
-        console.log(flattenData);
+        
         const total = [0];
         const clientValues = [...clientIds];
         const values = flattenData.tags ? [...flattenData.tags[0].sessions] : [];
