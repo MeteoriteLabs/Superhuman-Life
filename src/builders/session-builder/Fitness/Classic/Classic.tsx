@@ -38,7 +38,8 @@ const Classic: React.FC = () => {
                     packageName: packageItem.fitnesspackage.packagename,
                     duration: packageItem.fitnesspackage.duration,
                     expiry: moment(packageItem?.fitnesspackage?.expiry_date).format('MMMM DD,YYYY'),
-                    programName: packageItem.tag_name ? packageItem.tag_name : 'N/A'
+                    programName: packageItem.tag_name ? packageItem.tag_name : 'N/A',
+                    programStatus: packageItem.fitnesspackage.Status === true ? 'Assigned' : 'N/A',
                 };
             })
         ]);

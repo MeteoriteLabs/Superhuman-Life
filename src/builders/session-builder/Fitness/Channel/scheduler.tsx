@@ -12,7 +12,7 @@ import moment from 'moment';
 import FitnessAction from '../FitnessAction';
 import AuthContext from '../../../../context/auth-context';
 import { Link } from 'react-router-dom';
-import "../../profilepicture.css";
+import '../../profilepicture.css';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
 import '../Group/actionButton.css';
 import Loader from '../../../../components/Loader/Loader';
@@ -66,7 +66,7 @@ const Scheduler: React.FC = () => {
     function loadTagData(data: any) {
         setSchedulerSessions(data);
         const flattenData = flattenObj({ ...data });
-console.log(flattenData);
+        console.log(flattenData);
         const total = [0];
         const clientValues = [...clientIds];
         const values = flattenData.tags ? [...flattenData.tags[0].sessions] : [];
@@ -96,7 +96,7 @@ console.log(flattenData);
             return 'N/A';
         }
 
-        const moments = sessions.map((d) => moment(d.session_date));
+        const moments = sessions.map((currentDate) => moment(currentDate.session_date));
         const maxDate = moment.max(moments);
 
         return maxDate.format('MMM Do,YYYY');
@@ -162,7 +162,7 @@ console.log(flattenData);
         mainQuery.refetch();
     }
 
-    if (!show) return <Loader />;
+    if (!show) return <Loader msg="loading scheduler..." />;
     else
         return (
             <div className="col-lg-12">
@@ -174,13 +174,15 @@ console.log(flattenData);
                         <b> back</b>
                     </span>
                 </div>
-                <Card style={{ width: '90%' }} className="shadow-lg bg-white">
+                <Card style={{ width: '90%' }}>
                     <Card.Body>
                         <Row>
                             <Col lg={10} sm={8}>
                                 <Card.Title>
-                                    <h4>{tag && tag.fitnesspackage?.packagename}
-                                    {tag?.tag_name ? ` (${tag?.tag_name})` : null}</h4>
+                                    <h4>
+                                        {tag && tag.fitnesspackage?.packagename}
+                                        {tag?.tag_name ? ` (${tag?.tag_name})` : null}
+                                    </h4>
                                 </Card.Title>
                             </Col>
                             <Col>
@@ -227,15 +229,15 @@ console.log(flattenData);
                         </Row>
 
                         <Card.Text>
-                            <Badge pill variant="dark" className="py-2 px-3 my-2">
-                                {tag && tag.fitnesspackage ? tag.fitnesspackage.level : null}
-                            </Badge>
-
-                            <br />
                             <Row>
                                 <Col lg={9} sm={5}>
-                                    <b>Start Date:</b>{' '}
-                                    {channelStartDate}
+                                    <Badge pill variant="dark" className="py-2 px-3 my-2">
+                                        {tag && tag.fitnesspackage
+                                            ? tag.fitnesspackage.level
+                                            : null}
+                                    </Badge>
+                                    <br />
+                                    <b>Start Date:</b> {channelStartDate}
                                     <br />
                                     <b>End Date: </b>
                                     {channelEndDate}
@@ -243,7 +245,8 @@ console.log(flattenData);
                                 <Col>
                                     <DisplayImage
                                         imageName={
-                                            'Photo_ID' in tag && tag.client_packages &&
+                                            'Photo_ID' in tag &&
+                                            tag.client_packages &&
                                             tag.client_packages.length &&
                                             tag.client_packages[0].users_permissions_user &&
                                             tag.client_packages[0].users_permissions_user.Photo_ID
@@ -271,19 +274,23 @@ console.log(flattenData);
                                     >
                                         View all
                                     </Badge>
-                                    <p className='ml-3'>{tag.client_packages.length} people</p>
+                                    <p className="ml-3">{tag.client_packages.length} people</p>
                                 </Col>
                             </Row>
                         </Card.Text>
                     </Card.Body>
                 </Card>
-                <Card style={{ width: '90%' }} className="mt-3  shadow-lg bg-white">
+                <Card style={{ width: '90%' }} className="mt-3">
                     <Card.Body>
-                        <Card.Title><h4>Movement Sessions</h4></Card.Title>
-                        <Card.Text>Last planned session {calculateLastSession(tag.sessions)}</Card.Text>
+                        <Card.Title>
+                            <h4>Movement Sessions</h4>
+                        </Card.Title>
+                        <Card.Text>
+                            Last planned session {calculateLastSession(tag.sessions)}
+                        </Card.Text>
                         <Row>
                             <Col lg={8}>
-                                <Table striped bordered hover size="sm">
+                                <Table striped bordered hover size="sm" responsive>
                                     <thead className="text-center">
                                         <tr>
                                             <th>Type</th>
@@ -304,12 +311,11 @@ console.log(flattenData);
                                             <td>360</td>
                                             <td></td>
                                             <td></td>
-                                            
                                         </tr>
                                     </tbody>
                                 </Table>
                             </Col>
-                            <Col className='h-25'>
+                            <Col className="h-25">
                                 <Calendar
                                     className="disabled"
                                     // tileClassName={tileContent}
@@ -335,7 +341,7 @@ console.log(flattenData);
                     </Card.Body>
                 </Card>
 
-{/* old code */}
+                {/* old code */}
                 {/* <Row>
                     <Col
                         lg={11}

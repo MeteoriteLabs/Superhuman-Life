@@ -111,8 +111,20 @@ console.log(tag);
         const formattedSum = handleTimeFormatting(sum, duration);
         return formattedSum;
     }
-    console.log(tag);
-    if (!show) return <Loader />;
+
+    
+    function calculateLastSession(sessions) {
+        if (sessions.length === 0) {
+            return 'N/A';
+        }
+
+        const moments = sessions.map((currentDate) => moment(currentDate.session_date));
+        const maxDate = moment.max(moments);
+
+        return maxDate.format('MMM Do,YYYY');
+    }
+    
+    if (!show) return <Loader msg="loading scheduler..."/>;
     else
         return (
             <div className="col-lg-12">
@@ -166,13 +178,14 @@ console.log(tag);
                             </Row>
 
                             <Card.Text>
-                                <Badge pill variant="dark" className="p-2">
+                                
+                                <Row>
+                                    <Col lg={9} sm={5}>
+                                    <Badge pill variant="dark" className="p-2">
                                     {tag.fitnesspackage?.level}
                                 </Badge>
                                 
                                 <br />
-                                <Row>
-                                    <Col lg={9} sm={5}>
                                         {
                                             tag && tag.fitnesspackage && tag.fitnesspackage.fitness_package_type.type ===
                                             "On-Demand PT" ? <b>Date of session: {tag && tag.client_packages && tag.client_packages.length
@@ -234,12 +247,12 @@ console.log(tag);
                     </Card>
                     <Card style={{ width: '90%' }} className='mt-3'>
                         <Card.Body>
-                            <Card.Title>Movement Sessions</Card.Title>
-                            <Card.Text>Last planned session 25 may 2023</Card.Text>
+                            <Card.Title><h4>Movement Sessions</h4></Card.Title>
+                            <Card.Text>Last planned session {calculateLastSession(tag.sessions)}</Card.Text>
                             <Row>
                                 <Col lg={8}>
-                            <Table striped bordered hover size="sm">
-                                <thead>
+                            <Table striped bordered hover size="sm" responsive>
+                                <thead className='text-center'>
                                     <tr>
                                         <th>Type</th>
                                         <th>Total</th>
@@ -255,8 +268,8 @@ console.log(tag);
                                             && tag.fitnesspackage?.ptoffline  ? 
                                             <th>Plan Offline</th>
                                             : null}
-                                        
-                                        <th>Plan Rest</th>
+                                        {tag && tag.fitnesspackage && tag.fitnesspackage.fitness_package_type.type ===
+                                            "On-Demand PT" ? null : <th>Plan Rest</th> }
                                         {tag &&
                                         tag.fitnesspackage &&
                                         tag.fitnesspackage
@@ -274,7 +287,7 @@ console.log(tag);
                                         
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody className='text-center'>
                                     <tr>
                                         <td>{tag &&
                                         tag.fitnesspackage &&
@@ -296,7 +309,9 @@ console.log(tag);
                                         tag.fitnesspackage
                                             && tag.fitnesspackage.ptoffline ? <td>{tag.fitnesspackage.ptoffline }</td>
                                             : null}
-                                        <td>{tag.fitnesspackage?.restdays}</td>
+                                             {tag && tag.fitnesspackage && tag.fitnesspackage.fitness_package_type.type ===
+                                            "On-Demand PT" ? null : <td>{tag.fitnesspackage?.restdays}</td> }
+                                        
                                         {tag &&
                                         tag.fitnesspackage &&
                                         tag.fitnesspackage

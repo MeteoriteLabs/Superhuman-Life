@@ -34,6 +34,7 @@ import Loader from '../../../../components/Loader/Loader';
 import DisplayImage from '../../../../components/DisplayImage';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import "../../profilepicture.css";
 
 const Scheduler = () => {
     const auth = useContext(AuthContext);
@@ -361,8 +362,19 @@ console.log(last);
         const days = moment(ed).diff(moment(sd), 'days');
         return days + 1;
     }
-console.log(tag);
-    if (!show) return <Loader />;
+
+    function calculateLastSession(sessions) {
+        if (sessions.length === 0) {
+            return 'N/A';
+        }
+
+        const moments = sessions.map((currentDate) => moment(currentDate.session_date));
+        const maxDate = moment.max(moments);
+
+        return maxDate.format('MMM Do,YYYY');
+    }
+
+    if (!show) return <Loader msg="loading scheduler..."/>;
     else
         return (
             <div className="col-lg-12">
@@ -375,11 +387,11 @@ console.log(tag);
                     </span>
                 </div>
 
-                <Card style={{ width: '90%' }} className=' shadow-lg bg-white'>
+                <Card style={{ width: '90%' }}>
                     <Card.Body>
                         <Row>
                             <Col lg={10} sm={8}>
-                                <Card.Title>{tag && tag.fitnesspackage?.packagename}{tag?.tag_name ? ` (${tag?.tag_name})` : null}</Card.Title>
+                                <Card.Title><h4>{tag && tag.fitnesspackage?.packagename}{tag?.tag_name ? ` (${tag?.tag_name})` : null}</h4></Card.Title>
                             </Col>
                             <Col>
                                 <Row className="justify-content-end">
@@ -394,8 +406,6 @@ console.log(tag);
                                         </Dropdown.Toggle>
 
                                         <Dropdown.Menu>
-                                            
-
                                             <Dropdown.Item
                                                 key={2}
                                                 // onClick={() => updateAddress(currValue)}
@@ -427,13 +437,14 @@ console.log(tag);
                         </Row>
 
                         <Card.Text>
-                            <Badge pill variant="dark" className="p-2">
+                            
+                            <Row>
+                                <Col lg={9} sm={5}>
+                                <Badge pill variant="dark" className="p-2">
                                 {tag && tag.fitnesspackage ? tag.fitnesspackage.level : null}
                             </Badge>
 
                             <br />
-                            <Row>
-                                <Col lg={9} sm={5}>
                                 <b>Capacity: {tag && tag.fitnesspackage ? tag.fitnesspackage.classsize : null} people</b>
                                             <br/>
                                 <b>{moment(groupEndDate).diff(moment(groupStartDate), 'days') +
@@ -458,14 +469,14 @@ console.log(tag);
                                                 : null
                                         }
                                         defaultImageUrl="assets/image_placeholder.svg"
-                                        imageCSS="rounded-circle display_pic text-center img-fluid ml-4 "
+                                        imageCSS="rounded-circle profile_pic text-center img-fluid ml-2"
                                     />
                                     <br />
                                     <br />
                                     <Badge
                                         pill
                                         variant="dark"
-                                        className="py-2 px-4 ml-1 mt-2"
+                                        className="py-2 px-4 ml-1"
                                         style={{ cursor: 'pointer' }}
                                         onClick={() => {
                                             fitnessActionRef.current.TriggerForm(
@@ -486,25 +497,32 @@ console.log(tag);
                         </Card.Text>
                     </Card.Body>
                 </Card>
-                <Card style={{ width: '90%' }} className="mt-3  shadow-lg bg-white">
+                <Card style={{ width: '90%' }} className="mt-3">
                     <Card.Body>
-                        <Card.Title>Movement Sessions</Card.Title>
-                        <Card.Text>Last planned session 25 may 2023</Card.Text>
+                        <Card.Title><h4>Movement Sessions</h4></Card.Title>
+                        <Card.Text>Last planned session {calculateLastSession(tag.sessions)}</Card.Text>
                         <Row>
                             <Col lg={8}>
-                                <Table striped bordered hover size="sm">
-                                    <thead>
+                                <Table striped bordered hover size="sm" responsive>
+                                    <thead className="text-center">
                                         <tr>
                                             <th>Type</th>
                                             <th>Total</th>
-                                            <th>Plan Online</th>
-                                            <th>Plan Offline</th>
+                                            {tag && tag.fitnesspackage && (tag.fitnesspackage.mode === 'Online' ||
+                                                    tag.fitnesspackage.mode === 'Hybrid') ? <th>Plan Online</th>: null}
+                                            {tag && tag.fitnesspackage && (tag.fitnesspackage.mode === 'Offline' ||
+                                                    tag.fitnesspackage.mode === 'Hybrid') ? <th>Plan Offline</th>: null}
+                                           
+                                            
                                             <th>Plan Rest</th>
-                                            <th>Completed Online</th>
-                                            <th>Completed Offline</th>
+                                            {tag && tag.fitnesspackage && (tag.fitnesspackage.mode === 'Online' ||
+                                                    tag.fitnesspackage.mode === 'Hybrid') ? <th>Completed Online</th>: null}
+                                            {tag && tag.fitnesspackage && (tag.fitnesspackage.mode === 'Offline' ||
+                                                    tag.fitnesspackage.mode === 'Hybrid') ? <th>Completed Offline</th>: null}
+                                           
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody className="text-center">
                                         <tr>
                                             <td>
                                                 {tag &&
@@ -524,30 +542,31 @@ console.log(tag);
                                                                     tag.fitnesspackage.duration
                                                                 )}/
                                                       
-                                                            {tag.fitnesspackage.grouponline} 
-                                                       
-                                                       
-                                                               
-                                                            
+                                                            {tag.fitnesspackage.grouponline}           
                                                     </div>
                                                 )}
                                                 {tag && tag.fitnesspackage && tag.fitnesspackage
                                                     ? tag.fitnesspackage?.ptonline
                                                     : null}
                                             </td>
-                                            <td>
-                                            {(tag && tag.fitnesspackage && tag.fitnesspackage.mode === 'Offline' ||
-                                                    tag.fitnesspackage.mode === 'Hybrid') && (
+                                            {tag && tag.fitnesspackage && (tag.fitnesspackage.mode === 'Offline' ||
+                                                    tag.fitnesspackage.mode === 'Hybrid') ? <td>
+                                        
                                                    
-                                                            tag.fitnesspackage.groupoffline
-                                                    )
+                                                          {  tag.fitnesspackage.groupoffline}
+                                                    
                                                         
-                                                }
+                                                
                                                
-                                            </td>
+                                            </td>: null}
                                             <td>{tag.fitnesspackage.restdays}</td>
-                                            <td></td>
-                                            <td></td>
+                                            {tag && tag.fitnesspackage && (tag.fitnesspackage.mode === 'Online' ||
+                                                    tag.fitnesspackage.mode === 'Hybrid') ? <td>
+                                            </td>: null}
+                                            
+                                            {tag && tag.fitnesspackage && (tag.fitnesspackage.mode === 'Offline' ||
+                                                    tag.fitnesspackage.mode === 'Hybrid') ? <td>       
+                                            </td>: null}
                                         </tr>
                                     </tbody>
                                 </Table>
@@ -578,7 +597,7 @@ console.log(tag);
                    
                 </Card>
 
-                <Row>
+                {/* <Row>
                     <Col
                         lg={11}
                         className="p-4 shadow-lg bg-white"
@@ -812,7 +831,7 @@ console.log(tag);
                             </Dropdown>
                         </Row>
                     </Col>
-                </Row>
+                </Row> */}
                 <Row className="mt-5 mb-2">
                     <Col lg={11}>
                         <div className="text-center">

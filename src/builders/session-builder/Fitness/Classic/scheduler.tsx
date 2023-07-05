@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect, useRef, useContext } from 'react';
 import {
     GET_TABLEDATA,
@@ -18,6 +17,7 @@ import Loader from '../../../../components/Loader/Loader';
 import DisplayImage from '../../../../components/DisplayImage';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import '../../profilepicture.css';
 
 const Scheduler: React.FC = () => {
     const auth = useContext(AuthContext);
@@ -241,7 +241,18 @@ const Scheduler: React.FC = () => {
         // setSessionIds([]);
     }
 
-    if (!show) return <Loader />;
+    function calculateLastSession(sessions) {
+        if (sessions.length === 0) {
+            return 'N/A';
+        }
+
+        const moments = sessions.map((currentDate) => moment(currentDate.session_date));
+        const maxDate = moment.max(moments);
+
+        return maxDate.format('MMM Do,YYYY');
+    }
+
+    if (!show) return <Loader msg="loading scheduler..."/>;
     else
         return (
             <div className="col-lg-12">
@@ -253,11 +264,11 @@ const Scheduler: React.FC = () => {
                         <b> back</b>
                     </span>
                 </div>
-                <Card style={{ width: '90%' }} className='shadow-lg bg-white'>
+                <Card style={{ width: '90%' }}>
                     <Card.Body>
                         <Row>
                             <Col lg={10} sm={8}>
-                                <Card.Title>{tag && tag.fitnesspackage?.packagename}</Card.Title>
+                                <Card.Title><h4>{tag && tag.fitnesspackage?.packagename}</h4></Card.Title>
                             </Col>
                             <Col>
                                 <Row className="justify-content-end">
@@ -291,13 +302,13 @@ const Scheduler: React.FC = () => {
                         </Row>
 
                         <Card.Text>
-                            <Badge pill variant="dark" className="p-2">
-                                {tag.fitnesspackage?.level}
-                            </Badge>
-
-                            <br />
                             <Row className="mt-2">
                                 <Col lg={9} sm={5}>
+                                    <Badge pill variant="dark" className="p-2">
+                                        {tag.fitnesspackage?.level}
+                                    </Badge>
+
+                                    <br />
                                     <b>
                                         {tag.fitnesspackage.duration === 1
                                             ? `${tag.fitnesspackage.duration} day program`
@@ -316,7 +327,7 @@ const Scheduler: React.FC = () => {
                                                 : null
                                         }
                                         defaultImageUrl="assets/image_placeholder.svg"
-                                        imageCSS="rounded-circle display_pic text-center img-fluid ml-4 "
+                                        imageCSS="rounded-circle profile_pic text-center img-fluid ml-3 "
                                     />
                                     <br />
                                     <Badge
@@ -326,9 +337,9 @@ const Scheduler: React.FC = () => {
                                         style={{ cursor: 'pointer' }}
                                         onClick={() => {
                                             fitnessActionRef.current.TriggerForm({
-                                                id: last[1],
+                                                id: last[0],
                                                 actionType: 'allClients',
-                                                type: 'Classic'
+                                                type: 'Classic Class'
                                             });
                                         }}
                                     >
@@ -340,14 +351,16 @@ const Scheduler: React.FC = () => {
                         </Card.Text>
                     </Card.Body>
                 </Card>
-                <Card style={{ width: '90%' }} className="mt-3 shadow-lg bg-white">
+                <Card style={{ width: '90%' }} className="mt-3">
                     <Card.Body>
-                        <Card.Title>Movement Sessions</Card.Title>
-                        <Card.Text>Last planned session 25 may 2023</Card.Text>
+                        <Card.Title><h4>Movement Sessions</h4></Card.Title>
+                        <Card.Text>
+                            Last planned session {calculateLastSession(tag.sessions)}
+                        </Card.Text>
                         <Row>
                             <Col lg={8}>
-                                <Table striped bordered hover size="sm">
-                                    <thead>
+                                <Table striped bordered hover size="sm" responsive>
+                                    <thead className='text-center'>
                                         <tr>
                                             <th>Type</th>
                                             <th>Total</th>
@@ -355,7 +368,7 @@ const Scheduler: React.FC = () => {
                                             <th>Plan Rest</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody className='text-center'>
                                         <tr>
                                             <td>Recorded</td>
                                             <td>{tag.fitnesspackage.recordedclasses}</td>
@@ -376,7 +389,7 @@ const Scheduler: React.FC = () => {
                                 </Table>
                             </Col>
                             <Col>
-                            <Calendar
+                                <Calendar
                                     className="disabled"
                                     // tileClassName={tileContent}
                                     // onChange={onChange}

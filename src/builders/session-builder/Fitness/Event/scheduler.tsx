@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { GET_TAG_BY_ID } from '../../graphQL/queries';
 import { useQuery } from '@apollo/client';
-import { Row, Col, Dropdown } from 'react-bootstrap';
+import { Row, Col, Dropdown, Table, Card, Badge } from 'react-bootstrap';
 import SchedulerPage from '../../../program-builder/program-template/scheduler';
 import moment from 'moment';
 import FitnessAction from '../FitnessAction';
@@ -9,6 +9,10 @@ import { Link } from 'react-router-dom';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
 import '../Group/actionButton.css';
 import Loader from '../../../../components/Loader/Loader';
+import DisplayImage from '../../../../components/DisplayImage';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+import "../../profilepicture.css";
 
 const Scheduler = () => {
     const last = window.location.pathname.split('/').reverse();
@@ -79,7 +83,7 @@ const Scheduler = () => {
         mainQuery.refetch();
     }
 
-    if (!show) return <Loader />;
+    if (!show) return <Loader msg="loading scheduler..."/>;
     else
         return (
             <div className="col-lg-12">
@@ -92,7 +96,157 @@ const Scheduler = () => {
                     </span>
                 </div>
                 <Row>
-                    <Col
+                <Card style={{ width: '90%' }}>
+                <Card.Body>
+                        <Row>
+                            <Col lg={10} sm={8}>
+                                <Card.Title><h4>{tag && tag.fitnesspackage?.packagename}</h4></Card.Title>
+                            </Col>
+                            <Col>
+                                <Row className="justify-content-end">
+                                    <Dropdown>
+                                        <Dropdown.Toggle variant="bg-light" id="dropdown-basic">
+                                            <img
+                                                src="/assets/cardsKebab.svg"
+                                                alt="edit"
+                                                className="img-responsive "
+                                                style={{ height: '20px', width: '20px' }}
+                                            />
+                                        </Dropdown.Toggle>
+
+                                        <Dropdown.Menu>
+                                            <Dropdown.Item
+                                                key={2}
+                                                // onClick={() => updateAddress(currValue)}
+                                            >
+                                                Edit Program Name
+                                            </Dropdown.Item>
+                                            <Dropdown.Item
+                                                key={2}
+                                                // onClick={() => updateAddress(currValue)}
+                                            >
+                                                Reschedule
+                                            </Dropdown.Item>
+                                            <Dropdown.Item
+                                                key={1}
+                                                // onClick={() => deleteUserAddress(currValue)}
+                                            >
+                                                Send notification to subscribers
+                                            </Dropdown.Item>
+                                        </Dropdown.Menu>
+                                    </Dropdown>
+                                </Row>
+                            </Col>
+                        </Row>
+
+                        <Card.Text>
+                            <Row className="mt-2">
+                                <Col lg={9} sm={5}>
+                                    <Badge pill variant="dark" className="p-2">
+                                        {tag.fitnesspackage?.level}
+                                    </Badge>
+
+                                    <br />
+                                    <b>Capacity: {tag && tag.fitnesspackage ? tag.fitnesspackage.classsize : null} people</b>
+                                            <br/>
+                                
+                                    <b>Event Date:</b>{' '}
+                                    
+                                    {moment(tag.fitnesspackage.Start_date).format(
+                                                'DD MMMM, YYYY'
+                                            )}
+                                    <br />
+                                    
+                                </Col>
+                                <Col>
+                                    <DisplayImage
+                                        imageName={
+                                            'Photo_ID' in tag.client_packages &&
+                                            tag.client_packages.length &&
+                                            tag.client_packages[0].users_permissions_user &&
+                                            tag.client_packages[0].users_permissions_user.Photo_ID
+                                                ? tag.client_packages[0].users_permissions_user
+                                                      .Photo_ID
+                                                : null
+                                        }
+                                        defaultImageUrl="assets/image_placeholder.svg"
+                                        imageCSS="rounded-circle profile_pic text-center img-fluid ml-3 "
+                                    />
+                                    <br />
+                                    <Badge
+                                        pill
+                                        variant="dark"
+                                        className="py-2 px-4 ml-1 mt-2"
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={() => {
+                                            fitnessActionRef.current.TriggerForm({
+                                                id: last[0],
+                                                actionType: 'allClients',
+                                                type: 'Classic Class'
+                                            });
+                                        }}
+                                    >
+                                        View all
+                                    </Badge>
+                                    <p className="ml-3">{tag.client_packages.length} people</p>
+                                </Col>
+                            </Row>
+                        </Card.Text>
+                    </Card.Body>
+                </Card>
+                <Card style={{ width: '90%' }} className="mt-3">
+                    <Card.Body>
+                        <Card.Title><h4>Movement Sessions</h4></Card.Title>
+                        <Card.Text>
+                            Last planned session {calculateLastSession(tag.sessions)}
+                        </Card.Text>
+                        <Row>
+                            <Col lg={8}>
+                                <Table striped bordered hover size="sm" responsive>
+                                    <thead className='text-center'>
+                                        <tr>
+                                            <th>Type</th>
+                                            <th>Total Sessions</th>
+                                            <th>Plan</th>
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody className='text-center'>
+                                        <tr>
+                                            <td>Event</td>
+                                            <td></td>
+                                            <td>
+                                               
+                                            </td>
+                                            
+                                        </tr>
+                                    </tbody>
+                                </Table>
+                            </Col>
+                            <Col>
+                                <Calendar
+                                    className="disabled"
+                                    // tileClassName={tileContent}
+                                    // onChange={onChange}
+                                    // onActiveStartDateChange={({ action }) => {
+                                    //     action === 'next'
+                                    //         ? setMonth(month + 1)
+                                    //         : setMonth(month - 1);
+                                    // }}
+                                    // value={value}
+                                    minDate={moment().startOf('month').toDate()}
+                                    maxDate={moment().add(2, 'months').toDate()}
+                                    maxDetail="month"
+                                    minDetail="month"
+                                    next2Label={null}
+                                    prev2Label={null}
+                                />
+                            </Col>
+                        </Row>
+                        <p>Note: Create all the sessions to start accepting bookings</p>
+                    </Card.Body>
+                </Card>
+                    {/* <Col
                         lg={11}
                         className="p-4 shadow-lg bg-white"
                         style={{ borderRadius: '10px' }}
@@ -238,8 +392,8 @@ const Scheduler = () => {
                                 </Row>
                             </Col>
                         </Row>
-                    </Col>
-                </Row>
+                    </Col>*/}
+                </Row> 
                 {/* Scheduler */}
                 <Row>
                     <Col lg={11} className="pl-0 pr-0">
@@ -255,7 +409,7 @@ const Scheduler = () => {
                                 restDays={tag?.sessions.filter((ses) => ses.type === 'restday')}
                                 schedulerSessions={schedulerSessions}
                                 clientIds={clientIds}
-                                classType={'Cohort'}
+                                classType={'Event'}
                                 programId={tagId}
                                 startDate={tag?.fitnesspackage?.Start_date}
                             />
