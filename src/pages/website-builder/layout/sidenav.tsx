@@ -26,15 +26,17 @@ export default function SideNav({
         setSelectedOption(location.pathname.slice(1));
     }, [location]);
 
+    const [showSubOptions, setShowSubOptions] = useState(false);
+
     return (
         <aside style={{ position: 'fixed', height: '100%', zIndex: 2 }} className="bg-dark">
             <hr />
             <Nav className="flex-column mt-4" style={{ gap: '10px' }}>
-                <OverlayTrigger
+                {/* <OverlayTrigger
                     placement="right"
                     delay={{ show: 250, hide: 400 }}
                     overlay={renderTooltip('Website')}
-                >
+                  >
                     {selectedOption === 'website' ? (
                         <NavLink
                             className="nav-link text-white"
@@ -75,8 +77,64 @@ export default function SideNav({
                             </Row>
                         </NavLink>
                     )}
-                </OverlayTrigger>
+                </OverlayTrigger> */}
+
                 <OverlayTrigger
+                    placement="right"
+                    delay={{ show: 250, hide: 400 }}
+                    overlay={renderTooltip('Website')}
+                >
+                    <NavLink
+                        className={
+                            selectedOption === 'website' ? 'nav-link text-white' : 'nav-link'
+                        }
+                        to="/website"
+                        onClick={() => {
+                            setSelectedOption(location.pathname.slice(1));
+                            setShowSubOptions(!showSubOptions); // Toggle the sub-option visibility
+                        }}
+                        style={{ color: '#fff', textAlign: 'left' }}
+                    >
+                        <Row>
+                            <Col className="ml-4 m-0 p-0">
+                                <WWWIcon width={24} height={24} />
+                            </Col>
+                            {collapse ? (
+                                ''
+                            ) : (
+                                <Col>
+                                    <div style={{ width: 160 }}>
+                                        Website <span style={{ marginLeft: '80px' }}>⮟</span>
+                                    </div>
+                                </Col>
+                            )}
+                        </Row>
+                    </NavLink>
+                </OverlayTrigger>
+
+                {/* Render the sub-options when showSubOptions is true */}
+                {showSubOptions && selectedOption === 'website' && (
+                    <div style={{ marginLeft: '45px', marginTop: '-15px' }}>
+                        <NavLink
+                            style={{ color: 'white' }}
+                            className="nav-link"
+                            to="/theme-library"
+                            onClick={() => setSelectedOption('theme-library')}
+                        >
+                            Theme Library
+                        </NavLink>
+                        <NavLink
+                            style={{ color: 'white' }}
+                            className="nav-link"
+                            to="/live-editor"
+                            onClick={() => setSelectedOption('live-editor')}
+                        >
+                            Live Editor
+                        </NavLink>
+                    </div>
+                )}
+
+                {/* <OverlayTrigger
                     placement="right"
                     delay={{ show: 250, hide: 400 }}
                     overlay={renderTooltip('mobileApp')}
@@ -122,7 +180,73 @@ export default function SideNav({
                             </Row>
                         </NavLink>
                     )}
+                </OverlayTrigger> */}
+
+                <OverlayTrigger
+                    placement="right"
+                    delay={{ show: 250, hide: 400 }}
+                    overlay={renderTooltip('mobileApp')}
+                >
+                    <NavLink
+                        className={
+                            selectedOption === 'mobileApp' ? 'nav-link text-white' : 'nav-link'
+                        }
+                        to="#"
+                        onClick={() => {
+                            setSelectedOption(location.pathname.slice(1));
+                            setShowSubOptions(!showSubOptions); // Toggle the sub-option visibility
+                        }}
+                        style={{ color: '#fff' }}
+                    >
+                        <Row>
+                            <Col className="ml-4 m-0 p-0">
+                                <MobileIcon width={24} height={24} />
+                            </Col>
+                            {collapse ? (
+                                ''
+                            ) : (
+                                <Col>
+                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                                        <div style={{ width: 160 }}>Mobile Application
+                                        <span style={{ marginLeft: '10px' }}>⮟</span>
+                                        </div>
+                                    </div>
+                                </Col>
+                            )}
+                        </Row>
+                    </NavLink>
                 </OverlayTrigger>
+
+                {/* Render the sub-options when showSubOptions is true */}
+                {showSubOptions && selectedOption === 'website' && (
+                    <div style={{ marginLeft: '45px', marginTop: '-25px' }}>
+                        <NavLink
+                          style={{ color: 'white' }}
+                            className="nav-link"
+                            to="/theme-library"
+                            onClick={() => setSelectedOption('theme-library')}
+                        >
+                            Theme Library
+                        </NavLink>
+                        <NavLink
+                          style={{ color: 'white' }}
+                            className="nav-link"
+                            to="/notification"
+                            onClick={() => setSelectedOption('notification')}
+                        >
+                            Notification
+                        </NavLink>
+                        <NavLink
+                          style={{ color: 'white' }}
+                            className="nav-link"
+                            to="/setting"
+                            onClick={() => setSelectedOption('setting')}
+                        >
+                            Setting
+                        </NavLink>
+                    </div>
+                )}
+
                 <OverlayTrigger
                     placement="right"
                     delay={{ show: 250, hide: 400 }}
