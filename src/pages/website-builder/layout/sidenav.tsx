@@ -47,7 +47,7 @@ export default function SideNav({
                             setShowSubOptionsWebsite(!showSubOptionsWebsite); // Toggle the sub-option visibility
                         }}
                         style={{ color: '#fff', textAlign: 'left' }}
-                    >
+                      >
                         <Row>
                             <Col className="ml-4 m-0 p-0">
                                 <Icon name='website' height={22} width={22}/>
