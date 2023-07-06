@@ -30,11 +30,11 @@
 }
 
 .wrapper {
-    width: 100%;
+    width: 85vw;
     overflow: auto;
     position: relative;
     min-height: 50px;
-    height: 500px;
+    height: 90vh;
 }
 
 .schedular-content {
@@ -152,4 +152,40 @@
 
 #fitness-dropdown {
     width: 200px;
+}
+
+/* Sidebar */
+.sidebar {
+    height: 100%;
+    width: 85px;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    right: 0;
+    background-color: #343a40;
+    transition: 0.5s;
+    overflow-x: hidden;
+    padding-top: 60px;
+    white-space: nowrap;
+    margin-top: 15px;
+}
+
+.sidebar a {
+    padding: 0 0 0 10px;
+    text-decoration: none;
+    font-size: 10px;
+    display: flex;
+    color: #f1f1f1;
+}
+
+.sidebar a:hover {
+    font-weight: bold;
+}
+
+.icon-text {
+    font-size: 20px;
+    vertical-align: middle;
+    color: '#fff';
+    position: relative;
+    bottom: 12px;
 }

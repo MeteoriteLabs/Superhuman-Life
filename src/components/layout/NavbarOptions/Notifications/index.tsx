@@ -1,4 +1,4 @@
-import { Row, Col, Button, Card, Spinner } from 'react-bootstrap';
+import { Row, Col, Button, Card } from 'react-bootstrap';
 import Icons from '../../../Icons';
 import { Link } from 'react-router-dom';
 import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
@@ -8,7 +8,7 @@ import {
     GET_CHANGEMAKER_NOTIFICATION,
     MARK_NOTIFICATION_AS_READ,
     DELETE_NOTIFICATION,
-    GET_CHANGEMAKER_NOTIFICATION_All_RECORS
+    GET_CHANGEMAKER_NOTIFICATION_All_RECORDS
 } from './queries';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
 import moment from 'moment';
@@ -63,7 +63,7 @@ function Notifications(): JSX.Element {
     );
 
     const [getAllNotifications, { data: get_all_notifications }] = useLazyQuery(
-        GET_CHANGEMAKER_NOTIFICATION_All_RECORS
+        GET_CHANGEMAKER_NOTIFICATION_All_RECORDS
     );
 
     const [changeNotificationStatus] = useMutation(MARK_NOTIFICATION_AS_READ);

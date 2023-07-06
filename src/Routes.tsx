@@ -48,6 +48,9 @@ const CustomProgramSchedulerPage = React.lazy(
 const CohortProgramSchedulerPage = React.lazy(
     () => import('./builders/session-builder/Fitness/Cohort/scheduler')
 );
+const EventProgramSchedulerPage = React.lazy(
+    () => import('./builders/session-builder/Fitness/Event/scheduler')
+);
 const ChannelProgramSchedulerPage = React.lazy(
     () => import('./builders/session-builder/Fitness/Channel/scheduler')
 );
@@ -126,6 +129,10 @@ export default function Routes({ token }: { token: string }): JSX.Element {
                             <Route
                                 path="/cohort/session/scheduler"
                                 component={CohortProgramSchedulerPage}
+                            />
+                            <Route
+                                path="/event/session/scheduler"
+                                component={EventProgramSchedulerPage}
                             />
                             <Route
                                 path="/channel/session/scheduler"

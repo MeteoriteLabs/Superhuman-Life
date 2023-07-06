@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { useContext, useMemo, useRef, useState } from 'react';
-import { Badge, Row, Col, Form } from 'react-bootstrap';
+import { Badge, Row, Col, Button } from 'react-bootstrap';
 import Table from '../../../../components/table';
 import AuthContext from '../../../../context/auth-context';
 import { GET_SESSIONS_FROM_TAGS } from '../../graphQL/queries';
@@ -12,99 +12,116 @@ import { flattenObj } from '../../../../components/utils/responseFlatten';
 export default function Custom() {
     const auth = useContext(AuthContext);
     const [userPackage, setUserPackage] = useState<any>([]);
-    const [showHistory, setShowHistory] = useState<boolean>(false);
     const fitnessActionRef = useRef<any>(null);
+    const [page, setPage] = useState<number>(1);
+    const [totalRecords, setTotalRecords] = useState<number>(0);
 
     const mainQuery = useQuery(GET_SESSIONS_FROM_TAGS, {
         variables: {
             id: auth.userid,
-            tagType: 'Custom Fitness'
+            tagType: 'Custom Fitness',
+            start: page * 10 - 10,
+            limit: 10
         },
-        onCompleted: (data) => loadData(data)
+        fetchPolicy: 'no-cache',
+        onCompleted: (data) => {
+            loadData(data);
+            setTotalRecords(data.tags.meta.pagination.total);
+        }
     });
 
     const loadData = (data) => {
         const flattenData = flattenObj({ ...data });
 
-        setUserPackage(
-            [...flattenData.tags].map((packageItem) => {
-                let renewDay: any = '';
-                if (
-                    packageItem.client_packages &&
-                    packageItem.client_packages.length &&
-                    packageItem.client_packages[0].fitnesspackages &&
-                    packageItem.client_packages[0].fitnesspackages[0].length !== 0
-                ) {
-                    renewDay = new Date(packageItem.client_packages[0].effective_date);
-                    renewDay.setDate(
-                        renewDay.getDate() +
-                            packageItem.client_packages[0].fitnesspackages[0].duration
-                    );
-                }
-                return {
-                    tagId: packageItem.id,
-                    id:
+        if (flattenData.tags.client_packages && flattenData.tags.client_packages.length) {
+            setUserPackage(
+                [...flattenData.tags].map((packageItem) => {
+                    let renewDay: any = '';
+                    if (
                         packageItem.client_packages &&
                         packageItem.client_packages.length &&
                         packageItem.client_packages[0].fitnesspackages &&
-                        packageItem.client_packages[0].fitnesspackages[0].id,
-                    packageName:
-                        packageItem.client_packages &&
-                        packageItem.client_packages.length &&
-                        packageItem.client_packages[0].fitnesspackages
-                            ? packageItem.client_packages[0].fitnesspackages[0].packagename
-                            : null,
-                    duration:
-                        packageItem.client_packages &&
-                        packageItem.client_packages.length &&
-                        packageItem.client_packages[0].fitnesspackages &&
-                        packageItem.client_packages[0].fitnesspackages[0].duration,
-                    effectiveDate:
-                        packageItem.client_packages &&
-                        packageItem.client_packages.length &&
-                        packageItem.client_packages[0].fitnesspackages
-                            ? moment(packageItem.client_packages[0].effective_date).format(
-                                  'MMMM DD,YYYY'
-                              )
-                            : null,
-                    packageStatus:
-                        packageItem.client_packages &&
-                        packageItem.client_packages.length &&
-                        packageItem.client_packages[0].fitnesspackages &&
-                        packageItem.client_packages[0].fitnesspackages[0].Status
-                            ? 'Active'
-                            : 'Inactive',
-                    packageRenewal:
-                        packageItem.client_packages && packageItem.client_packages.length
-                            ? moment(renewDay).format('MMMM DD,YYYY')
-                            : null,
-                    client:
-                        packageItem.client_packages && packageItem.client_packages.length
-                            ? packageItem.client_packages[0].users_permissions_user.username
-                            : null,
-                    clientId:
-                        packageItem.client_packages && packageItem.client_packages.length
-                            ? packageItem.client_packages[0].users_permissions_user.id
-                            : null,
-                    programName: packageItem.tag_name,
-                    programStatus:
-                        packageItem.client_packages && packageItem.client_packages.length
-                            ? handleStatus(
-                                  packageItem.sessions,
-                                  packageItem.client_packages[0].effective_date,
-                                  renewDay
-                              )
-                            : null,
-                    programRenewal:
-                        packageItem.client_packages && packageItem.client_packages.length
-                            ? calculateProgramRenewal(
-                                  packageItem.sessions,
-                                  packageItem.client_packages[0].effective_date
-                              )
-                            : null
-                };
-            })
-        );
+                        packageItem.client_packages[0].fitnesspackages.length &&
+                        packageItem.client_packages[0].fitnesspackages[0].length !== 0
+                    ) {
+                        renewDay = new Date(packageItem.client_packages[0].effective_date);
+                        renewDay.setDate(
+                            renewDay.getDate() +
+                                packageItem.client_packages[0].fitnesspackages[0].duration
+                        );
+                    }
+
+                    return {
+                        tagId: packageItem.id,
+                        id:
+                            packageItem.client_packages &&
+                            packageItem.client_packages.length &&
+                            packageItem.client_packages[0].fitnesspackages &&
+                            packageItem.client_packages[0].fitnesspackages.length
+                                ? packageItem.client_packages[0].fitnesspackages[0].id
+                                : null,
+                        packageName:
+                            packageItem.client_packages &&
+                            packageItem.client_packages.length &&
+                            packageItem.client_packages[0].fitnesspackages &&
+                            packageItem.client_packages[0].fitnesspackages.length
+                                ? packageItem.client_packages[0].fitnesspackages[0].packagename
+                                : null,
+                        duration:
+                            packageItem.client_packages &&
+                            packageItem.client_packages.length &&
+                            packageItem.client_packages[0].fitnesspackages &&
+                            packageItem.client_packages[0].fitnesspackages.length
+                                ? packageItem.client_packages[0].fitnesspackages[0].duration
+                                : null,
+                        effectiveDate:
+                            packageItem.client_packages &&
+                            packageItem.client_packages.length &&
+                            packageItem.client_packages[0].effective_date
+                                ? moment(packageItem.client_packages[0].effective_date).format(
+                                      'MMMM DD,YYYY'
+                                  )
+                                : 'N/A',
+                        packageStatus:
+                            packageItem.client_packages &&
+                            packageItem.client_packages.length &&
+                            packageItem.client_packages[0].fitnesspackages
+                                ? packageItem.client_packages[0].fitnesspackages.length &&
+                                  packageItem.client_packages[0].fitnesspackages[0].Status
+                                    ? 'Active'
+                                    : 'Inactive'
+                                : null,
+                        packageRenewal: renewDay ? moment(renewDay).format('MMMM DD,YYYY') : 'N/A',
+
+                        client:
+                            packageItem.client_packages && packageItem.client_packages.length
+                                ? packageItem.client_packages[0].users_permissions_user.username
+                                : null,
+                        clientId:
+                            packageItem.client_packages && packageItem.client_packages.length
+                                ? packageItem.client_packages[0].users_permissions_user.id
+                                : null,
+                        programName: packageItem.tag_name,
+                        programStatus: handleStatus(
+                            packageItem.sessions,
+                            packageItem.client_packages && packageItem.client_packages.length
+                                ? packageItem.client_packages[0].effective_date
+                                : null,
+                            renewDay
+                        ),
+                        programRenewal: calculateProgramRenewal(
+                            packageItem.sessions,
+                            packageItem.client_packages && packageItem.client_packages.length
+                                ? packageItem.client_packages[0].effective_date
+                                : null
+                        )
+                    };
+                })
+            );
+        } 
+        else {
+            setUserPackage([]);
+        }
     };
 
     function handleStatus(sessions: any, effective_date: any, renewDay) {
@@ -143,7 +160,7 @@ export default function Custom() {
     }
 
     function handleRedirect(id: any) {
-        if (id === 'N/A') {
+        if (id === null) {
             alert('No Program Assigned');
             return;
         }
@@ -240,82 +257,43 @@ export default function Custom() {
         []
     );
 
-    function handleHistoryPackage(data: any) {
-        const flattenData = flattenObj({ ...data });
-        setUserPackage(
-            [...flattenData.tags].map((packageItem) => {
-                let renewDay: any = '';
-                if (packageItem.client_packages[0].fitnesspackages[0].length !== 0) {
-                    renewDay = new Date(packageItem.client_packages[0].effective_date);
-                    renewDay.setDate(
-                        renewDay.getDate() +
-                            packageItem.client_packages[0].fitnesspackages[0].duration
-                    );
-                }
-                return {
-                    tagId: packageItem.id,
-                    id: packageItem.client_packages[0].fitnesspackages[0].id,
-                    packageName: packageItem.client_packages[0].fitnesspackages[0].packagename,
-                    duration: packageItem.client_packages[0].fitnesspackages[0].duration,
-                    effectiveDate: moment(packageItem.client_packages[0].effective_date).format(
-                        'MMMM DD,YYYY'
-                    ),
-                    packageStatus: packageItem.client_packages[0].fitnesspackages[0].Status
-                        ? 'Active'
-                        : 'Inactive',
-                    packageRenewal: moment(renewDay).format('MMMM DD,YYYY'),
-
-                    client: packageItem.client_packages[0].users_permissions_user.username,
-                    clientId: packageItem.client_packages[0].users_permissions_user.id,
-                    programName: packageItem.tag_name,
-                    programStatus: handleStatus(
-                        packageItem.sessions,
-                        packageItem.client_packages[0].effective_date,
-                        renewDay
-                    ),
-                    programRenewal: calculateProgramRenewal(
-                        packageItem.sessions,
-                        packageItem.client_packages[0].effective_date
-                    )
-                };
-            })
-        );
-    }
-
-    if (!showHistory) {
-        if (userPackage.length > 0) {
-            userPackage.filter((item: any, index: any) =>
-                moment(item.packageRenewal).isBefore(moment()) === true
-                    ? userPackage.splice(index, 1)
-                    : null
-            );
-        }
-    }
+    const pageHandler = (selectedPageNumber: number) => {
+        setPage(selectedPageNumber);
+    };
 
     return (
         <div className="mt-5">
-            <div className="mb-3">
-                <Form>
-                    <Form.Check
-                        type="switch"
-                        id="switchEnabled"
-                        label="Show History"
-                        defaultChecked={showHistory}
-                        onClick={() => {
-                            setShowHistory(!showHistory);
-                            mainQuery.refetch().then((res: any) => {
-                                handleHistoryPackage(res.data);
-                            });
-                        }}
-                    />
-                </Form>
-            </div>
             <Row>
                 <Col>
                     <Table columns={columns} data={userPackage} />
                     <FitnessAction ref={fitnessActionRef} callback={() => mainQuery} />
                 </Col>
             </Row>
+            {/* Pagination */}
+            {userPackage && userPackage.length ? (
+                <Row className="justify-content-end">
+                    <Button
+                        variant="outline-dark"
+                        className="m-2"
+                        onClick={() => pageHandler(page - 1)}
+                        disabled={page === 1 ? true : false}
+                    >
+                        Previous
+                    </Button>
+
+                    <Button
+                        variant="outline-dark"
+                        className="m-2"
+                        onClick={() => pageHandler(page + 1)}
+                        disabled={totalRecords > page * 10 - 10 + userPackage.length ? false : true}
+                    >
+                        Next
+                    </Button>
+                    <span className="m-2 bold pt-2">{`${page * 10 - 10 + 1} - ${
+                        page * 10 - 10 + userPackage.length
+                    }`}</span>
+                </Row>
+            ) : null}
         </div>
     );
 }
