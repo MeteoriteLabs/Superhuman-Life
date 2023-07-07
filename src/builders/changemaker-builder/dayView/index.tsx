@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react';
+import { FC, useState, useContext, useEffect } from 'react';
 import moment from 'moment';
 import { Row, Col, Button, Badge, Spinner } from 'react-bootstrap';
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
@@ -8,7 +8,7 @@ import AuthContext from '../../../context/auth-context';
 import 'react-vertical-timeline-component/style.min.css';
 import { flattenObj } from '../../../components/utils/responseFlatten';
 
-const DayView = (props: any) => {
+const DayView: FC = () => {
     const auth = useContext(AuthContext);
     const [todaysEvents, setTodaysEvents] = useState<any[]>([]);
     const [events, setEvents] = useState<any[]>([]);
@@ -37,9 +37,6 @@ const DayView = (props: any) => {
         variables: {
             id: auth.userid,
             type_in: ['One-On-One', 'Group Class', 'Custom']
-        },
-        onCompleted: (data) => {
-            // loadData(data);
         }
     });
 

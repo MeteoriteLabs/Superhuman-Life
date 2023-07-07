@@ -137,7 +137,7 @@ function CreateEditEvent(props: any, ref: any) {
             props.refetchTags();
             props.refetchOfferings();
             setIsFormSubmitted(!isFormSubmitted);
-            window.open(`cohort/session/scheduler/${response.createTag.data.id}`, '_self');
+            window.open(`event/session/scheduler/${response.createTag.data.id}`, '_self');
         }
     });
 
@@ -583,7 +583,7 @@ function CreateEditEvent(props: any, ref: any) {
             </Modal>
 
             {/* Delete modal validation (if classAvailability is greater than zero show this dailouge box) */}
-            {offeringInventoryDetails && offeringInventoryDetails.ActiveBookings > 0 ? (
+            {offeringInventoryDetails && offeringInventoryDetails.ActiveBookings > 0 && operation.type === 'delete' ? (
                 <Modal
                     size="lg"
                     aria-labelledby="contained-modal-title-vcenter"

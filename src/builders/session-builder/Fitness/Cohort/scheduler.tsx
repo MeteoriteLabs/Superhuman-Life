@@ -217,7 +217,8 @@ const Scheduler: React.FC = () => {
                                     <tbody className='text-center'>
                                         <tr>
                                             <td>Cohort</td>
-                                            <td></td>
+                                            <td>{(moment(tag.fitnesspackage.End_date).diff(moment(tag.fitnesspackage.Start_date), 'days')) + 1
+                                            }</td>
                                             <td>
                                                
                                             </td>

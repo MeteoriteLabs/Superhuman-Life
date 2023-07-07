@@ -78,12 +78,14 @@ function CreateEditNewWorkout(props: any, ref: any) {
             modalTrigger.next(false);
         }
     });
+
     const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, {
         onCompleted: () => {
             modalTrigger.next(false);
             props.callback();
         }
     });
+
     const [upateSessions] = useMutation(UPDATE_TAG_SESSIONS, {
         onCompleted: () => {
             if (props?.clientIds.length > 0) {
@@ -101,12 +103,14 @@ function CreateEditNewWorkout(props: any, ref: any) {
             }
         }
     });
+
     const [updateFitenssProgram] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, {
         onCompleted: () => {
             modalTrigger.next(false);
             props.callback();
         }
     });
+
     const [createSession] = useMutation(CREATE_SESSION, {
         onCompleted: (response) => {
             setIsCreated(!isCreated);
@@ -204,6 +208,7 @@ function CreateEditNewWorkout(props: any, ref: any) {
     }
 
     async function updateSchedulerEvents(frm: any, workout_id: any) {
+       
         const existingEvents = props.events === null ? [] : [...props.events];
 
         if (frm && frm.day) {
@@ -224,7 +229,7 @@ function CreateEditNewWorkout(props: any, ref: any) {
                 setDropConflict(true);
                 return;
             }
-        }
+         }
 
         const eventJson: any = {};
         if (frm.day) {
