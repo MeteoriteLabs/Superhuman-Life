@@ -772,8 +772,8 @@ const WorkHours: React.FC = () => {
                         </div>
                     </Col>
                     <Col lg={6}>
-                        <div className="btnNav">
-                            <ButtonToolbar className="btnToolbar">
+                        <div className="btn_nav">
+                            <ButtonToolbar className="btn_toolbar">
                                 <Button
                                     onClick={() => {
                                         setShowDatesRangeModal(true);
@@ -796,7 +796,7 @@ const WorkHours: React.FC = () => {
                     </Col>
                 </Row>
                 <div style={{ borderRadius: '20px' }} className="text-center mt-3 p-0">
-                    <Row className="rowBorderBottom">
+                    <Row className="row_border_bottom">
                         {moment(date).format('Do MMMM YYYY, dddd')}
                     </Row>
                     <Row className="mt-3">
@@ -823,7 +823,7 @@ const WorkHours: React.FC = () => {
                         </Col>
                         <Col lg={8}>
                             {slots?.length === 0 && (
-                                <div className="message-container">
+                                <div className="message_container">
                                     You have nothing assigned for{' '}
                                     {moment(value).format('Do MMM, YYYY')}
                                 </div>
@@ -845,7 +845,7 @@ const WorkHours: React.FC = () => {
                                     overflow: 'auto',
                                     overflowX: 'hidden'
                                 }}
-                                className="table-container"
+                                className="table_container"
                             >
                                 {slots[0] !== null &&
                                     slots?.map((item, index: number) => {
@@ -853,7 +853,7 @@ const WorkHours: React.FC = () => {
                                             <Row
                                                 id={item.id}
                                                 key={index}
-                                                className="mt-3 pt-1 pb-1 items-center smallScreen"
+                                                className="mt-3 pt-1 pb-1 items-center small_screen"
                                                 style={{ fontWeight: '600', letterSpacing: '2px' }}
                                             >
                                                 <Col
@@ -863,7 +863,7 @@ const WorkHours: React.FC = () => {
                                                         overflow: 'hidden'
                                                     }}
                                                     md={10}
-                                                    className="shadow p-1 mb-0 bg-white tableCol"
+                                                    className="shadow p-1 mb-0 bg-white table_col"
                                                 >
                                                     <Row className="align-items-center">
                                                         <Col
@@ -942,7 +942,7 @@ const WorkHours: React.FC = () => {
                                                                     item.tag ? 'none' : 'block'
                                                                 }`
                                                             }}
-                                                            className="btnDelete"
+                                                            className="btn_delete"
                                                             src="/assets/delete.svg"
                                                             alt="delete"
                                                             onClick={() => {
@@ -960,7 +960,7 @@ const WorkHours: React.FC = () => {
                     </Row>
                     <Row className="mt-3">
                         <Col>
-                            <Row className="rowBorderBottom"></Row>
+                            <Row className="row_border_bottom"></Row>
                         </Col>
                     </Row>
 
@@ -970,7 +970,7 @@ const WorkHours: React.FC = () => {
                             <Row>
                                 <Col lg={5}>
                                     <TimePicker
-                                        className="timepicker"
+                                        className="time_picker"
                                         value={convertToMoment(fromTime)}
                                         showSecond={false}
                                         minuteStep={15}
@@ -982,7 +982,7 @@ const WorkHours: React.FC = () => {
                                 <Col lg={2}>To</Col>
                                 <Col lg={5}>
                                     <TimePicker
-                                        className="timepicker"
+                                        className="time_picker"
                                         value={convertToMoment(toTime)}
                                         showSecond={false}
                                         minuteStep={15}
@@ -996,7 +996,7 @@ const WorkHours: React.FC = () => {
                         </Col>
                         <Col lg={2} className="pl-0 pr-0">
                             <Form.Control
-                                className="modepicker"
+                                className="mode_picker"
                                 as="select"
                                 onChange={(e) => {
                                     setClassMode(e.target.value);
@@ -1010,7 +1010,7 @@ const WorkHours: React.FC = () => {
                         </Col>
                         <Col lg={1}>
                             <Button
-                                className="pl-3 pr-3 pt-1 pb-1 shadow-lg btnAdd"
+                                className="pl-3 pr-3 pt-1 pb-1 shadow-lg btn_add"
                                 title={
                                     disableAdd || classMode === ''
                                         ? 'please enter valid details'
