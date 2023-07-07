@@ -36,7 +36,6 @@ import './styles.css';
 import Toaster from '../../../../components/Toaster';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
 
-
 const configTemplate: any = {
     Sunday: {
         isHoliday: false,
@@ -81,7 +80,6 @@ const WorkHours: React.FC = () => {
     const [holidays, setHolidays] = useState<any>([]);
     const [month, setMonth] = useState<number>(0);
     const [showDaysModal, setShowDaysModal] = useState<boolean>(false);
-    const [showDatesModal, setShowDatesModal] = useState<boolean>(false);
     const [showDatesRangeModal, setShowDatesRangeModal] = useState(false);
     const [masterSettings, setMasterSettings] = useState<any>([]);
     const [slots, setSlots] = useState<any>([]);
@@ -94,8 +92,6 @@ const WorkHours: React.FC = () => {
     const [startDate, setStartDate] = useState(moment().format('YYYY-MM-DD'));
     const [endDate, setEndDate] = useState(moment().add(1, 'months').format('YYYY-MM-DD'));
     const [userConfig, setUserConfig] = useState<any>(configTemplate);
-    const [checkState, setCheckState] = useState<boolean>(false);
-    const [holidayCheckState, setHolidayCheckState] = useState<boolean>(false);
     const [dayHoliday, setDayHoliday] = useState<boolean>(false);
     const [desc, setDesc] = useState<string>('');
     const [rangeValue, rangeOnChange] = useState([new Date(), new Date()]);
@@ -112,18 +108,6 @@ const WorkHours: React.FC = () => {
     useEffect(() => {
         setDate(moment(value).format('YYYY-MM-DD'));
     }, [value]);
-
-    useEffect(() => {
-        if (holidays.length > 0) {
-            setHolidayCheckState(holidays[0]?.Is_Holiday);
-            setCheckState(holidays[0]?.Is_Holiday);
-            setDesc(holidays[0]?.holiday_title);
-        } else {
-            setCheckState(false);
-            setHolidayCheckState(false);
-            setDesc('');
-        }
-    }, [holidays]);
 
     const mainQuery = useQuery(GET_CHANGEMAKER_AVAILABILITY_AND_TAGS, {
         variables: {
@@ -788,8 +772,8 @@ const WorkHours: React.FC = () => {
                         </div>
                     </Col>
                     <Col lg={6}>
-                        <div style={{ textAlign: 'end' }}>
-                            <ButtonToolbar style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <div className="btn_nav">
+                            <ButtonToolbar className="btn_toolbar">
                                 <Button
                                     onClick={() => {
                                         setShowDatesRangeModal(true);
@@ -811,21 +795,8 @@ const WorkHours: React.FC = () => {
                         </div>
                     </Col>
                 </Row>
-                <div style={{ borderRadius: '20px' }} className="text-center mt-3 p-5 ">
-                    <Row
-                        style={{
-                            borderBottom: '3px solid gray',
-                            width: '65%',
-                            marginLeft: '27vw',
-                            letterSpacing: '2px',
-                            fontSize: '24px',
-                            fontFamily: 'Inter',
-                            fontStyle: 'normal',
-                            fontWeight: '700',
-                            display: 'flex',
-                            justifyContent: 'center'
-                        }}
-                    >
+                <div style={{ borderRadius: '20px' }} className="text-center mt-3 p-0">
+                    <Row className="row_border_bottom">
                         {moment(date).format('Do MMMM YYYY, dddd')}
                     </Row>
                     <Row className="mt-3">
@@ -852,7 +823,7 @@ const WorkHours: React.FC = () => {
                         </Col>
                         <Col lg={8}>
                             {slots?.length === 0 && (
-                                <div>
+                                <div className="message_container">
                                     You have nothing assigned for{' '}
                                     {moment(value).format('Do MMM, YYYY')}
                                 </div>
@@ -874,6 +845,7 @@ const WorkHours: React.FC = () => {
                                     overflow: 'auto',
                                     overflowX: 'hidden'
                                 }}
+                                className="table_container"
                             >
                                 {slots[0] !== null &&
                                     slots?.map((item, index: number) => {
@@ -881,7 +853,7 @@ const WorkHours: React.FC = () => {
                                             <Row
                                                 id={item.id}
                                                 key={index}
-                                                className="mt-3 pt-1 pb-1 items-center"
+                                                className="mt-3 pt-1 pb-1 items-center small_screen"
                                                 style={{ fontWeight: '600', letterSpacing: '2px' }}
                                             >
                                                 <Col
@@ -891,7 +863,7 @@ const WorkHours: React.FC = () => {
                                                         overflow: 'hidden'
                                                     }}
                                                     md={10}
-                                                    className="shadow p-1 mb-0 bg-white"
+                                                    className="shadow p-1 mb-0 bg-white table_col"
                                                 >
                                                     <Row className="align-items-center">
                                                         <Col
@@ -959,21 +931,26 @@ const WorkHours: React.FC = () => {
 
                                                 <Col className="p-2">
                                                     {' '}
-                                                    <img
-                                                        style={{
-                                                            cursor: 'pointer',
-                                                            marginLeft: '50px',
-                                                            display: `${
-                                                                item.tag ? 'none' : 'block'
-                                                            }`
-                                                        }}
-                                                        src="/assets/delete.svg"
-                                                        alt="delete"
-                                                        onClick={() => {
-                                                            setConfirmModal(true);
-                                                            setSlotId(item.id);
-                                                        }}
-                                                    />
+                                                    {item.SessionTitle ? (
+                                                        ''
+                                                    ) : (
+                                                        <img
+                                                            style={{
+                                                                cursor: 'pointer',
+
+                                                                display: `${
+                                                                    item.tag ? 'none' : 'block'
+                                                                }`
+                                                            }}
+                                                            className="btn_delete"
+                                                            src="/assets/delete.svg"
+                                                            alt="delete"
+                                                            onClick={() => {
+                                                                setConfirmModal(true);
+                                                                setSlotId(item.id);
+                                                            }}
+                                                        />
+                                                    )}
                                                 </Col>
                                             </Row>
                                         );
@@ -983,154 +960,75 @@ const WorkHours: React.FC = () => {
                     </Row>
                     <Row className="mt-3">
                         <Col>
-                            <Row
-                                style={{
-                                    borderTop: '3px solid gray',
-                                    width: '65%',
-                                    marginLeft: '27vw',
-                                    marginTop: '15px'
-                                }}
-                            ></Row>
+                            <Row className="row_border_bottom"></Row>
                         </Col>
                     </Row>
-                    {checkState && (
-                        <Row className="mt-3 mb-3">
-                            <Col>
-                                <Form>
-                                    <Form.Check
-                                        type="switch"
-                                        defaultChecked={checkState}
-                                        onClick={() => setCheckState(!checkState)}
-                                        id="custom-switch"
-                                        label="Set Holiday"
-                                    />
-                                </Form>
-                            </Col>
-                            <Col lg={{ span: 1, offset: 2 }}></Col>
-                            <Col lg={5} className="pl-0 pr-0">
-                                <input
-                                    type="text"
-                                    className="shadow-lg p-1"
-                                    value={desc}
-                                    onChange={(e) => setDesc(e.target.value)}
-                                    placeholder="Enter the event"
-                                    style={{
-                                        width: '100%',
-                                        border: '1px solid gray',
-                                        borderRadius: '10px'
-                                    }}
-                                ></input>
-                                <span className="text-start">
-                                    <b>Enter holiday Description above</b>
-                                </span>
-                            </Col>
-                            {!holidayCheckState && (
-                                <Col lg={2}>
-                                    <Button
-                                        className="pl-3 pr-3 pt-1 pb-1 shadow-lg"
-                                        disabled={desc === '' ? true : false}
-                                        style={{ borderRadius: '10px' }}
-                                        variant="info"
-                                        onClick={() => {
-                                            handleAddHoliday(date, desc);
-                                            handleToast();
+
+                    <Row className="mt-3 mb-3 mr-3">
+                        <Col></Col>
+                        <Col lg={{ span: 5 }}>
+                            <Row>
+                                <Col lg={5}>
+                                    <TimePicker
+                                        className="time_picker"
+                                        value={convertToMoment(fromTime)}
+                                        showSecond={false}
+                                        minuteStep={15}
+                                        onChange={(e) => {
+                                            handleFromTimeInput(moment(e).format('HH:mm'));
                                         }}
-                                    >
-                                        Set Holiday
-                                    </Button>
-                                </Col>
-                            )}
-                            {holidayCheckState && (
-                                <Col lg={2}>
-                                    <Button
-                                        className="pl-3 pr-3 pt-1 pb-1 shadow-lg"
-                                        disabled={desc === '' ? true : false}
-                                        style={{ borderRadius: '10px' }}
-                                        variant="danger"
-                                        onClick={() => {
-                                            handleDeleteHoliday(holidays);
-                                            handleDeleteToast();
-                                        }}
-                                    >
-                                        Delete Holiday
-                                    </Button>
-                                </Col>
-                            )}
-                        </Row>
-                    )}
-                    {!checkState && (
-                        <Row className="mt-3 mb-3">
-                            <Col>
-                                <Form>
-                                    <Form.Check
-                                        type="switch"
-                                        defaultChecked={checkState}
-                                        onClick={() => setCheckState(!checkState)}
-                                        id="custom-switch"
-                                        label="Set Holiday"
                                     />
-                                </Form>
-                            </Col>
-                            <Col lg={{ span: 5 }}>
-                                <Row>
-                                    <Col lg={5}>
-                                        <TimePicker
-                                            value={convertToMoment(fromTime)}
-                                            showSecond={false}
-                                            minuteStep={15}
-                                            onChange={(e) => {
-                                                handleFromTimeInput(moment(e).format('HH:mm'));
-                                            }}
-                                        />
-                                    </Col>
-                                    <Col lg={2}>To</Col>
-                                    <Col lg={5}>
-                                        <TimePicker
-                                            value={convertToMoment(toTime)}
-                                            showSecond={false}
-                                            minuteStep={15}
-                                            onChange={(e) => {
-                                                handleToTimeInput(moment(e).format('HH:mm'));
-                                            }}
-                                        />
-                                    </Col>
-                                </Row>
-                                <div className="text-center mt-2">{handleTimeValidation()}</div>
-                            </Col>
-                            <Col lg={2} className="pl-0 pr-0">
-                                <Form.Control
-                                    as="select"
-                                    onChange={(e) => {
-                                        setClassMode(e.target.value);
-                                    }}
-                                >
-                                    <option value="none">Select Mode</option>
-                                    <option value="Online">Online</option>
-                                    <option value="Offline">Offline</option>
-                                    <option value="Hybrid">Hybrid</option>
-                                </Form.Control>
-                            </Col>
-                            <Col lg={1}>
-                                <Button
-                                    className="pl-3 pr-3 pt-1 pb-1 shadow-lg"
-                                    title={
-                                        disableAdd || classMode === ''
-                                            ? 'please enter valid details'
-                                            : ''
-                                    }
-                                    disabled={disableAdd || classMode === ''}
-                                    style={{ borderRadius: '10px' }}
-                                    variant="outline-dark"
-                                    onClick={() => {
-                                        handleWorkTime(fromTime, toTime, classMode, date, holidays);
-                                        handleToast();
-                                    }}
-                                >
-                                    Add
-                                </Button>
-                            </Col>
-                        </Row>
-                    )}
+                                </Col>
+                                <Col lg={2}>To</Col>
+                                <Col lg={5}>
+                                    <TimePicker
+                                        className="time_picker"
+                                        value={convertToMoment(toTime)}
+                                        showSecond={false}
+                                        minuteStep={15}
+                                        onChange={(e) => {
+                                            handleToTimeInput(moment(e).format('HH:mm'));
+                                        }}
+                                    />
+                                </Col>
+                            </Row>
+                            <div className="text-center mt-2">{handleTimeValidation()}</div>
+                        </Col>
+                        <Col lg={2} className="pl-0 pr-0">
+                            <Form.Control
+                                className="mode_picker"
+                                as="select"
+                                onChange={(e) => {
+                                    setClassMode(e.target.value);
+                                }}
+                            >
+                                <option value="none">Select Mode</option>
+                                <option value="Online">Online</option>
+                                <option value="Offline">Offline</option>
+                                <option value="Hybrid">Hybrid</option>
+                            </Form.Control>
+                        </Col>
+                        <Col lg={1}>
+                            <Button
+                                className="pl-3 pr-3 pt-1 pb-1 shadow-lg btn_add"
+                                title={
+                                    disableAdd || classMode === ''
+                                        ? 'please enter valid details'
+                                        : ''
+                                }
+                                disabled={disableAdd || classMode === ''}
+                                style={{ borderRadius: '10px' }}
+                                variant="outline-dark"
+                                onClick={() => {
+                                    handleWorkTime(fromTime, toTime, classMode, date, holidays);
+                                    handleToast();
+                                }}
+                            >
+                                Add
+                            </Button>
+                        </Col>
+                    </Row>
+                    {/* )} */}
                     <Row>
                         <Col lg={{ span: 8, offset: 4 }}>
                             <div
