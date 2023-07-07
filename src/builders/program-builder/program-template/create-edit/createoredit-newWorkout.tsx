@@ -78,7 +78,7 @@ function CreateEditNewWorkout(props: any, ref: any) {
             modalTrigger.next(false);
         }
     });
-console.log(frmDetails);
+
     const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, {
         onCompleted: () => {
             modalTrigger.next(false);
@@ -215,21 +215,21 @@ console.log(frmDetails);
             frm.day = JSON.parse(frm.day);
         }
 
-        // if (window.location.pathname.split('/')[1] !== 'programs') {
-        //     const variables = {
-        //         date: moment(frm.day[0].day, 'Do, MMM YY').format('YYYY-MM-DD')
-        //     };
+        if (window.location.pathname.split('/')[1] !== 'programs') {
+            const variables = {
+                date: moment(frm.day[0].day, 'Do, MMM YY').format('YYYY-MM-DD')
+            };
 
-        //     const result = await query.refetch(variables);
-        //     const filterResult = await AvailabilityCheck({
-        //         sessions: result.data.sessions,
-        //         event: frm
-        //     });
-        //     if (filterResult) {
-        //         setDropConflict(true);
-        //         return;
-        //     }
-        // }
+            const result = await query.refetch(variables);
+            const filterResult = await AvailabilityCheck({
+                sessions: result.data.sessions,
+                event: frm
+            });
+            if (filterResult) {
+                setDropConflict(true);
+                return;
+            }
+         }
 
         const eventJson: any = {};
         if (frm.day) {
