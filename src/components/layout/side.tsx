@@ -193,7 +193,7 @@ export function SideNav({
                 <OverlayTrigger
                     placement="right"
                     delay={{ show: 250, hide: 400 }}
-                    overlay={renderTooltip('Resources')}
+                    overlay={renderTooltip('Library')}
                 >
                     {selectedOption === 'resources' ? (
                         <NavLink
@@ -202,7 +202,7 @@ export function SideNav({
                             onClick={() => setSelectedOption(location.pathname.slice(1))}
                         >
                             <Icon name="resource" width={24} height={24} />
-                            <span className="ml-1">{!collapse && 'Resources'}</span>
+                            <span className="ml-1">{!collapse && 'Library'}</span>
                         </NavLink>
                     ) : (
                         <NavLink
@@ -212,7 +212,7 @@ export function SideNav({
                             style={{ color: '#cebaa8' }}
                         >
                             <Icon name="lightresource" width={24} height={24} />
-                            <span className="ml-1">{!collapse && 'Resources'}</span>
+                            <span className="ml-1">{!collapse && 'Library'}</span>
                         </NavLink>
                     )}
                 </OverlayTrigger>

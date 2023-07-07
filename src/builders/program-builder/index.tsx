@@ -4,7 +4,7 @@ import FitnessTab from './fitness/index';
 export default function ProgramPage(): JSX.Element {
     return (
         <>
-            <h2>Resources</h2>
+            <h2>Library</h2>
             <Card className="shadow-sm mt-3" border="light">
                 <Card.Body>
                     <Tabs
