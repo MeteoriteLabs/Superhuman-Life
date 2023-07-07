@@ -1,7 +1,7 @@
 import { FC, useState, useContext, useEffect } from 'react';
 import SideNav from './layout/sidenav';
 import 'react-toggle/style.css';
-import { Button, Container, Row, Col, Nav , Navbar } from 'react-bootstrap';
+import { Button, Container, Row, Col, Nav, Navbar } from 'react-bootstrap';
 import WebsiteBuilder_settings from './components/websiteBuilder_settings';
 import WebsiteBuilder_template from './components/websiteBuilder_template';
 import { useLocation } from 'react-router-dom';
@@ -66,8 +66,7 @@ const WebsiteBuilder: FC = () => {
                                         flexDirection: 'column',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        textAlign: 'center',
-                                        
+                                        textAlign: 'center'
                                     }}
                                 >
                                     <Icon name="website" height={22} width={22} />
@@ -78,7 +77,13 @@ const WebsiteBuilder: FC = () => {
                             {selected === 'website' && showSubOptionsWebsite && (
                                 <Navbar.Collapse
                                     id="basic-navbar-nav"
-                                    style={{ height: '20vh', width: '100vw' }}
+                                    style={{
+                                        height: '18vh',
+                                        width: '100vw', 
+                                        position: 'fixed',
+                                        bottom: '16vh',
+                                        backgroundColor: '#343a40'
+                                    }}
                                 >
                                     <Nav
                                         className="mr-auto ml-3"
@@ -114,18 +119,24 @@ const WebsiteBuilder: FC = () => {
                                         flexDirection: 'column',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        textAlign: 'center',
+                                        textAlign: 'center'
                                     }}
                                 >
                                     <MobileIcon width={24} height={24} />
                                 </div>
-                                <small> Mobile Application</small>
+                                <small>Mobile Application</small>
                             </Navbar.Brand>
 
                             {selected === 'mobileApp' && showSubOptionsMobile && (
                                 <Navbar.Collapse
                                     id="basic-navbar-nav"
-                                    style={{ height: '20vh', width: '100vw' }}
+                                    style={{
+                                        height: '20vh',
+                                        width: '100vw', 
+                                        position: 'fixed', 
+                                        bottom: '16vh', 
+                                        backgroundColor: '#343a40' 
+                                    }}
                                 >
                                     <Nav
                                         className="mr-auto ml-3"
@@ -153,6 +164,7 @@ const WebsiteBuilder: FC = () => {
                                 </Navbar.Collapse>
                             )}
                         </Navbar>
+
                         <Navbar>
                             <Navbar.Brand
                                 onClick={() => {
