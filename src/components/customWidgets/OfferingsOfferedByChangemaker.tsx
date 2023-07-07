@@ -40,7 +40,9 @@ const OfferingList: React.FC<{ value: string; onChange: (params: string | null) 
         setOfferingList(
             [...flattenedData.offeringInventories].map((currValue) => {
                 return {
+                    // eslint-disable-next-line
                     id: currValue.fitnesspackage && currValue.fitnesspackage.id,
+                    // eslint-disable-next-line
                     name: currValue.fitnesspackage && currValue.fitnesspackage.packagename
                 };
             })

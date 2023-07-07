@@ -25,6 +25,7 @@ export default function BookingFitness() {
     const loadData = (data) => {
         const flattenData = flattenObj({ ...data });
         setBookingPackage([
+            // eslint-disable-next-line
             ...flattenData.bookingConfigs.map((fitnessPackage) => {
                 return {
                     id: fitnessPackage.id,

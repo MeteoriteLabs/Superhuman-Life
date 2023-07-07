@@ -42,7 +42,7 @@ interface Operation {
 
 function CreateAddress(props: any, ref: any): JSX.Element {
     const auth = useContext(AuthContext);
-    const addressJson: any = require('./Address.json');
+    const addressJson: Record<string, unknown> = require('./Address.json');
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [addressDetails, setAddressDetails] = useState({} as BasicAddressDetails);
     const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);

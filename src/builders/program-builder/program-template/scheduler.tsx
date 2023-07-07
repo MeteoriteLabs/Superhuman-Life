@@ -1849,6 +1849,20 @@ const Schedular = (props: any) => {
     } else
         return (
             <>
+             {/* Floating Action Buttons */}
+                {props?.clientSchedular !== 'client' && (
+                    <FloatingButton
+                        clientIds={props.clientIds}
+                        sessionIds={props.sessionIds}
+                        startDate={props.startDate}
+                        duration={props.days}
+                        callback={handleFloatingActionProgramCallback}
+                        callback2={handleFloatingActionProgramCallback2}
+                        callback3={handleRefetch}
+                        restDayCallback={handleShowRestDay}
+                        showRestDayAction={showRestDay}
+                    />
+                )}
                 {/* this program list is only for fitnesstemplate */}
                 <div
                     className="mb-5 shadow-lg p-3"
@@ -2106,7 +2120,7 @@ const Schedular = (props: any) => {
                     </div>
                 </div>
                 {/* Floating Action Buttons */}
-                {props?.clientSchedular !== 'client' && (
+                {/* {props?.clientSchedular !== 'client' && (
                     <FloatingButton
                         clientIds={props.clientIds}
                         sessionIds={props.sessionIds}
@@ -2118,7 +2132,7 @@ const Schedular = (props: any) => {
                         restDayCallback={handleShowRestDay}
                         showRestDayAction={showRestDay}
                     />
-                )}
+                )} */}
                 {
                     <Modal
                         show={showModal}

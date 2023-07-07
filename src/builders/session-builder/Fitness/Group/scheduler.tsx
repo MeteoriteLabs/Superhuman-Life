@@ -8,7 +8,18 @@ import {
 } from '../../graphQL/queries';
 import { UPDATE_STARTDATE } from '../../graphQL/mutation';
 import { useQuery, useMutation } from '@apollo/client';
-import { Row, Col, Button, Dropdown, Modal, InputGroup, FormControl } from 'react-bootstrap';
+import {
+    Row,
+    Col,
+    Button,
+    Dropdown,
+    Modal,
+    InputGroup,
+    FormControl,
+    Table,
+    Card,
+    Badge
+} from 'react-bootstrap';
 import SchedulerPage from '../../../program-builder/program-template/scheduler';
 import moment from 'moment';
 import '../fitness.css';
@@ -20,6 +31,10 @@ import { flattenObj } from '../../../../components/utils/responseFlatten';
 import 'rc-time-picker/assets/index.css';
 import './actionButton.css';
 import Loader from '../../../../components/Loader/Loader';
+import DisplayImage from '../../../../components/DisplayImage';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+import "../../profilepicture.css";
 
 const Scheduler = () => {
     const auth = useContext(AuthContext);
@@ -45,7 +60,7 @@ const Scheduler = () => {
     const [tagSeperation, setTagSeperation] = useState<any>([]);
     const [statusDays, setStatusDays] = useState();
     const [tag, setTag] = useState<any>();
-
+console.log(last);
     let programIndex;
 
     const fitnessActionRef = useRef<any>(null);
@@ -91,6 +106,7 @@ const Scheduler = () => {
         }
         for (let i = 0; i < values.length; i++) {
             ids.push(values[i].id);
+            // eslint-disable-next-line
             if (values[i].mode === 'Online') {
                 total[0] += 1;
             } else if (values[i].mode === 'Offline') {
@@ -173,6 +189,7 @@ const Scheduler = () => {
                     level: detail.level,
                     sdate: detail.start_dt,
                     events: handleEventsSeperation(detail.events, detail.rest_days),
+                    // eslint-disable-next-line
                     edate: detail.end_dt,
                     duration: detail.duration_days,
                     details: detail.description,
@@ -346,7 +363,18 @@ const Scheduler = () => {
         return days + 1;
     }
 
-    if (!show) return <Loader />;
+    function calculateLastSession(sessions) {
+        if (sessions.length === 0) {
+            return 'N/A';
+        }
+
+        const moments = sessions.map((currentDate) => moment(currentDate.session_date));
+        const maxDate = moment.max(moments);
+
+        return maxDate.format('MMM Do,YYYY');
+    }
+
+    if (!show) return <Loader msg="loading scheduler..."/>;
     else
         return (
             <div className="col-lg-12">
@@ -358,7 +386,218 @@ const Scheduler = () => {
                         <b> back</b>
                     </span>
                 </div>
-                <Row>
+
+                <Card style={{ width: '90%' }}>
+                    <Card.Body>
+                        <Row>
+                            <Col lg={10} sm={8}>
+                                <Card.Title><h4>{tag && tag.fitnesspackage?.packagename}{tag?.tag_name ? ` (${tag?.tag_name})` : null}</h4></Card.Title>
+                            </Col>
+                            <Col>
+                                <Row className="justify-content-end">
+                                    <Dropdown>
+                                        <Dropdown.Toggle variant="bg-light" id="dropdown-basic">
+                                            <img
+                                                src="/assets/cardsKebab.svg"
+                                                alt="edit"
+                                                className="img-responsive "
+                                                style={{ height: '20px', width: '20px' }}
+                                            />
+                                        </Dropdown.Toggle>
+
+                                        <Dropdown.Menu>
+                                            <Dropdown.Item
+                                                key={2}
+                                                // onClick={() => updateAddress(currValue)}
+                                            >
+                                                Edit Program Name
+                                            </Dropdown.Item>
+                                            <Dropdown.Item
+                                                key={1}
+                                                // onClick={() => deleteUserAddress(currValue)}
+                                            >
+                                                Extend program and offering
+                                            </Dropdown.Item>
+                                            <Dropdown.Item
+                                                key={1}
+                                                // onClick={() => deleteUserAddress(currValue)}
+                                            >
+                                                Send notification to subscribers
+                                            </Dropdown.Item>
+                                            <Dropdown.Item
+                                                key={1}
+                                                // onClick={() => deleteUserAddress(currValue)}
+                                            >
+                                                Request Renewal
+                                            </Dropdown.Item>
+                                        </Dropdown.Menu>
+                                    </Dropdown>
+                                </Row>
+                            </Col>
+                        </Row>
+
+                        <Card.Text>
+                            
+                            <Row>
+                                <Col lg={9} sm={5}>
+                                <Badge pill variant="dark" className="p-2">
+                                {tag && tag.fitnesspackage ? tag.fitnesspackage.level : null}
+                            </Badge>
+
+                            <br />
+                                <b>Capacity: {tag && tag.fitnesspackage ? tag.fitnesspackage.classsize : null} people</b>
+                                            <br/>
+                                <b>{moment(groupEndDate).diff(moment(groupStartDate), 'days') +
+                                            ' days'}</b>
+                                            <br/>
+                                    <b>Start Date:</b>{' '}
+                                    
+                                    {moment(groupStartDate).format('DD MMMM, YY')}
+                                    <br />
+                                    <b>End Date: </b>
+                                    {moment(groupEndDate).format('DD MMMM, YY')}
+                                </Col>
+                                <Col>
+                                    <DisplayImage
+                                        imageName={
+                                            'Photo_ID' in tag.client_packages &&
+                                            tag.client_packages.length &&
+                                            tag.client_packages[0].users_permissions_user &&
+                                            tag.client_packages[0].users_permissions_user.Photo_ID
+                                                ? tag.client_packages[0].users_permissions_user
+                                                      .Photo_ID
+                                                : null
+                                        }
+                                        defaultImageUrl="assets/image_placeholder.svg"
+                                        imageCSS="rounded-circle profile_pic text-center img-fluid ml-2"
+                                    />
+                                    <br />
+                                    <br />
+                                    <Badge
+                                        pill
+                                        variant="dark"
+                                        className="py-2 px-4 ml-1"
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={() => {
+                                            fitnessActionRef.current.TriggerForm(
+                                                {
+                                                    id: tagId,
+                                                    actionType: 'allClients',
+                                                    type: 'Group Class'
+                                                }
+                                            );
+                                        }}
+                                    >
+                                        View all
+                                    </Badge>
+                                    <p className="ml-3">{tag.client_packages.length} people</p>
+                                    
+                                </Col>
+                            </Row>
+                        </Card.Text>
+                    </Card.Body>
+                </Card>
+                <Card style={{ width: '90%' }} className="mt-3">
+                    <Card.Body>
+                        <Card.Title><h4>Movement Sessions</h4></Card.Title>
+                        <Card.Text>Last planned session {calculateLastSession(tag.sessions)}</Card.Text>
+                        <Row>
+                            <Col lg={8}>
+                                <Table striped bordered hover size="sm" responsive>
+                                    <thead className="text-center">
+                                        <tr>
+                                            <th>Type</th>
+                                            <th>Total</th>
+                                            {tag && tag.fitnesspackage && (tag.fitnesspackage.mode === 'Online' ||
+                                                    tag.fitnesspackage.mode === 'Hybrid') ? <th>Plan Online</th>: null}
+                                            {tag && tag.fitnesspackage && (tag.fitnesspackage.mode === 'Offline' ||
+                                                    tag.fitnesspackage.mode === 'Hybrid') ? <th>Plan Offline</th>: null}
+                                           
+                                            
+                                            <th>Plan Rest</th>
+                                            {tag && tag.fitnesspackage && (tag.fitnesspackage.mode === 'Online' ||
+                                                    tag.fitnesspackage.mode === 'Hybrid') ? <th>Completed Online</th>: null}
+                                            {tag && tag.fitnesspackage && (tag.fitnesspackage.mode === 'Offline' ||
+                                                    tag.fitnesspackage.mode === 'Hybrid') ? <th>Completed Offline</th>: null}
+                                           
+                                        </tr>
+                                    </thead>
+                                    <tbody className="text-center">
+                                        <tr>
+                                            <td>
+                                                {tag &&
+                                                tag.fitnesspackage &&
+                                                tag.fitnesspackage.fitness_package_type
+                                                    ? tag.fitnesspackage.fitness_package_type.type
+                                                    : null}
+                                            </td>
+                                            <td>{moment(groupEndDate).diff(moment(groupStartDate), 'days')
+                                            }</td>
+                                            <td>
+                                            {(tag.fitnesspackage.mode === 'Online' ||
+                                                    tag.fitnesspackage.mode === 'Hybrid') && (
+                                                    <div>
+                                                         {handleTimeFormatting(
+                                                                    totalClasses[0],
+                                                                    tag.fitnesspackage.duration
+                                                                )}/
+                                                      
+                                                            {tag.fitnesspackage.grouponline}           
+                                                    </div>
+                                                )}
+                                                {tag && tag.fitnesspackage && tag.fitnesspackage
+                                                    ? tag.fitnesspackage?.ptonline
+                                                    : null}
+                                            </td>
+                                            {tag && tag.fitnesspackage && (tag.fitnesspackage.mode === 'Offline' ||
+                                                    tag.fitnesspackage.mode === 'Hybrid') ? <td>
+                                        
+                                                   
+                                                          {  tag.fitnesspackage.groupoffline}
+                                                    
+                                                        
+                                                
+                                               
+                                            </td>: null}
+                                            <td>{tag.fitnesspackage.restdays}</td>
+                                            {tag && tag.fitnesspackage && (tag.fitnesspackage.mode === 'Online' ||
+                                                    tag.fitnesspackage.mode === 'Hybrid') ? <td>
+                                            </td>: null}
+                                            
+                                            {tag && tag.fitnesspackage && (tag.fitnesspackage.mode === 'Offline' ||
+                                                    tag.fitnesspackage.mode === 'Hybrid') ? <td>       
+                                            </td>: null}
+                                        </tr>
+                                    </tbody>
+                                </Table>
+                            </Col>
+                            <Col>
+                            <Calendar
+                                    className="disabled"
+                                    // tileClassName={tileContent}
+                                    // onChange={onChange}
+                                    // onActiveStartDateChange={({ action }) => {
+                                    //     action === 'next'
+                                    //         ? setMonth(month + 1)
+                                    //         : setMonth(month - 1);
+                                    // }}
+                                    // value={value}
+                                    minDate={moment().startOf('month').toDate()}
+                                    maxDate={moment().add(2, 'months').toDate()}
+                                    maxDetail="month"
+                                    minDetail="month"
+                                    next2Label={null}
+                                    prev2Label={null}
+                                />
+                            </Col>
+                        </Row>
+                        <p className="text-dark">Note: Create atleast 3 sessions to start accepting bookings</p>
+                    </Card.Body>
+
+                   
+                </Card>
+
+                {/* <Row>
                     <Col
                         lg={11}
                         className="p-4 shadow-lg bg-white"
@@ -592,7 +831,7 @@ const Scheduler = () => {
                             </Dropdown>
                         </Row>
                     </Col>
-                </Row>
+                </Row> */}
                 <Row className="mt-5 mb-2">
                     <Col lg={11}>
                         <div className="text-center">

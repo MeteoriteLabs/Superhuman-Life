@@ -16,15 +16,13 @@ interface AccountVerificationDetail {
 const SocialAccount: React.FC = () => {
     const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
     const formRef = useRef<any>(null);
-    const accountVerificationJson: {
-        [name: string]: any;
-    } = require('./AccountVerification.json');
+    const accountVerificationJson: Record<string, unknown> = require('./AccountVerification.json');
     const auth = useContext(AuthContext);
     const [webpageDetails, setWebPageDetails] = useState<AccountVerificationDetail>(
         {} as AccountVerificationDetail
     );
 
-    const schema: any = {
+    const schema: Record<string, unknown> = {
         Verification_ID: {
             'ui:widget': (props: any) => (
                 <UploadImageToS3WithNativeSdk
@@ -52,8 +50,8 @@ const SocialAccount: React.FC = () => {
 
     const fetch = useQuery(FETCH_USER_PROFILE_DATA, {
         variables: { id: auth.userid },
-        onCompleted: (r: any) => {
-            const flattenData = flattenObj({ ...r });
+        onCompleted: (response: any) => {
+            const flattenData = flattenObj({ ...response });
             FillDetails(flattenData.usersPermissionsUser);
         }
     });
