@@ -43,3 +43,95 @@ input[type='reset'] {
     cursor: pointer;
     outline: inherit;
 }
+
+.rowBorderBottom {
+    border-bottom: 3px solid gray;
+    width: 63%;
+    margin-left: 29vw;
+    letter-spacing: 2px;
+    font-size: 24px;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 5px;
+}
+.table-container {
+    margin-left: 10px;
+}
+.btnNav {
+    text-align: end;
+}
+.btnToolbar {
+    display: flex;
+    justify-content: flex-end;
+}
+.message-container {
+    margin-right: 50px;
+    margin-top: 10px;
+}
+.btnDelete {
+    margin-left: 50px;
+}
+@media (max-width: 767px) {
+    .btnNav {
+        text-align: start;
+        margin-top: 10px;
+    }
+    .btnToolbar {
+        display: block;
+        justify-content: flex-start;
+    }
+    .rowBorderBottom {
+        width: 100%;
+        margin-left: 0;
+        text-align: center;
+        border-bottom-width: 2px;
+        margin-top: 30px;
+    }
+    .message-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 20vh;
+        margin-right: 0px;
+    }
+    .table-container {
+        margin-left: 0;
+        width: 100%;
+        margin: 0 auto;
+        margin-top: 30px;
+        overflow: hidden;
+    }
+    .smallScreen {
+        font-size: 12px;
+        font-weight: 400;
+        letter-spacing: 0;
+        display: flex;
+        flex-direction: row;
+    }
+    .tableCol {
+        width: 81vw;
+    }
+    .timepicker {
+        margin: 10px;
+    }
+
+    .modepicker {
+        margin: 0 auto;
+        width: 200px;
+        margin-bottom: 20px;
+    }
+    .btnAdd {
+        width: 200px;
+    }
+    .btnDelete {
+        margin-left: 0px;
+        margin-top: 8px;
+    }
+}
+
+.timepicker {
+    width: 200px;
+}
