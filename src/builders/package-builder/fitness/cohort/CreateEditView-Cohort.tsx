@@ -592,7 +592,7 @@ function CreateEditCohort(props: any, ref: any) {
             </Modal>
 
             {/* Delete modal validation (if classAvailability is greater than zero show this dailouge box) */}
-            {offeringInventoryDetails && offeringInventoryDetails.ActiveBookings > 0 ? (
+            {offeringInventoryDetails && offeringInventoryDetails.ActiveBookings > 0  && operation.type === 'delete' ? (
                 <Modal
                     size="lg"
                     aria-labelledby="contained-modal-title-vcenter"

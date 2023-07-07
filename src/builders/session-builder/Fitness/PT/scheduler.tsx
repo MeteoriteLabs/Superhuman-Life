@@ -95,7 +95,7 @@ const Scheduler: React.FC = () => {
 
         handleCloseDatesModal();
     }
-console.log(tag);
+
     function handleTimeFormatting(data: any, duration: number) {
         const digits = duration <= 30 ? 2 : 3;
         return (data === undefined ? 0 : data).toLocaleString('en-US', {
@@ -281,10 +281,7 @@ console.log(tag);
                                         tag.fitnesspackage
                                             && tag.fitnesspackage?.ptoffline  ? 
                                             <th>Completed Offline</th>
-                                            : null}
-                                        
-                                       
-                                        
+                                            : null}  
                                     </tr>
                                 </thead>
                                 <tbody className='text-center'>
@@ -294,8 +291,7 @@ console.log(tag);
                                         tag.fitnesspackage.fitness_package_type
                                             ? tag.fitnesspackage.fitness_package_type.type
                                             : null}</td>
-                                        <td>365</td>
-
+                                        <td></td>
                                         {tag &&
                                         tag.fitnesspackage &&
                                         tag.fitnesspackage
@@ -315,12 +311,12 @@ console.log(tag);
                                         {tag &&
                                         tag.fitnesspackage &&
                                         tag.fitnesspackage
-                                            && tag.fitnesspackage.ptonline ? <td>{tag.fitnesspackage.ptonline}</td>
+                                            && tag.fitnesspackage.ptonline ? <td></td>
                                             : null}
                                              {tag &&
                                         tag.fitnesspackage &&
                                         tag.fitnesspackage
-                                            && tag.fitnesspackage.ptoffline ? <td>{tag.fitnesspackage.ptoffline}</td>
+                                            && tag.fitnesspackage.ptoffline ? <td></td>
                                             : null}
                                         
                                     </tr>
@@ -624,7 +620,7 @@ console.log(tag);
                         <div className="mt-5">
                             <SchedulerPage
                                 type="date"
-                                days={tag?.fitnesspackage?.duration}
+                                days={tag?.fitnesspackage?.fitness_package_type.type === "On-Demand PT" ? 1: tag?.fitnesspackage?.duration}
                                 classType={'One-On-One'}
                                 restDays={tag?.sessions.filter((ses) => ses.type === 'restday')}
                                 schedulerSessions={schedulerSessions}

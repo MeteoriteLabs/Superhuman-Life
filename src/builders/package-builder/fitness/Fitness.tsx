@@ -481,7 +481,10 @@ export default function FitnessTab() {
                                             <img
                                                 src="./assets/offeringImages/group-class-online.svg"
                                                 title={`${
-                                                    row.original.pricing &&
+                                                    row.original.pricing && row.original.pricing.length &&
+                                                    row.original.pricing[
+                                                        selectedDuration[row.index]
+                                                    ] &&
                                                     row.original.pricing[
                                                         selectedDuration[row.index]
                                                     ].classes
@@ -491,7 +494,10 @@ export default function FitnessTab() {
                                             <br />
                                             <p>
                                                 {' '}
-                                                {row.original.pricing &&
+                                                {row.original.pricing && row.original.pricing.length &&
+                                                 row.original.pricing[
+                                                    selectedDuration[row.index]
+                                                ] &&
                                                     row.original.pricing[
                                                         selectedDuration[row.index]
                                                     ].classes}{' '}
@@ -500,7 +506,10 @@ export default function FitnessTab() {
                                         <div>
                                             <img
                                                 title={`${
-                                                    row.original.pricing &&
+                                                    row.original.pricing && row.original.pricing.length &&
+                                                    row.original.pricing[
+                                                        selectedDuration[row.index]
+                                                    ] &&
                                                     row.original.pricing[
                                                         selectedDuration[row.index]
                                                     ].classes
@@ -511,7 +520,10 @@ export default function FitnessTab() {
                                             <br />
                                             <p>
                                                 {' '}
-                                                {row.original.pricing &&
+                                                {row.original.pricing && row.original.pricing.length &&
+                                                  row.original.pricing[
+                                                    selectedDuration[row.index]
+                                                ] &&
                                                     row.original.pricing[
                                                         selectedDuration[row.index]
                                                     ].classes}{' '}
@@ -779,7 +791,7 @@ export default function FitnessTab() {
                                     variant="success"
                                     now={
                                         (lengthOfobject * 100) /
-                                        differenceBetweenStartDateandEndDate
+                                        3
                                     }
                                 />
                                 {lengthOfobject}/3{' '}
@@ -920,8 +932,10 @@ export default function FitnessTab() {
                             name = 'classic';
                         } else if (type === 'Live Stream Channel') {
                             name = 'channel';
-                        } else if (type === 'Cohort' || type === 'Event') {
+                        } else if (type === 'Cohort') {
                             name = 'cohort';
+                        }  else if (type === 'Event') {
+                            name = 'event';
                         } else if (type === 'Group Class') {
                             name = 'group';
                         }

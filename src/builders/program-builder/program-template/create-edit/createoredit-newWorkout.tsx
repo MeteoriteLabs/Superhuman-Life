@@ -78,12 +78,14 @@ function CreateEditNewWorkout(props: any, ref: any) {
             modalTrigger.next(false);
         }
     });
+console.log(frmDetails);
     const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, {
         onCompleted: () => {
             modalTrigger.next(false);
             props.callback();
         }
     });
+
     const [upateSessions] = useMutation(UPDATE_TAG_SESSIONS, {
         onCompleted: () => {
             if (props?.clientIds.length > 0) {
@@ -101,12 +103,14 @@ function CreateEditNewWorkout(props: any, ref: any) {
             }
         }
     });
+
     const [updateFitenssProgram] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, {
         onCompleted: () => {
             modalTrigger.next(false);
             props.callback();
         }
     });
+
     const [createSession] = useMutation(CREATE_SESSION, {
         onCompleted: (response) => {
             setIsCreated(!isCreated);
@@ -204,27 +208,28 @@ function CreateEditNewWorkout(props: any, ref: any) {
     }
 
     async function updateSchedulerEvents(frm: any, workout_id: any) {
+        console.log(frm, workout_id);
         const existingEvents = props.events === null ? [] : [...props.events];
 
         if (frm && frm.day) {
             frm.day = JSON.parse(frm.day);
         }
 
-        if (window.location.pathname.split('/')[1] !== 'programs') {
-            const variables = {
-                date: moment(frm.day[0].day, 'Do, MMM YY').format('YYYY-MM-DD')
-            };
+        // if (window.location.pathname.split('/')[1] !== 'programs') {
+        //     const variables = {
+        //         date: moment(frm.day[0].day, 'Do, MMM YY').format('YYYY-MM-DD')
+        //     };
 
-            const result = await query.refetch(variables);
-            const filterResult = await AvailabilityCheck({
-                sessions: result.data.sessions,
-                event: frm
-            });
-            if (filterResult) {
-                setDropConflict(true);
-                return;
-            }
-        }
+        //     const result = await query.refetch(variables);
+        //     const filterResult = await AvailabilityCheck({
+        //         sessions: result.data.sessions,
+        //         event: frm
+        //     });
+        //     if (filterResult) {
+        //         setDropConflict(true);
+        //         return;
+        //     }
+        // }
 
         const eventJson: any = {};
         if (frm.day) {

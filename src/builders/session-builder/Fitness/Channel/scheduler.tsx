@@ -308,7 +308,8 @@ const Scheduler: React.FC = () => {
                                                     ? tag.fitnesspackage.fitness_package_type.type
                                                     : null}
                                             </td>
-                                            <td>360</td>
+                                            <td>{moment(channelEndDate).diff(moment(channelStartDate), 'days')
+                                            }</td>
                                             <td></td>
                                             <td></td>
                                         </tr>
