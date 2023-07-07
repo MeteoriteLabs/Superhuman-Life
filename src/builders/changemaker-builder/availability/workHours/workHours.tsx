@@ -778,7 +778,7 @@ const WorkHours: React.FC = () => {
                                     onClick={() => {
                                         setShowDatesRangeModal(true);
                                     }}
-                                    variant="outline-dark"
+                                    variant="dark"
                                 >
                                     Add Holidays
                                 </Button>
@@ -787,7 +787,7 @@ const WorkHours: React.FC = () => {
                                         setShowDaysModal(true);
                                     }}
                                     style={{ marginLeft: '15px' }}
-                                    variant="outline-dark"
+                                    variant="dark"
                                 >
                                     Add Bulk Slots
                                 </Button>
@@ -1018,7 +1018,7 @@ const WorkHours: React.FC = () => {
                                 }
                                 disabled={disableAdd || classMode === ''}
                                 style={{ borderRadius: '10px' }}
-                                variant="outline-dark"
+                                variant="dark"
                                 onClick={() => {
                                     handleWorkTime(fromTime, toTime, classMode, date, holidays);
                                     handleToast();
@@ -1372,7 +1372,7 @@ const WorkHours: React.FC = () => {
                                                     }
                                                     disabled={classMode === ''}
                                                     style={{ borderRadius: '10px' }}
-                                                    variant="info"
+                                                    variant="dark"
                                                     onClick={() => {
                                                         handleUserConfig({
                                                             fromTime: fromTime,

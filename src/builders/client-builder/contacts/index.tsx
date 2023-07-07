@@ -175,7 +175,7 @@ export default function Contacts() {
                     <Col>
                         <Card.Title className="text-center">
                             <Button
-                                variant="outline-secondary"
+                                variant="dark"
                                 size="sm"
                                 onClick={() => {
                                     createEditContactComponent.current.TriggerForm({

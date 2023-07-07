@@ -10,7 +10,7 @@ export default function ProgramPage() {
                 <div className="px-5">
                     <Button
                         onClick={() => (window.location.href = '/availability')}
-                        variant="outline-dark"
+                        variant="dark"
                     >
                         Availability
                     </Button>

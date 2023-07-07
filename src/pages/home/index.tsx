@@ -25,7 +25,7 @@ const HomePage: React.FC = () => {
             {/* Add Client */}
             <Button
                 className="m-2"
-                variant="outline-dark"
+                variant="dark"
                 size="sm"
                 onClick={() => {
                     history.push('/add_client');
@@ -38,7 +38,7 @@ const HomePage: React.FC = () => {
             {/* Add Lead */}
             <Button
                 className="mr-2 "
-                variant="outline-dark"
+                variant="dark"
                 size="sm"
                 onClick={() => {
                     createEditMessageComponent.current.TriggerForm({
@@ -56,7 +56,7 @@ const HomePage: React.FC = () => {
             {/* Add Contact */}
             <Button
                 className="mr-2"
-                variant="outline-dark"
+                variant="dark"
                 size="sm"
                 onClick={() => {
                     createEditContactComponent.current.TriggerForm({
@@ -76,7 +76,7 @@ const HomePage: React.FC = () => {
             <CreateEditContact ref={createEditContactComponent} />
 
             {/* Payment Link */}
-            <Button variant="outline-dark" className="mr-2" size="sm" onClick={redirectToFinance}>
+            <Button variant="dark" className="mr-2" size="sm" onClick={redirectToFinance}>
                 <img src="assets/home_page_images/rupee.svg" alt="paymentLink" /> Payment Link
             </Button>
 

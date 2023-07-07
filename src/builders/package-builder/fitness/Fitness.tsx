@@ -1092,7 +1092,7 @@ export default function FitnessTab() {
                 <div className="justify-content-lg-center d-flex overflow-auto p-3">
                     <DropdownButton
                         className="mx-3"
-                        variant="outline-secondary"
+                        variant="dark"
                         id="dropdown-basic-button"
                         title={
                             <span>
@@ -1118,7 +1118,7 @@ export default function FitnessTab() {
                     <Button
                         style={{ whiteSpace: 'nowrap', textAlign: 'center' }}
                         className="mx-3"
-                        variant="outline-secondary"
+                        variant="dark"
                         size="sm"
                         onClick={() => {
                             handleModalRender(null, 'create', 'Group Class');
@@ -1129,7 +1129,7 @@ export default function FitnessTab() {
                     <Button
                         style={{ whiteSpace: 'nowrap', textAlign: 'center' }}
                         className="mx-3"
-                        variant="outline-secondary"
+                        variant="dark"
                         size="sm"
                         onClick={() => {
                             handleModalRender(null, 'create', 'Classic Class');
@@ -1140,7 +1140,7 @@ export default function FitnessTab() {
                     <Button
                         style={{ whiteSpace: 'nowrap', textAlign: 'center' }}
                         className="mx-3"
-                        variant="outline-secondary"
+                        variant="dark"
                         size="sm"
                         onClick={() => {
                             handleModalRender(null, 'create', 'Custom Fitness');
@@ -1151,7 +1151,7 @@ export default function FitnessTab() {
                     <Button
                         style={{ whiteSpace: 'nowrap', textAlign: 'center' }}
                         className="mx-3"
-                        variant="outline-secondary"
+                        variant="dark"
                         size="sm"
                         onClick={() => {
                             handleModalRender(null, 'create', 'Live Stream Channel');
@@ -1162,7 +1162,7 @@ export default function FitnessTab() {
                     <Button
                         style={{ whiteSpace: 'nowrap', textAlign: 'center' }}
                         className="mx-3"
-                        variant="outline-secondary"
+                        variant="dark"
                         size="sm"
                         onClick={() => {
                             handleModalRender(null, 'create', 'Cohort');
@@ -1173,7 +1173,7 @@ export default function FitnessTab() {
                     <Button
                         style={{ whiteSpace: 'nowrap', textAlign: 'center' }}
                         className="mx-3"
-                        variant="outline-secondary"
+                        variant="dark"
                         size="sm"
                         onClick={() => {
                             handleModalRender(null, 'create', 'Event');
