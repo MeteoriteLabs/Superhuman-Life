@@ -208,7 +208,7 @@ function CreateEditNewWorkout(props: any, ref: any) {
     }
 
     async function updateSchedulerEvents(frm: any, workout_id: any) {
-        console.log(frm, workout_id);
+       
         const existingEvents = props.events === null ? [] : [...props.events];
 
         if (frm && frm.day) {
