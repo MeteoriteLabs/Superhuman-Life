@@ -185,7 +185,7 @@ function ClientListingPage() {
                     <Col>
                         <Card.Title className="text-center">
                             <Button
-                                variant="outline-secondary"
+                                variant="dark"
                                 size="sm"
                                 onClick={() => {
                                     window.open('/add_client', '_self');

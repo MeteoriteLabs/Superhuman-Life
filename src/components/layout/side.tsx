@@ -306,8 +306,9 @@ export function SideNav({
                 {collapse ? (
                     <i className="fas fa-angle-double-right"></i>
                 ) : (
-                    <>
-                        <i className="fas fa-angle-double-left mr-sm-2"></i>Collapse
+                    <><div className='mb-1'>
+                        <i className="fas fa-angle-double-left mr-sm-2 mt-1"></i>Collapse
+                        </div>
                     </>
                 )}
             </Button>

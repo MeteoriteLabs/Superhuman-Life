@@ -160,7 +160,7 @@ const MessagePage: React.FC = () => {
                         <Col>
                             <Card.Title className="text-center">
                                 <Button
-                                    variant="outline-secondary"
+                                    variant="dark"
                                     size="sm"
                                     onClick={() => {
                                         createEditMessageComponent.current.TriggerForm({

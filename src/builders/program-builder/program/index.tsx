@@ -248,7 +248,7 @@ export default function EventsTab(): JSX.Element {
                     <Col>
                         <Card.Title className="text-right">
                             <Button
-                                variant="outline-secondary"
+                                variant="dark"
                                 size="sm"
                                 onClick={() => {
                                     createEditProgramComponent.current.TriggerForm({

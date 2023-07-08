@@ -48,7 +48,7 @@ const Availability = () => {
                                 <b>Booking Lead Time</b>
                                 <span style={{ marginLeft: 'auto' }}>
                                     <Button
-                                        variant="outline-dark"
+                                        variant="dark"
                                         onClick={() => {
                                             setShowDatesModal(true);
                                         }}
