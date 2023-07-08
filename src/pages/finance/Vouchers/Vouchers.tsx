@@ -224,7 +224,7 @@ export default function Vouchers(): JSX.Element {
                     <Col xs={6}>
                         <Card.Title className="text-right">
                             <Button
-                                variant="outline-secondary"
+                                variant="dark"
                                 size="sm"
                                 onClick={() => {
                                     voucherActionRef.current?.TriggerForm({ actionType: 'create' });
