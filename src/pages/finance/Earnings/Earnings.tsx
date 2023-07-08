@@ -199,7 +199,7 @@ export default function Earnings(): JSX.Element {
         <TabContent>
             <Container className="mt-3">
                 <Row>
-                    <Col lg={2}>
+                    <Col lg={2} className="mb-3 mb-lg-0">
                         <Form.Control
                             as="select"
                             aria-label="Default select example"
@@ -210,6 +210,7 @@ export default function Earnings(): JSX.Element {
                             <option value="name">Name</option>
                         </Form.Control>
                     </Col>
+
                     <Col lg={4}>
                         <InputGroup className="mb-3">
                             <FormControl

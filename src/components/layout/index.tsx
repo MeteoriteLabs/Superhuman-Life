@@ -228,7 +228,7 @@ export default function Layout({
                                 style={{ color: '#cebaa8', display: 'flex' }}
                             >
                                 <Icon name="lightoffering" width={24} height={24} />
-                                <span className="ml-1">Offerings</span>
+                                <span className="ml-1">Services</span>
                             </Nav.Link>
 
                             <Nav.Link

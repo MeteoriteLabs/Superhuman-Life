@@ -258,7 +258,7 @@ export default function Payee(): JSX.Element {
         <TabContent>
             <Container className="mt-3">
                 <Row>
-                    <Col>
+                    <Col  lg={3}>
                         <InputGroup className="mb-3">
                             <FormControl
                                 aria-describedby="basic-addon1"
@@ -267,7 +267,7 @@ export default function Payee(): JSX.Element {
                             />
                             <InputGroup.Prepend>
                                 <Button
-                                    variant="outline-secondary"
+                                    variant="dark"
                                     onClick={(e) => {
                                         e.preventDefault();
                                         loadData(searchInput.current?.value);
@@ -278,10 +278,10 @@ export default function Payee(): JSX.Element {
                             </InputGroup.Prepend>
                         </InputGroup>
                     </Col>
-                    <Col>
+                    <Col  lg={3}>
                         <Card.Title className="text-center">
                             <Button
-                                variant="outline-secondary"
+                                variant="dark"
                                 size="sm"
                                 onClick={() => {
                                     createEditPayeeComponent.current?.TriggerForm({
@@ -302,10 +302,10 @@ export default function Payee(): JSX.Element {
                             ></CreateEditPayee>
                         </Card.Title>
                     </Col>
-                    <Col>
+                    <Col  lg={3}>
                         <Card.Title className="text-center">
                             <Button
-                                variant="outline-secondary"
+                                variant="dark"
                                 size="sm"
                                 onClick={() => {
                                     createChangemakerAsPayeeComponent.current?.TriggerForm({
@@ -326,10 +326,10 @@ export default function Payee(): JSX.Element {
                             ></CreateChangemakerAsPayee>
                         </Card.Title>
                     </Col>
-                    <Col>
+                    <Col  lg={3}>
                         <Card.Title className="text-center">
                             <Button
-                                variant="outline-secondary"
+                                variant="dark"
                                 size="sm"
                                 onClick={() => {
                                     createContactAsPayeeComponent.current?.TriggerForm({

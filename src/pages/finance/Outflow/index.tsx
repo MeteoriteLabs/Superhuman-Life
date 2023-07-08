@@ -178,7 +178,7 @@ export default function Expenses(): JSX.Element {
         <TabContent>
             <Container className="mt-3">
                 <Row>
-                    <Col lg={2}>
+                    <Col lg={2} className="mb-3 mb-lg-0">
                         <Form.Control
                             as="select"
                             aria-label="Default select example"

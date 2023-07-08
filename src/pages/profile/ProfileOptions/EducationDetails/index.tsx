@@ -64,7 +64,7 @@ const EducationDetails: React.FC = () => {
             <Col md={{ offset: 9, span: 3 }}>
                 <Card.Title className="text-center">
                     <Button
-                        variant="outline-secondary"
+                        variant="dark"
                         size="sm"
                         onClick={() => {
                             CreateEducationComponent.current.TriggerForm({
