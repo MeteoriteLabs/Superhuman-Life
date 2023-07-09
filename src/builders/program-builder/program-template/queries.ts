@@ -163,7 +163,7 @@ export const GET_SCHEDULEREVENTS_PROGRAM_MANAGER = gql`
             data {
                 id
                 attributes {
-                    sessions(pagination: { pageSize: 100 }) {
+                    sessions(pagination: { pageSize: 2000 }) {
                         data {
                             id
                             attributes {
@@ -455,9 +455,13 @@ export const CREATE_SESSION = gql`
         $changemaker: ID
         $day_of_program: Int
         $isProgram: Boolean
+        $SessionDurationMinutes: String
+        $SessionTitle: String
     ) {
         createSession(
             data: {
+                SessionTitle: $SessionTitle
+                SessionDurationMinutes: $SessionDurationMinutes
                 type: $type
                 end_time: $end_time
                 start_time: $start_time
@@ -648,7 +652,7 @@ export const GET_TEMPLATE_SESSIONS = gql`
             data {
                 id
                 attributes {
-                    sessions(pagination: { pageSize: 100 }) {
+                    sessions(pagination: { pageSize: 2000 }) {
                         data {
                             id
                             attributes {

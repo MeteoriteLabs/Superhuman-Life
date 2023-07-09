@@ -143,7 +143,7 @@ const Scheduler: React.FC = () => {
                             <Row className="mt-2">
                                 <Col lg={9} sm={5}>
                                     <Badge pill variant="dark" className="p-2">
-                                        {tag.fitnesspackage?.level}
+                                        {tag && tag.fitnesspackage && tag.fitnesspackage.level ? tag.fitnesspackage.level : null }
                                     </Badge>
 
                                     <br />
