@@ -322,7 +322,6 @@ function CreateEditNewWorkout(props: any, ref: any): JSX.Element {
     }
 
     function UpdateProgram(frm: any) {
-        // formDetails = frm;
         frm.discipline = JSON.parse(frm.discipline);
         frm.equipment = JSON.parse(frm.equipment);
         frm.muscleGroup = JSON.parse(frm.muscleGroup);
