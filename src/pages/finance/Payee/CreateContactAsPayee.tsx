@@ -61,7 +61,7 @@ function CreateContactAsPayee(props: any, ref: any) {
                     }
                 }
             },
-            onCompleted: (r: any) => {
+            onCompleted: () => {
                 createPaymentSchedule({
                     variables: {
                         data: {
@@ -100,7 +100,7 @@ function CreateContactAsPayee(props: any, ref: any) {
                             }
                         }
                     },
-                    onCompleted: (data) => {
+                    onCompleted: () => {
                         props.refetchContacts();
                         props.refetchChangemakersPaymentSchedules();
                         modalTrigger.next(false);

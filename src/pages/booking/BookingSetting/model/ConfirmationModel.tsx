@@ -35,7 +35,7 @@ const ConfirmationModel = (props: any) => {
     };
 
     const [updateBooking] = useMutation(UPDATE_BOOKING_CONFIG, {
-        onCompleted: (data: any) => props.modalTrigger.next(false)
+        onCompleted: () => props.modalTrigger.next(false)
     });
 
     const handleSubmit = (e: { preventDefault: () => void }) => {

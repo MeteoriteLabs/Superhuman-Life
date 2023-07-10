@@ -89,8 +89,8 @@ export default function AllTransactions() {
     const [datatable, setDataTable] = useState<Record<string, unknown>[]>([]);
 
     const [paymentSchedules, { data: get_payment_schedule }] = useLazyQuery(GET_PAYMENT_SCHEDULE, {
-        onCompleted: (data) => {
-            loadData(data);
+        onCompleted: () => {
+            loadData();
         }
     });
 
@@ -100,12 +100,12 @@ export default function AllTransactions() {
             receiverId: id,
             receiverType: isChangemaker ? 'Changemaker' : 'Contacts'
         },
-        onCompleted: (data) => {
+        onCompleted: () => {
             paymentSchedules();
         }
     });
 
-    function loadData(data: any) {
+    function loadData() {
         const flattenTransactionData = flattenObj({ ...get_transaction });
         const flattenPaymentScheduleData = flattenObj({ ...get_payment_schedule });
 

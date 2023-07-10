@@ -39,7 +39,7 @@ export default function EventsTab(): JSX.Element {
     const [totalRecords, setTotalRecords] = useState<number>(0);
 
     const [createProgram] = useMutation(CREATE_PROGRAM, {
-        onCompleted: (e: any) => {
+        onCompleted: () => {
             refetchQueryCallback();
         }
     });

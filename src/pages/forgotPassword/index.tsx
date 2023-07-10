@@ -7,8 +7,8 @@ import EmailForm from './email';
 
 const ForgotPassword: React.FC = () => {
     const [emailSent, setEmailSent] = useState<boolean>(false);
-    const loginSchema: any = require('./forgotPassword.json');
-    const uiSchema: any = {
+    const loginSchema: Record<string, unknown> = require('./forgotPassword.json');
+    const uiSchema: Record<string, unknown> = {
         email: {
             'ui:widget': (props) => {
                 return <EmailForm {...props} />;

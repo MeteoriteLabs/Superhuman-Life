@@ -1,7 +1,7 @@
 import React from 'react';
 import './chevron.css';
 
-const Chevron = (props: any) => {
+const Chevron: React.FC<{className: string; height?: number; width: number; fill: string;}> = (props) => {
     return (
         <svg
             className={props.className}

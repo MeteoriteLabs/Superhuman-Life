@@ -1,6 +1,6 @@
 import { Table, Button } from 'react-bootstrap';
 
-function Receipt() {
+function Receipt(): JSX.Element {
     const printReciept = () => {
         window.print();
     };

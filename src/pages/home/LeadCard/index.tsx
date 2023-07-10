@@ -9,7 +9,7 @@ import AuthContext from '../../../context/auth-context';
 import moment from 'moment';
 import './lead.css';
 
-function LeadComponent() {
+function LeadComponent(): JSX.Element {
     const [leadData, setLeadData] = useState<any>([]);
     const auth = useContext(AuthContext);
 
@@ -54,7 +54,7 @@ function LeadComponent() {
                                             <Col md={{ span: 3, offset: 9 }}>
                                                 <a
                                                     href={`mailto:${
-                                                        currentValue.Details
+                                                        currentValue.Details && currentValue.Details.leadsdetails
                                                             ? currentValue.Details.leadsdetails
                                                                   .email
                                                             : null
@@ -68,7 +68,7 @@ function LeadComponent() {
                                                 </a>{' '}
                                                 <a
                                                     href={`tel:${
-                                                        currentValue.Details
+                                                        currentValue.Details && currentValue.Details.leadsdetails
                                                             ? currentValue.Details.leadsdetails
                                                                   .phonenumber
                                                             : null
@@ -85,7 +85,7 @@ function LeadComponent() {
                                         <Row>
                                             <Col>
                                                 <Card.Title>
-                                                    {currentValue.Details
+                                                    {currentValue.Details && currentValue.Details.leadsdetails
                                                         ? currentValue.Details.leadsdetails.name
                                                         : null}
                                                 </Card.Title>
@@ -94,7 +94,7 @@ function LeadComponent() {
 
                                         {/* Message */}
                                         <Card.Subtitle className="mb-2 text-secondary">
-                                            {currentValue.Details
+                                            {currentValue.Details && currentValue.Details.leadsdetails
                                                 ? currentValue.Details.leadsdetails.leadsmesssage
                                                 : null}
                                         </Card.Subtitle>

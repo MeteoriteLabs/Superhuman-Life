@@ -4,7 +4,7 @@ import Clients from './Clients';
 import Program from './Program';
 import './style.css';
 
-export default function Sessions() {
+export default function Sessions(): JSX.Element {
     const [variableName, setVariableName] = useState<string>('Program');
 
     return (
@@ -19,7 +19,7 @@ export default function Sessions() {
                             name="inlineRadioOptions"
                             id="auto"
                             value="program"
-                            onChange={(e) => setVariableName('Program')}
+                            onChange={() => setVariableName('Program')}
                             checked={variableName === 'Program'}
                         />
                         <label className="form-check-label" htmlFor="inlineRadio1">
@@ -33,7 +33,7 @@ export default function Sessions() {
                             name="inlineRadioOptions"
                             id="auto"
                             value="clients"
-                            onChange={(e) => setVariableName('Clients')}
+                            onChange={() => setVariableName('Clients')}
                             checked={variableName === 'Clients'}
                         />
                         <label className="form-check-label" htmlFor="inlineRadio2">

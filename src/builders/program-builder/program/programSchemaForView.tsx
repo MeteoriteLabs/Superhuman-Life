@@ -4,7 +4,7 @@ export const widgetsView = {
     fitnessSelect: FitnessMultiSelect
 };
 
-export const schemaView: any = {
+export const schemaView: Record<string, unknown> = {
     programName: {
         'ui:readonly': true
     },

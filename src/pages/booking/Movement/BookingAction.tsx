@@ -111,7 +111,7 @@ const BookingAction = (props: { refetchBookings: () => void }, ref: any) => {
     });
 
     const [createUserPackage] = useMutation(CREATE_USER_PACKAGE, {
-        onCompleted: (data) => {
+        onCompleted: () => {
             props.refetchBookings();
         }
     });
