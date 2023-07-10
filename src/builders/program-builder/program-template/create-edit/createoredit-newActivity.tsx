@@ -26,7 +26,7 @@ interface Form {
     user_permissions_user: string;
     time: {startTime: string; endTime: string;};
     day: {key: number; day: string;}[];
-    newActivity: Record<string, unknown>[];
+    newActivity: string;
     name?: string;
 }
 
@@ -136,13 +136,14 @@ function CreateEditActivity(props: any, ref: any): JSX.Element {
         const existingEvents = props.events === null ? [] : [...props.events];
         const daysArray: any = [];
         let id: any;
-
+        
         if (frm.day && frm.newActivity) {
             frm.day = JSON.parse(frm.day);
             frm.time = JSON.parse(frm.time);
             frm.newActivity = JSON.parse(frm.newActivity);
 
             const name: string = frm.newActivity[0].activity;
+           
             id = frm.newActivity[0].id;
             delete frm.newActivity[0].activity;
             delete frm.newActivity[0].id;
@@ -239,7 +240,7 @@ function CreateEditActivity(props: any, ref: any): JSX.Element {
                     session_date: moment(frm.day[z].day, 'Do, MMM YY').format('YYYY-MM-DD'),
                     changemaker: auth.userid,
                     isProgram: true,
-                    SessionTitle: frm.newActivity[0].activity,
+                    SessionTitle: JSON.parse(frm.newActivity)[0].activity,
                     SessionDurationMinutes: (handleTimeInMinutes(frm.time.endTime) - handleTimeInMinutes(frm.time.startTime)).toString()
                 },
                 onCompleted: (data) => {
@@ -263,6 +264,7 @@ function CreateEditActivity(props: any, ref: any): JSX.Element {
     }
 
     function OnSubmit(form: Form) {
+       
         if (form) form.user_permissions_user = auth.userid;
         if (form.name === 'edit' || form.name === 'view') {
             if (form.name === 'edit') {
@@ -285,7 +287,6 @@ function CreateEditActivity(props: any, ref: any): JSX.Element {
                 formUISchema={schema}
                 formSchema={programSchema}
                 formSubmit={(form: Form) => {
-                    console.log(form);
                     OnSubmit(form);
                 }}
                 stepperValues={['Schedule', 'Activity']}

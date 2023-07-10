@@ -302,7 +302,6 @@ const Schedular = (props: any) => {
     // this incase of the scheduler in the client page
     function handleRenderClientTable(data: any) {
         const flattenData = flattenObj({ ...data });
-        console.log(sessionIds);
         // const sessionsExistingValues = [...sessionIds];
         const sessionsExistingValues: any = [];
 

@@ -72,7 +72,7 @@ function CreateEditNewWorkout(props: any, ref: any): JSX.Element {
 
     const [createWorkout] = useMutation(CREATE_WORKOUT, {
         onCompleted: (response) => {
-            updateSchedulerEvents(formDetails, response.createWorkout.data.id);
+            updateSchedulerEvents(formDetails, response.createWorkout.data.id,response.createWorkout.data.attributes.workouttitle);
             modalTrigger.next(false);
         }
     });
@@ -205,7 +205,15 @@ function CreateEditNewWorkout(props: any, ref: any): JSX.Element {
         return timeString.toString();
     }
 
-    async function updateSchedulerEvents(frm: any, workout_id: any) {
+    function handleTimeInMinutes(time: string) {
+        const timeArray = time.split(':');
+        const hours = +timeArray[0] * 60;
+        const minutes = +timeArray[1];
+        const timeInMinutes = hours + minutes;
+        return timeInMinutes;
+    }
+
+    async function updateSchedulerEvents(frm: any, workout_id: string, title: string) {
         const existingEvents = props.events === null ? [] : [...props.events];
 
         if (frm && frm.day) {
@@ -287,8 +295,8 @@ function CreateEditNewWorkout(props: any, ref: any): JSX.Element {
                     changemaker: auth.userid,
                     session_date: null,
                     isProgram: true,
-                    SessionTitle: eventJson.name,
-                    SessionDurationMinutes: eventJson.endTime - eventJson.startTime
+                    SessionTitle: title,
+                    SessionDurationMinutes: (handleTimeInMinutes(eventJson.endTime) - handleTimeInMinutes(eventJson.startTime)).toString()
                 };
             } else {
                 data = {
@@ -302,8 +310,8 @@ function CreateEditNewWorkout(props: any, ref: any): JSX.Element {
                     session_date: moment(frm.day[0].day, 'Do, MMM YY').format('YYYY-MM-DD'),
                     changemaker: auth.userid,
                     isProgram: false,
-                    SessionTitle: eventJson.name,
-                    SessionDurationMinutes: eventJson.endTime - eventJson.startTime
+                    SessionTitle: title,
+                    SessionDurationMinutes: (handleTimeInMinutes(eventJson.endTime) - handleTimeInMinutes(eventJson.startTime)).toString()
                 };
             }
 

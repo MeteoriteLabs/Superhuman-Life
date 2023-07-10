@@ -60,7 +60,7 @@ const Scheduler = () => {
     const [tagSeperation, setTagSeperation] = useState<any>([]);
     const [statusDays, setStatusDays] = useState();
     const [tag, setTag] = useState<any>();
-console.log(last);
+
     let programIndex;
 
     const fitnessActionRef = useRef<any>(null);
@@ -550,14 +550,8 @@ console.log(last);
                                                     : null}
                                             </td>
                                             {tag && tag.fitnesspackage && (tag.fitnesspackage.mode === 'Offline' ||
-                                                    tag.fitnesspackage.mode === 'Hybrid') ? <td>
-                                        
-                                                   
-                                                          {  tag.fitnesspackage.groupoffline}
-                                                    
-                                                        
-                                                
-                                               
+                                                    tag.fitnesspackage.mode === 'Hybrid') ? <td>          
+                                                          {  tag.fitnesspackage.groupoffline}                          
                                             </td>: null}
                                             <td>{tag.fitnesspackage.restdays}</td>
                                             {tag && tag.fitnesspackage && (tag.fitnesspackage.mode === 'Online' ||

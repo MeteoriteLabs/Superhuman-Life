@@ -152,14 +152,14 @@ const Scheduler: React.FC = () => {
                                 
                                     <b>Start Date:</b>{' '}
                                     
-                                    {moment(tag.fitnesspackage.Start_date).format(
+                                    {tag && tag.fitnesspackage && tag.fitnesspackage.Start_date ? moment(tag.fitnesspackage.Start_date).format(
                                                 'DD MMMM, YYYY'
-                                            )}
+                                            ) : null}
                                     <br />
                                     <b>End Date: </b>
-                                    {moment(tag.fitnesspackage.End_date).format(
+                                    {tag && tag.fitnesspackage && tag.fitnesspackage.End_date ? moment(tag.fitnesspackage.End_date).format(
                                                 'DD MMMM, YYYY'
-                                            )}
+                                            ) : null}
                                 </Col>
                                 <Col>
                                     <DisplayImage
