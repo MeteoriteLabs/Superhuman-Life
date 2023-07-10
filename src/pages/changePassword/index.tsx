@@ -1,15 +1,20 @@
-import React, { useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import Form from '@rjsf/bootstrap-4';
 import { Button, Modal, Row } from 'react-bootstrap';
 import { useMutation, gql } from '@apollo/client';
 import AuthContext from '../../context/auth-context';
 
-export default function ChangePassword(props: any) {
+interface Props{
+  show: boolean;
+  onHide: () => void;
+}
+
+export default function ChangePassword(props: Props): JSX.Element {
     const auth = useContext(AuthContext);
     const [emailSent, setEmailSent] = useState(false);
 
-    const loginSchema: any = require('./changePassword.json');
-    const uiSchema: any = {
+    const loginSchema: Record<string, unknown> = require('./changePassword.json');
+    const uiSchema: Record<string, unknown> = {
         oldPassword: {
             'ui:widget': 'password',
             'ui:help': 'Hint: Enter your existing password.'

@@ -9,7 +9,7 @@ import { LobbyColors } from '../dashboard-data/colors';
 import './miniLobby.css';
 import { useHistory } from 'react-router-dom';
 
-export const MiniLobbyComponent = () => {
+export const MiniLobbyComponent: React.FC = () => {
     const history = useHistory();
     const auth = useContext(AuthContext);
     const [organizations, setOrganizations] = useState([]);

@@ -24,7 +24,9 @@ interface UserData {
     about_mini_description: string;
     // eslint-disable-next-line
     addresses: any;
+    // eslint-disable-next-line
     designations: any;
+    // eslint-disable-next-line
     educational_details: any;
     email: string;
     instagram_url: string;

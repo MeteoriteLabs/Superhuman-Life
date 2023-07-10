@@ -29,7 +29,7 @@ const BasicProfileForm: React.FC = () => {
 
     const schema: Schema = {
         Photo_ID: {
-            'ui:widget': (props: any) => (
+            'ui:widget': (props: {value: string; onChange: (params: React.ChangeEvent<HTMLInputElement>) => void;}) => (
                 <UploadImageToS3WithNativeSdk
                     value={props.value}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {

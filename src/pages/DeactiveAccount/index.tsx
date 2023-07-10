@@ -3,7 +3,7 @@ import { Container, Row } from 'react-bootstrap';
 const email = process.env.REACT_APP_SUPPORT_EMAIL;
 const phone = process.env.REACT_APP_SUPPORT_CONTACT_NUMBER;
 
-function DeactiveAccount() {
+function DeactiveAccount(): JSX.Element {
     return (
         <Container fluid>
             {/* Header */}
