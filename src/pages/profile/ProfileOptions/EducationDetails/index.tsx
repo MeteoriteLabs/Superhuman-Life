@@ -93,7 +93,7 @@ const EducationDetails: React.FC = () => {
                                         <Dropdown key={currValue.id}>
                                             <Dropdown.Toggle variant="bg-light" id="dropdown-basic">
                                                 <img
-                                                    src="/assets/kebabcase.svg"
+                                                    src="/assets/cardsKebab.svg"
                                                     alt="notification"
                                                     className="img-responsive "
                                                     style={{ height: '20px', width: '20px' }}
