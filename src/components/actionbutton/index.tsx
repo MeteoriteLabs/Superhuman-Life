@@ -34,7 +34,7 @@ const ActionButton: React.FC<{
     return (
         <Dropdown>
             <Dropdown.Toggle id="dropdown-basic" as="button" className="dropDown">
-                <img src='/assets/cardsKebab.svg'/>
+                <i className="fas fa-ellipsis-v"></i>
             </Dropdown.Toggle>
 
             <Dropdown.Menu>{renderItemAction()}</Dropdown.Menu>
