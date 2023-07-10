@@ -106,7 +106,7 @@ const Scheduler = () => {
         const formattedSum = handleTimeFormatting(sum, duration);
         return formattedSum;
     }
-    console.log(tag);
+ ]
     if (!show) return <Loader msg="loading scheduler..." />;
     else
         return (
