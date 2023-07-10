@@ -119,9 +119,9 @@ export default function Custom() {
                 })
             );
         } 
-        else {
-            setUserPackage([]);
-        }
+        // else {
+        //     setUserPackage([]);
+        // }
     };
 
     function handleStatus(sessions: any, effective_date: any, renewDay) {

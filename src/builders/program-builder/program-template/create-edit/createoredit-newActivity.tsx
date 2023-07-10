@@ -240,7 +240,7 @@ function CreateEditActivity(props: any, ref: any): JSX.Element {
                     session_date: moment(frm.day[z].day, 'Do, MMM YY').format('YYYY-MM-DD'),
                     changemaker: auth.userid,
                     isProgram: true,
-                    SessionTitle: JSON.parse(frm.newActivity)[0].activity,
+                    SessionTitle: frm.newActivity[0].activity,
                     SessionDurationMinutes: (handleTimeInMinutes(frm.time.endTime) - handleTimeInMinutes(frm.time.startTime)).toString()
                 },
                 onCompleted: (data) => {
