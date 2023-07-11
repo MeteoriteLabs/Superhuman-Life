@@ -1,4 +1,4 @@
-import { useMemo, useContext, useRef, useState } from 'react';
+import { useMemo, useContext, useRef, useState, useEffect } from 'react';
 import ActionButton from '../../../components/actionbutton/index';
 import {
     Badge,
@@ -157,6 +157,12 @@ function ClientListingPage() {
     const pageHandler = (selectedPageNumber: number) => {
         setPage(selectedPageNumber);
     };
+
+    useEffect(() => {
+        if (datatable.length === 0 && page > 1) {
+            setPage(page - 1);
+        }
+    }, [datatable]);
 
     return (
         <TabContent>

@@ -1,4 +1,4 @@
-import { useMemo, useContext, useState, useRef } from 'react';
+import { useMemo, useContext, useState, useRef ,useEffect} from 'react';
 import {
     Button,
     Card,
@@ -211,6 +211,12 @@ export default function EventsTab(): JSX.Element {
     const pageHandler = (selectedPageNumber: number) => {
         setPage(selectedPageNumber);
     };
+
+    useEffect(() => {
+        if (tableData.length === 0 && page > 1) {
+            setPage(page - 1);
+        }
+    }, [tableData]);
 
     return (
         <TabContent>
