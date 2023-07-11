@@ -229,7 +229,6 @@ function CreateEditActivity(props: any, ref: any): JSX.Element {
         }
 
         for (let z = 0; z < frm.day.length; z++) {
-            console.log(id);
             createSession({
                 variables: {
                     start_time: handleTimeFormat(frm.time.startTime),
