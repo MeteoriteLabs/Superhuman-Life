@@ -200,8 +200,8 @@ function CreateEditActivity(props: any, ref: any): JSX.Element {
         }
 
         const sessionIds_new: any = [];
-        // const sessionIds_old: string[] = [...props.sessionIds];
-        const sessionIds_old: string[] = [];
+        const sessionIds_old: string[] = [...props.sessionIds];
+        // const sessionIds_old: string[] = [];
         const templateIds_old: string[] = [...templateSessionsIds];
 
         function updateSessionFunc(id: string) {
@@ -229,6 +229,7 @@ function CreateEditActivity(props: any, ref: any): JSX.Element {
         }
 
         for (let z = 0; z < frm.day.length; z++) {
+            console.log(id);
             createSession({
                 variables: {
                     start_time: handleTimeFormat(frm.time.startTime),
