@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import { Card, Row, Col, Button, Dropdown } from 'react-bootstrap';
 import { EDUCATIONAL_DETAILS } from '../../queries/queries';
 import { useQuery } from '@apollo/client';
@@ -17,6 +17,13 @@ const EducationDetails: React.FC = () => {
     const [educationData, setEducationData] = useState<any>([]);
     const [page, setPage] = useState<number>(1);
     const [totalRecords, setTotalRecords] = useState<number>(0);
+
+        
+    useEffect(() => {
+        if (educationData.length === 0 && page > 1) {
+            setPage(page - 1);
+        }
+    }, [educationData]);
 
     const {
         // eslint-disable-next-line
