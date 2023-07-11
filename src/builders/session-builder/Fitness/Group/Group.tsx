@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from '@apollo/client';
-import React, { useContext, useMemo, useRef, useState } from 'react';
+import React, { useContext, useMemo, useRef, useState  , useEffect} from 'react';
 import { Badge, Row, Col, Form, Button, Modal } from 'react-bootstrap';
 import AuthContext from '../../../../context/auth-context';
 import GroupTable from '../../../../components/table/GroupTable/GroupTable';
@@ -283,6 +283,12 @@ const Group: React.FC = () => {
     const pageHandler = (selectedPageNumber: number) => {
         setPage(selectedPageNumber);
     };
+    
+    useEffect(() => {
+        if (userPackage.length === 0 && page > 1) {
+            setPage(page - 1);
+        }
+    }, [userPackage]);
 
     return (
         <>

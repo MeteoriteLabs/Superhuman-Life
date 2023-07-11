@@ -147,6 +147,11 @@ export default function Contacts() {
     const pageHandler = (selectedPageNumber: number) => {
         setPage(selectedPageNumber);
     };
+    useEffect(() => {
+        if (datatable.length === 0 && page > 1) {
+            setPage(page - 1);
+        }
+    }, [datatable]);
 
     return (
         <TabContent>

@@ -1,4 +1,4 @@
-import { useMemo, useState, useContext, useRef } from 'react';
+import { useMemo, useState, useContext, useRef , useEffect } from 'react';
 import {
     Badge,
     Button,
@@ -195,6 +195,11 @@ export default function Earnings(): JSX.Element {
         setPage(selectedPageNumber);
     };
 
+    useEffect(() => {
+        if (datatable.length === 0 && page > 1) {
+            setPage(page - 1);
+        }
+    }, [datatable]);
     return (
         <TabContent>
             <Container className="mt-3">

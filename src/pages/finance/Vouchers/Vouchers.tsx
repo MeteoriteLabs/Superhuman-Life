@@ -1,4 +1,4 @@
-import React from 'react';
+import {useEffect} from 'react';
 import { Badge, Row, Col, Button, InputGroup, FormControl, Container, Card } from 'react-bootstrap';
 import { useContext, useMemo, useRef, useState } from 'react';
 import Table from '../../../components/table/index';
@@ -197,6 +197,11 @@ export default function Vouchers(): JSX.Element {
         setPage(selectedPageNumber);
     };
 
+    useEffect(() => {
+        if (dataTable.length === 0 && page > 1) {
+            setPage(page - 1);
+        }
+    }, [dataTable]);
     return (
         <div className="mt-3">
             <Container className="mt-3">

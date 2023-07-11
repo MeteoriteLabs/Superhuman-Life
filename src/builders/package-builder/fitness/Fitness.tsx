@@ -1,4 +1,4 @@
-import { useMemo, useState, useContext, useRef } from 'react';
+import { useMemo, useState, useContext, useRef , useEffect } from 'react';
 import { useQuery, useLazyQuery } from '@apollo/client';
 import {
     Badge,
@@ -1078,6 +1078,12 @@ export default function FitnessTab() {
     const pageHandler = (selectedPageNumber: number) => {
         setPage(selectedPageNumber);
     };
+
+    useEffect(() => {
+        if (dataTable.length === 0 && page > 1) {
+            setPage(page - 1);
+        }
+    }, [dataTable]);
 
     return (
         <>

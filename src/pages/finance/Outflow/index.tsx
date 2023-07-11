@@ -1,4 +1,4 @@
-import { useMemo, useState, useContext, useRef } from 'react';
+import { useMemo, useState, useContext, useRef , useEffect } from 'react';
 import {
     Badge,
     Button,
@@ -173,6 +173,11 @@ export default function Expenses(): JSX.Element {
     const pageHandler = (selectedPageNumber: number) => {
         setPage(selectedPageNumber);
     };
+    useEffect(() => {
+        if (datatable.length === 0 && page > 1) {
+            setPage(page - 1);
+        }
+    }, [datatable]);
 
     return (
         <TabContent>

@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { useContext, useMemo, useRef, useState } from 'react';
+import { useContext, useMemo, useRef, useState  , useEffect} from 'react';
 import { Badge, Row, Col, Button } from 'react-bootstrap';
 import Table from '../../../../components/table';
 import AuthContext from '../../../../context/auth-context';
@@ -154,6 +154,11 @@ export default function Cohort(): JSX.Element {
         setPage(selectedPageNumber);
     };
 
+    useEffect(() => {
+        if (userPackage.length === 0 && page > 1) {
+            setPage(page - 1);
+        }
+    }, [userPackage]);
     return (
         <div className="mt-5">
             <Row>

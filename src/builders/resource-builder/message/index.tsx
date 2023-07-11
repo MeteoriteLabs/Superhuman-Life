@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState, useContext } from 'react';
+import React, { useMemo, useRef, useState, useContext  , useEffect} from 'react';
 import {
     Badge,
     Button,
@@ -138,6 +138,11 @@ const MindsetPage: React.FC = () => {
         setPage(selectedPageNumber);
     };
 
+    useEffect(() => {
+        if (datatable.length === 0 && page > 1) {
+            setPage(page - 1);
+        }
+    }, [datatable]);
     return (
         <>
             <TabContent>

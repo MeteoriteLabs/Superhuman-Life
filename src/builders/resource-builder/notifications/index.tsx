@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useRef, useContext } from 'react';
+import React, { useMemo, useState, useRef, useContext  , useEffect} from 'react';
 import Table from '../../../components/table';
 import { useQuery } from '@apollo/client';
 import AuthContext from '../../../context/auth-context';
@@ -131,6 +131,11 @@ const MessagePage: React.FC = () => {
     const pageHandler = (selectedPageNumber: number) => {
         setPage(selectedPageNumber);
     };
+    useEffect(() => {
+        if (datatable.length === 0 && page > 1) {
+            setPage(page - 1);
+        }
+    }, [datatable]);
 
     return (
         <>

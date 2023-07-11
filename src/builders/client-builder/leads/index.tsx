@@ -269,6 +269,12 @@ export default function Leads() {
         setPage(selectedPageNumber);
     };
 
+    useEffect(() => {
+        if (datatable.length === 0 && page > 1) {
+            setPage(page - 1);
+        }
+    }, [datatable]);
+
     return (
         <TabContent>
             <Container>

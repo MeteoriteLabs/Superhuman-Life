@@ -1,4 +1,4 @@
-import { useState, useContext, useRef, forwardRef } from 'react';
+import { useState, useContext, useRef, forwardRef , useEffect } from 'react';
 import { Card, Row, Col, Button, Dropdown } from 'react-bootstrap';
 import { ADDRESSES } from '../../queries/queries';
 import AuthContext from '../../../../context/auth-context';
@@ -16,6 +16,12 @@ const AddressDetails = () => {
     const CreateAddressComponent = useRef<any>(null);
     const [page, setPage] = useState<number>(1);
     const [totalRecords, setTotalRecords] = useState<number>(0);
+    
+    useEffect(() => {
+        if (addressData.length === 0 && page > 1) {
+            setPage(page - 1);
+        }
+    }, [addressData]);
 
     const {
         // eslint-disable-next-line
@@ -55,6 +61,7 @@ const AddressDetails = () => {
     const pageHandler = (selectedPageNumber: number) => {
         setPage(selectedPageNumber);
     };
+  
 
     return (
         <Col md={{ span: 8, offset: 2 }}>
