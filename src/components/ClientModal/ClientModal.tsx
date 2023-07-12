@@ -41,7 +41,7 @@ const ClientModal: React.FC<{
 
     const loadData = (data) => {
         const flattenData = flattenObj({ ...data });
-        console.log(flattenData);
+       
         setDataTable(
             [...flattenData.tags[0].client_packages].map((packageItem) => {
                 const startDate = moment(packageItem.effective_date);
