@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import Form from '@rjsf/bootstrap-4';
 import { Link } from 'react-router-dom';
 import { Button, Modal, Row, Col } from 'react-bootstrap';
-import authContext from '../../context/auth-context';
+import authContext from 'context/auth-context';
 import { useMutation, gql } from '@apollo/client';
 import { Schema, LoginData, FormData, LoginJSON } from './interface';
 

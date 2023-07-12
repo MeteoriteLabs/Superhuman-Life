@@ -4,11 +4,11 @@ import { Button, Form } from 'react-bootstrap';
 import { useMutation, useQuery } from '@apollo/client';
 import { UPDATE_WEBSITE_SECTION } from './queries/hero';
 import { GET_WEBSITE_SECTION } from './queries';
-import authContext from '../../../../../context/auth-context';
+import authContext from 'context/auth-context';
 import { useContext, useEffect, useState } from 'react';
-import { ChangeMakerWebsiteContext } from '../../../../../context/changemakerWebsite-context';
-import Toaster from '../../../../../components/Toaster';
-import UploadImageToS3WithNativeSdk from '../../../../../components/upload/upload';
+import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
+import Toaster from 'components/Toaster';
+import UploadImageToS3WithNativeSdk from 'components/upload/upload';
 
 type FormData = {
     title: string;

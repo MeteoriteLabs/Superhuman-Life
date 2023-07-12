@@ -1,12 +1,12 @@
 import { ReactNode, createContext, useContext, useEffect, useState } from 'react';
 import authContext from './auth-context';
 import { useLazyQuery } from '@apollo/client';
-import { FETCH_USER_WEBSITE } from '../pages/website-builder/queries/changemakerWebsite';
+import { FETCH_USER_WEBSITE } from 'pages/website-builder/queries/changemakerWebsite';
 import {
     changeMakerWebsiteStateTs,
     changeMakerWebsiteTs
 } from '../types/changemakerWebsiteContext';
-import { FETECH_SELECTED_TEMPLATE } from '../pages/website-builder/queries/templates';
+import { FETECH_SELECTED_TEMPLATE } from 'pages/website-builder/queries/templates';
 
 export const ChangeMakerWebsiteContext = createContext<changeMakerWebsiteTs>({
     changemakerWebsiteState: {

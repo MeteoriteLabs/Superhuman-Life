@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import Toggle from 'react-toggle';
-import { ChangeMakerWebsiteContext } from '../../../context/changemakerWebsite-context';
+import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
 import { Link } from 'react-router-dom';
 
 function WebsiteBuilder_template(): JSX.Element {

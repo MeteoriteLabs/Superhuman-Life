@@ -1,7 +1,7 @@
 import React from 'react';
 import { Badge, Row, Col } from 'react-bootstrap';
 import { useMemo } from 'react';
-import Table from '../../../components/table/index';
+import Table from 'components/table/index';
 export default function Platform() {
     const dataTable = [
         {

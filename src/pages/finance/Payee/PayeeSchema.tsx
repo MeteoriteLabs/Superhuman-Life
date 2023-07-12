@@ -1,12 +1,12 @@
-import ContactList from '../../../components/customWidgets/ContactList';
-import Changemaker from '../../../components/customWidgets/Changemakers';
+import ContactList from 'components/customWidgets/ContactList';
+import Changemaker from 'components/customWidgets/Changemakers';
 
 export const widgets = {
     contactList: ContactList,
     changemaker: Changemaker
 };
-// eslint-disable-next-line
-export const schema: any = {
+
+export const schema: Record<string, unknown> = {
     PaymentCategory: {
         'ui:help': 'Select payment category'
     },

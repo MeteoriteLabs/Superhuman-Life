@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import FitnessTemplate_01 from './templates/fitnessTemplate_01';
-import { ChangeMakerWebsiteContext } from '../context/changemakerWebsite-context';
+import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
 
 function Index(): JSX.Element {
     const { changemakerWebsiteState } = useContext(ChangeMakerWebsiteContext);

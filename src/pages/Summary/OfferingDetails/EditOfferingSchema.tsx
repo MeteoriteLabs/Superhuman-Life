@@ -1,4 +1,4 @@
-import OfferingsList from '../../../components/customWidgets/OfferingsOfferedByChangemaker';
+import OfferingsList from 'components/customWidgets/OfferingsOfferedByChangemaker';
 
 export const widgets = {
     offerings: OfferingsList

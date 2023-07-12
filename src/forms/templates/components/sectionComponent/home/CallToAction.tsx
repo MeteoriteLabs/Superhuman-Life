@@ -1,13 +1,13 @@
 import { useForm, Controller } from 'react-hook-form';
 import style from '../style.module.css';
 import { Button, Form } from 'react-bootstrap';
-import authContext from '../../../../../context/auth-context';
+import authContext from 'context/auth-context';
 import { useContext, useEffect, useState } from 'react';
-import { ChangeMakerWebsiteContext } from '../../../../../context/changemakerWebsite-context';
+import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
 import { GET_WEBSITE_SECTION } from './queries';
 import { useMutation, useQuery } from '@apollo/client';
 import { UPDATE_WEBSITE_SECTION } from './queries/cta';
-import Toaster from '../../../../../components/Toaster';
+import Toaster from 'components/Toaster';
 
 type FormData = {
     sectionId: number;

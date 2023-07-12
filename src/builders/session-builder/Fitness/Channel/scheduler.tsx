@@ -10,13 +10,13 @@ import { Row, Col, Dropdown, Card, Badge, Table } from 'react-bootstrap';
 import SchedulerPage from '../../../program-builder/program-template/scheduler';
 import moment from 'moment';
 import FitnessAction from '../FitnessAction';
-import AuthContext from '../../../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { Link } from 'react-router-dom';
 import '../../profilepicture.css';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 import '../Group/actionButton.css';
-import Loader from '../../../../components/Loader/Loader';
-import DisplayImage from '../../../../components/DisplayImage';
+import Loader from 'components/Loader/Loader';
+import DisplayImage from 'components/DisplayImage';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 

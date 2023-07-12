@@ -1,15 +1,15 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
-import ModalView from '../../../components/modal/index';
+import ModalView from 'components/modal/index';
 import { ADD_PAYMENT_SCHEDULE } from './queries';
 import { useMutation } from '@apollo/client';
-import AuthContext from '../../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { schema, widgets } from './PayeeSchema';
 import { Subject } from 'rxjs';
-import Toaster from '../../../components/Toaster';
+import Toaster from 'components/Toaster';
 import {
     phoneCustomFormats,
     phoneTransformErrors
-} from '../../../components/utils/ValidationPatterns';
+} from 'components/utils/ValidationPatterns';
 
 interface Operation {
     id: string;

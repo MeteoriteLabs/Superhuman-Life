@@ -10,22 +10,22 @@ import {
     Row,
     Col
 } from 'react-bootstrap';
-import Table from '../../../components/table';
+import Table from 'components/table';
 import { useQuery, useLazyQuery } from '@apollo/client';
-import AuthContext from '../../../context/auth-context';
-import ActionButton from '../../../components/actionbutton/index';
+import AuthContext from 'context/auth-context';
+import ActionButton from 'components/actionbutton/index';
 import {
     GET_CONTACTS,
     GET_PAYMENT_SCHEDULES,
     FETCH_CHANGEMAKERS,
     GET_PAYMENT_SCHEDULES_FOR_CHANGEMAKER
 } from './queries';
-import { flattenObj } from '../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 import CreateEditPayee from './CreateEditPayee';
 import CreateChangemakerAsPayee from './CreateChangemakerAsPayee';
 import CreateContactAsPayee from './CreateContactAsPayee';
 import { useHistory } from 'react-router-dom';
-import containsSubstring from '../../../components/utils/containsSubstring';
+import containsSubstring from 'components/utils/containsSubstring';
 
 interface PayeeComponentTs {
     TriggerForm: ({
