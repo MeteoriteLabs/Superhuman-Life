@@ -1,10 +1,10 @@
-import Upload from '../../../../components/upload/upload';
-import DatesConfig from '../../../../components/customWidgets/datesConfig';
-import FitnessSelect from '../../../../components/customWidgets/fitnessMultiSelect';
-import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect';
+import Upload from 'components/upload/upload';
+import DatesConfig from 'components/customWidgets/datesConfig';
+import FitnessSelect from 'components/customWidgets/fitnessMultiSelect';
+import EquipmentSelect from 'components/customWidgets/equipmentListSelect';
 import ClassicProgramDetails from './classicProgramDetails';
 import ClassicPricingTable from './classicPricingTable';
-import LanguageSelect from '../../../../components/customWidgets/languageSelect';
+import LanguageSelect from 'components/customWidgets/languageSelect';
 import ClassicBookingConfig from './bookingConfig';
 
 export const widgets = {

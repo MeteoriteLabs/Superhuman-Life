@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client';
 import React, { useImperativeHandle, useState, useContext } from 'react';
-import StatusModal from '../../../components/StatusModal/StatusModal';
+import StatusModal from 'components/StatusModal/StatusModal';
 import {
     CREATE_USER_PACKAGE,
     UPDATE_BOOKING_STATUS,
@@ -8,9 +8,9 @@ import {
     CREATE_TAG
 } from '../GraphQL/mutation';
 import { GET_TAGS } from '../GraphQL/queries';
-import authContext from '../../../context/auth-context';
+import authContext from 'context/auth-context';
 import { Subject } from 'rxjs';
-import { flattenObj } from '../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 
 interface Operation {
     id: string;

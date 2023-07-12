@@ -1,6 +1,6 @@
 import React, { useImperativeHandle, useState, useContext, useEffect } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
-import ModalView from '../../../../components/modal';
+import ModalView from 'components/modal';
 import {
     FETCH_USER_PROFILE_DATA,
     CREATE_EDUCATION_DETAILS,
@@ -9,16 +9,16 @@ import {
     DELETE_EDUCATION_DETAILS,
     FETCH_USERS_PROFILE_DATA
 } from '../../queries/queries';
-import AuthContext from '../../../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { Subject } from 'rxjs';
 import { schema, widgets } from '../../profileSchema';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
-import StatusModal from '../../../../components/StatusModal/StatusModal';
-import Toaster from '../../../../components/Toaster';
+import { flattenObj } from 'components/utils/responseFlatten';
+import StatusModal from 'components/StatusModal/StatusModal';
+import Toaster from 'components/Toaster';
 import {
     yearCustomFormats,
     yearTransformErrors
-} from '../../../../components/utils/ValidationPatterns';
+} from 'components/utils/ValidationPatterns';
 
 interface Operation {
     id: string;

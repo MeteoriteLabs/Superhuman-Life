@@ -9,13 +9,13 @@ import {
     Row,
     TabContent
 } from 'react-bootstrap';
-import Table from '../../../components/table';
+import Table from 'components/table';
 import { useQuery } from '@apollo/client';
 import { GET_TABLEDATA } from './queries';
-import AuthContext from '../../../context/auth-context';
-import ActionButton from '../../../components/actionbutton';
+import AuthContext from 'context/auth-context';
+import ActionButton from 'components/actionbutton';
 import CreateEditExercise from './createoredit-exercise';
-import { flattenObj } from '../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 import moment from 'moment';
 import { Exercise, FlattenExercise } from './@exercisesTypes';
 

@@ -1,16 +1,16 @@
 import React, { useState, useContext, useRef } from 'react';
 import Form from '@rjsf/core';
 import { FETCH_USER_PROFILE_DATA, UPDATE_USER_PROFILE_DATA } from '../../queries/queries';
-import AuthContext from '../../../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { useMutation, useQuery } from '@apollo/client';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
-import Toaster from '../../../../components/Toaster';
+import { flattenObj } from 'components/utils/responseFlatten';
+import Toaster from 'components/Toaster';
 import { Col } from 'react-bootstrap';
 import { schema } from './SocialAccountSchema';
 import {
     urlCustomFormats,
     urlTransformErrors
-} from '../../../../components/utils/ValidationPatterns';
+} from 'components/utils/ValidationPatterns';
 
 interface SocialDetails {
     instagram_url: string;

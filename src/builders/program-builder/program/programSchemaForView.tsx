@@ -1,4 +1,4 @@
-import FitnessMultiSelect from '../../../components/customWidgets/fitnessMultiSelect';
+import FitnessMultiSelect from 'components/customWidgets/fitnessMultiSelect';
 
 export const widgetsView = {
     fitnessSelect: FitnessMultiSelect

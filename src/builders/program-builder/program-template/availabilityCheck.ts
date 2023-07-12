@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { flattenObj } from '../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 
 export const AvailabilityCheck = (props: any) => {
     if (props.event.tag === 'Group Class') {

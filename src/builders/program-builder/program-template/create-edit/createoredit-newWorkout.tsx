@@ -10,14 +10,14 @@ import {
     GET_TEMPLATE_SESSIONS,
     UPDATE_FITNESSPORGRAMS_SESSIONS
 } from '../queries';
-import AuthContext from '../../../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { schema, widgets } from '../schema/newWorkoutSchema';
 import { Subject } from 'rxjs';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 import moment from 'moment';
 import { AvailabilityCheck } from './availabilityCheck';
 import { Modal, Button } from 'react-bootstrap';
-import Toaster from '../../../../components/Toaster';
+import Toaster from 'components/Toaster';
 
 interface Operation {
     id: string;

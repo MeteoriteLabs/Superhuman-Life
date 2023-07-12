@@ -7,7 +7,7 @@ import CreateEditRestDay from './create-edit/createoredit-restDay';
 // import { GET_SCHEDULEREVENTS } from './queries';
 // import { useQuery } from '@apollo/client';
 // import { flattenObj } from '../../../components/utils/responseFlatten';
-import Icons from '../../../components/Icons';
+import Icons from 'components/Icons';
 import './styles.css';
 
 const FloatingButton = (props: any) => {

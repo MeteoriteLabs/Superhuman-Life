@@ -1,8 +1,8 @@
-import TextEditor from '../../../components/customWidgets/textEditor';
-import EquipmentSearch from '../../../components/customWidgets/equipmentListSelect';
-import MuscleGroupSearch from '../../../components/customWidgets/muscleGroupMultiSelect';
-import FitnessMultiSelect from '../../../components/customWidgets/fitnessMultiSelect';
-import Upload from '../../../components/upload/upload';
+import TextEditor from 'components/customWidgets/textEditor';
+import EquipmentSearch from 'components/customWidgets/equipmentListSelect';
+import MuscleGroupSearch from 'components/customWidgets/muscleGroupMultiSelect';
+import FitnessMultiSelect from 'components/customWidgets/fitnessMultiSelect';
+import Upload from 'components/upload/upload';
 
 export const widgets = {
     fitnessSelect: FitnessMultiSelect,

@@ -3,12 +3,12 @@ import moment from 'moment';
 import { useContext, useMemo, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Badge, Col, Row, Button } from 'react-bootstrap';
-import ActionButton from '../../../components/actionbutton';
-import BookingTable from '../../../components/table/BookingTable/BookingTable';
-import authContext from '../../../context/auth-context';
+import ActionButton from 'components/actionbutton';
+import BookingTable from 'components/table/BookingTable/BookingTable';
+import authContext from 'context/auth-context';
 import { GET_ALL_BOOKINGS } from '../GraphQL/queries';
 import BookingAction from './BookingAction';
-import { flattenObj } from '../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 
 export default function Movement() {
     const history = useHistory();

@@ -1,12 +1,12 @@
 import { useState, useContext, useRef, forwardRef , useEffect } from 'react';
 import { Card, Row, Col, Button, Dropdown } from 'react-bootstrap';
 import { ADDRESSES } from '../../queries/queries';
-import AuthContext from '../../../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { useQuery } from '@apollo/client';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 import CreateAddress from './CreateAddress';
-import Loader from '../../../../components/Loader/Loader';
-import NoDataFound from '../../../../components/NoDataFound';
+import Loader from 'components/Loader/Loader';
+import NoDataFound from 'components/NoDataFound';
 import { BasicAddressDetails } from './CreateAddress';
 
 const AddressDetails = () => {

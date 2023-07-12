@@ -10,15 +10,15 @@ import {
     Row,
     Container
 } from 'react-bootstrap';
-import Table from '../../../components/table';
+import Table from 'components/table';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_TABLEDATA, CREATE_PROGRAM, CREATE_SESSION } from './queries';
-import AuthContext from '../../../context/auth-context';
-import ActionButton from '../../../components/actionbutton';
+import AuthContext from 'context/auth-context';
+import ActionButton from 'components/actionbutton';
 import CreateEditProgram from './createoredit-program';
-import { flattenObj } from '../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 import moment from 'moment';
-import Toaster from '../../../components/Toaster';
+import Toaster from 'components/Toaster';
 
 export default function EventsTab(): JSX.Element {
     const auth = useContext(AuthContext);

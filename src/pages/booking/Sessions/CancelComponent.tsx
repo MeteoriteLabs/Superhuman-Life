@@ -7,11 +7,11 @@ import {
     GET_FUTURE_SESSIONS,
     GET_SESSION
 } from './queries';
-import StatusModal from '../../../components/StatusModal/StatusModal';
-import { flattenObj } from '../../../components/utils/responseFlatten';
-import AuthContext from '../../../context/auth-context';
+import StatusModal from 'components/StatusModal/StatusModal';
+import { flattenObj } from 'components/utils/responseFlatten';
+import AuthContext from 'context/auth-context';
 import moment from 'moment';
-import Toaster from '../../../components/Toaster';
+import Toaster from 'components/Toaster';
 import { Modal, DropdownButton, Dropdown, Row, Col, Button } from 'react-bootstrap';
 import './RescheduleModal.css';
 

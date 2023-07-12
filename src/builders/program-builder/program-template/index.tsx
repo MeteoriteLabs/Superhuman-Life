@@ -3,11 +3,11 @@ import { useQuery } from '@apollo/client';
 import { GET_TABLEDATA } from './queries';
 import { Row, Col } from 'react-bootstrap';
 import Scheduler from './scheduler';
-import SessionContext from '../../../context/session-context';
-import { flattenObj } from '../../../components/utils/responseFlatten';
-import Loader from '../../../components/Loader/Loader';
+import SessionContext from 'context/session-context';
+import { flattenObj } from 'components/utils/responseFlatten';
+import Loader from 'components/Loader/Loader';
 
-const ProgramManager = (props: any) => {
+const ProgramManager = () => {
     const last = window.location.pathname.split('/').pop();
     const [data, setData] = useState<any[]>([]);
     const [show, setShow] = useState(false);

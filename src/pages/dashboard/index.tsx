@@ -3,9 +3,9 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { ImageCaptions } from './dashboard-data/data';
 import { LobbyColors } from './dashboard-data/colors';
 import { Link } from 'react-router-dom';
-import AuthContext from '../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { GET_USER_ORGANIZATIONS } from './queries';
-import { flattenObj } from '../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 import { useQuery } from '@apollo/client';
 import './mainLobby.css';
 
