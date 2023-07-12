@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
-import Icon from '../Icons/index';
+import Icon from 'components/Icons';
 
 export function SideNav({
     collapse,

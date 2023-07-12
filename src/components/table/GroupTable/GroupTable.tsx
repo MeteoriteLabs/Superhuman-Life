@@ -1,5 +1,5 @@
 import { useTable } from 'react-table';
-import NoDataInCard from '../../NoDataInCard';
+import NoDataInCard from 'components/NoDataInCard';
 import './groupTable.css';
 
 function GroupTable({ data, columns }: any) {

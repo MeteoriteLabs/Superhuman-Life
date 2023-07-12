@@ -3,7 +3,7 @@ import { Col, Row, Form } from 'react-bootstrap';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import { useQuery, gql } from '@apollo/client';
-import AuthContext from '../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { flattenObj } from '../utils/responseFlatten';
 
 const LocationList: React.FC<{ onChange: (args: string) => void }> = (props) => {

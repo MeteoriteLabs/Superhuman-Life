@@ -4,7 +4,7 @@ import 'react-bootstrap-typeahead/css/Typeahead.css';
 import { GET_CONTACTS } from './queries';
 import { useQuery } from '@apollo/client';
 import { flattenObj } from '../utils/responseFlatten';
-import AuthContext from '../../context/auth-context';
+import AuthContext from 'context/auth-context';
 
 const ContactList: React.FC<{ value: string; onChange: (params: string | null) => void }> = (
     props

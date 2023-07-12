@@ -1,10 +1,10 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
-import SessionModal from '../../../components/SessionModal/SessionModal';
-import authContext from '../../../context/auth-context';
+import SessionModal from 'components/SessionModal/SessionModal';
+import authContext from 'context/auth-context';
 import { schema, widgets } from './programSchema';
 import { CREATE_TAG } from '../graphQL/mutation';
 import { useMutation } from '@apollo/client';
-import ClientModal from '../../../components/ClientModal/ClientModal';
+import ClientModal from 'components/ClientModal/ClientModal';
 import { Subject } from 'rxjs';
 
 interface Operation {

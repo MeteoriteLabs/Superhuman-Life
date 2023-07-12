@@ -1,13 +1,13 @@
 import { useQuery } from '@apollo/client';
 import { useContext, useEffect, useState } from 'react';
-import authContext from '../../context/auth-context';
+import authContext from 'context/auth-context';
 import { Container, Nav, Navbar, Badge } from 'react-bootstrap';
-import { MiniLobbyComponent } from '../../pages/dashboard/mini-lobby/LobbyPopover';
+import { MiniLobbyComponent } from 'pages/dashboard/mini-lobby/LobbyPopover';
 import { ProfileOption } from './NavbarOptions/ProfileOption';
 import { Link } from 'react-router-dom';
 import './topNavbar.css';
 import { GET_CHANGEMAKER_NOTIFICATION } from './queries';
-import { flattenObj } from '../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 
 export function AuthenticatedNav(): JSX.Element {
     const auth = useContext(authContext);

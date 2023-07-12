@@ -2,11 +2,11 @@ import { useQuery } from '@apollo/client';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Badge, Button, Modal } from 'react-bootstrap';
 import Table from '../table/index';
-import { GET_CLIENTS_BY_TAG } from '../../builders/session-builder/graphQL/queries';
+import { GET_CLIENTS_BY_TAG } from 'builders/session-builder/graphQL/queries';
 import ActionButton from '../actionbutton';
 import moment from 'moment';
-import FitnessAction from '../../builders/session-builder/Fitness/FitnessAction';
-import { flattenObj } from '../../components/utils/responseFlatten';
+import FitnessAction from 'builders/session-builder/Fitness/FitnessAction';
+import { flattenObj } from 'components/utils/responseFlatten';
 
 // eslint-disable-next-line
 const ClientModal: React.FC<{
@@ -41,6 +41,7 @@ const ClientModal: React.FC<{
 
     const loadData = (data) => {
         const flattenData = flattenObj({ ...data });
+        console.log(flattenData);
         setDataTable(
             [...flattenData.tags[0].client_packages].map((packageItem) => {
                 const startDate = moment(packageItem.effective_date);
@@ -48,6 +49,7 @@ const ClientModal: React.FC<{
                     .add(flattenData.tags[0].fitnesspackage.duration, 'days')
                     .format('MMMM DD,YYYY');
                 return {
+                    id: packageItem.users_permissions_user.id,
                     programName: flattenData.tags[0].fitnesspackage.packagename,
                     client: packageItem.users_permissions_user.username,
                     duration: flattenData.tags[0].fitnesspackage.duration,
@@ -104,11 +106,7 @@ const ClientModal: React.FC<{
                 Header: 'Actions',
                 Cell: ({ row }: any) => {
                     const manageHandler = () => {
-                        fitnessActionRef.current.TriggerForm({
-                            id: row.original.id,
-                            actionType: 'manage',
-                            rowData: ''
-                        });
+                        window.location.href = `/client/home/${row.original.id}`;
                     };
 
                     const arrayAction = [{ actionName: 'Manage', actionClick: manageHandler }];

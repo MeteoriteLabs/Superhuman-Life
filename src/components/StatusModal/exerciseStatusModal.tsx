@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Col, Modal, Row } from 'react-bootstrap';
-import Loader from '../../components/Loader/Loader';
+import Loader from 'components/Loader/Loader';
 
 const StatusModal: React.FC<{
     buttonRight: string;

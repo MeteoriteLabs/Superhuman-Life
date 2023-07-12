@@ -11,12 +11,12 @@ import {
     Row,
     Col
 } from 'react-bootstrap';
-import AuthContext from '../../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { useQuery } from '@apollo/client';
 import { GET_CLIENT_NEW } from './queries';
 import CreateClient from './addclientcomponent';
-import Table from '../../../components/table';
-import { flattenObj } from '../../../components/utils/responseFlatten';
+import Table from 'components/table';
+import { flattenObj } from 'components/utils/responseFlatten';
 
 function ClientListingPage() {
     const auth = useContext(AuthContext);
@@ -86,9 +86,9 @@ function ClientListingPage() {
 
                     const arrayAction = [
                         { actionName: 'Go to client', actionClick: actionClick1 },
-                        { actionName: 'Build Program', actionClick: actionClick2 },
-                        { actionName: 'Chat', actionClick: actionClick3 },
-                        { actionName: 'Build Package', actionClick: actionClick4 },
+                        // { actionName: 'Build Program', actionClick: actionClick2 },
+                        // { actionName: 'Chat', actionClick: actionClick3 },
+                        // { actionName: 'Build Package', actionClick: actionClick4 },
                         { actionName: 'Remove Client', actionClick: actionClick5 }
                     ];
 

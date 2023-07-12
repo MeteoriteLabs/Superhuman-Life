@@ -19,9 +19,9 @@ import moment from 'moment';
 import { Link } from 'react-router-dom';
 import '../Group/actionButton.css';
 import '../fitness.css';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
-import Loader from '../../../../components/Loader/Loader';
-import DisplayImage from '../../../../components/DisplayImage';
+import { flattenObj } from 'components/utils/responseFlatten';
+import Loader from 'components/Loader/Loader';
+import DisplayImage from 'components/DisplayImage';
 
 const Scheduler = () => {
     const last = window.location.pathname.split('/').reverse();

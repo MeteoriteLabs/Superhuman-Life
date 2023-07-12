@@ -1,7 +1,7 @@
 import { useState, useRef, useContext } from 'react';
 import { InputGroup, FormControl, Container, Col, Row, Button } from 'react-bootstrap';
 import { gql, useQuery } from '@apollo/client';
-import AuthContext from '../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { flattenObj } from '../utils/responseFlatten';
 
 const ProgramList = (props: any) => {

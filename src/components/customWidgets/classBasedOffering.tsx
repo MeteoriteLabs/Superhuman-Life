@@ -9,7 +9,7 @@ import {
 } from './queries';
 import { useQuery, useLazyQuery } from '@apollo/client';
 import { flattenObj } from '../utils/responseFlatten';
-import AuthContext from '../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import moment from 'moment';
 
 const classBasedOffering: React.FC<{

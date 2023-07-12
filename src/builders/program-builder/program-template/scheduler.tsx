@@ -702,7 +702,7 @@ const Schedular = (props: any) => {
     const [duplicatedDay, setDuplicatedDay] = useState<any>([]);
     const [updateSessionBooking] = useMutation(UPDATE_SESSION_BOOKING);
     const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, {
-        onCompleted: (r: any) => {
+        onCompleted: () => {
             setEvent({});
             props.callback();
         }
