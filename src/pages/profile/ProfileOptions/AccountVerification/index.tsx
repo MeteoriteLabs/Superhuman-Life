@@ -3,11 +3,11 @@ import Form from '@rjsf/core';
 import { widgets } from '../../profileSchema';
 import { FETCH_USER_PROFILE_DATA, UPDATE_USER_PROFILE_DATA } from '../../queries/queries';
 import { useMutation, useQuery } from '@apollo/client';
-import AuthContext from '../../../../context/auth-context';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
-import Toaster from '../../../../components/Toaster';
+import AuthContext from 'context/auth-context';
+import { flattenObj } from 'components/utils/responseFlatten';
+import Toaster from 'components/Toaster';
 import { Col } from 'react-bootstrap';
-import UploadImageToS3WithNativeSdk from '../../../../components/upload/upload';
+import UploadImageToS3WithNativeSdk from 'components/upload/upload';
 
 interface AccountVerificationDetail {
     Verification_ID: string;

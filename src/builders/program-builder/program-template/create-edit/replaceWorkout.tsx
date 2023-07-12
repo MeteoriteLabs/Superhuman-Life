@@ -1,8 +1,8 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { useMutation } from '@apollo/client';
-import ModalView from '../../../../components/modal';
+import ModalView from 'components/modal';
 import { REPLACE_SESSION_WORKOUT } from '../queries';
-import AuthContext from '../../../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { schema, widgets } from '../schema/replaceWorkoutSchema';
 import { Subject } from 'rxjs';
 

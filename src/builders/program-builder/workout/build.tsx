@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
-import TextEditor from '../../../components/customWidgets/textEditor';
-import ExerciseList from '../../../components/customWidgets/exerciseList';
+import TextEditor from 'components/customWidgets/textEditor';
+import ExerciseList from 'components/customWidgets/exerciseList';
 import URLlist from '../search-builder/urlList';
-import Upload from '../../../components/upload/upload';
+import Upload from 'components/upload/upload';
 
 const Build = (props: any) => {
     const [exerciseFields, setExerciseFields] = useState<any[]>([]);

@@ -1,6 +1,6 @@
 import React, { useContext, useImperativeHandle, useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-import ModalView from '../../../components/modal';
+import ModalView from 'components/modal';
 import {
     FETCH_DATA,
     CREATE_EXERCISE,
@@ -8,13 +8,13 @@ import {
     DELETE_EXERCISE,
     FETCH_WORKOUTS
 } from './queries';
-import AuthContext from '../../../context/auth-context';
-import StatusModal from '../../../components/StatusModal/exerciseStatusModal';
+import AuthContext from 'context/auth-context';
+import StatusModal from 'components/StatusModal/exerciseStatusModal';
 import { schema, widgets } from './exerciseSchema';
 import { schemaView } from './exerciseSchemaForView';
 import { Subject } from 'rxjs';
-import { flattenObj } from '../../../components/utils/responseFlatten';
-import Toaster from '../../../components/Toaster';
+import { flattenObj } from 'components/utils/responseFlatten';
+import Toaster from 'components/Toaster';
 
 interface Operation {
     id: string;

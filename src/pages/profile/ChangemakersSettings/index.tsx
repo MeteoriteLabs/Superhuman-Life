@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import AuthContext from '../../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import ChangePasswordPage from '../../changePassword';
 import Modules from '../../Modules';

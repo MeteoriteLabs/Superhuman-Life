@@ -2,7 +2,7 @@ import { useState, useContext } from 'react';
 import Form from '@rjsf/bootstrap-4';
 import { Button, Modal, Row } from 'react-bootstrap';
 import { useMutation, gql } from '@apollo/client';
-import AuthContext from '../../context/auth-context';
+import AuthContext from 'context/auth-context';
 
 interface Props{
   show: boolean;

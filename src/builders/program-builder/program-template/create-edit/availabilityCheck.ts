@@ -1,6 +1,6 @@
 //this availability check is for modal actions
 import moment from 'moment';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 
 export const AvailabilityCheck = (props: any) => {
     const sessions = flattenObj({ ...props.sessions });

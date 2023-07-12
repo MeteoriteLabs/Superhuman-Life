@@ -3,11 +3,11 @@ import { Row, Col, Form, InputGroup, FormControl, Button } from 'react-bootstrap
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import { useQuery, gql } from '@apollo/client';
-import AuthContext from '../../../../context/auth-context';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
-import AddFitnessAddressModal from '../../../../components/customWidgets/AddFitnessAddressModal';
-import { ADDRESSES_IS_PRIMARY } from '../../../../pages/profile/queries/queries';
-import { BasicAddressDetails } from '../../../../pages/profile/ProfileOptions/AddressDetails/CreateAddress';
+import AuthContext from 'context/auth-context';
+import { flattenObj } from 'components/utils/responseFlatten';
+import AddFitnessAddressModal from 'components/customWidgets/AddFitnessAddressModal';
+import { ADDRESSES_IS_PRIMARY } from 'pages/profile/queries/queries';
+import { BasicAddressDetails } from 'pages/profile/ProfileOptions/AddressDetails/CreateAddress';
 
 const CustomProgramDetails: React.FC<{
     readonly: boolean;

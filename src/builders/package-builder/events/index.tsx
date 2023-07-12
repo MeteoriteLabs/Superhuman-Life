@@ -11,8 +11,8 @@ import {
     Row,
     TabContent
 } from 'react-bootstrap';
-import CreateFitnessPackageModal from '../../../components/CreateFitnessPackageModal/CreateFitnessPackageModal';
-import Table from '../../../components/table';
+import CreateFitnessPackageModal from 'components/CreateFitnessPackageModal/CreateFitnessPackageModal';
+import Table from 'components/table';
 
 function PaymentWidget({ formData }: any) {
     return (

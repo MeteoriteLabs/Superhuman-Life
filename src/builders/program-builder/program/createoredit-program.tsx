@@ -1,15 +1,15 @@
 import React, { useContext, useImperativeHandle, useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-import ModalView from '../../../components/modal';
+import ModalView from 'components/modal';
 import { CREATE_PROGRAM, DELETE_PROGRAM, GET_DATA, UPDATE_PROGRAM } from './queries';
-import AuthContext from '../../../context/auth-context';
-import StatusModal from '../../../components/StatusModal/StatusModal';
+import AuthContext from 'context/auth-context';
+import StatusModal from 'components/StatusModal/StatusModal';
 import { schema, widgets } from './programSchema';
 import { schemaView } from './programSchemaForView';
 import { Subject } from 'rxjs';
-import { flattenObj } from '../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 import moment from 'moment';
-import Toaster from '../../../components/Toaster';
+import Toaster from 'components/Toaster';
 
 interface Operation {
     id: string;

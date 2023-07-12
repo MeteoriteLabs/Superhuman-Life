@@ -1,6 +1,6 @@
 import React, { useImperativeHandle, useState, useContext } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
-import ModalView from '../../../../components/modal';
+import ModalView from 'components/modal';
 import {
     UPDATE_ADDRESS_DATA,
     CREATE_ADDRESS,
@@ -11,14 +11,14 @@ import {
 } from '../../queries/queries';
 import { Subject } from 'rxjs';
 import { schema, widgets } from '../../profileSchema';
-import AuthContext from '../../../../context/auth-context';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
-import StatusModal from '../../../../components/StatusModal/StatusModal';
+import AuthContext from 'context/auth-context';
+import { flattenObj } from 'components/utils/responseFlatten';
+import StatusModal from 'components/StatusModal/StatusModal';
 import {
     zipcodeCustomFormats,
     zipcodeTransformErrors
-} from '../../../../components/utils/ValidationPatterns';
-import Toaster from '../../../../components/Toaster/index';
+} from 'components/utils/ValidationPatterns';
+import Toaster from 'components/Toaster/index';
 
 export interface BasicAddressDetails {
     id: string;

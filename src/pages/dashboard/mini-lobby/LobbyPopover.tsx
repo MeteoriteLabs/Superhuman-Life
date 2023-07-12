@@ -1,10 +1,10 @@
 import React, { useContext, useState } from 'react';
 import { Row, NavDropdown, Image } from 'react-bootstrap';
 import { GET_USER_ORGANIZATIONS } from '../queries';
-import { flattenObj } from '../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 import { useQuery } from '@apollo/client';
 import { LobbyData } from './LobbyData';
-import AuthContext from '../../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { LobbyColors } from '../dashboard-data/colors';
 import './miniLobby.css';
 import { useHistory } from 'react-router-dom';

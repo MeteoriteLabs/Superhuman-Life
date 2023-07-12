@@ -1,9 +1,9 @@
 import React, { useContext, useState } from 'react';
 import { Container, Col, Row } from 'react-bootstrap';
-import AuthContext from '../../../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { useQuery } from '@apollo/client';
 import { FETCH_USER_PROFILE_DATA } from '../../queries/queries';
-import DisplayImage from '../../../../components/DisplayImage/index';
+import DisplayImage from 'components/DisplayImage';
 import './profilecard.css';
 
 interface UserData {

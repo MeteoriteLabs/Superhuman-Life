@@ -30,20 +30,20 @@ import {
     UPDATE_FITNESSPORGRAMS_SESSIONS
 } from './queries';
 import { useQuery, useMutation, gql } from '@apollo/client';
-import ProgramList from '../../../components/customWidgets/programList';
-import SessionList from '../../../components/customWidgets/sessionList';
+import ProgramList from 'components/customWidgets/programList';
+import SessionList from 'components/customWidgets/sessionList';
 import FloatingButton from './FloatingButtons';
-import TimeField from '../../../components/customWidgets/multipleTimeFields';
-import TextEditor from '../../../components/customWidgets/textEditor';
+import TimeField from 'components/customWidgets/multipleTimeFields';
+import TextEditor from 'components/customWidgets/textEditor';
 import CreateoreditWorkout from '../workout/createoredit-workout';
 import ReplaceWorkout from './create-edit/replaceWorkout';
 import DaysInput from './daysInput';
 import moment from 'moment';
-import { flattenObj } from '../../../components/utils/responseFlatten';
-import AuthContext from '../../../context/auth-context';
+import { flattenObj } from 'components/utils/responseFlatten';
+import AuthContext from 'context/auth-context';
 import { AvailabilityCheck } from './availabilityCheck';
-import SapienVideoPlayer from '../../../components/customWidgets/SpaienVideoPlayer';
-import Toaster from '../../../components/Toaster';
+import SapienVideoPlayer from 'components/customWidgets/SpaienVideoPlayer';
+import Toaster from 'components/Toaster';
 
 const Schedular = (props: any) => {
     const auth = useContext(AuthContext);

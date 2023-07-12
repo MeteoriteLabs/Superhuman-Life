@@ -6,16 +6,16 @@ import {
     FETCH_USERS_PROFILE_DATA,
     UPDATE_USER_PROFILE_DATA
 } from '../../queries/queries';
-import AuthContext from '../../../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { useMutation, useQuery } from '@apollo/client';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
-import Toaster from '../../../../components/Toaster';
+import { flattenObj } from 'components/utils/responseFlatten';
+import Toaster from 'components/Toaster';
 import { Col } from 'react-bootstrap';
 import {
     phoneCustomFormats,
     phoneTransformErrors
-} from '../../../../components/utils/ValidationPatterns';
-import UploadImageToS3WithNativeSdk from '../../../../components/upload/upload';
+} from 'components/utils/ValidationPatterns';
+import UploadImageToS3WithNativeSdk from 'components/upload/upload';
 import { UsersPermissionsUser, Schema, FlattenData } from './Interfaces';
 
 const BasicProfileForm: React.FC = () => {
