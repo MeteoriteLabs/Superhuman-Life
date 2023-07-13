@@ -1,37 +1,24 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import { FormControl, InputGroup } from 'react-bootstrap';
 import { flattenObj } from '../../../components/utils/responseFlatten';
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import AuthContext from '../../../context/auth-context';
+import { FETCH_CONTACTS } from './queries';
 
-function GroupEmailAndPhone(props: any) {
+interface GroupEmailAndPhoneProps {
+    value: string;
+    onChange: (data: string) => void;
+}
+
+function GroupEmailAndPhone(props: GroupEmailAndPhoneProps) {
     const [userEmail, setUserEmail] = useState<string>(props.value);
     const [userPhone, setUserPhone] = useState<string>(props.value);
     const auth = useContext(AuthContext);
-
     const [user, setUser] = useState<{ id: string; email: string; phone: string }[]>([]);
 
-    const FETCH_USER = gql`
-        query contacts($id: ID!, $email: String, $phone: String) {
-            contacts(
-                filters: {
-                    ownedBy: { id: { eq: $id } }
-                    or: [{ phone: { eq: $phone } }, { email: { eq: $email } }]
-                }
-            ) {
-                data {
-                    id
-                    attributes {
-                        email
-                        phone
-                    }
-                }
-            }
-        }
-    `;
     props.onChange(JSON.stringify({ userEmail, userPhone }));
 
-    useQuery(FETCH_USER, {
+    useQuery(FETCH_CONTACTS, {
         variables: { id: auth.userid, email: userEmail, phone: userPhone },
         skip: userEmail === undefined && userPhone === undefined,
         onCompleted: loadData
@@ -39,7 +26,6 @@ function GroupEmailAndPhone(props: any) {
 
     function loadData(data: any) {
         const flattenedData = flattenObj({ ...data });
-        console.log('flatten data', flattenedData);
         setUser(
             [...flattenedData.contacts].map((user) => {
                 return {
