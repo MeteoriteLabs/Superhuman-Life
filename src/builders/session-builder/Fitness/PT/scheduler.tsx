@@ -12,7 +12,9 @@ import {
     FormControl,
     Card,
     Badge,
-    Table
+    Table,
+    Accordion,
+    
 } from 'react-bootstrap';
 import SchedulerPage from '../../../program-builder/program-template/scheduler';
 import moment from 'moment';
@@ -22,7 +24,7 @@ import '../fitness.css';
 import '../Group/actionButton.css';
 import Loader from '../../../../components/Loader/Loader';
 import DisplayImage from '../../../../components/DisplayImage';
-import "../../profilepicture.css";
+import '../../profilepicture.css';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 
@@ -35,10 +37,9 @@ const Scheduler: React.FC = () => {
     const [editDatesModal, setEditdatesModal] = useState(false);
     const [startDate, setStartDate] = useState('');
     const [schedulerSessions, setSchedulerSessions] = useState([]);
-
     const [tag, setTag] = useState<any>();
-
     const [totalClasses, setTotalClasses] = useState<any>([]);
+    const [key, setKey] = useState('');
     let programIndex;
 
     useEffect(() => {
@@ -48,7 +49,7 @@ const Scheduler: React.FC = () => {
     }, [show]);
 
     const handleCloseDatesModal = () => setEditdatesModal(false);
-    const handleShowDatesModal = () => setEditdatesModal(true);
+    // const handleShowDatesModal = () => setEditdatesModal(true);
 
     const [updateDate] = useMutation(UPDATE_USERPACKAGE_EFFECTIVEDATE);
 
@@ -103,16 +104,16 @@ const Scheduler: React.FC = () => {
             useGrouping: false
         });
     }
-    function handleTotalClasses(data: any, duration: number) {
-        let sum = 0;
-        for (let i = 0; i < data.length; i++) {
-            sum += data[i];
-        }
-        const formattedSum = handleTimeFormatting(sum, duration);
-        return formattedSum;
-    }
 
-    
+    // function handleTotalClasses(data: any, duration: number) {
+    //     let sum = 0;
+    //     for (let i = 0; i < data.length; i++) {
+    //         sum += data[i];
+    //     }
+    //     const formattedSum = handleTimeFormatting(sum, duration);
+    //     return formattedSum;
+    // }
+
     function calculateLastSession(sessions) {
         if (sessions.length === 0) {
             return 'N/A';
@@ -123,8 +124,8 @@ const Scheduler: React.FC = () => {
 
         return maxDate.format('MMM Do,YYYY');
     }
-    
-    if (!show) return <Loader msg="loading scheduler..."/>;
+
+    if (!show) return <Loader msg="loading scheduler..." />;
     else
         return (
             <div className="col-lg-12">
@@ -136,221 +137,331 @@ const Scheduler: React.FC = () => {
                         <b> back</b>
                     </span>
                 </div>
-               
-                    <Card style={{ width: '90%' }}>
-                        <Card.Body>
-                            <Row>
-                                <Col lg={10} sm={8}>
-                                    <Card.Title>
-                                        {tag && tag.fitnesspackage?.packagename}
-                                    </Card.Title>
-                                </Col>
-                                <Col>
-                                    <Row className="justify-content-end">
-                                        <Dropdown>
-                                            <Dropdown.Toggle variant="bg-light" id="dropdown-basic">
-                                                <img
-                                                    src="/assets/cardsKebab.svg"
-                                                    alt="notification"
-                                                    className="img-responsive "
-                                                    style={{ height: '20px', width: '20px' }}
-                                                />
-                                            </Dropdown.Toggle>
 
-                                            <Dropdown.Menu>
-                                                <Dropdown.Item
-                                                    key={1}
-                                                    // onClick={() => deleteUserAddress(currValue)}
-                                                >
-                                                    Renew subscription
-                                                </Dropdown.Item>
+                
 
-                                                <Dropdown.Item
-                                                    key={2}
-                                                    // onClick={() => updateAddress(currValue)}
-                                                >
-                                                    Edit Program Name
-                                                </Dropdown.Item>
-                                            </Dropdown.Menu>
-                                        </Dropdown>
-                                    </Row>
-                                </Col>
-                            </Row>
+                {/* Cards for service details and movement sessions */}
+                <Row>
+                    <Col lg={11}>
+                        <Accordion>
+                            <Card>
+                                <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => {key==='' ? setKey("0") : setKey('')}}>
+                                    <span className="d-inline-block">
+                                        <b>{tag && tag.fitnesspackage?.packagename}</b>
+                                    </span>
+                                    <span className="d-inline-block btn float-right">
+                                        {key === "0" ? <i className="fa fa-chevron-up d-flex justify-content-end"/> : <i className="fa fa-chevron-down d-flex justify-content-end"/>}
+                                    </span>
+                                </Accordion.Toggle>
+                                <Accordion.Collapse eventKey="0">
+                                    {/* Package details card */}
+                                    <Card style={{ width: '100%' }}>
+                                        <Card.Body>
+                                            <Row>
+                                                <Col lg={10} sm={8}>
+                                                    <Card.Title>
+                                                        {tag && tag.fitnesspackage?.packagename}
+                                                    </Card.Title>
+                                                </Col>
+                                                <Col>
+                                                    <Row className="justify-content-end">
+                                                        <Dropdown>
+                                                            <Dropdown.Toggle
+                                                                variant="bg-light"
+                                                                id="dropdown-basic"
+                                                            >
+                                                                <img
+                                                                    src="/assets/cardsKebab.svg"
+                                                                    alt="notification"
+                                                                    className="img-responsive "
+                                                                    style={{
+                                                                        height: '20px',
+                                                                        width: '20px'
+                                                                    }}
+                                                                />
+                                                            </Dropdown.Toggle>
 
-                            <Card.Text>
-                                
-                                <Row>
-                                    <Col lg={9} sm={5}>
-                                    <Badge pill variant="dark" className="p-2">
-                                    {tag.fitnesspackage?.level}
-                                </Badge>
-                                
-                                <br />
-                                        {
-                                            tag && tag.fitnesspackage && tag.fitnesspackage.fitness_package_type.type ===
-                                            "On-Demand PT" ? <b>Date of session: {tag && tag.client_packages && tag.client_packages.length
-                                                ? moment(tag.client_packages[0].effective_date).format(
-                                                      'DD MMMM, YY'
-                                                  )
-                                                : null} </b> : 
-                                        
-                                        <>
-                                        <b>Start Date:</b>
-                                        {tag && tag.client_packages && tag.client_packages.length
-                                            ? moment(tag.client_packages[0].effective_date).format(
-                                                  'DD MMMM, YY'
-                                              )
-                                            : null}
-                                        <br />
-                                        <b>End Date: </b>
-                                        {tag && tag.client_packages && tag.client_packages.length
-                                            ? moment.utc(tag.client_packages[0].effective_date)
-                                                  .add(tag.client_packages[0].effective_date.package_duration, 'days')
-                                                  .format('DD MMMM, YY')
-                                            : null}
-                                        </>}
-                                    </Col>
-                                    <Col>
-                                        <DisplayImage
-                                            imageName={
-                                                'Photo_ID' in tag.client_packages &&
-                                                tag.client_packages.length &&
-                                                tag.client_packages[0].users_permissions_user &&
-                                                tag.client_packages[0].users_permissions_user
-                                                    .Photo_ID
-                                                    ? tag.client_packages[0].users_permissions_user
-                                                          .Photo_ID
-                                                    : null
-                                            }
-                                            defaultImageUrl="assets/image_placeholder.svg"
-                                            imageCSS="rounded-circle profile_pic text-center img-fluid ml-4 "
-                                        />
-                                        <br />
-                                        <b>
-                                            {tag.client_packages.length &&
-                                            tag.client_packages[0].users_permissions_user &&
-                                            tag.client_packages[0].users_permissions_user.First_Name
-                                                ? tag.client_packages[0].users_permissions_user
-                                                      .First_Name
-                                                : null}{' '}
-                                            {tag.client_packages.length &&
-                                            tag.client_packages[0].users_permissions_user &&
-                                            tag.client_packages[0].users_permissions_user.Last_Name
-                                                ? tag.client_packages[0].users_permissions_user
-                                                      .Last_Name
-                                                : null}
-                                        </b>
-                                    </Col>
-                                </Row>
-                            </Card.Text>
-                        </Card.Body>
-                    </Card>
-                    <Card style={{ width: '90%' }} className='mt-3'>
-                        <Card.Body>
-                            <Card.Title><h4>Movement Sessions</h4></Card.Title>
-                            <Card.Text>Last planned session {calculateLastSession(tag.sessions)}</Card.Text>
-                            <Row>
-                                <Col lg={8}>
-                            <Table striped bordered hover size="sm" responsive>
-                                <thead className='text-center'>
-                                    <tr>
-                                        <th>Type</th>
-                                        <th>Total</th>
-                                        {tag &&
-                                        tag.fitnesspackage &&
-                                        tag.fitnesspackage
-                                            && tag.fitnesspackage?.ptonline  ? 
-                                            <th>Plan Online</th>
-                                            : null}
-                                        {tag &&
-                                        tag.fitnesspackage &&
-                                        tag.fitnesspackage
-                                            && tag.fitnesspackage?.ptoffline  ? 
-                                            <th>Plan Offline</th>
-                                            : null}
-                                        {tag && tag.fitnesspackage && tag.fitnesspackage.fitness_package_type.type ===
-                                            "On-Demand PT" ? null : <th>Plan Rest</th> }
-                                        {tag &&
-                                        tag.fitnesspackage &&
-                                        tag.fitnesspackage
-                                            && tag.fitnesspackage?.ptonline  ? 
-                                            <th>Completed Online</th>
-                                            : null}
-                                            {tag &&
-                                        tag.fitnesspackage &&
-                                        tag.fitnesspackage
-                                            && tag.fitnesspackage?.ptoffline  ? 
-                                            <th>Completed Offline</th>
-                                            : null}  
-                                    </tr>
-                                </thead>
-                                <tbody className='text-center'>
-                                    <tr>
-                                        <td>{tag &&
-                                        tag.fitnesspackage &&
-                                        tag.fitnesspackage.fitness_package_type
-                                            ? tag.fitnesspackage.fitness_package_type.type
-                                            : null}</td>
-                                        <td></td>
-                                        {tag &&
-                                        tag.fitnesspackage &&
-                                        tag.fitnesspackage
-                                            && tag.fitnesspackage.ptonline ? <td>{`${handleTimeFormatting(
-                                                totalClasses[0],
-                                                tag.fitnesspackage?.duration
-                                            )}/${tag.fitnesspackage.ptonline}`}</td>
-                                            : null}
-                                        {tag &&
-                                        tag.fitnesspackage &&
-                                        tag.fitnesspackage
-                                            && tag.fitnesspackage.ptoffline ? <td>{tag.fitnesspackage.ptoffline }</td>
-                                            : null}
-                                             {tag && tag.fitnesspackage && tag.fitnesspackage.fitness_package_type.type ===
-                                            "On-Demand PT" ? null : <td>{tag.fitnesspackage?.restdays}</td> }
-                                        
-                                        {tag &&
-                                        tag.fitnesspackage &&
-                                        tag.fitnesspackage
-                                            && tag.fitnesspackage.ptonline ? <td></td>
-                                            : null}
-                                             {tag &&
-                                        tag.fitnesspackage &&
-                                        tag.fitnesspackage
-                                            && tag.fitnesspackage.ptoffline ? <td></td>
-                                            : null}
-                                        
-                                    </tr>
-                                </tbody>
-                            </Table>
-                            </Col>
-                            <Col>
-                                <Calendar
-                                    className="disabled"
-                                    // tileClassName={tileContent}
-                                    // onChange={onChange}
-                                    // onActiveStartDateChange={({ action }) => {
-                                    //     action === 'next'
-                                    //         ? setMonth(month + 1)
-                                    //         : setMonth(month - 1);
-                                    // }}
-                                    // value={value}
-                                    minDate={moment().startOf('month').toDate()}
-                                    maxDate={moment().add(2, 'months').toDate()}
-                                    maxDetail="month"
-                                    minDetail="month"
-                                    next2Label={null}
-                                    prev2Label={null}
-                                />
-                            </Col>
-                            </Row>
-                            <small className="text-muted">
-                                Note: Plan all the sessions in advance
-                            </small>
-                        </Card.Body>
+                                                            <Dropdown.Menu>
+                                                                <Dropdown.Item
+                                                                    key={1}
+                                                                    // onClick={() => deleteUserAddress(currValue)}
+                                                                >
+                                                                    Renew subscription
+                                                                </Dropdown.Item>
 
-                       
-                    </Card>
-               
+                                                                <Dropdown.Item
+                                                                    key={2}
+                                                                    // onClick={() => updateAddress(currValue)}
+                                                                >
+                                                                    Edit Program Name
+                                                                </Dropdown.Item>
+                                                            </Dropdown.Menu>
+                                                        </Dropdown>
+                                                    </Row>
+                                                </Col>
+                                            </Row>
+
+                                            <Card.Text>
+                                                <Row>
+                                                    <Col lg={9} sm={5}>
+                                                        <Badge pill variant="dark" className="p-2">
+                                                            {tag.fitnesspackage?.level}
+                                                        </Badge>
+
+                                                        <br />
+                                                        {tag &&
+                                                        tag.fitnesspackage &&
+                                                        tag.fitnesspackage.fitness_package_type
+                                                            .type === 'On-Demand PT' ? (
+                                                            <b>
+                                                                Date of session:{' '}
+                                                                {tag &&
+                                                                tag.client_packages &&
+                                                                tag.client_packages.length
+                                                                    ? moment(
+                                                                          tag.client_packages[0]
+                                                                              .effective_date
+                                                                      ).format('DD MMMM, YY')
+                                                                    : null}{' '}
+                                                            </b>
+                                                        ) : (
+                                                            <>
+                                                                <b>Start Date:</b>
+                                                                {tag &&
+                                                                tag.client_packages &&
+                                                                tag.client_packages.length
+                                                                    ? moment(
+                                                                          tag.client_packages[0]
+                                                                              .effective_date
+                                                                      ).format('DD MMMM, YY')
+                                                                    : null}
+                                                                <br />
+                                                                <b>End Date: </b>
+                                                                {tag &&
+                                                                tag.client_packages &&
+                                                                tag.client_packages.length
+                                                                    ? moment
+                                                                          .utc(
+                                                                              tag.client_packages[0]
+                                                                                  .effective_date
+                                                                          )
+                                                                          .add(
+                                                                              tag.client_packages[0]
+                                                                                  .effective_date
+                                                                                  .package_duration,
+                                                                              'days'
+                                                                          )
+                                                                          .format('DD MMMM, YY')
+                                                                    : null}
+                                                            </>
+                                                        )}
+                                                    </Col>
+                                                    <Col>
+                                                        <DisplayImage
+                                                            imageName={
+                                                                'Photo_ID' in tag.client_packages &&
+                                                                tag.client_packages.length &&
+                                                                tag.client_packages[0]
+                                                                    .users_permissions_user &&
+                                                                tag.client_packages[0]
+                                                                    .users_permissions_user.Photo_ID
+                                                                    ? tag.client_packages[0]
+                                                                          .users_permissions_user
+                                                                          .Photo_ID
+                                                                    : null
+                                                            }
+                                                            defaultImageUrl="assets/image_placeholder.svg"
+                                                            imageCSS="rounded-circle profile_pic text-center img-fluid ml-4 "
+                                                        />
+                                                        <br />
+                                                        <b>
+                                                            {tag.client_packages.length &&
+                                                            tag.client_packages[0]
+                                                                .users_permissions_user &&
+                                                            tag.client_packages[0]
+                                                                .users_permissions_user.First_Name
+                                                                ? tag.client_packages[0]
+                                                                      .users_permissions_user
+                                                                      .First_Name
+                                                                : null}{' '}
+                                                            {tag.client_packages.length &&
+                                                            tag.client_packages[0]
+                                                                .users_permissions_user &&
+                                                            tag.client_packages[0]
+                                                                .users_permissions_user.Last_Name
+                                                                ? tag.client_packages[0]
+                                                                      .users_permissions_user
+                                                                      .Last_Name
+                                                                : null}
+                                                        </b>
+                                                    </Col>
+                                                </Row>
+                                            </Card.Text>
+                                        </Card.Body>
+                                    </Card>
+                                </Accordion.Collapse>
+                            </Card>
+                            <Card>
+                                <Accordion.Toggle as={Card.Header} eventKey="1" onClick={() => {key==='' ? setKey("1") : setKey('')}}>
+                                    <span className="d-inline-block">
+                                        <b>Movement Sessions</b>
+                                    </span>
+                                    <span className="d-inline-block btn float-right">
+                                        {key === "1" ? <i className="fa fa-chevron-up d-flex justify-content-end"></i> : <i className="fa fa-chevron-down d-flex justify-content-end"></i>}
+                                    </span>
+                                </Accordion.Toggle>
+                                <Accordion.Collapse eventKey="1">
+                                    {/* Movement sessions */}
+                                    <Card style={{ width: '100%' }}>
+                                        <Card.Body>
+                                            <Card.Title>
+                                                <h4>Movement Sessions</h4>
+                                            </Card.Title>
+                                            <Card.Text>
+                                                Last planned session{' '}
+                                                {calculateLastSession(tag.sessions)}
+                                            </Card.Text>
+                                            <Row>
+                                                <Col lg={8}>
+                                                    <Table
+                                                        striped
+                                                        bordered
+                                                        hover
+                                                        size="sm"
+                                                        responsive
+                                                    >
+                                                        <thead className="text-center">
+                                                            <tr>
+                                                                <th>Type</th>
+                                                                <th>Total</th>
+                                                                {tag &&
+                                                                tag.fitnesspackage &&
+                                                                tag.fitnesspackage &&
+                                                                tag.fitnesspackage?.ptonline ? (
+                                                                    <th>Plan Online</th>
+                                                                ) : null}
+                                                                {tag &&
+                                                                tag.fitnesspackage &&
+                                                                tag.fitnesspackage &&
+                                                                tag.fitnesspackage?.ptoffline ? (
+                                                                    <th>Plan Offline</th>
+                                                                ) : null}
+                                                                {tag &&
+                                                                tag.fitnesspackage &&
+                                                                tag.fitnesspackage
+                                                                    .fitness_package_type.type ===
+                                                                    'On-Demand PT' ? null : (
+                                                                    <th>Plan Rest</th>
+                                                                )}
+                                                                {tag &&
+                                                                tag.fitnesspackage &&
+                                                                tag.fitnesspackage &&
+                                                                tag.fitnesspackage?.ptonline ? (
+                                                                    <th>Completed Online</th>
+                                                                ) : null}
+                                                                {tag &&
+                                                                tag.fitnesspackage &&
+                                                                tag.fitnesspackage &&
+                                                                tag.fitnesspackage?.ptoffline ? (
+                                                                    <th>Completed Offline</th>
+                                                                ) : null}
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody className="text-center">
+                                                            <tr>
+                                                                <td>
+                                                                    {tag &&
+                                                                    tag.fitnesspackage &&
+                                                                    tag.fitnesspackage
+                                                                        .fitness_package_type
+                                                                        ? tag.fitnesspackage
+                                                                              .fitness_package_type
+                                                                              .type
+                                                                        : null}
+                                                                </td>
+                                                                <td></td>
+                                                                {tag &&
+                                                                tag.fitnesspackage &&
+                                                                tag.fitnesspackage &&
+                                                                tag.fitnesspackage.ptonline ? (
+                                                                    <td>{`${handleTimeFormatting(
+                                                                        totalClasses[0],
+                                                                        tag.fitnesspackage?.duration
+                                                                    )}/${
+                                                                        tag.fitnesspackage.ptonline
+                                                                    }`}</td>
+                                                                ) : null}
+                                                                {tag &&
+                                                                tag.fitnesspackage &&
+                                                                tag.fitnesspackage &&
+                                                                tag.fitnesspackage.ptoffline ? (
+                                                                    <td>
+                                                                        {
+                                                                            tag.fitnesspackage
+                                                                                .ptoffline
+                                                                        }
+                                                                    </td>
+                                                                ) : null}
+                                                                {tag &&
+                                                                tag.fitnesspackage &&
+                                                                tag.fitnesspackage
+                                                                    .fitness_package_type.type ===
+                                                                    'On-Demand PT' ? null : (
+                                                                    <td>
+                                                                        {
+                                                                            tag.fitnesspackage
+                                                                                ?.restdays
+                                                                        }
+                                                                    </td>
+                                                                )}
+
+                                                                {tag &&
+                                                                tag.fitnesspackage &&
+                                                                tag.fitnesspackage &&
+                                                                tag.fitnesspackage.ptonline ? (
+                                                                    <td></td>
+                                                                ) : null}
+                                                                {tag &&
+                                                                tag.fitnesspackage &&
+                                                                tag.fitnesspackage &&
+                                                                tag.fitnesspackage.ptoffline ? (
+                                                                    <td></td>
+                                                                ) : null}
+                                                            </tr>
+                                                        </tbody>
+                                                    </Table>
+                                                </Col>
+                                                <Col>
+                                                    <Calendar
+                                                        className="disabled"
+                                                        // tileClassName={tileContent}
+                                                        // onChange={onChange}
+                                                        // onActiveStartDateChange={({ action }) => {
+                                                        //     action === 'next'
+                                                        //         ? setMonth(month + 1)
+                                                        //         : setMonth(month - 1);
+                                                        // }}
+                                                        // value={value}
+                                                        minDate={moment().startOf('month').toDate()}
+                                                        maxDate={moment().add(2, 'months').toDate()}
+                                                        maxDetail="month"
+                                                        minDetail="month"
+                                                        next2Label={null}
+                                                        prev2Label={null}
+                                                    />
+                                                </Col>
+                                            </Row>
+                                            <small className="text-muted">
+                                                Note: Plan all the sessions in advance
+                                            </small>
+                                        </Card.Body>
+                                    </Card>
+                                </Accordion.Collapse>
+                            </Card>
+                        </Accordion>
+                    </Col>
+                </Row>
+
                 {/* <Row>
                     <Col
                         lg={11}
@@ -620,7 +731,12 @@ const Scheduler: React.FC = () => {
                         <div className="mt-5">
                             <SchedulerPage
                                 type="date"
-                                days={tag?.fitnesspackage?.fitness_package_type.type === "On-Demand PT" ? 1: tag?.fitnesspackage?.duration}
+                                days={
+                                    tag?.fitnesspackage?.fitness_package_type.type ===
+                                    'On-Demand PT'
+                                        ? 1
+                                        : tag?.fitnesspackage?.duration
+                                }
                                 classType={'One-On-One'}
                                 restDays={tag?.sessions.filter((ses) => ses.type === 'restday')}
                                 schedulerSessions={schedulerSessions}

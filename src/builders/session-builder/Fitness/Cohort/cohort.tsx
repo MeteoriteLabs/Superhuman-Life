@@ -1,12 +1,12 @@
 import { useQuery } from '@apollo/client';
 import { useContext, useMemo, useRef, useState  , useEffect} from 'react';
 import { Badge, Row, Col, Button } from 'react-bootstrap';
-import Table from '../../../../components/table';
-import AuthContext from '../../../../context/auth-context';
+import Table from 'components/table';
+import AuthContext from 'context/auth-context';
 import { GET_TAGS_FOR_COHORT } from '../../graphQL/queries';
 import FitnessAction from '../FitnessAction';
-import ActionButton from '../../../../components/actionbutton';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
+import ActionButton from 'components/actionbutton';
+import { flattenObj } from 'components/utils/responseFlatten';
 import moment from 'moment';
 
 export default function Cohort(): JSX.Element {
@@ -159,6 +159,7 @@ export default function Cohort(): JSX.Element {
             setPage(page - 1);
         }
     }, [userPackage]);
+    
     return (
         <div className="mt-5">
             <Row>
@@ -167,6 +168,7 @@ export default function Cohort(): JSX.Element {
                     <FitnessAction ref={fitnessActionRef} callback={() => mainQuery} />
                 </Col>
             </Row>
+
             {/* Pagination */}
             {userPackage && userPackage.length ? (
                 <Row className="justify-content-end">
