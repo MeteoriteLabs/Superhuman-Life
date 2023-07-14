@@ -10,7 +10,7 @@ import {
 } from './queries';
 import StatusModal from '../../../components/StatusModal/StatusModal';
 import { Subject } from 'rxjs';
-import { schema } from './contactsSchema';
+import { schema , widgets } from './contactsSchema';
 import { flattenObj } from '../../../components/utils/responseFlatten';
 import AuthContext from '../../../context/auth-context';
 import {
@@ -163,8 +163,8 @@ function CreateEditContact(props: any, ref: any) {
                 data: {
                     firstname: frm.firstname ? frm.firstname : null,
                     lastname: frm.lastname ? frm.lastname : null,
-                    email: frm.email ? frm.email : null,
-                    phone: frm.phone ? frm.phone : null,
+                    email: frm.emailAndPhone ? JSON.parse(frm.emailAndPhone).userEmail : null,
+                    phone: frm.emailAndPhone ? JSON.parse(frm.emailAndPhone).userPhone : null,                    
                     type: frm.type ? frm.type : null,
                     appDownloadStatus: frm.appDownloadStatus ? 'Invited' : 'NotInvited',
                     isPayee: frm.isPayee,
@@ -258,6 +258,7 @@ function CreateEditContact(props: any, ref: any) {
                 actionType={operation.type}
                 customFormats={phoneCustomFormats}
                 transformErrors={phoneTransformErrors}
+                widgets={widgets}
             />
 
             {/* Delete Modal */}
