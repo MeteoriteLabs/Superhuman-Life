@@ -35,6 +35,7 @@ const Scheduler: React.FC = () => {
     //im using this session ids from parent only in case of day wise session
     const [sessionIds, setSessionIds] = useState<any>([]);
     const [tag, setTag] = useState<any>();
+    const [key, setKey] = useState('');
 
     const fitnessActionRef = useRef<any>(null);
 
@@ -268,11 +269,21 @@ const Scheduler: React.FC = () => {
                     <Col lg={11}>
                         <Accordion>
                             <Card>
-                                <Accordion.Toggle as={Card.Header} eventKey="0">
-                                    <b>{tag && tag.fitnesspackage?.packagename}</b>
+                                <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => {key==='' ? setKey('0') : setKey('')}}>
+                                <span className="d-inline-block">
+                                        <b>{tag && tag.fitnesspackage?.packagename}</b>
+                                    </span>
+                                    <span className="d-inline-block btn float-right">
+                                        {key === '0' ? (
+                                            <i className="fa fa-chevron-up d-flex justify-content-end" />
+                                        ) : (
+                                            <i className="fa fa-chevron-down d-flex justify-content-end" />
+                                        )}
+                                    </span>
+                                    
                                 </Accordion.Toggle>
                                 <Accordion.Collapse eventKey="0">
-                                    <Card style={{ width: '90%' }}>
+                                    <Card style={{ width: '100%' }}>
                                         <Card.Body>
                                             <Row>
                                                 <Col lg={10} sm={8}>
@@ -379,11 +390,21 @@ const Scheduler: React.FC = () => {
                                 </Accordion.Collapse>
                             </Card>
                             <Card>
-                                <Accordion.Toggle as={Card.Header} eventKey="1">
-                                    <b>Movement</b>
+                                <Accordion.Toggle as={Card.Header} eventKey="1" onClick={() => {key === '' ? setKey('1') : setKey('')}}>
+                                    
+                                    <span className="d-inline-block">
+                                        <b>Movement Session</b>
+                                    </span>
+                                    <span className="d-inline-block btn float-right">
+                                        {key === '1' ? (
+                                            <i className="fa fa-chevron-up d-flex justify-content-end" />
+                                        ) : (
+                                            <i className="fa fa-chevron-down d-flex justify-content-end" />
+                                        )}
+                                    </span>
                                 </Accordion.Toggle>
                                 <Accordion.Collapse eventKey="1">
-                                    <Card style={{ width: '90%' }} className="mt-3">
+                                    <Card style={{ width: '100%' }}>
                                         <Card.Body>
                                             <Card.Title>
                                                 <h4>Movement Sessions</h4>

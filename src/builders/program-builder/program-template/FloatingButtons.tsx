@@ -21,7 +21,7 @@ const FloatingButton = (props: any) => {
     const program_id = window.location.pathname.split('/').pop();
 
     const [mini, setMini] = useState(true);
-    const [width, setWidth] = useState('250px');
+    const [width, setWidth] = useState('55px');
     const [event, setEvent] = useState('');
 
     function toggleSidebar() {

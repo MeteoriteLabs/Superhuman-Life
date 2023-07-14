@@ -348,6 +348,17 @@ const Scheduler = () => {
         }
     }
 
+    function handleCurrentDate() {
+        // setGroupStartDate(moment(date).add(1, 'month').format('YYYY-MM-DD'));
+        setPrevDate(moment().format('YYYY-MM-DD'));
+
+        if (moment().add(30, 'days').isBefore(moment(groupEndDate))) {
+            setNextDate(moment().add(30, 'days').format('YYYY-MM-DD'));
+        } else {
+            setNextDate(moment(groupEndDate).format('YYYY-MM-DD'));
+        }
+    }
+
     // this is to handle the left chevron, if we have to display it or no.
     function handlePrevDisplay(date: string) {
         return moment(date).isSame(moment(groupStartDate)) ? 'none' : '';
@@ -974,7 +985,12 @@ const Scheduler = () => {
                     </Col>
                 </Row> */}
                 <Row className="mt-5 mb-2">
-                    <Col lg={11}>
+                    <Col lg={2}>
+                    <Button variant="dark"  onClick={() => {
+                                    handleCurrentDate();
+                                }}>Today</Button>
+                    </Col>
+                    <Col lg={8}>
                         <div className="text-center">
                             <span
                                 style={{
@@ -1006,6 +1022,9 @@ const Scheduler = () => {
                                 <i className="fa fa-chevron-right ml-4"></i>
                             </span>
                         </div>
+                    </Col>
+                    <Col lg={2}>
+                    <Button variant='dark'>Collapse</Button>
                     </Col>
                 </Row>
                 {/* Scheduler */}

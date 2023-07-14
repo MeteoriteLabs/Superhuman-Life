@@ -1,6 +1,6 @@
 import { useQuery, useMutation } from '@apollo/client';
 import React, { useContext, useMemo, useRef, useState  , useEffect} from 'react';
-import { Badge, Row, Col, Form, Button, Modal } from 'react-bootstrap';
+import { Badge, Row, Col, Button, Modal } from 'react-bootstrap';
 import AuthContext from 'context/auth-context';
 import GroupTable from 'components/table/GroupTable/GroupTable';
 import { GET_TAGS_FOR_GROUP } from '../../graphQL/queries';

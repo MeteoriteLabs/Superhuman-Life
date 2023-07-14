@@ -38,6 +38,7 @@ const Scheduler: React.FC = () => {
     const [cohortStartDate, setCohortStartDate] = useState('');
     const [cohortEndDate, setCohortEndDate] = useState('');
     // this is used for monthly toggle
+    const [key, setKey] = useState('');
 
     const fitnessActionRef = useRef<any>(null);
 
@@ -167,12 +168,16 @@ const Scheduler: React.FC = () => {
                     <Col lg={11}>
                         <Accordion>
                             <Card>
-                                <Accordion.Toggle as={Card.Header} eventKey="0">
+                                <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => {key === '' ? setKey('0') : setKey('')}}>
                                     <span className="d-inline-block">
                                         <b>{tag && tag.fitnesspackage?.packagename}</b>
                                     </span>
                                     <span className="d-inline-block btn float-right">
-                                        <i className="fa fa-chevron-down d-flex justify-content-end"></i>
+                                    {key === '0' ? (
+                                            <i className="fa fa-chevron-up d-flex justify-content-end" />
+                                        ) : (
+                                            <i className="fa fa-chevron-down d-flex justify-content-end" />
+                                        )}
                                     </span>
                                 </Accordion.Toggle>
                                 <Accordion.Collapse eventKey="0">
@@ -313,12 +318,16 @@ const Scheduler: React.FC = () => {
                                 </Accordion.Collapse>
                             </Card>
                             <Card>
-                                <Accordion.Toggle as={Card.Header} eventKey="1">
+                                <Accordion.Toggle as={Card.Header} eventKey="1" onClick={() => {key === '' ? setKey('1') : setKey('')}}>
                                     <span className="d-inline-block">
                                         <b>Movement Sessions</b>
                                     </span>
                                     <span className="d-inline-block btn float-right">
-                                        <i className="fa fa-chevron-down d-flex justify-content-end"></i>
+                                    {key === '1' ? (
+                                            <i className="fa fa-chevron-up d-flex justify-content-end" />
+                                        ) : (
+                                            <i className="fa fa-chevron-down d-flex justify-content-end" />
+                                        )}
                                     </span>
                                 </Accordion.Toggle>
                                 <Accordion.Collapse eventKey="1">
