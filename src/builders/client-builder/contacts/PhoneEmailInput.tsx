@@ -4,7 +4,7 @@ import { flattenObj } from '../../../components/utils/responseFlatten';
 import { useQuery } from '@apollo/client';
 import AuthContext from '../../../context/auth-context';
 import { FETCH_CONTACTS } from './queries';
-import { indianPhoneNumberPattern } from '../../../components/utils/ValidationPatterns';
+import { phoneCustomFormats } from '../../../components/utils/ValidationPatterns';
 
 interface GroupEmailAndPhoneProps {
     value: string;
@@ -40,7 +40,7 @@ function GroupEmailAndPhone(props: GroupEmailAndPhoneProps) {
 
     // Function to validate the phone number
     function validatePhoneNumber(phoneNumber: string): boolean {
-        return indianPhoneNumberPattern.test(phoneNumber);
+        return phoneCustomFormats['phone-in'].test(phoneNumber);
     }
 
     return (
