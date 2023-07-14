@@ -6,7 +6,6 @@ import AuthContext from '../../../context/auth-context';
 import { FETCH_CONTACTS } from './queries';
 import { indianPhoneNumberPattern } from '../../../components/utils/ValidationPatterns';
 
-
 interface GroupEmailAndPhoneProps {
     value: string;
     onChange: (data: string) => void;
