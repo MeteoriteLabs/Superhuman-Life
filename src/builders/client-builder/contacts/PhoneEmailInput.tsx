@@ -1,10 +1,10 @@
 import { useContext, useState } from 'react';
 import { FormControl, InputGroup } from 'react-bootstrap';
-import { flattenObj } from '../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 import { useQuery } from '@apollo/client';
-import AuthContext from '../../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { FETCH_CONTACTS } from './queries';
-import { phoneCustomFormats } from '../../../components/utils/ValidationPatterns';
+import { phoneCustomFormats } from 'components/utils/ValidationPatterns';
 
 interface GroupEmailAndPhoneProps {
     value: string;
