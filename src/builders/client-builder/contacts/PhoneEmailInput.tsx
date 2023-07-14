@@ -4,6 +4,8 @@ import { flattenObj } from '../../../components/utils/responseFlatten';
 import { useQuery } from '@apollo/client';
 import AuthContext from '../../../context/auth-context';
 import { FETCH_CONTACTS } from './queries';
+import { indianPhoneNumberPattern } from '../../../components/utils/ValidationPatterns';
+
 
 interface GroupEmailAndPhoneProps {
     value: string;
@@ -37,6 +39,11 @@ function GroupEmailAndPhone(props: GroupEmailAndPhoneProps) {
         );
     }
 
+    // Function to validate the phone number
+    function validatePhoneNumber(phoneNumber: string): boolean {
+        return indianPhoneNumberPattern.test(phoneNumber);
+    }
+
     return (
         <>
             <label>Email ID</label>
@@ -60,7 +67,7 @@ function GroupEmailAndPhone(props: GroupEmailAndPhoneProps) {
             <label className="mt-0">Phone Number</label>
             <InputGroup className="mb-1">
                 <FormControl
-                    type="number"
+                    type="text"
                     value={userPhone}
                     onChange={(e) => {
                         setUserPhone(e.target.value);
@@ -71,6 +78,13 @@ function GroupEmailAndPhone(props: GroupEmailAndPhoneProps) {
             {userPhone && user.length && user.some((u) => u.phone === userPhone) ? (
                 <span style={{ fontSize: '13px', color: 'red' }}>
                     This Phone Number is already taken.
+                </span>
+            ) : (
+                ''
+            )}
+            {!validatePhoneNumber(userPhone) && userPhone ? (
+                <span style={{ fontSize: '13px', color: 'red' }}>
+                    Please enter a valid Indian phone number.
                 </span>
             ) : (
                 ''

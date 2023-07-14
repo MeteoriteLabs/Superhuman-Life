@@ -70,3 +70,6 @@ export function youtubeUrlTransformErrors(errors) {
         return error;
     });
 }
+
+// Regular expression pattern for validating Indian phone numbers
+export const indianPhoneNumberPattern = /^[6-9]\d{9}$/;
