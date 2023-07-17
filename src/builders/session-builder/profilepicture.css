@@ -4,18 +4,6 @@
     width: 68px;
 }
 
-.accordion-button {
-    background-color: gray !important;
-  }
-  
-  .accordion-button:focus {
-    box-shadow: none;
-  }
-  
-  .accordion-button:not(.collapsed) {
-    color: #212529;
-  }
-
 @media (max-width: 500px) {
     .profile_pic {
         border: 4px solid white;
