@@ -6,8 +6,8 @@ import {
     GET_TAG_BY_ID
 } from '../../graphQL/queries';
 import { useQuery } from '@apollo/client';
-import { Row, Col, Dropdown, Card, Badge, Table, Accordion } from 'react-bootstrap';
-import SchedulerPage from '../../../program-builder/program-template/scheduler';
+import { Row, Col, Dropdown, Card, Badge, Table, Accordion,Button } from 'react-bootstrap';
+import SchedulerPage from 'builders/program-builder/program-template/scheduler';
 import moment from 'moment';
 import FitnessAction from '../FitnessAction';
 import AuthContext from 'context/auth-context';
@@ -103,20 +103,29 @@ const Scheduler: React.FC = () => {
         return maxDate.format('MMM Do,YYYY');
     }
 
-    function calculateDailySessions(sessions) {
-        const dailySessions = sessions.filter(
-            (ses: any) => ses.session_date === moment().format('YYYY-MM-DD')
-        );
-        return dailySessions.length >= 1 ? dailySessions.length : 'N/A';
-    }
+    // function calculateDailySessions(sessions) {
+    //     const dailySessions = sessions.filter(
+    //         (ses: any) => ses.session_date === moment().format('YYYY-MM-DD')
+    //     );
+    //     return dailySessions.length >= 1 ? dailySessions.length : 'N/A';
+    // }
 
     function calculateDays(sd: string, ed: string) {
         const days = moment(ed).diff(moment(sd), 'days');
         return days + 1;
     }
 
+    function handleCurrentDate() {
+        setPrevDate(moment().format('YYYY-MM-DD'));
+
+        if (moment().add(30, 'days').isBefore(moment(channelEndDate))) {
+            setNextDate(moment().add(30, 'days').format('YYYY-MM-DD'));
+        } else {
+            setNextDate(moment(channelEndDate).format('YYYY-MM-DD'));
+        }
+    }
+
     function handleDatePicked(date: string) {
-        // setScheduleDate(moment(date).format('YYYY-MM-DD'));
 
         setPrevDate(moment(date).format('YYYY-MM-DD'));
 
@@ -576,8 +585,74 @@ const Scheduler: React.FC = () => {
                             </Col>
                         </Row>
                     </Col>
+                </Row> */}
+
+                {/* Scheduler manager based on dates */}
+                <Row className="mt-5 mb-2">
+                    <Col lg={2}>
+                    {moment().isBefore(moment(channelEndDate)) ? (
+                            <Button
+                                variant="dark"
+                                onClick={() => {
+                                    handleCurrentDate();
+                                }}
+                            >
+                                Today
+                            </Button>
+                        ) : null}
+                    </Col>
+                    <Col lg={8}>
+                    <div className="text-center">
+                            <input
+                                min={moment(channelStartDate).format('YYYY-MM-DD')}
+                                max={moment(channelEndDate).format('YYYY-MM-DD')}
+                                className="p-1 rounded shadow-sm mb-3"
+                                type="date"
+                                style={{
+                                    border: 'none',
+                                    backgroundColor: 'rgba(211,211,211,0.8)',
+                                    cursor: 'pointer'
+                                }}
+                                value={prevDate}
+                                onChange={(e) => handleDatePicked(e.target.value)}
+                            />{' '}
+                            <br />
+                            <span
+                                style={{
+                                    display: `${handlePrevDisplay(prevDate)}`,
+                                    cursor: 'pointer'
+                                }}
+                                onClick={() => {
+                                    handlePrevMonth(prevDate);
+                                }}
+                                className="rounded-circle"
+                            >
+                                <i className="fa fa-chevron-left mr-4"></i>
+                            </span>
+                            <span className="shadow-lg bg-white p-2 rounded-lg">
+                                <b>
+                                    {moment(prevDate).startOf('month').format('MMMM, YYYY')} -{' '}
+                                    {moment(nextDate).endOf('month').format('MMMM, YYYY')}
+                                </b>
+                            </span>
+                            <span
+                                style={{
+                                    display: `${handleNextDisplay(nextDate)}`,
+                                    cursor: 'pointer'
+                                }}
+                                onClick={() => {
+                                    handleNextMonth(nextDate);
+                                }}
+                            >
+                                <i className="fa fa-chevron-right ml-4"></i>
+                            </span>
+                        </div>
+                    </Col>
+                    <Col lg={2}>
+                        <Button variant="dark">Collapse</Button>
+                    </Col>
                 </Row>
-                <Row className="mt-5 mb-3">
+                {/* <Row className="mt-5 mb-3">
                     <Col lg={11}>
                         <div className="text-center">
                             <input
@@ -625,7 +700,7 @@ const Scheduler: React.FC = () => {
                             </span>
                         </div>
                     </Col>
-                </Row> */}
+                </Row>  */}
 
                 {/* Scheduler */}
                 <Row>

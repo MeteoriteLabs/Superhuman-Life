@@ -1,11 +1,11 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useRef, useEffect } from 'react';
 import { Card, Row, Col } from 'react-bootstrap';
 import { useQuery, useMutation } from '@apollo/client';
-import { UPDATE_SEEN_NEW } from '../../../builders/client-builder/leads/queries';
+import { UPDATE_SEEN_NEW } from 'builders/client-builder/leads/queries';
 import { GET_LEADS } from './queries';
-import { flattenObj } from '../../../components/utils/responseFlatten';
-import NoDataInCard from '../../../components/NoDataInCard';
-import AuthContext from '../../../context/auth-context';
+import { flattenObj } from 'components/utils/responseFlatten';
+import NoDataInCard from 'components/NoDataInCard';
+import AuthContext from 'context/auth-context';
 import moment from 'moment';
 import './lead.css';
 

@@ -726,6 +726,7 @@ const Scheduler: React.FC = () => {
                         </Row>
                     </Col>
                 </Row> */}
+                
                 <Row>
                     <Col lg={11} className="pl-0 pr-0">
                         <div className="mt-5">

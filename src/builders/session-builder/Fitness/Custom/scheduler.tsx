@@ -122,28 +122,30 @@ const Scheduler = () => {
                     </span>
                 </div>
 
-                
-
                 {/* Cards for service details and movement sessions */}
                 <Row>
                     <Col lg={11}>
                         <Accordion>
                             <Card>
-                                <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => {
+                                <Accordion.Toggle
+                                    as={Card.Header}
+                                    eventKey="0"
+                                    onClick={() => {
                                         key === '1' || key === '' ? setKey('0') : setKey('');
-                                    }}>
+                                    }}
+                                >
                                     <span className="d-inline-block">
                                         <b>{tag && tag.fitnesspackage?.packagename}</b>
                                     </span>
                                     <span className="d-inline-block btn float-right">
-                                    {key === '0' ? (
+                                        {key === '0' ? (
                                             <i className="fa fa-chevron-up d-flex justify-content-end" />
                                         ) : (
                                             <i className="fa fa-chevron-down d-flex justify-content-end" />
                                         )}
                                     </span>
                                 </Accordion.Toggle>
-                                <Accordion.Collapse eventKey="0" >
+                                <Accordion.Collapse eventKey="0">
                                     {/* Package details card */}
                                     <Card style={{ width: '100%' }}>
                                         <Card.Body>
@@ -271,17 +273,25 @@ const Scheduler = () => {
                                 </Accordion.Collapse>
                             </Card>
                             <Card>
-                                <Accordion.Toggle as={Card.Header} eventKey="1" onClick={() => {
-                                        key === ''|| key === '0' ? setKey('1') : setKey('');
-                                    }}>
+                                <Accordion.Toggle
+                                    as={Card.Header}
+                                    eventKey="1"
+                                    onClick={() => {
+                                        key === '' || key === '0' ? setKey('1') : setKey('');
+                                    }}
+                                >
                                     <span className="d-inline-block">
                                         <b>Movement Sessions</b>
                                     </span>
                                     <span className="d-inline-block btn float-right">
-                                    {key === "1" ? <i className="fa fa-chevron-up d-flex justify-content-end"/> : <i className="fa fa-chevron-down d-flex justify-content-end"/>}
+                                        {key === '1' ? (
+                                            <i className="fa fa-chevron-up d-flex justify-content-end" />
+                                        ) : (
+                                            <i className="fa fa-chevron-down d-flex justify-content-end" />
+                                        )}
                                     </span>
                                 </Accordion.Toggle>
-                                <Accordion.Collapse eventKey="1" >
+                                <Accordion.Collapse eventKey="1">
                                     {/* Movement sessions */}
                                     <Card style={{ width: '100%' }} className="mt-3">
                                         <Card.Body>

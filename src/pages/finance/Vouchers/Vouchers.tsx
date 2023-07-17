@@ -1,14 +1,14 @@
 import {useEffect} from 'react';
 import { Badge, Row, Col, Button, InputGroup, FormControl, Container, Card } from 'react-bootstrap';
 import { useContext, useMemo, useRef, useState } from 'react';
-import Table from '../../../components/table/index';
-import ActionButton from '../../../components/actionbutton';
+import Table from 'components/table/index';
+import ActionButton from 'components/actionbutton';
 import { useQuery } from '@apollo/client';
 import { GET_ALL_VOUCHERS } from '../graphQL/queries';
-import authContext from '../../../context/auth-context';
+import authContext from 'context/auth-context';
 import moment from 'moment';
 import VoucherAction from './VoucherAction';
-import containsSubstring from '../../../components/utils/containsSubstring';
+import containsSubstring from 'components/utils/containsSubstring';
 
 interface VoucherTs {
     TriggerForm: ({

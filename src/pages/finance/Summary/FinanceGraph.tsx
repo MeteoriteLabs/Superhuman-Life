@@ -6,9 +6,9 @@ import {
     GET_USERS_JOINED_DATE
 } from './Queries';
 import { Row, Col } from 'react-bootstrap';
-import AuthContext from '../../../context/auth-context';
-import { flattenObj } from '../../../components/utils/responseFlatten';
-import LineGraph from '../../../components/Graphs/LineGraph/LineGraph';
+import AuthContext from 'context/auth-context';
+import { flattenObj } from 'components/utils/responseFlatten';
+import LineGraph from 'components/Graphs/LineGraph/LineGraph';
 import moment from 'moment';
 
 interface ArrayType {

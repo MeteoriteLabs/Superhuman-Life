@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { GET_TAG_BY_ID } from '../../graphQL/queries';
 import { useQuery } from '@apollo/client';
-import { Row, Col, Dropdown, Card, Badge, Table, Accordion } from 'react-bootstrap';
+import { Row, Col, Dropdown, Card, Badge, Table, Accordion, Button } from 'react-bootstrap';
 import SchedulerPage from '../../../program-builder/program-template/scheduler';
 import moment from 'moment';
 import FitnessAction from '../FitnessAction';
@@ -14,5 +14,5 @@ import Calendar from 'react-calendar';
 
 
 
-export {useState, useEffect, useRef , GET_TAG_BY_ID, useQuery,Row, Col, Dropdown, Card, Badge, Table, Accordion,SchedulerPage,moment, FitnessAction,Link,flattenObj, Loader, DisplayImage, Calendar};
+export {useState, useEffect, useRef , GET_TAG_BY_ID, useQuery,Row, Col, Button, Dropdown, Card, Badge, Table, Accordion,SchedulerPage,moment, FitnessAction,Link,flattenObj, Loader, DisplayImage, Calendar};
 

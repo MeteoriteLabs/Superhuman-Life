@@ -18,7 +18,8 @@ import {
     flattenObj,
     Loader,
     DisplayImage,
-    Calendar
+    Calendar,
+    Button
 } from './import';
 import '../../profilepicture.css';
 import '../Group/actionButton.css';
@@ -80,6 +81,28 @@ const Scheduler: React.FC = () => {
         setTag(flattenData.tags[0]);
     }
 
+    function handleDatePicked(date: string) {
+        // setScheduleDate(moment(date).format('YYYY-MM-DD'));
+
+        setPrevDate(moment(date).format('YYYY-MM-DD'));
+
+        if (moment(date).add(30, 'days').isBefore(moment(cohortEndDate))) {
+            setNextDate(moment(date).add(30, 'days').format('YYYY-MM-DD'));
+        } else {
+            setNextDate(moment(cohortEndDate).format('YYYY-MM-DD'));
+        }
+    }
+
+    function handleCurrentDate() {
+        setPrevDate(moment().format('YYYY-MM-DD'));
+
+        if (moment().add(30, 'days').isBefore(moment(cohortEndDate))) {
+            setNextDate(moment().add(30, 'days').format('YYYY-MM-DD'));
+        } else {
+            setNextDate(moment(cohortEndDate).format('YYYY-MM-DD'));
+        }
+    }
+
     function handleRangeDates(startDate: string, endDate: string) {
         setPrevDate(moment(startDate).format('YYYY-MM-DD'));
 
@@ -91,7 +114,6 @@ const Scheduler: React.FC = () => {
     }
 
     function handlePrevMonth(date: string) {
-        // setGroupStartDate(moment(date).subtract(1, 'month').format('YYYY-MM-DD'));
         setNextDate(moment(date).format('YYYY-MM-DD'));
 
         if (moment(date).subtract(30, 'days').isSameOrAfter(moment(cohortStartDate))) {
@@ -102,7 +124,6 @@ const Scheduler: React.FC = () => {
     }
 
     function handleNextMonth(date: string) {
-        // setGroupStartDate(moment(date).add(1, 'month').format('YYYY-MM-DD'));
         setPrevDate(moment(date).format('YYYY-MM-DD'));
 
         if (moment(date).add(30, 'days').isBefore(moment(cohortEndDate))) {
@@ -168,12 +189,18 @@ const Scheduler: React.FC = () => {
                     <Col lg={11}>
                         <Accordion>
                             <Card>
-                                <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => {key === '' ? setKey('0') : setKey('')}}>
+                                <Accordion.Toggle
+                                    as={Card.Header}
+                                    eventKey="0"
+                                    onClick={() => {
+                                        key === '' ? setKey('0') : setKey('');
+                                    }}
+                                >
                                     <span className="d-inline-block">
                                         <b>{tag && tag.fitnesspackage?.packagename}</b>
                                     </span>
                                     <span className="d-inline-block btn float-right">
-                                    {key === '0' ? (
+                                        {key === '0' ? (
                                             <i className="fa fa-chevron-up d-flex justify-content-end" />
                                         ) : (
                                             <i className="fa fa-chevron-down d-flex justify-content-end" />
@@ -318,12 +345,18 @@ const Scheduler: React.FC = () => {
                                 </Accordion.Collapse>
                             </Card>
                             <Card>
-                                <Accordion.Toggle as={Card.Header} eventKey="1" onClick={() => {key === '' ? setKey('1') : setKey('')}}>
+                                <Accordion.Toggle
+                                    as={Card.Header}
+                                    eventKey="1"
+                                    onClick={() => {
+                                        key === '' ? setKey('1') : setKey('');
+                                    }}
+                                >
                                     <span className="d-inline-block">
                                         <b>Movement Sessions</b>
                                     </span>
                                     <span className="d-inline-block btn float-right">
-                                    {key === '1' ? (
+                                        {key === '1' ? (
                                             <i className="fa fa-chevron-up d-flex justify-content-end" />
                                         ) : (
                                             <i className="fa fa-chevron-down d-flex justify-content-end" />
@@ -555,7 +588,73 @@ const Scheduler: React.FC = () => {
                         </Row>
                     </Col>*/}
                 </Row>
+                {/* Scheduler manager based on dates */}
                 <Row className="mt-5 mb-2">
+                    <Col lg={2}>
+                        {moment().isBefore(moment(cohortEndDate)) ? (
+                            <Button
+                                variant="dark"
+                                onClick={() => {
+                                    handleCurrentDate();
+                                }}
+                            >
+                                Today
+                            </Button>
+                        ) : null}
+                    </Col>
+                    <Col lg={8}>
+                        <div className="text-center">
+                            <input
+                                min={moment(cohortStartDate).format('YYYY-MM-DD')}
+                                max={moment(cohortEndDate).format('YYYY-MM-DD')}
+                                className="p-1 rounded shadow-sm mb-3"
+                                type="date"
+                                style={{
+                                    border: 'none',
+                                    backgroundColor: 'rgba(211,211,211,0.8)',
+                                    cursor: 'pointer'
+                                }}
+                                value={prevDate}
+                                onChange={(e) => handleDatePicked(e.target.value)}
+                            />{' '}
+                            <br />
+                            <span
+                                style={{
+                                    display: `${handlePrevDisplay(prevDate)}`,
+                                    cursor: 'pointer'
+                                }}
+                                onClick={() => {
+                                    handlePrevMonth(prevDate);
+                                }}
+                                className="rounded-circle"
+                            >
+                                <i className="fa fa-chevron-left mr-4"></i>
+                            </span>
+                            <span className="shadow-lg bg-white p-2 rounded-lg">
+                                <b>
+                                    {moment(prevDate).startOf('month').format('MMMM, YYYY')} -{' '}
+                                    {moment(nextDate).endOf('month').format('MMMM, YYYY')}
+                                </b>
+                            </span>
+                            <span
+                                style={{
+                                    display: `${handleNextDisplay(nextDate)}`,
+                                    cursor: 'pointer'
+                                }}
+                                onClick={() => {
+                                    handleNextMonth(nextDate);
+                                }}
+                            >
+                                <i className="fa fa-chevron-right ml-4"></i>
+                            </span>
+                        </div>
+                    </Col>
+                    <Col lg={2}>
+                        <Button variant="dark">Collapse</Button>
+                    </Col>
+                </Row>
+
+                {/* <Row className="mt-5 mb-2">
                     <Col lg={11}>
                         <div className="text-center">
                             <span
@@ -589,7 +688,7 @@ const Scheduler: React.FC = () => {
                             </span>
                         </div>
                     </Col>
-                </Row>
+                </Row> */}
                 {/* Scheduler */}
                 <Row>
                     <Col lg={11} className="pl-0 pr-0">

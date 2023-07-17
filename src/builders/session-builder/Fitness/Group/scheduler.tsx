@@ -575,7 +575,11 @@ const Scheduler = () => {
                                         <b>Movement Sessions</b>
                                     </span>
                                     <span className="d-inline-block btn float-right">
-                                        {key === "1" ? <i className="fa fa-chevron-up d-flex justify-content-end" /> : <i className="fa fa-chevron-down d-flex justify-content-end" />}
+                                        {key === '1' ? (
+                                            <i className="fa fa-chevron-up d-flex justify-content-end" />
+                                        ) : (
+                                            <i className="fa fa-chevron-down d-flex justify-content-end" />
+                                        )}
                                     </span>
                                 </Accordion.Toggle>
                                 <Accordion.Collapse eventKey="1">
@@ -984,11 +988,20 @@ const Scheduler = () => {
                         </Row>
                     </Col>
                 </Row> */}
+
+                {/* Scheduler manager based on dates */}
                 <Row className="mt-5 mb-2">
                     <Col lg={2}>
-                    <Button variant="dark"  onClick={() => {
+                        {moment().isBefore(moment(groupEndDate)) ? (
+                            <Button
+                                variant="dark"
+                                onClick={() => {
                                     handleCurrentDate();
-                                }}>Today</Button>
+                                }}
+                            >
+                                Today
+                            </Button>
+                        ) : null}
                     </Col>
                     <Col lg={8}>
                         <div className="text-center">
@@ -1024,9 +1037,10 @@ const Scheduler = () => {
                         </div>
                     </Col>
                     <Col lg={2}>
-                    <Button variant='dark'>Collapse</Button>
+                        <Button variant="dark">Collapse</Button>
                     </Col>
                 </Row>
+
                 {/* Scheduler */}
                 <Row>
                     <Col lg={11} className="pl-0 pr-0">

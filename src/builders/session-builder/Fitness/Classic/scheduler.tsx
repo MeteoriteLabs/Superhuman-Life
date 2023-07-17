@@ -6,7 +6,7 @@ import {
     GET_TAG_BY_ID
 } from '../../graphQL/queries';
 import { useQuery } from '@apollo/client';
-import { Row, Col, Table, Card, Dropdown, Badge, Accordion } from 'react-bootstrap';
+import { Row, Col, Table, Card, Dropdown, Badge, Accordion, Button } from 'react-bootstrap';
 import SchedulerPage from '../../../program-builder/program-template/scheduler';
 import moment from 'moment';
 import FitnessAction from '../FitnessAction';
@@ -36,6 +36,10 @@ const Scheduler: React.FC = () => {
     const [sessionIds, setSessionIds] = useState<any>([]);
     const [tag, setTag] = useState<any>();
     const [key, setKey] = useState('');
+    const [prevDate, setPrevDate] = useState('');
+    const [nextDate, setNextDate] = useState('');
+    const [classicStartDate, setClassicStartDate] = useState('');
+    const [classicEndDate, setClassicEndDate] = useState('');
 
     const fitnessActionRef = useRef<any>(null);
 
@@ -63,10 +67,28 @@ const Scheduler: React.FC = () => {
                 total[0] += 1;
             }
         }
+        setClassicStartDate(
+            moment(flattenData.tags[0].fitnesspackage.Start_date).format('YYYY-MM-DD')
+        );
+        setClassicEndDate(moment(flattenData.tags[0].fitnesspackage.End_date).format('YYYY-MM-DD'));
+        handleRangeDates(
+            flattenData.tags[0].fitnesspackage.Start_date,
+            flattenData.tags[0].fitnesspackage.End_date
+        );
         setClientIds(clientValues);
         setSessionIds(ids);
         setTotalClasses(total);
         setTag(flattenData.tags[0]);
+    }
+
+    function handleRangeDates(startDate: string, endDate: string) {
+        setPrevDate(moment(startDate).format('YYYY-MM-DD'));
+
+        if (moment(startDate).add(30, 'days').isBefore(moment(endDate))) {
+            setNextDate(moment(startDate).add(30, 'days').format('YYYY-MM-DD'));
+        } else {
+            setNextDate(moment(endDate).format('YYYY-MM-DD'));
+        }
     }
 
     const { data: data4 } = useQuery(GET_TABLEDATA, {
@@ -112,6 +134,16 @@ const Scheduler: React.FC = () => {
             }
             const restDays = rest_days === null ? 0 : rest_days.length;
             setStatusDays(arr.length + restDays);
+        }
+    }
+
+    function handleCurrentDate() {
+        setPrevDate(moment().format('YYYY-MM-DD'));
+
+        if (moment().add(30, 'days').isBefore(moment(classicEndDate))) {
+            setNextDate(moment().add(30, 'days').format('YYYY-MM-DD'));
+        } else {
+            setNextDate(moment(classicEndDate).format('YYYY-MM-DD'));
         }
     }
 
@@ -224,6 +256,18 @@ const Scheduler: React.FC = () => {
         ]);
     }
 
+    function handleDatePicked(date: string) {
+        // setScheduleDate(moment(date).format('YYYY-MM-DD'));
+
+        setPrevDate(moment(date).format('YYYY-MM-DD'));
+
+        if (moment(date).add(30, 'days').isBefore(moment(classicEndDate))) {
+            setNextDate(moment(date).add(30, 'days').format('YYYY-MM-DD'));
+        } else {
+            setNextDate(moment(classicEndDate).format('YYYY-MM-DD'));
+        }
+    }
+
     // if(userPackage.length > 0){
     //     programIndex = userPackage.findIndex(item => item.id === last[1] && item.proManagerFitnessId === last[0])
     // }
@@ -250,6 +294,36 @@ const Scheduler: React.FC = () => {
         const maxDate = moment.max(moments);
 
         return maxDate.format('MMM Do,YYYY');
+    }
+
+    function handlePrevMonth(date: string) {
+        setNextDate(moment(date).format('YYYY-MM-DD'));
+
+        if (moment(date).subtract(30, 'days').isSameOrAfter(moment(classicStartDate))) {
+            setPrevDate(moment(date).subtract(30, 'days').format('YYYY-MM-DD'));
+        } else {
+            setPrevDate(moment(classicStartDate).format('YYYY-MM-DD'));
+        }
+    }
+
+    function handleNextMonth(date: string) {
+        setPrevDate(moment(date).format('YYYY-MM-DD'));
+
+        if (moment(date).add(30, 'days').isBefore(moment(classicEndDate))) {
+            setNextDate(moment(date).add(30, 'days').format('YYYY-MM-DD'));
+        } else {
+            setNextDate(moment(classicEndDate).format('YYYY-MM-DD'));
+        }
+    }
+
+    // this is to handle the left chevron, if we have to display it or no.
+    function handlePrevDisplay(date: string) {
+        return moment(date).isSame(moment(classicStartDate)) ? 'none' : '';
+    }
+
+    // this is to handle the right chevron, if we have to display it or no.
+    function handleNextDisplay(date: string) {
+        return moment(date).isSame(moment(classicEndDate)) ? 'none' : '';
     }
 
     if (!show) return <Loader msg="loading scheduler..." />;
@@ -334,7 +408,7 @@ const Scheduler: React.FC = () => {
                                                 <Row className="mt-2">
                                                     <Col lg={9} sm={5}>
                                                         <Badge pill variant="dark" className="p-2">
-                                                            {tag.fitnesspackage?.level}
+                                                            {tag && tag.fitnesspackage ? tag.fitnesspackage.level : null}
                                                         </Badge>
 
                                                         <br />
@@ -636,6 +710,105 @@ const Scheduler: React.FC = () => {
                                 </div>
                             </Col>
                         </Row>
+                    </Col>
+                </Row> */}
+                {/* Scheduler manager based on dates */}
+                {/* <Row className="mt-5 mb-2">
+                    <Col lg={2}>
+                        <Button
+                            variant="dark"
+                            onClick={() => {
+                                handleCurrentDate();
+                            }}
+                        >
+                            Today
+                        </Button>
+                    </Col>
+                    <Col lg={8}>
+                    <div className="text-center">
+                            <input
+                                min={moment(classicStartDate).format('YYYY-MM-DD')}
+                                max={moment(classicEndDate).format('YYYY-MM-DD')}
+                                className="p-1 rounded shadow-sm mb-3"
+                                type="date"
+                                style={{
+                                    border: 'none',
+                                    backgroundColor: 'rgba(211,211,211,0.8)',
+                                    cursor: 'pointer'
+                                }}
+                                value={prevDate}
+                                onChange={(e) => handleDatePicked(e.target.value)}
+                            />{' '}
+                            <br />
+                            <span
+                                style={{
+                                    display: `${handlePrevDisplay(prevDate)}`,
+                                    cursor: 'pointer'
+                                }}
+                                onClick={() => {
+                                    handlePrevMonth(prevDate);
+                                }}
+                                className="rounded-circle"
+                            >
+                                <i className="fa fa-chevron-left mr-4"></i>
+                            </span>
+                            <span className="shadow-lg bg-white p-2 rounded-lg">
+                                <b>
+                                    {moment(prevDate).startOf('month').format('MMMM, YYYY')} -{' '}
+                                    {moment(nextDate).endOf('month').format('MMMM, YYYY')}
+                                </b>
+                            </span>
+                            <span
+                                style={{
+                                    display: `${handleNextDisplay(nextDate)}`,
+                                    cursor: 'pointer'
+                                }}
+                                onClick={() => {
+                                    handleNextMonth(nextDate);
+                                }}
+                            >
+                                <i className="fa fa-chevron-right ml-4"></i>
+                            </span>
+                        </div>
+                    </Col>
+                    <Col lg={2}>
+                        <Button variant="dark">Collapse</Button>
+                    </Col>
+                </Row> */}
+
+                {/* <Row className="mt-5 mb-2">
+                    <Col lg={11}>
+                        <div className="text-center">
+                            <span
+                                style={{
+                                    display: `${handlePrevDisplay(prevDate)}`,
+                                    cursor: 'pointer'
+                                }}
+                                onClick={() => {
+                                    handlePrevMonth(prevDate);
+                                }}
+                                className="rounded-circle"
+                            >
+                                <i className="fa fa-chevron-left mr-4"></i>
+                            </span>
+                            <span className="shadow-lg bg-white p-2 rounded-lg">
+                                <b>
+                                    {moment(prevDate).format('MMMM, YYYY')} -{' '}
+                                    {moment(nextDate).format('MMMM, YYYY')}
+                                </b>
+                            </span>
+                            <span
+                                style={{
+                                    display: `${handleNextDisplay(nextDate)}`,
+                                    cursor: 'pointer'
+                                }}
+                                onClick={() => {
+                                    handleNextMonth(nextDate);
+                                }}
+                            >
+                                <i className="fa fa-chevron-right ml-4"></i>
+                            </span>
+                        </div>
                     </Col>
                 </Row> */}
                 {/* Scheduler */}

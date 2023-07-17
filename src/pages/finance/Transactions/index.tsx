@@ -10,15 +10,15 @@ import {
     Col,
     Form
 } from 'react-bootstrap';
-import Table from '../../../components/table/leads-table';
-import ActionButton from '../../../components/actionbutton/index';
+import Table from 'components/table/leads-table';
+import ActionButton from 'components/actionbutton/index';
 import { useQuery, useLazyQuery } from '@apollo/client';
 import { GET_TRANSACTIONS, GET_CONTACTS, FETCH_CHANGEMAKERS } from './queries';
-import { flattenObj } from '../../../components/utils/responseFlatten';
-import AuthContext from '../../../context/auth-context';
+import { flattenObj } from 'components/utils/responseFlatten';
+import AuthContext from 'context/auth-context';
 import moment from 'moment';
 import { useHistory } from 'react-router-dom';
-import containsSubstring from '../../../components/utils/containsSubstring';
+import containsSubstring from 'components/utils/containsSubstring';
 
 export default function Transactions(): JSX.Element {
     const auth = useContext(AuthContext);
