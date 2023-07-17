@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Form } from 'react-bootstrap';
 import { gql, useQuery } from '@apollo/client';
-import { flattenObj } from '../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 
 const Email: React.FC<{ value: string; onChange: (args: string) => void }> = (props) => {
     const [userEmail, setUserEmail] = useState<string>(props.value);

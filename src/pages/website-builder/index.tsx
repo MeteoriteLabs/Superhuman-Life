@@ -5,10 +5,10 @@ import { Button, Container, Row, Col, Nav, Navbar } from 'react-bootstrap';
 import WebsiteBuilder_settings from './components/websiteBuilder_settings';
 import WebsiteBuilder_template from './components/websiteBuilder_template';
 import { useLocation } from 'react-router-dom';
-import AuthContext from '../../context/auth-context';
-import Icon from '../../components/Icons';
-import MobileIcon from '../../components/Icons/mobile';
-import Icons from '../../components/Icons';
+import AuthContext from 'context/auth-context';
+import Icon from 'components/Icons';
+import MobileIcon from 'components/Icons/mobile';
+import Icons from 'components/Icons';
 
 const WebsiteBuilder: FC = () => {
     const [collapse, setCollapse] = useState<boolean>(true);

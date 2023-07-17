@@ -1,19 +1,18 @@
 import { useRef, useContext, useState } from 'react';
 import { Button, Row, Col, Card, Dropdown, Badge } from 'react-bootstrap';
 import PaymentMethodsAction from '../PaymentMethodsAction';
-import Loader from '../../../../components/Loader/Loader';
+import Loader from 'components/Loader/Loader';
 import { useQuery } from '@apollo/client';
 import { GET_BANK_DETAILS } from '../queries';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
-import AuthContext from '../../../../context/auth-context';
+import { flattenObj } from 'components/utils/responseFlatten';
+import AuthContext from 'context/auth-context';
 
 function BankAccount() {
     const paymentMethodActionRef = useRef<any>(null);
     const auth = useContext(AuthContext);
     const [bankDetails, setBankDetails] = useState<Record<string, unknown>[]>([]);
 
-    // eslint-disable-next-line
-    const { data: get_bank_details, refetch: refetch_bank_details } = useQuery(GET_BANK_DETAILS, {
+    const { refetch: refetch_bank_details } = useQuery(GET_BANK_DETAILS, {
         variables: { id: auth.userid },
         onCompleted: (data) => {
             const flattenBankData = flattenObj({ ...data.bankDetails });

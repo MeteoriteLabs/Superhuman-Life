@@ -1,13 +1,13 @@
 import { useQuery } from '@apollo/client';
 import { useContext, useMemo, useRef, useState , useEffect } from 'react';
 import { Badge, Row, Col, Button } from 'react-bootstrap';
-import Table from '../../../../components/table';
+import Table from 'components/table';
 import AuthContext from '../../../../context/auth-context';
 import { GET_SESSIONS_FROM_TAGS } from '../../graphQL/queries';
 import moment from 'moment';
-import ActionButton from '../../../../components/actionbutton';
+import ActionButton from 'components/actionbutton';
 import FitnessAction from '../FitnessAction';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 
 export default function Custom() {
     const auth = useContext(AuthContext);

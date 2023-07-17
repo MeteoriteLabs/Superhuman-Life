@@ -1,9 +1,9 @@
 import React, { useRef } from 'react';
 import { Button } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
-import CreateEditMessage from '../../builders/client-builder/leads/createoredit-leads';
-import CreateEditContact from '../../builders/client-builder/contacts/createEditContact';
-import CreateClient from '../../builders/client-builder/clientlisting/addclientcomponent';
+import CreateEditMessage from 'builders/client-builder/leads/createoredit-leads';
+import CreateEditContact from 'builders/client-builder/contacts/createEditContact';
+import CreateClient from 'builders/client-builder/clientlisting/addclientcomponent';
 import Grid from './grid';
 
 const HomePage: React.FC = () => {

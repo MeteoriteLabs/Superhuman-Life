@@ -6,10 +6,10 @@ import GooglePlacesAutocomplete, {
     getLatLng
 } from 'react-google-places-autocomplete';
 import { useMutation } from '@apollo/client';
-import { CREATE_ADDRESS } from '../../builders/package-builder/fitness/graphQL/mutations';
-import authContext from '../../context/auth-context';
+import { CREATE_ADDRESS } from 'builders/package-builder/fitness/graphQL/mutations';
+import authContext from 'context/auth-context';
 import axios from 'axios';
-import API_END_POINTS from '../../components/utils/integration';
+import API_END_POINTS from 'components/utils/integration';
 
 const AddFitnessAddressModal: React.FC<{ onHide: () => void; show: boolean }> = ({
     onHide,

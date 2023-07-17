@@ -1,14 +1,14 @@
 import { useQuery, useMutation } from '@apollo/client';
 import React, { useContext, useMemo, useRef, useState  , useEffect} from 'react';
-import { Badge, Row, Col, Form, Button, Modal } from 'react-bootstrap';
-import AuthContext from '../../../../context/auth-context';
-import GroupTable from '../../../../components/table/GroupTable/GroupTable';
+import { Badge, Row, Col, Button, Modal } from 'react-bootstrap';
+import AuthContext from 'context/auth-context';
+import GroupTable from 'components/table/GroupTable/GroupTable';
 import { GET_TAGS_FOR_GROUP } from '../../graphQL/queries';
 import { DELETE_TAG_BATCH } from '../../graphQL/mutation';
 import moment from 'moment';
-import ActionButton from '../../../../components/actionbutton';
+import ActionButton from 'components/actionbutton';
 import FitnessAction from '../FitnessAction';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 
 const Group: React.FC = () => {
     const auth = useContext(AuthContext);

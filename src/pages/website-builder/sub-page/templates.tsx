@@ -2,14 +2,12 @@ import { useContext, useState } from 'react';
 import SideNav from '../layout/sidenav';
 import { Button, Col, Container, Form, InputGroup, Row } from 'react-bootstrap';
 import { Search } from 'react-bootstrap-icons';
-
 import { FETCH_TEMPLATES } from '../queries/templates';
 import { useQuery } from '@apollo/client';
 import { FetchedTemplates, Template } from '../@types/websiteTemplates';
-import CardWithImageAndFooter from '../../../components/cards/CardWithImageAndFooter';
+import CardWithImageAndFooter from 'components/cards/CardWithImageAndFooter';
 import InfoModal from '../layout/InfoModal';
-
-import { ChangeMakerWebsiteContext } from '../../../context/changemakerWebsite-context';
+import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
 
 function Templates(): JSX.Element {
     const [collapse, setCollapse] = useState<boolean>(true);

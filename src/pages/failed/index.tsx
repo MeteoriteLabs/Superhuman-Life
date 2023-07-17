@@ -1,7 +1,7 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
-import AuthContext from '../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import axios from 'axios';
 
 interface PaymentDetails {

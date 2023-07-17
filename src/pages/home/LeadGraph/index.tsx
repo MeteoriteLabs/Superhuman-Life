@@ -1,9 +1,9 @@
 import { useContext, useState } from 'react';
-import BarGraph from '../../../components/Graphs/BarGraph/BarGraph';
+import BarGraph from 'components/Graphs/BarGraph/BarGraph';
 import { useQuery } from '@apollo/client';
 import { GET_LEADS } from './queries';
-import AuthContext from '../../../context/auth-context';
-import { flattenObj } from '../../../components/utils/responseFlatten';
+import AuthContext from 'context/auth-context';
+import { flattenObj } from 'components/utils/responseFlatten';
 import moment from 'moment';
 import { Tabs, Tab, Row, Col } from 'react-bootstrap';
 import WeeklyLeadsGraph from './WeeklyLeadsGraph';

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Row, Col, Toast } from 'react-bootstrap';
-import Icon from '../Icons';
+import Icon from 'components/Icons';
 
 const Toaster: React.FC<{ type: string; msg: string; handleCallback: () => void }> = (props) => {
     const [showToaster, setShowToaster] = useState<boolean>(true);

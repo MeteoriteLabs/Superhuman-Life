@@ -6,8 +6,8 @@ import {
     GET_USERS_JOINED_DATE
 } from './Queries';
 import { Row, Col, Card } from 'react-bootstrap';
-import { flattenObj } from '../../../components/utils/responseFlatten';
-import AuthContext from '../../../context/auth-context';
+import { flattenObj } from 'components/utils/responseFlatten';
+import AuthContext from 'context/auth-context';
 import FinanceGraph from './FinanceGraph';
 import moment from 'moment';
 import './Summary.css';

@@ -1,9 +1,9 @@
 import { Row, Col, Button, Card } from 'react-bootstrap';
-import Icons from '../../../Icons';
+import Icons from 'components/Icons';
 import { Link } from 'react-router-dom';
 import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
 import { useContext, useState } from 'react';
-import authContext from '../../../../context/auth-context';
+import authContext from 'context/auth-context';
 import {
     GET_CHANGEMAKER_NOTIFICATION,
     MARK_NOTIFICATION_AS_READ,

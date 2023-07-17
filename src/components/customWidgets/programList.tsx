@@ -1,9 +1,9 @@
 import React, { useState, useRef, useContext } from 'react';
 import { InputGroup, FormControl, Container, Col, Row, Button } from 'react-bootstrap';
 import { gql, useQuery } from '@apollo/client';
-import AuthContext from '../../context/auth-context';
-import '../../builders/program-builder/program-template/styles.css';
-import SchedulerEvent from '../../builders/program-builder/program-template/scheduler-event';
+import AuthContext from 'context/auth-context';
+import 'builders/program-builder/program-template/styles.css';
+import SchedulerEvent from 'builders/program-builder/program-template/scheduler-event';
 import { flattenObj } from '../utils/responseFlatten';
 
 const ProgramList: React.FC<{

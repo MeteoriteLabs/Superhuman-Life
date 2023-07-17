@@ -1,5 +1,5 @@
 import { useTable } from 'react-table';
-import NoDataInCard from '../../NoDataInCard';
+import NoDataInCard from 'components/NoDataInCard';
 import './ptTable.css';
 
 function PTTable({ data, columns }: any) {

@@ -4,11 +4,11 @@ import { Accordion, Button, Card, Form } from 'react-bootstrap';
 import { UPDATE_WEBSITE_SECTION } from './queries/features';
 import { GET_WEBSITE_SECTION } from './queries';
 import { useContext, useEffect, useState } from 'react';
-import authContext from '../../../../../context/auth-context';
-import { ChangeMakerWebsiteContext } from '../../../../../context/changemakerWebsite-context';
+import authContext from 'context/auth-context';
+import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
 import { useMutation, useQuery } from '@apollo/client';
 import { ArrowDownShort } from 'react-bootstrap-icons';
-import Toaster from '../../../../../components/Toaster';
+import Toaster from 'components/Toaster';
 
 // * --------------------- Types ---------------------
 

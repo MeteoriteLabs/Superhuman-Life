@@ -1,5 +1,4 @@
-// eslint-disable-next-line
-export const schema: any = {
+export const schema: Record<string, unknown> = {
     firstname: {
         'ui:placeholder': 'Enter First Name'
     },

@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 import { useTable, useExpanded } from 'react-table';
-import NoDataInCard from '../../NoDataInCard';
+import NoDataInCard from 'components/NoDataInCard';
 import './leads.css';
 
 function Table({ data, columns }: any): JSX.Element {

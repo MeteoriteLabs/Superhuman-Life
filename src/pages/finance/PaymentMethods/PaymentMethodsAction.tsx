@@ -1,12 +1,12 @@
 import { useMutation, useQuery } from '@apollo/client';
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { Subject } from 'rxjs';
-import FinanceModal from '../../../components/financeModal/FinanceModal';
+import FinanceModal from 'components/financeModal/FinanceModal';
 import moment from 'moment';
-import StatusModal from '../../../components/StatusModal/StatusModal';
-import authContext from '../../../context/auth-context';
+import StatusModal from 'components/StatusModal/StatusModal';
+import authContext from 'context/auth-context';
 import { CREATE_UPI } from '../graphQL/mutations';
-import { flattenObj } from '../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 import {
     GET_UPI_DETAILS,
     DELETE_UPI,
@@ -20,7 +20,7 @@ import {
     GET_BANK_DETAILS_IS_PRIMARY,
     GET_UPI_DETAILS_IS_PRIMARY
 } from './queries';
-import Toaster from '../../../components/Toaster';
+import Toaster from 'components/Toaster';
 
 interface Operation {
     id: string;

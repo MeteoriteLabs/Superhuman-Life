@@ -8,9 +8,9 @@ import {
     GET_SESSIONS_BY_TAG
 } from './queries';
 import { useQuery } from '@apollo/client';
-import AuthContext from '../../context/auth-context';
-import '../../builders/program-builder/program-template/styles.css';
-import SchedulerEvent from '../../builders/program-builder/program-template/scheduler-event';
+import AuthContext from 'context/auth-context';
+import 'builders/program-builder/program-template/styles.css';
+import SchedulerEvent from 'builders/program-builder/program-template/scheduler-event';
 import { flattenObj } from '../utils/responseFlatten';
 import moment from 'moment';
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
-import { FETCH_FITNESSDISCPLINES } from '../../builders/program-builder/workout/queries';
+import { FETCH_FITNESSDISCPLINES } from 'builders/program-builder/workout/queries';
 import { useQuery } from '@apollo/client';
 import { flattenObj } from '../utils/responseFlatten';
 

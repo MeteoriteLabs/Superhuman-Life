@@ -1,8 +1,8 @@
 import { useState, useRef, useContext } from 'react';
 import { InputGroup, FormControl, Container, Row, Col } from 'react-bootstrap';
 import { useQuery } from '@apollo/client';
-import { GET_EXERCISELIST } from '../../builders/program-builder/exercises/queries';
-import AuthContext from '../../context/auth-context';
+import { GET_EXERCISELIST } from 'builders/program-builder/exercises/queries';
+import AuthContext from 'context/auth-context';
 import { flattenObj } from '../utils/responseFlatten';
 
 const MIN_VALUE = 0;

@@ -1,7 +1,7 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { Subject } from 'rxjs';
-import FinanceModal from '../../../components/financeModal/FinanceModal';
-import authContext from '../../../context/auth-context';
+import FinanceModal from 'components/financeModal/FinanceModal';
+import authContext from 'context/auth-context';
 import InvoiceModal from './InvoiceModal';
 
 interface Operation {

@@ -3,9 +3,9 @@ import { useHistory } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Button } from 'react-bootstrap';
 import axios from 'axios';
-import AuthContext from '../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { GET_CLIENT_BOOKING } from '../Summary/queries';
-import { flattenObj } from '../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 import { Card, CardDeck } from 'react-bootstrap';
 
 const SuccessfulBooking: React.FC = () => {

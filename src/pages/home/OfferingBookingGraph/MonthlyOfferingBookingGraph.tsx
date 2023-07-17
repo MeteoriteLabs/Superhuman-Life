@@ -1,10 +1,10 @@
 import React, { useContext, useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { GET_BOOKINGS } from './queries';
-import AuthContext from '../../../context/auth-context';
-import { flattenObj } from '../../../components/utils/responseFlatten';
+import AuthContext from 'context/auth-context';
+import { flattenObj } from 'components/utils/responseFlatten';
 import moment from 'moment';
-import LineGraph from '../../../components/Graphs/LineGraph/LineGraph';
+import LineGraph from 'components/Graphs/LineGraph/LineGraph';
 import { Row, Col } from 'react-bootstrap';
 
 interface ArrayType {

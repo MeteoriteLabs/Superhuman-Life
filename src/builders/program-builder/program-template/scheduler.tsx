@@ -62,7 +62,7 @@ const Schedular = (props: any) => {
     const [mode, setMode] = useState('');
     const [tag, setTag] = useState('');
     const program_id = window.location.pathname.split('/').pop();
-    const schedulerDay: any = require('./json/scheduler-day.json');
+    const schedulerDay: Record<string,unknown> = require('./json/scheduler-day.json');
     const [changeMakerAvailability, setChangeMakerAvailability] = useState<any>([]);
     const [sessionIds, setSessionsIds] = useState<any>(props.sessionIds);
     const [templateSessionsIds, setTemplateSessionsIds] = useState<any>([]);
@@ -702,20 +702,22 @@ const Schedular = (props: any) => {
     const [duplicatedDay, setDuplicatedDay] = useState<any>([]);
     const [updateSessionBooking] = useMutation(UPDATE_SESSION_BOOKING);
     const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, {
-        onCompleted: (r: any) => {
+        onCompleted: () => {
             setEvent({});
             props.callback();
         }
     });
+
     const [createSession] = useMutation(CREATE_SESSION, {
-        onCompleted: (r: any) => {
+        onCompleted: (response: any) => {
             if (window.location.pathname.split('/')[1] === 'programs') {
-                handleUpdateFitnessPrograms(r.createSession.data.id);
+                handleUpdateFitnessPrograms(response.createSession.data.id);
             } else {
-                handleUpdateTag(r.createSession.data.id);
+                handleUpdateTag(response.createSession.data.id);
             }
         }
     });
+
     const [updateSession] = useMutation(UPDATE_SESSION, {
         onCompleted: () => {
             setEvent({});
@@ -723,6 +725,7 @@ const Schedular = (props: any) => {
             setIsUpdated(!isUpdated);
         }
     });
+
     const [updateTagSessions] = useMutation(UPDATE_TAG_SESSIONS, {
         onCompleted: () => {
             if (props.classType !== 'Group Class' && newSessionId !== '') {
@@ -738,6 +741,7 @@ const Schedular = (props: any) => {
             }
         }
     });
+
     const [updateFitnessProgramSessions] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, {
         onCompleted: () => {
             setEvent({});
@@ -1837,11 +1841,11 @@ const Schedular = (props: any) => {
 
     if (!show) {
         return (
-            <div className="text-center">
+               <div className="text-center">
                 <Spinner animation="border" variant="secondary" />
                 <br />
-                <div className="mt-3" style={{ fontWeight: 'bold' }}>
-                    Loading Schedule...
+                <div className="mt-3" style={{ fontSize: 'small' }}>
+                    Loading schedule...
                 </div>
             </div>
         );
@@ -1934,7 +1938,7 @@ const Schedular = (props: any) => {
                                                 paddingRight: '10px',
                                                 zIndex: 999
                                             }}
-                                        >{`${h}:00`}</span>
+                                        >{h<10 ? `0${h}:00`: `${h}:00`}</span>
                                     </div>
                                     {days.map((d, index) => {
                                         return (

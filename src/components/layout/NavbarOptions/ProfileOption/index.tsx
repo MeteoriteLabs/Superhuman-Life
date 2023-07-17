@@ -1,9 +1,9 @@
 import { useContext, useState } from 'react';
 import { NavDropdown } from 'react-bootstrap';
-import authContext from '../../../../context/auth-context';
+import authContext from 'context/auth-context';
 import { useQuery } from '@apollo/client';
-import { FETCH_USER_PROFILE_DATA } from '../../../../pages/profile/queries/queries';
-import DisplayImage from '../../../../components/DisplayImage/index';
+import { FETCH_USER_PROFILE_DATA } from 'pages/profile/queries/queries';
+import DisplayImage from 'components/DisplayImage/index';
 import './ProfileOption.css';
 
 export function ProfileOption() {

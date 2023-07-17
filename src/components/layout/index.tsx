@@ -3,7 +3,7 @@ import { Col, Row, Navbar, Nav } from 'react-bootstrap';
 import { SideNav } from './side';
 import { AuthenticatedNav, UnauthenticatedNav } from './top';
 import { useLocation } from 'react-router-dom';
-import Icon from '../Icons';
+import Icon from 'components/Icons';
 import './bottomBar.css';
 
 export default function Layout({

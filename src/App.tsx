@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { ApolloClient, ApolloLink, ApolloProvider, InMemoryCache } from '@apollo/client';
-import { authLink, defaultOptions, httpLink } from './lib/apolloClient';
+import { authLink, defaultOptions, httpLink } from 'lib/apolloClient';
 import AuthContext from 'context/auth-context';
-import Routes from './Routes';
+import Routes from 'Routes';
 import Toaster from 'components/Toaster';
 import ErrorBoundary from 'components/ErrorBoundaries';
 import ChangemakerWebsiteContextProvider from 'context/changemakerWebsite-context';

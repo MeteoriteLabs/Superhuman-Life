@@ -1,13 +1,13 @@
 import { useMutation, useQuery } from '@apollo/client';
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { Subject } from 'rxjs';
-import FinanceModal from '../../../components/financeModal/FinanceModal';
-import StatusModal from '../../../components/StatusModal/StatusModal';
-import authContext from '../../../context/auth-context';
+import FinanceModal from 'components/financeModal/FinanceModal';
+import StatusModal from 'components/StatusModal/StatusModal';
+import authContext from 'context/auth-context';
 import { schema, widgets } from './VouchersSchema';
 import { CREATE_VOUCHER, DELETE_VOUCHER, EDIT_VOUCHER, TOGGLE_STATUS } from '../graphQL/mutations';
 import { GET_VOUCHERS_BY_ID } from '../graphQL/queries';
-import Toaster from '../../../components/Toaster';
+import Toaster from 'components/Toaster';
 
 interface Vouchers {
     voucher_name: string;

@@ -4,7 +4,7 @@ import 'react-bootstrap-typeahead/css/Typeahead.css';
 import { FETCH_CHANGEMAKERS } from './queries';
 import { useQuery } from '@apollo/client';
 import { flattenObj } from '../utils/responseFlatten';
-import AuthContext from '../../context/auth-context';
+import AuthContext from 'context/auth-context';
 
 const Changemakers: React.FC<{ value: string; onChange: (args: string | null) => void }> = (
     props

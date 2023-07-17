@@ -4,7 +4,7 @@ import PagesComponent from './components/pagesComponent';
 import SectionComponent from './components/sectionComponent';
 
 import styles from '../styles/fitnessTemplate_01.module.css';
-import { SetFirstLetterToUpperCase } from '../../lib/StringManipulation';
+import { SetFirstLetterToUpperCase } from 'lib/StringManipulation';
 
 function FitnessTemplate_01(): JSX.Element {
     const [page, setPage] = useState<string>('');
