@@ -1,4 +1,4 @@
-import { useContext, useState, useRef, useEffect } from 'react';
+import { useContext, useState } from 'react';
 import { Card, Row, Col } from 'react-bootstrap';
 import { useQuery, useMutation } from '@apollo/client';
 import { UPDATE_SEEN_NEW } from 'builders/client-builder/leads/queries';
