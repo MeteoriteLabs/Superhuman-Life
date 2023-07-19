@@ -9,10 +9,8 @@ import AuthContext from '../../../context/auth-context';
 import moment from 'moment';
 import './lead.css';
 
-type LeadData = Array<any>;
-
 function LeadComponent() {
-    const [leadData, setLeadData] = useState<LeadData>([]);
+    const [leadData, setLeadData] = useState<any>([]);
     const auth = useContext(AuthContext);
     const [page, setPage] = useState<number>(0);
     const [loadingMore, setLoadingMore] = useState<boolean>(false); // Added loading state
