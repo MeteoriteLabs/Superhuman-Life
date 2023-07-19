@@ -10,9 +10,6 @@ import moment from 'moment';
 import './lead.css';
 
 type LeadData = Array<any>;
-type PositionTop = number;
-type InnerHeight = number;
-type ScrollHeight = number;
 
 function LeadComponent() {
     const [leadData, setLeadData] = useState<LeadData>([]);
@@ -20,9 +17,9 @@ function LeadComponent() {
     const [page, setPage] = useState<number>(0);
     const [loadingMore, setLoadingMore] = useState<boolean>(false); // Added loading state
     const myElementRef = useRef<HTMLDivElement>(null);
-    const [positionTop, setPositionTop] = useState<PositionTop>(0);
-    const [innerHeight, setInnerHeight] = useState<InnerHeight>(0);
-    const [scrollHeight, setScrollHeight] = useState<ScrollHeight>(0);
+    const [positionTop, setPositionTop] = useState<number>(0);
+    const [innerHeight, setInnerHeight] = useState<number>(0);
+    const [scrollHeight, setScrollHeight] = useState<number>(0);
     const [totalRecords, setTotalRecords] = useState<number>(0);
 
     const { data, fetchMore } = useQuery(GET_LEADS, {
