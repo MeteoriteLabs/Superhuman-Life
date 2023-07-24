@@ -42,7 +42,6 @@ const UpcomingCard: React.FC = () => {
                     +minutes,
                     0
                 );
-
                 return date >= currentTime;
             });
 

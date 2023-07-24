@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     // GET_TABLEDATA,
     // GET_ALL_FITNESS_PACKAGE_BY_TYPE,
@@ -6,11 +6,10 @@ import {
     GET_TAG_BY_ID
 } from '../../graphQL/queries';
 import { useQuery } from '@apollo/client';
-import { Row, Col, Dropdown, Card, Badge, Table, Accordion,Button } from 'react-bootstrap';
+import { Row, Col, Dropdown, Card, Badge, Table, Accordion, Button } from 'react-bootstrap';
 import SchedulerPage from 'builders/program-builder/program-template/scheduler';
 import moment from 'moment';
 import FitnessAction from '../FitnessAction';
-import AuthContext from 'context/auth-context';
 import { Link } from 'react-router-dom';
 import '../../profilepicture.css';
 import { flattenObj } from 'components/utils/responseFlatten';
@@ -19,17 +18,14 @@ import Loader from 'components/Loader/Loader';
 import DisplayImage from 'components/DisplayImage';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import { SideNav } from '../Event/import';
 
 const Scheduler: React.FC = () => {
-    const auth = useContext(AuthContext);
     const last = window.location.pathname.split('/').reverse();
     const tagId = window.location.pathname.split('/').pop();
     const [show, setShow] = useState(false);
     // const [totalClasses, setTotalClasses] = useState<any>([]);
     const [tag, setTag] = useState<any>();
-    const [scheduleDate, setScheduleDate] = useState(
-        moment().startOf('month').format('YYYY-MM-DD')
-    );
     const [channelStartDate, setChannelStartDate] = useState('');
     const [channelEndDate, setChannelEndDate] = useState('');
     // this is used for monthly toggle
@@ -40,6 +36,16 @@ const Scheduler: React.FC = () => {
     // these are the sessions that will passed onto the scheduler
     const [schedulerSessions, setSchedulerSessions] = useState<any>([]);
     const [key, setKey] = useState('');
+    const [collapse, setCollapse] = useState<boolean>(true);
+    const [accordionExpanded, setAccordionExpanded] = useState(true);
+
+    const handleAccordionToggle = () => {
+        setAccordionExpanded(!accordionExpanded);
+    };
+
+    const [program, setProgram] = useState('none');
+    const [sessionFilter, setSessionFilter] = useState('none');
+    const [showRestDay, setShowRestDay] = useState<boolean>(false);
 
     const fitnessActionRef = useRef<any>(null);
 
@@ -126,7 +132,6 @@ const Scheduler: React.FC = () => {
     }
 
     function handleDatePicked(date: string) {
-
         setPrevDate(moment(date).format('YYYY-MM-DD'));
 
         if (moment(date).add(30, 'days').isBefore(moment(channelEndDate))) {
@@ -157,6 +162,38 @@ const Scheduler: React.FC = () => {
         }
     }
 
+    function calculateDuration(sd: any, ed: any) {
+        const start = moment(sd);
+        const end = moment(ed);
+        return end.diff(start, 'days') + 1;
+    }
+
+    // function calculateDailySessions(sessions) {
+    //     const dailySessions = sessions.filter(
+    //         (ses: any) => ses.session_date === moment().format('YYYY-MM-DD')
+    //     );
+    //     return dailySessions.length ? dailySessions.length : 'N/A';
+    // }
+
+    function handleFloatingActionProgramCallback(event: any) {
+        setProgram(`${event}`);
+        handleCallback();
+    }
+
+    function handleFloatingActionProgramCallback2(event: any) {
+        setSessionFilter(`${event}`);
+        handleCallback();
+    }
+
+    function handleRefetch() {
+        handleCallback();
+    }
+
+    function handleShowRestDay() {
+        setShowRestDay(!showRestDay);
+    }
+
+
     function handleNextMonth(date: string) {
         // setScheduleDate(moment(date).add(1, 'month').format('YYYY-MM-DD'));
         setPrevDate(moment(date).format('YYYY-MM-DD'));
@@ -175,6 +212,8 @@ const Scheduler: React.FC = () => {
     if (!show) return <Loader msg="loading scheduler..." />;
     else
         return (
+            <Row noGutters className="bg-light  py-4 mb-5  min-vh-100">
+            <Col lg={collapse ? '11' : '10'} className="pr-2 pl-3 mb-5">
             <div className="col-lg-12">
                 <div className="mb-3">
                     <span style={{ fontSize: '30px' }}>
@@ -189,6 +228,7 @@ const Scheduler: React.FC = () => {
                 <Row>
                     <Col lg={11}>
                         <Accordion>
+                            {/* Service details card */}
                             <Card>
                                 <Accordion.Toggle
                                     as={Card.Header}
@@ -196,15 +236,16 @@ const Scheduler: React.FC = () => {
                                     onClick={() => {
                                         key === '' ? setKey('0') : setKey('');
                                     }}
+                                    style={{ background: '#343A40', color: '#fff' }}
                                 >
                                     <span className="d-inline-block">
                                         <b>{tag && tag.fitnesspackage?.packagename}</b>
                                     </span>
                                     <span className="d-inline-block btn float-right">
                                         {key === '0' ? (
-                                            <i className="fa fa-chevron-up d-flex justify-content-end" />
+                                            <i className="fa fa-chevron-up d-flex justify-content-end text-white" />
                                         ) : (
-                                            <i className="fa fa-chevron-down d-flex justify-content-end" />
+                                            <i className="fa fa-chevron-down d-flex justify-content-end text-white" />
                                         )}
                                     </span>
                                 </Accordion.Toggle>
@@ -241,28 +282,16 @@ const Scheduler: React.FC = () => {
                                                             </Dropdown.Toggle>
 
                                                             <Dropdown.Menu>
-                                                                <Dropdown.Item
-                                                                    key={2}
-                                                                    // onClick={() => updateAddress(currValue)}
-                                                                >
+                                                                <Dropdown.Item key={2}>
                                                                     Edit Program Name
                                                                 </Dropdown.Item>
-                                                                <Dropdown.Item
-                                                                    key={1}
-                                                                    // onClick={() => deleteUserAddress(currValue)}
-                                                                >
+                                                                <Dropdown.Item key={1}>
                                                                     Extend program and offering
                                                                 </Dropdown.Item>
-                                                                <Dropdown.Item
-                                                                    key={1}
-                                                                    // onClick={() => deleteUserAddress(currValue)}
-                                                                >
+                                                                <Dropdown.Item key={1}>
                                                                     Send notification to subscribers
                                                                 </Dropdown.Item>
-                                                                <Dropdown.Item
-                                                                    key={1}
-                                                                    // onClick={() => deleteUserAddress(currValue)}
-                                                                >
+                                                                <Dropdown.Item key={1}>
                                                                     Request Renewal
                                                                 </Dropdown.Item>
                                                             </Dropdown.Menu>
@@ -336,6 +365,7 @@ const Scheduler: React.FC = () => {
                                     </Card>
                                 </Accordion.Collapse>
                             </Card>
+                            {/* Movement Card */}
                             <Card>
                                 <Accordion.Toggle
                                     as={Card.Header}
@@ -343,15 +373,16 @@ const Scheduler: React.FC = () => {
                                     onClick={() => {
                                         key === '' ? setKey('1') : setKey('');
                                     }}
+                                    style={{ background: '#343A40', color: '#fff' }}
                                 >
                                     <span className="d-inline-block">
                                         <b>Movement Sessions</b>
                                     </span>
                                     <span className="d-inline-block btn float-right">
                                         {key === '1' ? (
-                                            <i className="fa fa-chevron-up d-flex justify-content-end" />
+                                            <i className="fa fa-chevron-up d-flex justify-content-end text-white" />
                                         ) : (
-                                            <i className="fa fa-chevron-down d-flex justify-content-end" />
+                                            <i className="fa fa-chevron-down d-flex justify-content-end text-white" />
                                         )}
                                     </span>
                                 </Accordion.Toggle>
@@ -589,8 +620,9 @@ const Scheduler: React.FC = () => {
 
                 {/* Scheduler manager based on dates */}
                 <Row className="mt-5 mb-2">
+                    {/* Today Button */}
                     <Col lg={2}>
-                    {moment().isBefore(moment(channelEndDate)) ? (
+                        {moment().isBefore(moment(channelEndDate)) ? (
                             <Button
                                 variant="dark"
                                 onClick={() => {
@@ -601,8 +633,9 @@ const Scheduler: React.FC = () => {
                             </Button>
                         ) : null}
                     </Col>
+                    {/* Previous and Next button */}
                     <Col lg={8}>
-                    <div className="text-center">
+                        <div className="text-center">
                             <input
                                 min={moment(channelStartDate).format('YYYY-MM-DD')}
                                 max={moment(channelEndDate).format('YYYY-MM-DD')}
@@ -629,7 +662,7 @@ const Scheduler: React.FC = () => {
                             >
                                 <i className="fa fa-chevron-left mr-4"></i>
                             </span>
-                            <span className="shadow-lg bg-white p-2 rounded-lg">
+                            <span className="shadow-lg bg-dark text-white p-2 rounded-lg">
                                 <b>
                                     {moment(prevDate).startOf('month').format('MMMM, YYYY')} -{' '}
                                     {moment(nextDate).endOf('month').format('MMMM, YYYY')}
@@ -648,6 +681,7 @@ const Scheduler: React.FC = () => {
                             </span>
                         </div>
                     </Col>
+                    {/* Collapse View */}
                     <Col lg={2}>
                         <Button variant="dark">Collapse</Button>
                     </Col>
@@ -717,12 +751,46 @@ const Scheduler: React.FC = () => {
                                 classType={'Live Stream Channel'}
                                 programId={tagId}
                                 startDate={prevDate}
+                                handleFloatingActionProgramCallback={
+                                    handleFloatingActionProgramCallback
+                                }
+                                handleFloatingActionProgramCallback2={
+                                    handleFloatingActionProgramCallback2
+                                }
+                                handleRefetch={handleRefetch}
+                                sessionFilter={sessionFilter}
+                                program={program}
+                                showRestDay={showRestDay}
                             />
                         </div>
                     </Col>
                     <FitnessAction ref={fitnessActionRef} callback={() => mainQuery} />
                 </Row>
             </div>
+            </Col>
+            {/* Right sidebar */}
+            <Col lg={collapse ? '1' : '2'} className="d-lg-block">
+                    <SideNav
+                        collapse={collapse}
+                        setCollapse={setCollapse}
+                        accordionExpanded={accordionExpanded}
+                        onAccordionToggle={handleAccordionToggle}
+                        clientIds={clientIds}
+                        sessionIds={sessionIds}
+                        startDate={tag?.fitnesspackage?.Start_date}
+                        duration={calculateDuration(
+                            tag?.fitnesspackage?.Start_date,
+                            tag?.fitnesspackage?.End_date
+                        )}
+                        callback={handleFloatingActionProgramCallback}
+                        callback2={handleFloatingActionProgramCallback2}
+                        callback3={handleRefetch}
+                        restDayCallback={handleShowRestDay}
+                        showRestDayAction={showRestDay}
+                    />
+                </Col>
+
+            </Row>
         );
 };
 

@@ -23,6 +23,7 @@ import '../fitness.css';
 import { flattenObj } from 'components/utils/responseFlatten';
 import Loader from 'components/Loader/Loader';
 import DisplayImage from 'components/DisplayImage';
+import { SideNav } from '../Event/import';
 
 const Scheduler = () => {
     const last = window.location.pathname.split('/').reverse();
@@ -35,6 +36,18 @@ const Scheduler = () => {
     const [totalClasses, setTotalClasses] = useState<any>([]);
     const [tag, setTag] = useState<any>();
     const [key, setKey] = useState('');
+    const [collapse, setCollapse] = useState<boolean>(true);
+    const [accordionExpanded, setAccordionExpanded] = useState(true);
+    const [clientIds, setClientIds] = useState<any>([]);
+    const [showRestDay, setShowRestDay] = useState<boolean>(false);
+    const [program, setProgram] = useState('none');
+    const [sessionFilter, setSessionFilter] = useState('none');
+    const [sessionIds, setSessionIds] = useState<any>([]);
+
+    const handleAccordionToggle = () => {
+        setAccordionExpanded(!accordionExpanded);
+    };
+
     let programIndex;
 
     useEffect(() => {
@@ -43,7 +56,7 @@ const Scheduler = () => {
         }, 1500);
     }, [show]);
 
-    useQuery(GET_TAG_BY_ID, {
+    const mainQuery = useQuery(GET_TAG_BY_ID, {
         variables: { id: tagId },
         onCompleted: (data) => loadTagData(data)
     });
@@ -52,6 +65,7 @@ const Scheduler = () => {
         const flattenData = flattenObj({ ...data });
         const total = [0, 0, 0, 0, 0];
         const values = [...flattenData.tags[0].sessions];
+        const clientValues = [...clientIds];
         for (let i = 0; i < values.length; i++) {
             if (values[i].tag === 'One-On-One' && values[i].mode === 'Online') {
                 total[0] += 1;
@@ -66,8 +80,12 @@ const Scheduler = () => {
                 total[4] += 1;
             }
         }
+        setClientIds(clientValues);
         setTotalClasses(total);
         setTag(flattenData.tags[0]);
+        const ids = [...sessionIds];
+       
+        setSessionIds(ids);
     }
 
     const handleCloseDatesModal = () => setEditdatesModal(false);
@@ -100,18 +118,48 @@ const Scheduler = () => {
         });
     }
 
-    function handleTotalClasses(data: any, duration: number) {
-        let sum = 0;
-        for (let i = 0; i < data.length; i++) {
-            sum += data[i];
-        }
-        const formattedSum = handleTimeFormatting(sum, duration);
-        return formattedSum;
+    function handleCallback() {
+        mainQuery.refetch();
     }
+
+    function handleFloatingActionProgramCallback(event: any) {
+        setProgram(`${event}`);
+        handleCallback();
+    }
+
+    function handleFloatingActionProgramCallback2(event: any) {
+        setSessionFilter(`${event}`);
+        handleCallback();
+    }
+
+    function handleRefetch() {
+        handleCallback();
+    }
+
+    function handleShowRestDay() {
+        setShowRestDay(!showRestDay);
+    }
+
+    function calculateDuration(sd: any, ed: any) {
+        const start = moment(sd);
+        const end = moment(ed);
+        return end.diff(start, 'days') + 1;
+    }
+
+    // function handleTotalClasses(data: any, duration: number) {
+    //     let sum = 0;
+    //     for (let i = 0; i < data.length; i++) {
+    //         sum += data[i];
+    //     }
+    //     const formattedSum = handleTimeFormatting(sum, duration);
+    //     return formattedSum;
+    // }
 
     if (!show) return <Loader msg="loading scheduler..." />;
     else
         return (
+            <Row noGutters className="bg-light  py-4 mb-5  min-vh-100">
+            <Col lg={collapse ? '11' : '10'} className="pr-2 pl-3 mb-5">
             <div className="col-lg-12">
                 <div className="mb-3">
                     <span style={{ fontSize: '30px' }}>
@@ -133,15 +181,16 @@ const Scheduler = () => {
                                     onClick={() => {
                                         key === '1' || key === '' ? setKey('0') : setKey('');
                                     }}
+                                    style={{ background: '#343A40', color: '#fff' }}
                                 >
                                     <span className="d-inline-block">
                                         <b>{tag && tag.fitnesspackage?.packagename}</b>
                                     </span>
                                     <span className="d-inline-block btn float-right">
                                         {key === '0' ? (
-                                            <i className="fa fa-chevron-up d-flex justify-content-end" />
+                                            <i className="fa fa-chevron-up d-flex justify-content-end text-white" />
                                         ) : (
-                                            <i className="fa fa-chevron-down d-flex justify-content-end" />
+                                            <i className="fa fa-chevron-down d-flex justify-content-end text-white" />
                                         )}
                                     </span>
                                 </Accordion.Toggle>
@@ -176,14 +225,14 @@ const Scheduler = () => {
                                                             <Dropdown.Menu>
                                                                 <Dropdown.Item
                                                                     key={1}
-                                                                    // onClick={() => deleteUserAddress(currValue)}
+                                                                   
                                                                 >
                                                                     Renew subscription
                                                                 </Dropdown.Item>
 
                                                                 <Dropdown.Item
                                                                     key={2}
-                                                                    // onClick={() => updateAddress(currValue)}
+                                                                    
                                                                 >
                                                                     Edit Program Name
                                                                 </Dropdown.Item>
@@ -279,15 +328,16 @@ const Scheduler = () => {
                                     onClick={() => {
                                         key === '' || key === '0' ? setKey('1') : setKey('');
                                     }}
+                                    style={{ background: '#343A40', color: '#fff' }}
                                 >
                                     <span className="d-inline-block">
                                         <b>Movement Sessions</b>
                                     </span>
                                     <span className="d-inline-block btn float-right">
                                         {key === '1' ? (
-                                            <i className="fa fa-chevron-up d-flex justify-content-end" />
+                                            <i className="fa fa-chevron-up d-flex justify-content-end text-white" />
                                         ) : (
-                                            <i className="fa fa-chevron-down d-flex justify-content-end" />
+                                            <i className="fa fa-chevron-down d-flex justify-content-end text-white" />
                                         )}
                                     </span>
                                 </Accordion.Toggle>
@@ -689,6 +739,16 @@ const Scheduler = () => {
                                     tag.client_packages.length &&
                                     tag.client_packages[0]?.users_permissions_user.id
                                 }
+                                handleFloatingActionProgramCallback={
+                                    handleFloatingActionProgramCallback
+                                }
+                                handleFloatingActionProgramCallback2={
+                                    handleFloatingActionProgramCallback2
+                                }
+                                handleRefetch={handleRefetch}
+                                sessionFilter={sessionFilter}
+                                program={program}
+                                showRestDay={showRestDay}
                             />
                         </div>
                     </Col>
@@ -731,6 +791,29 @@ const Scheduler = () => {
                     </Modal.Footer>
                 </Modal>
             </div>
+            </Col>
+                {/* Right sidebar */}
+                <Col lg={collapse ? '1' : '2'} className="d-lg-block">
+                    <SideNav
+                        collapse={collapse}
+                        setCollapse={setCollapse}
+                        accordionExpanded={accordionExpanded}
+                        onAccordionToggle={handleAccordionToggle}
+                        clientIds={clientIds}
+                        sessionIds={sessionIds}
+                        startDate={tag?.fitnesspackage?.Start_date}
+                        duration={calculateDuration(
+                            tag?.fitnesspackage?.Start_date,
+                            tag?.fitnesspackage?.End_date
+                        )}
+                        callback={handleFloatingActionProgramCallback}
+                        callback2={handleFloatingActionProgramCallback2}
+                        callback3={handleRefetch}
+                        restDayCallback={handleShowRestDay}
+                        showRestDayAction={showRestDay}
+                    />
+                </Col>
+            </Row>
         );
 };
 

@@ -18,7 +18,8 @@ import {
     Table,
     Card,
     Badge,
-    Accordion
+    Accordion,
+    Form
 } from 'react-bootstrap';
 import SchedulerPage from '../../../program-builder/program-template/scheduler';
 import moment from 'moment';
@@ -35,6 +36,8 @@ import DisplayImage from 'components/DisplayImage';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import '../../profilepicture.css';
+import SideNav from 'builders/program-builder/program-template/SchedulerSideBar';
+import CollapsibleScheduler from 'builders/program-builder/program-template/CollapsibleScheduler';
 
 const Scheduler = () => {
     const auth = useContext(AuthContext);
@@ -61,6 +64,16 @@ const Scheduler = () => {
     const [statusDays, setStatusDays] = useState();
     const [tag, setTag] = useState<any>();
     const [key, setKey] = useState('');
+    const [collapse, setCollapse] = useState<boolean>(true);
+    const [accordionExpanded, setAccordionExpanded] = useState(true);
+    const [showRestDay, setShowRestDay] = useState<boolean>(false);
+    const [showCollapseView, setShowCollapseView] = useState(false);
+    const [program, setProgram] = useState('none');
+    const [sessionFilter, setSessionFilter] = useState('none');
+
+    const handleAccordionToggle = () => {
+        setAccordionExpanded(!accordionExpanded);
+    };
 
     let programIndex;
 
@@ -375,6 +388,37 @@ const Scheduler = () => {
         return days + 1;
     }
 
+    function calculateDuration(sd: any, ed: any) {
+        const start = moment(sd);
+        const end = moment(ed);
+        return end.diff(start, 'days') + 1;
+    }
+
+    // function calculateDailySessions(sessions) {
+    //     const dailySessions = sessions.filter(
+    //         (ses: any) => ses.session_date === moment().format('YYYY-MM-DD')
+    //     );
+    //     return dailySessions.length ? dailySessions.length : 'N/A';
+    // }
+
+    function handleFloatingActionProgramCallback(event: any) {
+        setProgram(`${event}`);
+        handleCallback();
+    }
+
+    function handleFloatingActionProgramCallback2(event: any) {
+        setSessionFilter(`${event}`);
+        handleCallback();
+    }
+
+    function handleRefetch() {
+        handleCallback();
+    }
+
+    function handleShowRestDay() {
+        setShowRestDay(!showRestDay);
+    }
+
     function calculateLastSession(sessions) {
         if (sessions.length === 0) {
             return 'N/A';
@@ -389,371 +433,409 @@ const Scheduler = () => {
     if (!show) return <Loader msg="loading scheduler..." />;
     else
         return (
-            <div className="col-lg-12">
-                <div className="mb-3">
-                    <span style={{ fontSize: '30px' }}>
-                        <Link to="/session">
-                            <i className="fa fa-arrow-circle-left" style={{ color: 'black' }}></i>
-                        </Link>
-                        <b> back</b>
-                    </span>
-                </div>
+            <Row noGutters className="bg-light  py-4 mb-5  min-vh-100">
+                <Col lg={collapse ? '11' : '10'} className="pr-2 pl-3 mb-5">
+                    <div className="col-lg-12">
+                        <div className="mb-3">
+                            <span style={{ fontSize: '30px' }}>
+                                <Link to="/session">
+                                    <i
+                                        className="fa fa-arrow-circle-left"
+                                        style={{ color: 'black' }}
+                                    ></i>
+                                </Link>
+                                <b> back</b>
+                            </span>
+                        </div>
 
-                {/* Cards for service details and movement sessions */}
-                <Row>
-                    <Col lg={11}>
-                        <Accordion>
-                            <Card>
-                                <Accordion.Toggle
-                                    as={Card.Header}
-                                    eventKey="0"
-                                    onClick={() => {
-                                        key === '' ? setKey('0') : setKey('');
-                                    }}
-                                >
-                                    <span className="d-inline-block">
-                                        <b>{tag && tag.fitnesspackage?.packagename}</b>
-                                    </span>
-                                    <span className="d-inline-block btn float-right">
-                                        {key === '0' ? (
-                                            <i className="fa fa-chevron-up d-flex justify-content-end" />
-                                        ) : (
-                                            <i className="fa fa-chevron-down d-flex justify-content-end" />
-                                        )}
-                                    </span>
-                                </Accordion.Toggle>
-                                <Accordion.Collapse eventKey="0">
-                                    <Card style={{ width: '100%' }}>
-                                        <Card.Body>
-                                            <Row>
-                                                <Col lg={10} sm={8}>
-                                                    <Card.Title>
-                                                        <h4>
-                                                            {tag && tag.fitnesspackage?.packagename}
-                                                            {tag?.tag_name
-                                                                ? ` (${tag?.tag_name})`
-                                                                : null}
-                                                        </h4>
-                                                    </Card.Title>
-                                                </Col>
-                                                <Col>
-                                                    <Row className="justify-content-end">
-                                                        <Dropdown>
-                                                            <Dropdown.Toggle
-                                                                variant="bg-light"
-                                                                id="dropdown-basic"
-                                                            >
-                                                                <img
-                                                                    src="/assets/cardsKebab.svg"
-                                                                    alt="edit"
-                                                                    className="img-responsive "
-                                                                    style={{
-                                                                        height: '20px',
-                                                                        width: '20px'
-                                                                    }}
-                                                                />
-                                                            </Dropdown.Toggle>
-
-                                                            <Dropdown.Menu>
-                                                                <Dropdown.Item
-                                                                    key={2}
-                                                                    // onClick={() => updateAddress(currValue)}
-                                                                >
-                                                                    Edit Program Name
-                                                                </Dropdown.Item>
-                                                                <Dropdown.Item
-                                                                    key={1}
-                                                                    // onClick={() => deleteUserAddress(currValue)}
-                                                                >
-                                                                    Extend program and offering
-                                                                </Dropdown.Item>
-                                                                <Dropdown.Item
-                                                                    key={1}
-                                                                    // onClick={() => deleteUserAddress(currValue)}
-                                                                >
-                                                                    Send notification to subscribers
-                                                                </Dropdown.Item>
-                                                                <Dropdown.Item
-                                                                    key={1}
-                                                                    // onClick={() => deleteUserAddress(currValue)}
-                                                                >
-                                                                    Request Renewal
-                                                                </Dropdown.Item>
-                                                            </Dropdown.Menu>
-                                                        </Dropdown>
-                                                    </Row>
-                                                </Col>
-                                            </Row>
-
-                                            <Card.Text>
-                                                <Row>
-                                                    <Col lg={9} sm={5}>
-                                                        <Badge pill variant="dark" className="p-2">
-                                                            {tag && tag.fitnesspackage
-                                                                ? tag.fitnesspackage.level
-                                                                : null}
-                                                        </Badge>
-                                                        <br />
-                                                        <b>
-                                                            Capacity:{' '}
-                                                            {tag && tag.fitnesspackage
-                                                                ? tag.fitnesspackage.classsize
-                                                                : null}{' '}
-                                                            people
-                                                        </b>
-                                                        <br />
-                                                        <b>
-                                                            {moment(groupEndDate).diff(
-                                                                moment(groupStartDate),
-                                                                'days'
-                                                            ) + ' days'}
-                                                        </b>
-                                                        <br />
-                                                        <b>Start Date:</b>{' '}
-                                                        {moment(groupStartDate).format(
-                                                            'DD MMMM, YY'
-                                                        )}
-                                                        <br />
-                                                        <b>End Date: </b>
-                                                        {moment(groupEndDate).format('DD MMMM, YY')}
-                                                    </Col>
-                                                    <Col>
-                                                        <DisplayImage
-                                                            imageName={
-                                                                'Photo_ID' in tag.client_packages &&
-                                                                tag.client_packages.length &&
-                                                                tag.client_packages[0]
-                                                                    .users_permissions_user &&
-                                                                tag.client_packages[0]
-                                                                    .users_permissions_user.Photo_ID
-                                                                    ? tag.client_packages[0]
-                                                                          .users_permissions_user
-                                                                          .Photo_ID
-                                                                    : null
-                                                            }
-                                                            defaultImageUrl="assets/image_placeholder.svg"
-                                                            imageCSS="rounded-circle profile_pic text-center img-fluid ml-2"
-                                                        />
-                                                        <br />
-                                                        <br />
-                                                        <Badge
-                                                            pill
-                                                            variant="dark"
-                                                            className="py-2 px-4 ml-1"
-                                                            style={{ cursor: 'pointer' }}
-                                                            onClick={() => {
-                                                                fitnessActionRef.current.TriggerForm(
-                                                                    {
-                                                                        id: tagId,
-                                                                        actionType: 'allClients',
-                                                                        type: 'Group Class'
-                                                                    }
-                                                                );
-                                                            }}
-                                                        >
-                                                            View all
-                                                        </Badge>
-                                                        <p className="ml-3">
-                                                            {tag.client_packages.length} people
-                                                        </p>
-                                                    </Col>
-                                                </Row>
-                                            </Card.Text>
-                                        </Card.Body>
-                                    </Card>
-                                </Accordion.Collapse>
-                            </Card>
-                            <Card>
-                                <Accordion.Toggle
-                                    as={Card.Header}
-                                    eventKey="1"
-                                    onClick={() => {
-                                        key === '' ? setKey('1') : setKey('');
-                                    }}
-                                >
-                                    <span className="d-inline-block">
-                                        <b>Movement Sessions</b>
-                                    </span>
-                                    <span className="d-inline-block btn float-right">
-                                        {key === '1' ? (
-                                            <i className="fa fa-chevron-up d-flex justify-content-end" />
-                                        ) : (
-                                            <i className="fa fa-chevron-down d-flex justify-content-end" />
-                                        )}
-                                    </span>
-                                </Accordion.Toggle>
-                                <Accordion.Collapse eventKey="1">
-                                    <Card style={{ width: '100%' }}>
-                                        <Card.Body>
-                                            <Card.Title>
-                                                <h4>Movement Sessions</h4>
-                                            </Card.Title>
-                                            <Card.Text>
-                                                Last planned session{' '}
-                                                {calculateLastSession(tag.sessions)}
-                                            </Card.Text>
-                                            <Row>
-                                                <Col lg={8}>
-                                                    <Table
-                                                        striped
-                                                        bordered
-                                                        hover
-                                                        size="sm"
-                                                        responsive
-                                                    >
-                                                        <thead className="text-center">
-                                                            <tr>
-                                                                <th>Type</th>
-                                                                <th>Total</th>
-                                                                {tag &&
-                                                                tag.fitnesspackage &&
-                                                                (tag.fitnesspackage.mode ===
-                                                                    'Online' ||
-                                                                    tag.fitnesspackage.mode ===
-                                                                        'Hybrid') ? (
-                                                                    <th>Plan Online</th>
-                                                                ) : null}
-                                                                {tag &&
-                                                                tag.fitnesspackage &&
-                                                                (tag.fitnesspackage.mode ===
-                                                                    'Offline' ||
-                                                                    tag.fitnesspackage.mode ===
-                                                                        'Hybrid') ? (
-                                                                    <th>Plan Offline</th>
-                                                                ) : null}
-
-                                                                <th>Plan Rest</th>
-                                                                {tag &&
-                                                                tag.fitnesspackage &&
-                                                                (tag.fitnesspackage.mode ===
-                                                                    'Online' ||
-                                                                    tag.fitnesspackage.mode ===
-                                                                        'Hybrid') ? (
-                                                                    <th>Completed Online</th>
-                                                                ) : null}
-                                                                {tag &&
-                                                                tag.fitnesspackage &&
-                                                                (tag.fitnesspackage.mode ===
-                                                                    'Offline' ||
-                                                                    tag.fitnesspackage.mode ===
-                                                                        'Hybrid') ? (
-                                                                    <th>Completed Offline</th>
-                                                                ) : null}
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody className="text-center">
-                                                            <tr>
-                                                                <td>
+                        {/* Cards for service details and movement sessions */}
+                        <Row>
+                            <Col lg={11}>
+                                <Accordion>
+                                    <Card>
+                                        <Accordion.Toggle
+                                            as={Card.Header}
+                                            eventKey="0"
+                                            onClick={() => {
+                                                key === '' ? setKey('0') : setKey('');
+                                            }}
+                                            style={{ background: '#343A40', color: '#fff' }}
+                                        >
+                                            <span className="d-inline-block">
+                                                <b>{tag && tag.fitnesspackage?.packagename}</b>
+                                            </span>
+                                            <span className="d-inline-block btn float-right">
+                                                {key === '0' ? (
+                                                    <i className="fa fa-chevron-up d-flex justify-content-end text-white" />
+                                                ) : (
+                                                    <i className="fa fa-chevron-down d-flex justify-content-end text-white" />
+                                                )}
+                                            </span>
+                                        </Accordion.Toggle>
+                                        <Accordion.Collapse eventKey="0">
+                                            <Card style={{ width: '100%' }}>
+                                                <Card.Body>
+                                                    <Row>
+                                                        <Col lg={10} sm={8}>
+                                                            <Card.Title>
+                                                                <h4>
                                                                     {tag &&
-                                                                    tag.fitnesspackage &&
-                                                                    tag.fitnesspackage
-                                                                        .fitness_package_type
-                                                                        ? tag.fitnesspackage
-                                                                              .fitness_package_type
-                                                                              .type
+                                                                        tag.fitnesspackage
+                                                                            ?.packagename}
+                                                                    {tag?.tag_name
+                                                                        ? ` (${tag?.tag_name})`
                                                                         : null}
-                                                                </td>
-                                                                <td>
+                                                                </h4>
+                                                            </Card.Title>
+                                                        </Col>
+                                                        <Col>
+                                                            <Row className="justify-content-end">
+                                                                <Dropdown>
+                                                                    <Dropdown.Toggle
+                                                                        variant="bg-light"
+                                                                        id="dropdown-basic"
+                                                                    >
+                                                                        <img
+                                                                            src="/assets/cardsKebab.svg"
+                                                                            alt="edit"
+                                                                            className="img-responsive "
+                                                                            style={{
+                                                                                height: '20px',
+                                                                                width: '20px'
+                                                                            }}
+                                                                        />
+                                                                    </Dropdown.Toggle>
+
+                                                                    <Dropdown.Menu>
+                                                                        <Dropdown.Item key={2}>
+                                                                            Edit Program Name
+                                                                        </Dropdown.Item>
+                                                                        <Dropdown.Item key={1}>
+                                                                            Extend program and
+                                                                            offering
+                                                                        </Dropdown.Item>
+                                                                        <Dropdown.Item key={1}>
+                                                                            Send notification to
+                                                                            subscribers
+                                                                        </Dropdown.Item>
+                                                                        <Dropdown.Item key={1}>
+                                                                            Request Renewal
+                                                                        </Dropdown.Item>
+                                                                    </Dropdown.Menu>
+                                                                </Dropdown>
+                                                            </Row>
+                                                        </Col>
+                                                    </Row>
+
+                                                    <Card.Text>
+                                                        <Row>
+                                                            <Col lg={9} sm={5}>
+                                                                <Badge
+                                                                    pill
+                                                                    variant="dark"
+                                                                    className="p-2"
+                                                                >
+                                                                    {tag && tag.fitnesspackage
+                                                                        ? tag.fitnesspackage.level
+                                                                        : null}
+                                                                </Badge>
+                                                                <br />
+                                                                <b>
+                                                                    Capacity:{' '}
+                                                                    {tag && tag.fitnesspackage
+                                                                        ? tag.fitnesspackage
+                                                                              .classsize
+                                                                        : null}{' '}
+                                                                    people
+                                                                </b>
+                                                                <br />
+                                                                <b>
                                                                     {moment(groupEndDate).diff(
                                                                         moment(groupStartDate),
                                                                         'days'
-                                                                    )}
-                                                                </td>
-                                                                <td>
-                                                                    {(tag.fitnesspackage.mode ===
-                                                                        'Online' ||
-                                                                        tag.fitnesspackage.mode ===
-                                                                            'Hybrid') && (
-                                                                        <div>
-                                                                            {handleTimeFormatting(
-                                                                                totalClasses[0],
-                                                                                tag.fitnesspackage
-                                                                                    .duration
+                                                                    ) + ' days'}
+                                                                </b>
+                                                                <br />
+                                                                <b>Start Date:</b>{' '}
+                                                                {moment(groupStartDate).format(
+                                                                    'DD MMMM, YY'
+                                                                )}
+                                                                <br />
+                                                                <b>End Date: </b>
+                                                                {moment(groupEndDate).format(
+                                                                    'DD MMMM, YY'
+                                                                )}
+                                                            </Col>
+                                                            <Col>
+                                                                <DisplayImage
+                                                                    imageName={
+                                                                        tag &&
+                                                                        tag.client_packages &&
+                                                                        tag.client_packages
+                                                                            .length &&
+                                                                        tag.client_packages[0]
+                                                                            .users_permissions_user &&
+                                                                        tag.client_packages[0]
+                                                                            .users_permissions_user
+                                                                            .Photo_ID
+                                                                            ? tag.client_packages[0]
+                                                                                  .users_permissions_user
+                                                                                  .Photo_ID
+                                                                            : null
+                                                                    }
+                                                                    defaultImageUrl="assets/image_placeholder.svg"
+                                                                    imageCSS="rounded-circle profile_pic text-center img-fluid ml-2"
+                                                                />
+                                                                <br />
+                                                                <br />
+                                                                <Badge
+                                                                    pill
+                                                                    variant="dark"
+                                                                    className="py-2 px-4 ml-1"
+                                                                    style={{ cursor: 'pointer' }}
+                                                                    onClick={() => {
+                                                                        fitnessActionRef.current.TriggerForm(
+                                                                            {
+                                                                                id: tagId,
+                                                                                actionType:
+                                                                                    'allClients',
+                                                                                type: 'Group Class'
+                                                                            }
+                                                                        );
+                                                                    }}
+                                                                >
+                                                                    View all
+                                                                </Badge>
+                                                                <p className="ml-3">
+                                                                    {tag.client_packages.length}{' '}
+                                                                    people
+                                                                </p>
+                                                            </Col>
+                                                        </Row>
+                                                    </Card.Text>
+                                                </Card.Body>
+                                            </Card>
+                                        </Accordion.Collapse>
+                                    </Card>
+                                    <Card>
+                                        <Accordion.Toggle
+                                            as={Card.Header}
+                                            eventKey="1"
+                                            onClick={() => {
+                                                key === '' ? setKey('1') : setKey('');
+                                            }}
+                                            style={{ background: '#343A40', color: '#fff' }}
+                                        >
+                                            <span className="d-inline-block">
+                                                <b>Movement Sessions</b>
+                                            </span>
+                                            <span className="d-inline-block btn float-right">
+                                                {key === '1' ? (
+                                                    <i className="fa fa-chevron-up d-flex justify-content-end text-white" />
+                                                ) : (
+                                                    <i className="fa fa-chevron-down d-flex justify-content-end text-white" />
+                                                )}
+                                            </span>
+                                        </Accordion.Toggle>
+                                        <Accordion.Collapse eventKey="1">
+                                            <Card style={{ width: '100%' }}>
+                                                <Card.Body>
+                                                    <Card.Title>
+                                                        <h4>Movement Sessions</h4>
+                                                    </Card.Title>
+                                                    <Card.Text>
+                                                        Last planned session{' '}
+                                                        {calculateLastSession(tag.sessions)}
+                                                    </Card.Text>
+                                                    <Row>
+                                                        <Col lg={8}>
+                                                            <Table
+                                                                striped
+                                                                bordered
+                                                                hover
+                                                                size="sm"
+                                                                responsive
+                                                            >
+                                                                <thead className="text-center">
+                                                                    <tr>
+                                                                        <th>Type</th>
+                                                                        <th>Total</th>
+                                                                        {tag &&
+                                                                        tag.fitnesspackage &&
+                                                                        (tag.fitnesspackage.mode ===
+                                                                            'Online' ||
+                                                                            tag.fitnesspackage
+                                                                                .mode ===
+                                                                                'Hybrid') ? (
+                                                                            <th>Plan Online</th>
+                                                                        ) : null}
+                                                                        {tag &&
+                                                                        tag.fitnesspackage &&
+                                                                        (tag.fitnesspackage.mode ===
+                                                                            'Offline' ||
+                                                                            tag.fitnesspackage
+                                                                                .mode ===
+                                                                                'Hybrid') ? (
+                                                                            <th>Plan Offline</th>
+                                                                        ) : null}
+
+                                                                        <th>Plan Rest</th>
+                                                                        {tag &&
+                                                                        tag.fitnesspackage &&
+                                                                        (tag.fitnesspackage.mode ===
+                                                                            'Online' ||
+                                                                            tag.fitnesspackage
+                                                                                .mode ===
+                                                                                'Hybrid') ? (
+                                                                            <th>
+                                                                                Completed Online
+                                                                            </th>
+                                                                        ) : null}
+                                                                        {tag &&
+                                                                        tag.fitnesspackage &&
+                                                                        (tag.fitnesspackage.mode ===
+                                                                            'Offline' ||
+                                                                            tag.fitnesspackage
+                                                                                .mode ===
+                                                                                'Hybrid') ? (
+                                                                            <th>
+                                                                                Completed Offline
+                                                                            </th>
+                                                                        ) : null}
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody className="text-center">
+                                                                    <tr>
+                                                                        <td>
+                                                                            {tag &&
+                                                                            tag.fitnesspackage &&
+                                                                            tag.fitnesspackage
+                                                                                .fitness_package_type
+                                                                                ? tag.fitnesspackage
+                                                                                      .fitness_package_type
+                                                                                      .type
+                                                                                : null}
+                                                                        </td>
+                                                                        <td>
+                                                                            {moment(
+                                                                                groupEndDate
+                                                                            ).diff(
+                                                                                moment(
+                                                                                    groupStartDate
+                                                                                ),
+                                                                                'days'
                                                                             )}
-                                                                            /
+                                                                        </td>
+                                                                        <td>
+                                                                            {(tag.fitnesspackage
+                                                                                .mode ===
+                                                                                'Online' ||
+                                                                                tag.fitnesspackage
+                                                                                    .mode ===
+                                                                                    'Hybrid') && (
+                                                                                <div>
+                                                                                    {handleTimeFormatting(
+                                                                                        totalClasses[0],
+                                                                                        tag
+                                                                                            .fitnesspackage
+                                                                                            .duration
+                                                                                    )}
+                                                                                    /
+                                                                                    {
+                                                                                        tag
+                                                                                            .fitnesspackage
+                                                                                            .grouponline
+                                                                                    }
+                                                                                </div>
+                                                                            )}
+                                                                            {tag &&
+                                                                            tag.fitnesspackage &&
+                                                                            tag.fitnesspackage
+                                                                                ? tag.fitnesspackage
+                                                                                      ?.ptonline
+                                                                                : null}
+                                                                        </td>
+                                                                        {tag &&
+                                                                        tag.fitnesspackage &&
+                                                                        (tag.fitnesspackage.mode ===
+                                                                            'Offline' ||
+                                                                            tag.fitnesspackage
+                                                                                .mode ===
+                                                                                'Hybrid') ? (
+                                                                            <td>
+                                                                                {
+                                                                                    tag
+                                                                                        .fitnesspackage
+                                                                                        .groupoffline
+                                                                                }
+                                                                            </td>
+                                                                        ) : null}
+                                                                        <td>
                                                                             {
                                                                                 tag.fitnesspackage
-                                                                                    .grouponline
+                                                                                    .restdays
                                                                             }
-                                                                        </div>
-                                                                    )}
-                                                                    {tag &&
-                                                                    tag.fitnesspackage &&
-                                                                    tag.fitnesspackage
-                                                                        ? tag.fitnesspackage
-                                                                              ?.ptonline
-                                                                        : null}
-                                                                </td>
-                                                                {tag &&
-                                                                tag.fitnesspackage &&
-                                                                (tag.fitnesspackage.mode ===
-                                                                    'Offline' ||
-                                                                    tag.fitnesspackage.mode ===
-                                                                        'Hybrid') ? (
-                                                                    <td>
-                                                                        {
+                                                                        </td>
+                                                                        {tag &&
+                                                                        tag.fitnesspackage &&
+                                                                        (tag.fitnesspackage.mode ===
+                                                                            'Online' ||
                                                                             tag.fitnesspackage
-                                                                                .groupoffline
-                                                                        }
-                                                                    </td>
-                                                                ) : null}
-                                                                <td>
-                                                                    {tag.fitnesspackage.restdays}
-                                                                </td>
-                                                                {tag &&
-                                                                tag.fitnesspackage &&
-                                                                (tag.fitnesspackage.mode ===
-                                                                    'Online' ||
-                                                                    tag.fitnesspackage.mode ===
-                                                                        'Hybrid') ? (
-                                                                    <td></td>
-                                                                ) : null}
+                                                                                .mode ===
+                                                                                'Hybrid') ? (
+                                                                            <td></td>
+                                                                        ) : null}
 
-                                                                {tag &&
-                                                                tag.fitnesspackage &&
-                                                                (tag.fitnesspackage.mode ===
-                                                                    'Offline' ||
-                                                                    tag.fitnesspackage.mode ===
-                                                                        'Hybrid') ? (
-                                                                    <td></td>
-                                                                ) : null}
-                                                            </tr>
-                                                        </tbody>
-                                                    </Table>
-                                                </Col>
-                                                <Col>
-                                                    <Calendar
-                                                        className="disabled"
-                                                        // tileClassName={tileContent}
-                                                        // onChange={onChange}
-                                                        // onActiveStartDateChange={({ action }) => {
-                                                        //     action === 'next'
-                                                        //         ? setMonth(month + 1)
-                                                        //         : setMonth(month - 1);
-                                                        // }}
-                                                        // value={value}
-                                                        minDate={moment().startOf('month').toDate()}
-                                                        maxDate={moment().add(2, 'months').toDate()}
-                                                        maxDetail="month"
-                                                        minDetail="month"
-                                                        next2Label={null}
-                                                        prev2Label={null}
-                                                    />
-                                                </Col>
-                                            </Row>
-                                            <p className="text-dark">
-                                                Note: Create atleast 3 sessions to start accepting
-                                                bookings
-                                            </p>
-                                        </Card.Body>
+                                                                        {tag &&
+                                                                        tag.fitnesspackage &&
+                                                                        (tag.fitnesspackage.mode ===
+                                                                            'Offline' ||
+                                                                            tag.fitnesspackage
+                                                                                .mode ===
+                                                                                'Hybrid') ? (
+                                                                            <td></td>
+                                                                        ) : null}
+                                                                    </tr>
+                                                                </tbody>
+                                                            </Table>
+                                                        </Col>
+                                                        <Col>
+                                                            <Calendar
+                                                                className="disabled"
+                                                                // tileClassName={tileContent}
+                                                                // onChange={onChange}
+                                                                // onActiveStartDateChange={({ action }) => {
+                                                                //     action === 'next'
+                                                                //         ? setMonth(month + 1)
+                                                                //         : setMonth(month - 1);
+                                                                // }}
+                                                                // value={value}
+                                                                minDate={moment()
+                                                                    .startOf('month')
+                                                                    .toDate()}
+                                                                maxDate={moment()
+                                                                    .add(2, 'months')
+                                                                    .toDate()}
+                                                                maxDetail="month"
+                                                                minDetail="month"
+                                                                next2Label={null}
+                                                                prev2Label={null}
+                                                            />
+                                                        </Col>
+                                                    </Row>
+                                                    <p className="text-dark">
+                                                        Note: Create atleast 3 sessions to start
+                                                        accepting bookings
+                                                    </p>
+                                                </Card.Body>
+                                            </Card>
+                                        </Accordion.Collapse>
                                     </Card>
-                                </Accordion.Collapse>
-                            </Card>
-                        </Accordion>
-                    </Col>
-                </Row>
+                                </Accordion>
+                            </Col>
+                        </Row>
 
-                {/* <Row>
+                        {/* <Row>
                     <Col
                         lg={11}
                         className="p-4 shadow-lg bg-white"
@@ -989,153 +1071,224 @@ const Scheduler = () => {
                     </Col>
                 </Row> */}
 
-                {/* Scheduler manager based on dates */}
-                <Row className="mt-5 mb-2">
-                    <Col lg={2}>
-                        {moment().isBefore(moment(groupEndDate)) ? (
-                            <Button
-                                variant="dark"
-                                onClick={() => {
-                                    handleCurrentDate();
-                                }}
-                            >
-                                Today
-                            </Button>
+                        {/* Scheduler manager based on dates */}
+                        <Row className="mt-5 mb-2">
+                            <Col lg={2}>
+                                {moment().isBefore(moment(groupEndDate)) ? (
+                                    <Button
+                                        variant="dark"
+                                        onClick={() => {
+                                            handleCurrentDate();
+                                        }}
+                                    >
+                                        Today
+                                    </Button>
+                                ) : null}
+                            </Col>
+                            <Col lg={8}>
+                                <div className="text-center">
+                                    <span
+                                        style={{
+                                            display: `${handlePrevDisplay(prevDate)}`,
+                                            cursor: 'pointer'
+                                        }}
+                                        onClick={() => {
+                                            handlePrevMonth(prevDate);
+                                        }}
+                                        className="rounded-circle"
+                                    >
+                                        <i className="fa fa-chevron-left mr-4"></i>
+                                    </span>
+                                    <span className="shadow-lg bg-dark p-2 rounded-lg text-white">
+                                        <b>
+                                            {moment(prevDate).format('MMMM, YYYY')} -{' '}
+                                            {moment(nextDate).format('MMMM, YYYY')}
+                                        </b>
+                                    </span>
+                                    <span
+                                        style={{
+                                            display: `${handleNextDisplay(nextDate)}`,
+                                            cursor: 'pointer'
+                                        }}
+                                        onClick={() => {
+                                            handleNextMonth(nextDate);
+                                        }}
+                                    >
+                                        <i className="fa fa-chevron-right ml-4"></i>
+                                    </span>
+                                </div>
+                            </Col>
+                            <Col lg={2}>
+                                <Form>
+                                    <Form.Check
+                                        type="switch"
+                                        id="custom-switch"
+                                        label="Show Collapse view"
+                                        // checked={isSettingNotificationCreated ? true : false}
+                                        // disabled={isSettingNotificationCreated !== 0 ? true : false}
+                                        onChange={() => {
+                                            setShowCollapseView(!showCollapseView);
+                                        }}
+                                    />
+                                </Form>
+                            </Col>
+                        </Row>
+                        {showCollapseView ? (
+                            <Row>
+                                <Col lg={11} className="pl-0 pr-0">
+                                    <CollapsibleScheduler
+                                        type="date"
+                                        days={calculateDays(prevDate, nextDate)}
+                                        callback={handleCallback}
+                                        restDays={tag?.sessions.filter(
+                                            (ses) => ses.type === 'restday'
+                                        )}
+                                        programId={tagId}
+                                        schedulerSessions={schedulerSessions}
+                                        sessionIds={sessionIds}
+                                        clientIds={clientIds}
+                                        classType={'Group Class'}
+                                        startDate={prevDate}
+                                        duration={moment(nextDate).diff(moment(prevDate), 'days')}
+                                        showRestDay={showRestDay}
+                                    />
+                                </Col>
+                            </Row>
                         ) : null}
-                    </Col>
-                    <Col lg={8}>
-                        <div className="text-center">
-                            <span
-                                style={{
-                                    display: `${handlePrevDisplay(prevDate)}`,
-                                    cursor: 'pointer'
-                                }}
-                                onClick={() => {
-                                    handlePrevMonth(prevDate);
-                                }}
-                                className="rounded-circle"
-                            >
-                                <i className="fa fa-chevron-left mr-4"></i>
-                            </span>
-                            <span className="shadow-lg bg-white p-2 rounded-lg">
-                                <b>
-                                    {moment(prevDate).format('MMMM, YYYY')} -{' '}
-                                    {moment(nextDate).format('MMMM, YYYY')}
-                                </b>
-                            </span>
-                            <span
-                                style={{
-                                    display: `${handleNextDisplay(nextDate)}`,
-                                    cursor: 'pointer'
-                                }}
-                                onClick={() => {
-                                    handleNextMonth(nextDate);
-                                }}
-                            >
-                                <i className="fa fa-chevron-right ml-4"></i>
-                            </span>
-                        </div>
-                    </Col>
-                    <Col lg={2}>
-                        <Button variant="dark">Collapse</Button>
-                    </Col>
-                </Row>
 
-                {/* Scheduler */}
-                <Row>
-                    <Col lg={11} className="pl-0 pr-0">
-                        <div className="mt-5">
-                            <SchedulerPage
-                                type="date"
-                                days={calculateDays(prevDate, nextDate)}
-                                callback={handleCallback}
-                                restDays={tag?.sessions.filter((ses) => ses.type === 'restday')}
-                                programId={tagId}
-                                schedulerSessions={schedulerSessions}
-                                sessionIds={sessionIds}
-                                clientIds={clientIds}
-                                classType={'Group Class'}
-                                startDate={prevDate}
-                                duration={moment(nextDate).diff(moment(prevDate), 'days')}
-                            />
-                        </div>
-                    </Col>
-                    <FitnessAction ref={fitnessActionRef} callback={() => mainQuery} />
-                </Row>
-                {
-                    <Modal show={editDatesModal} onHide={handleCloseDatesModal}>
-                        <Modal.Body>
-                            <label>Edit Start Date: </label>
-                            <InputGroup className="mb-3">
-                                <FormControl
-                                    value={
-                                        startDate === ''
-                                            ? tag?.client_packages[0]?.effective_date
-                                            : startDate
-                                    }
-                                    onChange={(e) => {
-                                        setStartDate(e.target.value);
-                                    }}
-                                    type="date"
-                                />
-                            </InputGroup>
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="outline-danger" onClick={handleCloseDatesModal}>
-                                Close
-                            </Button>
-                            <Button
-                                variant="outline-success"
-                                disabled={startDate === '' ? true : false}
-                                onClick={() => {
-                                    handleDateEdit();
-                                }}
-                            >
-                                Submit
-                            </Button>
-                        </Modal.Footer>
-                    </Modal>
-                }
-                {
-                    <Modal show={editTimeModal} onHide={handleCloseTimeModal}>
-                        <Modal.Body>
-                            <label>Edit Group Start Time: </label>
-                            <Row>
-                                <Col lg={4}>
-                                    <TimePicker
-                                        showSecond={false}
-                                        minuteStep={15}
-                                        // onChange={(e) => {}}
+                        {/* Scheduler */}
+                        <Row>
+                            <Col lg={11} className="pl-0 pr-0">
+                                <div className="mt-5">
+                                    <SchedulerPage
+                                        type="date"
+                                        days={calculateDays(prevDate, nextDate)}
+                                        callback={handleCallback}
+                                        restDays={tag?.sessions.filter(
+                                            (ses) => ses.type === 'restday'
+                                        )}
+                                        programId={tagId}
+                                        schedulerSessions={schedulerSessions}
+                                        sessionIds={sessionIds}
+                                        clientIds={clientIds}
+                                        classType={'Group Class'}
+                                        startDate={prevDate}
+                                        duration={moment(nextDate).diff(moment(prevDate), 'days')}
+                                        showRestDay={showRestDay}
+                                        handleFloatingActionProgramCallback={
+                                            handleFloatingActionProgramCallback
+                                        }
+                                        handleFloatingActionProgramCallback2={
+                                            handleFloatingActionProgramCallback2
+                                        }
+                                        handleRefetch={handleRefetch}
+                                        sessionFilter={sessionFilter}
+                                        program={program}
                                     />
-                                </Col>
-                            </Row>
-                            <label>Edit Group End Time: </label>
-                            <Row>
-                                <Col lg={4}>
-                                    <TimePicker
-                                        showSecond={false}
-                                        minuteStep={15}
-                                        // onChange={(e) => {}}
-                                    />
-                                </Col>
-                            </Row>
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="outline-danger" onClick={handleCloseTimeModal}>
-                                Close
-                            </Button>
-                            <Button
-                                variant="outline-success"
-                                onClick={() => {
-                                    handleDateEdit();
-                                }}
-                            >
-                                Submit
-                            </Button>
-                        </Modal.Footer>
-                    </Modal>
-                }
-            </div>
+                                </div>
+                            </Col>
+                            <FitnessAction ref={fitnessActionRef} callback={() => mainQuery} />
+                        </Row>
+                        {
+                            <Modal show={editDatesModal} onHide={handleCloseDatesModal}>
+                                <Modal.Body>
+                                    <label>Edit Start Date: </label>
+                                    <InputGroup className="mb-3">
+                                        <FormControl
+                                            value={
+                                                startDate === ''
+                                                    ? tag?.client_packages[0]?.effective_date
+                                                    : startDate
+                                            }
+                                            onChange={(e) => {
+                                                setStartDate(e.target.value);
+                                            }}
+                                            type="date"
+                                        />
+                                    </InputGroup>
+                                </Modal.Body>
+                                <Modal.Footer>
+                                    <Button
+                                        variant="outline-danger"
+                                        onClick={handleCloseDatesModal}
+                                    >
+                                        Close
+                                    </Button>
+                                    <Button
+                                        variant="outline-success"
+                                        disabled={startDate === '' ? true : false}
+                                        onClick={() => {
+                                            handleDateEdit();
+                                        }}
+                                    >
+                                        Submit
+                                    </Button>
+                                </Modal.Footer>
+                            </Modal>
+                        }
+                        {
+                            <Modal show={editTimeModal} onHide={handleCloseTimeModal}>
+                                <Modal.Body>
+                                    <label>Edit Group Start Time: </label>
+                                    <Row>
+                                        <Col lg={4}>
+                                            <TimePicker
+                                                showSecond={false}
+                                                minuteStep={15}
+                                                // onChange={(e) => {}}
+                                            />
+                                        </Col>
+                                    </Row>
+                                    <label>Edit Group End Time: </label>
+                                    <Row>
+                                        <Col lg={4}>
+                                            <TimePicker
+                                                showSecond={false}
+                                                minuteStep={15}
+                                                // onChange={(e) => {}}
+                                            />
+                                        </Col>
+                                    </Row>
+                                </Modal.Body>
+                                <Modal.Footer>
+                                    <Button variant="outline-danger" onClick={handleCloseTimeModal}>
+                                        Close
+                                    </Button>
+                                    <Button
+                                        variant="outline-success"
+                                        onClick={() => {
+                                            handleDateEdit();
+                                        }}
+                                    >
+                                        Submit
+                                    </Button>
+                                </Modal.Footer>
+                            </Modal>
+                        }
+                    </div>
+                </Col>
+                {/* Right sidebar */}
+                <Col lg={collapse ? '1' : '2'} className="d-lg-block">
+                    <SideNav
+                        collapse={collapse}
+                        setCollapse={setCollapse}
+                        accordionExpanded={accordionExpanded}
+                        onAccordionToggle={handleAccordionToggle}
+                        clientIds={clientIds}
+                        sessionIds={sessionIds}
+                        startDate={tag?.fitnesspackage?.Start_date}
+                        duration={calculateDuration(
+                            tag?.fitnesspackage?.Start_date,
+                            tag?.fitnesspackage?.End_date
+                        )}
+                        callback={handleFloatingActionProgramCallback}
+                        callback2={handleFloatingActionProgramCallback2}
+                        callback3={handleRefetch}
+                        restDayCallback={handleShowRestDay}
+                        showRestDayAction={showRestDay}
+                    />
+                </Col>
+            </Row>
         );
 };
 
