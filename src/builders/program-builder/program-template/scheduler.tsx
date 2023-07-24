@@ -1860,7 +1860,7 @@ const Schedular = (props: any) => {
             <div className="text-center">
                 <Spinner animation="border" variant="secondary" />
                 <br />
-                <div className="mt-3" style={{ font: 'small' }}>
+                <div className="mt-3" style={{ fontSize: 'small' }}>
                     Loading Schedule...
                 </div>
             </div>
