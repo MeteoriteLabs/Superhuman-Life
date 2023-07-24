@@ -46,7 +46,7 @@ import SapienVideoPlayer from 'components/customWidgets/SpaienVideoPlayer';
 import Toaster from 'components/Toaster';
 // import SideNav from '../program-template/SchedulerSideBar';
 
-const Schedular = (props: any) => {
+const Schedular = (props: any) => { 
     const auth = useContext(AuthContext);
     const [show, setShow] = useState<boolean>(false);
     const [showModal, setShowModal] = useState<boolean>(false);
@@ -65,13 +65,13 @@ const Schedular = (props: any) => {
     const program_id = window.location.pathname.split('/').pop();
     const schedulerDay: Record<string, unknown> = require('./json/scheduler-day.json');
     const [changeMakerAvailability, setChangeMakerAvailability] = useState<any>([]);
-    const [sessionIds, setSessionsIds] = useState<any>(props.sessionIds);
+    // const [sessionIds, setSessionsIds] = useState<string[]>(props.sessionIds);
     const [templateSessionsIds, setTemplateSessionsIds] = useState<any>([]);
     const [dropConflict, setDropConflict] = useState<boolean>(false);
     const [groupDropConflict, setGroupDropConflict] = useState<boolean>(false);
     const [sessionBookings, setSessionBooking] = useState<any>([]);
     const [clickedSessionId, setClickedSessionId] = useState('');
-    const [showRestDay, setShowRestDay] = useState<boolean>(false);
+    // const [showRestDay, setShowRestDay] = useState<boolean>(false);
     const [isUpdated, setIsUpdated] = useState<boolean>(false);
 
     const DELETE_REST_DAY = gql`
@@ -309,7 +309,7 @@ const Schedular = (props: any) => {
         for (let q = 0; q < flattenData?.sessionsBookings?.length; q++) {
             sessionsExistingValues.push(flattenData.sessionsBookings[q]?.session.id);
         }
-        setSessionsIds(sessionsExistingValues);
+        // setSessionsIds(sessionsExistingValues);
         for (let d = 1; d <= props.days; d++) {
             arr[d] = JSON.parse(JSON.stringify(schedulerDay));
         }
@@ -420,7 +420,7 @@ const Schedular = (props: any) => {
 
     // this incase of the scheduler in the session manager page
     function handleRenderTable(data: any) {
-        setSessionsIds(props.sessionIds);
+        // setSessionsIds(props.sessionIds);
         const flattenData = flattenObj({ ...data });
 
         if (window.location.pathname.split('/')[1] === 'programs') {
@@ -1844,15 +1844,15 @@ const Schedular = (props: any) => {
         const unit = hours >= 12 ? 'PM' : 'AM';
         hours = hours % 12 || 12;
 
-        const finalTime = hours + unit;
+        const finalTime = `${hours} ${unit}`;
         return finalTime;
     };
 
-    const handleCovertTimeFormat = (hours: number, minutes: number) => {
+    const handleConvertTimeFormat = (hours: number, minutes: number) => {
         const unit = hours >= 12 ? 'pm' : 'am';
         hours = hours % 12 || 12;
-        const finalTime = `${hours} : ${minutes < 10 ? `0${minutes}`:minutes} ${unit}`;
-        return finalTime; 
+        const finalTime = `${hours}:${minutes < 10 ? `0${minutes}` : minutes} ${unit}`;
+        return finalTime;
     };
 
     if (!show) {
@@ -1899,7 +1899,7 @@ const Schedular = (props: any) => {
                     style={{ display: `${props.sessionFilter}`, borderRadius: '20px' }}
                 >
                     <SessionList
-                        duration={props?.duration}
+                        duration={props?.days}
                         sessionIds={props.sessionIds}
                         startDate={props.startDate}
                         days={dates}
@@ -1955,7 +1955,7 @@ const Schedular = (props: any) => {
                                                 zIndex: 999
                                             }}
                                         >
-                                            {handle12HourFormat(h)}
+                                            {props.show24HourFormat ? `${h<10 ? `0${h}` : h}: 00`: handle12HourFormat(h)}
                                         </span>
                                     </div>
                                     {days.map((d, index) => {
@@ -2107,8 +2107,11 @@ const Schedular = (props: any) => {
                                                                                         {val.type ===
                                                                                         'restday'
                                                                                             ? null
-                                                                                            : 
-                                                                                            // (val.hour ===
+                                                                                            : (props.show24HourFormat ? `${val.hour === '0' ? '00': val.hour}:${val.min === '0' ? '00': val.min} - ${val.endHour}:${val.endMin.toString() === '0' ? '00' : val.endMin}` : `${handleConvertTimeFormat(Number(val.hour), Number(val.min))}-${handleConvertTimeFormat(Number(val.endHour), Number(val.endMin))}`)}
+                                                                                        {/* : ({
+                                                                                            //   true ?
+                                                                                            
+                                                                                            // ((val.hour ===
                                                                                             //   '0'
                                                                                             //       ? '00'
                                                                                             //       : val.hour) +
@@ -2123,9 +2126,9 @@ const Schedular = (props: any) => {
                                                                                             //   (val.endMin.toString() ===
                                                                                             //   '0'
                                                                                             //       ? '00'
-                                                                                            //       : val.endMin)
-                                                                                            `${handleCovertTimeFormat(Number(val.hour), Number(val.min))} - ${handleCovertTimeFormat(Number(val.endHour), Number(val.endMin))}`
-                                                                                        }
+                                                                                            //       : val.endMin)) :
+                                                                                            // `${handleCovertTimeFormat(Number(val.hour), Number(val.min))}-${handleCovertTimeFormat(Number(val.endHour), Number(val.endMin))}`
+                                                                                            // })} */}
                                                                                     </div>
                                                                                 </div>
                                                                             </div>

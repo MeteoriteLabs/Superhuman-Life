@@ -8,7 +8,7 @@ import { flattenObj } from '../utils/responseFlatten';
 
 const ProgramList: React.FC<{
     callback: (args: string) => void;
-    sessionIds: string;
+    sessionIds: string[];
     dayType: string;
 }> = (props) => {
     const auth = useContext(AuthContext);

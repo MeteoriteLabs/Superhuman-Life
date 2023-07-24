@@ -1,4 +1,4 @@
-import { Accordion, Button, Nav } from 'react-bootstrap';
+import { Accordion, Button,Form, Nav } from 'react-bootstrap';
 import { useState, useRef, useEffect } from 'react';
 import Icon from 'components/Icons';
 import CreateEditProgramManager from './create-edit/createoredit-workoutTemplate';
@@ -20,7 +20,9 @@ export default function SideNav({
     restDayCallback,
     showRestDayAction,
     accordionExpanded,
-    onAccordionToggle
+    onAccordionToggle,
+    show24HourFormat,
+    setShow24HourFormat
 }: {
     collapse: boolean;
     setCollapse: (arg: boolean) => void;
@@ -35,6 +37,8 @@ export default function SideNav({
     showRestDayAction: any;
     accordionExpanded: any;
     onAccordionToggle: any;
+    show24HourFormat: boolean;
+    setShow24HourFormat: (parmas: boolean) => void;
 }): JSX.Element {
     const createEditWorkoutTemplateComponent = useRef<any>(null);
     const createEditNewWorkoutComponent = useRef<any>(null);
@@ -391,6 +395,21 @@ export default function SideNav({
                                     <Nav className="flex-column pl-3">
                                         <Nav.Link className="text-white">Availaibility</Nav.Link>
                                         <Nav.Link className="text-white">Routine</Nav.Link>
+                                        <Form className='d-flex'>
+                                          
+                                            <p className='text-white pr-1'>12 hour </p>
+                                    <Form.Check
+                                        type="switch"
+                                        id="timeformat"
+                                        label="24 hour"
+                                        className='text-white'
+                                        onChange={() => {
+                                            setShow24HourFormat(!show24HourFormat)
+                                        }}
+                                    />
+                                     
+                                </Form>
+                               
                                     </Nav>
                                 </Accordion.Collapse>
                             ) : null}
