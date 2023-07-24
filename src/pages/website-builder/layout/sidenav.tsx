@@ -47,10 +47,10 @@ export default function SideNav({
                             setShowSubOptionsWebsite(!showSubOptionsWebsite); // Toggle the sub-option visibility
                         }}
                         style={{ color: '#fff', textAlign: 'left' }}
-                      >
+                    >
                         <Row>
                             <Col className="ml-4 m-0 p-0">
-                                <Icon name='website' height={22} width={22}/>
+                                <Icon name="website" height={22} width={22} />
                             </Col>
                             {collapse ? (
                                 ''
@@ -101,7 +101,7 @@ export default function SideNav({
                             setSelectedOption(location.pathname.slice(1));
                             setShowSubOptionsMobile(!showSubOptionsMobile); // Toggle the sub-option visibility
                         }}
-                        style={{ color: '#fff' , marginTop:"-5px" }}
+                        style={{ color: '#fff', marginTop: '-5px' }}
                     >
                         <Row>
                             <Col className="ml-4 m-0 p-0">
@@ -124,7 +124,7 @@ export default function SideNav({
                 </OverlayTrigger>
 
                 {/* Render the sub-options when showSubOptions is true */}
-                {showSubOptionsMobile  && (
+                {showSubOptionsMobile && (
                     <div style={{ marginLeft: '45px', marginTop: '-25px' }}>
                         <NavLink
                             style={{ color: 'white' }}
@@ -202,7 +202,15 @@ export default function SideNav({
                 </OverlayTrigger>
             </Nav>
 
-            <Button variant="dark" onClick={() => setCollapse(!collapse)} className="mt-2 nav-link">
+            <Button
+                variant="dark"
+                onClick={() => {
+                    setCollapse(!collapse);
+                    setShowSubOptionsMobile(false);
+                    setShowSubOptionsWebsite(false);
+                }}
+                className="mt-2 nav-link"
+            >
                 {collapse ? (
                     <i className="fas fa-angle-double-right"></i>
                 ) : (
