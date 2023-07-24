@@ -95,7 +95,7 @@ export default function Earnings(): JSX.Element {
                 Cell: ({ row }: { row: Row }) => {
                     const history = useHistory();
                     const routeChange = () => {
-                        const path = `receipt/?id=${row.original.id}`;
+                        const path = `receiptearning/?id=${row.original.id}`;
                         history.push(path);
                     };
 

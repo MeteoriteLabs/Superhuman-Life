@@ -202,7 +202,8 @@ export default function SideNav({
                 </OverlayTrigger>
             </Nav>
 
-            <Button variant="dark" onClick={() => setCollapse(!collapse)} className="mt-2 nav-link">
+            <Button variant="dark" onClick={() => setCollapse(!collapse)
+            } className="mt-2 nav-link">
                 {collapse ? (
                     <i className="fas fa-angle-double-right"></i>
                 ) : (

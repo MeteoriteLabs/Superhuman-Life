@@ -42,9 +42,7 @@ export const GET_TRANSACTIONS = gql`
 `;
 export const GET_TRANSACTION = gql`
     query TransactionQuery($id: ID) {
-        transaction(
-            id: $id 
-            ) {
+        transaction(id: $id) {
             data {
                 id
                 attributes {
@@ -86,11 +84,10 @@ export const FETCH_CHANGEMAKERS = gql`
         }
     }
 `;
+
 export const FETCH_CHANGEMAKER = gql`
     query fetchUsersProfileData($id: ID) {
-        usersPermissionsUser(
-            id: $id 
-        ) {
+        usersPermissionsUser(id: $id) {
             data {
                 id
                 attributes {
@@ -99,6 +96,38 @@ export const FETCH_CHANGEMAKER = gql`
                     Phone_Number
                     DOB
                     email
+                }
+            }
+        }
+    }
+`;
+
+export const FETH_CLIENTPACKAGES = gql`
+    query fethclientPackages($id: ID) {
+        clientPackage(id: $id) {
+            data {
+                id
+                attributes {
+                    package_duration
+                    fitnesspackages {
+                        data {
+                            attributes {
+                                packagename
+                                ptoffline
+                                ptonline
+                                grouponline
+                                groupoffline
+                                recordedclasses
+                                fitness_package_type{
+                                    data{
+                                        attributes{
+                                            type
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

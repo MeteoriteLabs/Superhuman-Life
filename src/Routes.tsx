@@ -57,7 +57,9 @@ const ChannelProgramSchedulerPage = React.lazy(
 const clientSchedulerPage = React.lazy(() => import('./builders/changemaker-builder'));
 const AvailabilityPage = React.lazy(() => import('./builders/changemaker-builder/availability'));
 const RosterPage = React.lazy(() => import('./builders/changemaker-builder/roster'));
-const Receipt = React.lazy(() => import('./pages/finance/Outflow/Receipt'));
+const ReceiptOutflow = React.lazy(() => import('./pages/finance/Outflow/ReceiptOutflow'));
+const ReceiptEarning = React.lazy(() => import('./pages/finance/Earnings/ReceiptEarning'));
+const ReceiptTransaction = React.lazy(() => import('./pages/finance/Transactions/ReceiptTransaction'));
 const PaymentScheduleSettingsPage = React.lazy(
     () => import('./builders/client-builder/PaymentScheduleSettings')
 );
@@ -147,7 +149,9 @@ export default function Routes({ token }: { token: string }): JSX.Element {
                             <Route path="/settings" component={SettingsPage} />
                             <Route path="/finance" component={FinancePage} />
                             <Route path="/change-password" component={ChangePasswordPage} />
-                            <Route path="/receipt" component={Receipt} />
+                            <Route path="/receiptoutflow" component={ReceiptOutflow} />
+                            <Route path="/receiptearning" component={ReceiptEarning} />
+                            <Route path="/receipttransaction" component={ReceiptTransaction} />
                             <Route
                                 path="/payment_settings"
                                 component={PaymentScheduleSettingsPage}
