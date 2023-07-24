@@ -23,7 +23,7 @@ import { SideNav } from '../Event/import';
 const Scheduler: React.FC = () => {
     const auth = useContext(AuthContext);
     const last = window.location.pathname.split('/').reverse();
-    const tagId = window.location.pathname.split('/').pop() ? window.location.pathname.split('/').pop() : null;
+    const tagId = window.location.pathname.split('/').pop();
     const [data, setData] = useState<any[]>([]);
     const [show, setShow] = useState(false);
     const [userPackage, setUserPackage] = useState<any>([]);
