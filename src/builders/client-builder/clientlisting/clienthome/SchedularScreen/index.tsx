@@ -5,7 +5,7 @@ import { useQuery } from '@apollo/client';
 import { GET_CLIENT_SESSIONS } from './queries';
 import { flattenObj } from '../../../../../components/utils/responseFlatten';
 
-const SchedulerScreen = (props: any) => {
+const SchedulerScreen = () => {
     const clientsSessions = window.location.href.split('/').pop();
     const [scheduleDate, setScheduleDate] = useState(moment().format('YYYY-MM-DD'));
     const [restDays, setRestDays] = useState<any>([]);

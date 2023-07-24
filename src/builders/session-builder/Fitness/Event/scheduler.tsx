@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState, useQuery, GET_TAG_BY_ID, Row, Calendar, Col, DisplayImage, Dropdown, Table, Card, Badge, Accordion, SchedulerPage, moment,FitnessAction, Link, flattenObj, SideNav,Loader} from "./import";
+import {useRef, useState, useQuery, GET_TAG_BY_ID, Row, Calendar, Col, DisplayImage, Dropdown, Table, Card, Badge, Accordion, SchedulerPage, moment,FitnessAction, Link, flattenObj, SideNav,Loader} from "./import";
 import 'react-calendar/dist/Calendar.css';
 import '../../profilepicture.css';
 import '../Group/actionButton.css';
@@ -7,14 +7,15 @@ const Scheduler = (): JSX.Element => {
     const last = window.location.pathname.split('/').reverse();
     const tagId = window.location.pathname.split('/').pop();
     // const [show, setShow] = useState<boolean>(false);
-    const [sessionIds, setSessionIds] = useState<any>([]);
-    const [clientIds, setClientIds] = useState<any>([]);
+    const [sessionIds, setSessionIds] = useState<string[]>([]);
+    const [clientIds, setClientIds] = useState<string[]>([]);
     // these are the sessions that will passed onto the scheduler
     const [schedulerSessions, setSchedulerSessions] = useState<any>([]);
     const [tag, setTag] = useState<any>();
     const [key, setKey] = useState('');
     const [collapse, setCollapse] = useState<boolean>(true);
     const [accordionExpanded, setAccordionExpanded] = useState(true);
+    const [show24HourFormat, setShow24HourFormat] = useState(false);
 
     const handleAccordionToggle = () => {
         setAccordionExpanded(!accordionExpanded);
@@ -66,10 +67,10 @@ const Scheduler = (): JSX.Element => {
         return maxDate.format('MMM Do,YYYY');
     }
 
-    function calculateDuration(sd: any, ed: any) {
-        const start = moment(sd);
-        const end = moment(ed);
-        return end.diff(start, 'days') + 1;
+    function calculateDuration(startDate: string, endDate: string) {
+        const packageStartDate = moment(startDate);
+        const packageEndDate = moment(endDate);
+        return packageEndDate.diff(packageStartDate, 'days') + 1;
     }
 
     // function calculateDailySessions(sessions) {
@@ -372,31 +373,32 @@ const Scheduler = (): JSX.Element => {
                             <Col lg={11} className="pl-0 pr-0">
                                 <div className="mt-5">
                                     <SchedulerPage
-                                        type="date"
-                                        callback={handleCallback}
+                                        show24HourFormat={show24HourFormat}//boolean
+                                        type="date"//string
+                                        callback={handleCallback}//()=>void
                                         sessionIds={sessionIds}
                                         days={calculateDuration(
                                             tag?.fitnesspackage?.Start_date,
                                             tag?.fitnesspackage?.End_date
-                                        )}
+                                        )}//number
                                         restDays={tag?.sessions.filter(
                                             (ses) => ses.type === 'restday'
                                         )}
                                         schedulerSessions={schedulerSessions}
                                         clientIds={clientIds}
-                                        classType={'Event'}
-                                        programId={tagId}
-                                        startDate={tag?.fitnesspackage?.Start_date}
-                                        showRestDay={showRestDay}
+                                        classType={'Event'}//string
+                                        programId={tagId ? tagId : null}//string
+                                        startDate={tag?.fitnesspackage?.Start_date}//string
+                                        showRestDay={showRestDay}//boolean
                                         handleFloatingActionProgramCallback={
                                             handleFloatingActionProgramCallback
                                         }
                                         handleFloatingActionProgramCallback2={
                                             handleFloatingActionProgramCallback2
                                         }
-                                        handleRefetch={handleRefetch}
-                                        sessionFilter={sessionFilter}
-                                        program={program}
+                                        handleRefetch={handleRefetch}//()=> void
+                                        sessionFilter={sessionFilter}//string
+                                        program={program}//string
                                     />
                                 </div>
                             </Col>
@@ -407,6 +409,8 @@ const Scheduler = (): JSX.Element => {
                 {/* Right sidebar */}
                 <Col lg={collapse ? '1' : '2'} className="d-lg-block">
                     <SideNav
+                        show24HourFormat={show24HourFormat}
+                        setShow24HourFormat={setShow24HourFormat}
                         collapse={collapse}
                         setCollapse={setCollapse}
                         accordionExpanded={accordionExpanded}

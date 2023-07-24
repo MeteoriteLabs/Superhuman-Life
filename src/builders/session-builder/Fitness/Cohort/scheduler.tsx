@@ -43,6 +43,7 @@ const Scheduler: React.FC = () => {
     const [key, setKey] = useState('');
     const [collapse, setCollapse] = useState<boolean>(true);
     const [accordionExpanded, setAccordionExpanded] = useState(true);
+    const [show24HourFormat, setShow24HourFormat] = useState(false);
 
     const handleAccordionToggle = () => {
         setAccordionExpanded(!accordionExpanded);
@@ -737,7 +738,7 @@ const Scheduler: React.FC = () => {
                                 schedulerSessions={schedulerSessions}
                                 clientIds={clientIds}
                                 classType={'Cohort'}
-                                programId={tagId}
+                                programId={tagId ? tagId : null}
                                 startDate={tag?.fitnesspackage?.Start_date}
                                 showRestDay={showRestDay}
                                 handleFloatingActionProgramCallback={
@@ -749,6 +750,8 @@ const Scheduler: React.FC = () => {
                                 handleRefetch={handleRefetch}
                                 sessionFilter={sessionFilter}
                                 program={program}
+                                show24HourFormat={show24HourFormat}
+                                
                             />
                         </div>
                     </Col>
@@ -759,6 +762,8 @@ const Scheduler: React.FC = () => {
             {/* Right sidebar */}
             <Col lg={collapse ? '1' : '2'} className="d-lg-block">
                     <SideNav
+                      show24HourFormat={show24HourFormat}
+                      setShow24HourFormat={setShow24HourFormat}
                         collapse={collapse}
                         setCollapse={setCollapse}
                         accordionExpanded={accordionExpanded}

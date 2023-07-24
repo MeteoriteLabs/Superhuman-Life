@@ -23,7 +23,7 @@ import { SideNav } from '../Event/import';
 const Scheduler: React.FC = () => {
     const auth = useContext(AuthContext);
     const last = window.location.pathname.split('/').reverse();
-    const tagId = window.location.pathname.split('/').pop();
+    const tagId = window.location.pathname.split('/').pop() ? window.location.pathname.split('/').pop() : null;
     const [data, setData] = useState<any[]>([]);
     const [show, setShow] = useState(false);
     const [userPackage, setUserPackage] = useState<any>([]);
@@ -43,6 +43,7 @@ const Scheduler: React.FC = () => {
     const [classicEndDate, setClassicEndDate] = useState('');
     const [collapse, setCollapse] = useState<boolean>(true);
     const [accordionExpanded, setAccordionExpanded] = useState(true);
+    const [show24HourFormat, setShow24HourFormat] = useState(false);
 
     const handleAccordionToggle = () => {
         setAccordionExpanded(!accordionExpanded);
@@ -868,7 +869,7 @@ const Scheduler: React.FC = () => {
                                 restDays={tag?.sessions.filter((ses) => ses.type === 'restday')}
                                 classType={'Classic Class'}
                                 startDate={'2021-05-01'}
-                                programId={tagId}
+                                programId={tagId ? tagId : null}
                                 handleFloatingActionProgramCallback={
                                     handleFloatingActionProgramCallback
                                 }
@@ -879,6 +880,8 @@ const Scheduler: React.FC = () => {
                                 sessionFilter={sessionFilter}
                                 program={program}
                                 showRestDay={showRestDay}
+                                show24HourFormat={show24HourFormat}
+                                
                             />
                         </div>
                     </Col>
@@ -889,6 +892,8 @@ const Scheduler: React.FC = () => {
             {/* Right sidebar */}
             <Col lg={collapse ? '1' : '2'} className="d-lg-block">
                     <SideNav
+                      show24HourFormat={show24HourFormat}
+                      setShow24HourFormat={setShow24HourFormat}
                         collapse={collapse}
                         setCollapse={setCollapse}
                         accordionExpanded={accordionExpanded}

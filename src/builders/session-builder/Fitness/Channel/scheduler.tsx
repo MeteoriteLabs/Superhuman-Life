@@ -38,6 +38,7 @@ const Scheduler: React.FC = () => {
     const [key, setKey] = useState('');
     const [collapse, setCollapse] = useState<boolean>(true);
     const [accordionExpanded, setAccordionExpanded] = useState(true);
+    const [show24HourFormat, setShow24HourFormat] = useState(false);
 
     const handleAccordionToggle = () => {
         setAccordionExpanded(!accordionExpanded);
@@ -686,56 +687,7 @@ const Scheduler: React.FC = () => {
                         <Button variant="dark">Collapse</Button>
                     </Col>
                 </Row>
-                {/* <Row className="mt-5 mb-3">
-                    <Col lg={11}>
-                        <div className="text-center">
-                            <input
-                                min={moment(channelStartDate).format('YYYY-MM-DD')}
-                                max={moment(channelEndDate).format('YYYY-MM-DD')}
-                                className="p-1 rounded shadow-sm mb-3"
-                                type="date"
-                                style={{
-                                    border: 'none',
-                                    backgroundColor: 'rgba(211,211,211,0.8)',
-                                    cursor: 'pointer'
-                                }}
-                                value={prevDate}
-                                onChange={(e) => handleDatePicked(e.target.value)}
-                            />{' '}
-                            <br />
-                            <span
-                                style={{
-                                    display: `${handlePrevDisplay(prevDate)}`,
-                                    cursor: 'pointer'
-                                }}
-                                onClick={() => {
-                                    handlePrevMonth(prevDate);
-                                }}
-                                className="rounded-circle"
-                            >
-                                <i className="fa fa-chevron-left mr-4"></i>
-                            </span>
-                            <span className="shadow-lg bg-white p-2 rounded-lg">
-                                <b>
-                                    {moment(prevDate).startOf('month').format('MMMM, YYYY')} -{' '}
-                                    {moment(nextDate).endOf('month').format('MMMM, YYYY')}
-                                </b>
-                            </span>
-                            <span
-                                style={{
-                                    display: `${handleNextDisplay(nextDate)}`,
-                                    cursor: 'pointer'
-                                }}
-                                onClick={() => {
-                                    handleNextMonth(nextDate);
-                                }}
-                            >
-                                <i className="fa fa-chevron-right ml-4"></i>
-                            </span>
-                        </div>
-                    </Col>
-                </Row>  */}
-
+                
                 {/* Scheduler */}
                 <Row>
                     <Col lg={11} className="pl-0 pr-0">
@@ -749,7 +701,7 @@ const Scheduler: React.FC = () => {
                                 schedulerSessions={schedulerSessions}
                                 clientIds={clientIds}
                                 classType={'Live Stream Channel'}
-                                programId={tagId}
+                                programId={tagId ? tagId : null}
                                 startDate={prevDate}
                                 handleFloatingActionProgramCallback={
                                     handleFloatingActionProgramCallback
@@ -761,6 +713,8 @@ const Scheduler: React.FC = () => {
                                 sessionFilter={sessionFilter}
                                 program={program}
                                 showRestDay={showRestDay}
+                                show24HourFormat={show24HourFormat}
+                                
                             />
                         </div>
                     </Col>
@@ -771,6 +725,8 @@ const Scheduler: React.FC = () => {
             {/* Right sidebar */}
             <Col lg={collapse ? '1' : '2'} className="d-lg-block">
                     <SideNav
+                      show24HourFormat={show24HourFormat}
+                      setShow24HourFormat={setShow24HourFormat}
                         collapse={collapse}
                         setCollapse={setCollapse}
                         accordionExpanded={accordionExpanded}

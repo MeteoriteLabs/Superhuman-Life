@@ -138,8 +138,6 @@ const Scheduler: React.FC = () => {
                     </span>
                 </div>
 
-                
-
                 {/* Cards for service details and movement sessions */}
                 <Row>
                     <Col lg={11}>
@@ -738,10 +736,11 @@ const Scheduler: React.FC = () => {
                                         ? 1
                                         : tag?.fitnesspackage?.duration
                                 }
-                                classType={'One-On-One'}
+                                classType={tag?.fitnesspackage?.fitness_package_type.type ===
+                                    'On-Demand PT'? 'On-Demand PT' : 'One-On-One'}
                                 restDays={tag?.sessions.filter((ses) => ses.type === 'restday')}
                                 schedulerSessions={schedulerSessions}
-                                programId={tagId}
+                                programId={tagId ? tagId : null}
                                 startDate={
                                     tag &&
                                     tag.client_packages &&

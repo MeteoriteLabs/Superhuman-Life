@@ -70,6 +70,7 @@ const Scheduler = () => {
     const [showCollapseView, setShowCollapseView] = useState(false);
     const [program, setProgram] = useState('none');
     const [sessionFilter, setSessionFilter] = useState('none');
+    const [show24HourFormat, setShow24HourFormat] = useState(false);
 
     const handleAccordionToggle = () => {
         setAccordionExpanded(!accordionExpanded);
@@ -835,242 +836,6 @@ const Scheduler = () => {
                             </Col>
                         </Row>
 
-                        {/* <Row>
-                    <Col
-                        lg={11}
-                        className="p-4 shadow-lg bg-white"
-                        style={{ borderRadius: '10px' }}
-                    >
-                        <Row>
-                            <Col lg={7}>
-                                <Row>
-                                    <h3 className="text-capitalize">{tag?.tag_name}</h3>
-                                </Row>
-                                <Row>
-                                    <span>{tag?.fitnesspackage.packagename}</span>
-                                    <div
-                                        className="ml-3 mt-1"
-                                        style={{ borderLeft: '1px solid black', height: '20px' }}
-                                    ></div>
-                                    <span className="ml-4">
-                                        {moment(groupEndDate).diff(moment(groupStartDate), 'days') +
-                                            ' days'}
-                                    </span>
-                                    <div
-                                        className="ml-3"
-                                        style={{ borderLeft: '1px solid black', height: '20px' }}
-                                    ></div>
-                                    <span className="ml-4">
-                                        {'Level: ' + tag.fitnesspackage.level}
-                                    </span>
-                                </Row>
-                                <Row>
-                                    <Col lg={4} className="pl-0 pr-0">
-                                        <Col
-                                            className="ml-1 mt-3"
-                                            style={{
-                                                border: '2px solid gray',
-                                                borderRadius: '10px'
-                                            }}
-                                        >
-                                            <Row>
-                                                <h5>
-                                                    <b>Clients</b>
-                                                </h5>
-                                            </Row>
-                                            <Col lg={{ offset: 2 }}>
-                                                <Row>
-                                                    <div className="text-center ml-2">
-                                                        {tag.client_packages[0]
-                                                            ?.users_permissions_user === 'N/A' ? (
-                                                            <div className="mb-0"></div>
-                                                        ) : (
-                                                            tag.client_packages
-                                                                .slice(0, 4)
-                                                                .map((item, index) => {
-                                                                    const postionLeft = 8;
-                                                                    return (
-                                                                        <div key={index}>
-                                                                            <img
-                                                                                key={index}
-                                                                                src="assets/image_placeholder.svg"
-                                                                                alt="profile-pic"
-                                                                                style={{
-                                                                                    width: '40px',
-                                                                                    height: '40px',
-                                                                                    borderRadius:
-                                                                                        '50%',
-                                                                                    left: `${
-                                                                                        postionLeft *
-                                                                                        index
-                                                                                    }%`
-                                                                                }}
-                                                                                className="position-absolute"
-                                                                            />
-                                                                        </div>
-                                                                    );
-                                                                })
-                                                        )}
-                                                        <Button
-                                                            onClick={() => {
-                                                                fitnessActionRef.current.TriggerForm(
-                                                                    {
-                                                                        id: tagId,
-                                                                        actionType: 'allClients',
-                                                                        type: 'Group Class'
-                                                                    }
-                                                                );
-                                                            }}
-                                                            style={{ marginLeft: '90px' }}
-                                                            variant="outline-primary"
-                                                        >
-                                                            All clients
-                                                        </Button>
-                                                    </div>
-                                                </Row>
-                                                <Row className="mt-1">
-                                                    <span className="text-capitalize">
-                                                        <b style={{ color: 'gray' }}>
-                                                            {tag.client_packages[0]?.length ===
-                                                            'N/A'
-                                                                ? 0
-                                                                : tag.client_packages[0]
-                                                                      ?.length}{' '}
-                                                            people
-                                                        </b>
-                                                    </span>
-                                                </Row>
-                                            </Col>
-                                        </Col>
-                                    </Col>
-                                    <Col lg={7} className="mt-4 ml-2">
-                                        <div className="mb-4">
-                                            <Row>
-                                                <Col lg={1}>
-                                                    <span>Date:</span>
-                                                </Col>
-                                                <Col lg={5} className="text-center">
-                                                    <span className="p-1 ml-2 scheduler-badge">
-                                                        {moment(groupStartDate).format(
-                                                            'DD MMMM, YY'
-                                                        )}
-                                                    </span>
-                                                </Col>
-                                                to
-                                                <Col lg={5} className="text-center">
-                                                    <span className="p-1 scheduler-badge">
-                                                        {moment(groupEndDate).format('DD MMMM, YY')}
-                                                    </span>
-                                                </Col>
-                                            </Row>
-                                        </div>
-                                    </Col>
-                                </Row>
-                            </Col>
-                            <Col lg={4} xs={11} style={{ borderLeft: '2px dashed gray' }}>
-                                <div
-                                    className="m-2 ml-2 text-center p-2"
-                                    style={{ border: '2px solid gray', borderRadius: '10px' }}
-                                >
-                                    <h4>
-                                        <b>Movement</b>
-                                    </h4>
-                                    <Row>
-                                        <Col>
-                                            <Row style={{ justifyContent: 'space-around' }}>
-                                                {(tag.fitnesspackage.mode === 'Online' ||
-                                                    tag.fitnesspackage.mode === 'Hybrid') && (
-                                                    <div>
-                                                        <img
-                                                            src="/assets/customgroup-Online.svg"
-                                                            alt="Group-Online"
-                                                        />
-                                                        <br />
-                                                        <span>
-                                                            {tag.fitnesspackage.grouponline} Group
-                                                        </span>
-                                                        <br />
-                                                        <span>
-                                                            <b>
-                                                                {handleTimeFormatting(
-                                                                    totalClasses[0],
-                                                                    tag.fitnesspackage.duration
-                                                                )}
-                                                            </b>
-                                                        </span>
-                                                    </div>
-                                                )}
-                                                {(tag.fitnesspackage.mode === 'Offline' ||
-                                                    tag.fitnesspackage.mode === 'Hybrid') && (
-                                                    <div>
-                                                        <img
-                                                            src="/assets/customgroup-Offline.svg"
-                                                            alt="GRoup-Offline"
-                                                        />
-                                                        <br />
-                                                        <span>
-                                                            {tag.fitnesspackage.groupoffline} Group
-                                                        </span>
-                                                        <br />
-                                                        <span>
-                                                            <b>
-                                                                {handleTimeFormatting(
-                                                                    totalClasses[1],
-                                                                    tag.fitnesspackage.duration
-                                                                )}
-                                                            </b>
-                                                        </span>
-                                                    </div>
-                                                )}
-                                            </Row>
-                                            <Row></Row>
-                                        </Col>
-                                    </Row>
-                                    <Row>
-                                        <Col>
-                                            <span>
-                                                <b style={{ color: 'gray' }}>Status: </b>{' '}
-                                                {handleTotalClasses(
-                                                    totalClasses,
-                                                    tag.fitnesspackage.duration
-                                                )}
-                                                /
-                                                {handleTimeFormatting(
-                                                    tag.fitnesspackage.duration,
-                                                    tag.fitnesspackage.duration
-                                                )}
-                                            </span>
-                                        </Col>
-                                        <Col>
-                                            <span>
-                                                <b style={{ color: 'gray' }}>Rest-Days: </b>
-                                                {tag.fitnesspackage.restdays} days
-                                            </span>
-                                        </Col>
-                                    </Row>
-                                </div>
-                            </Col>
-                            <Dropdown className="ml-5">
-                                <Dropdown.Toggle
-                                    id="dropdown-basic"
-                                    as="button"
-                                    className="actionButtonDropDown"
-                                >
-                                    <i className="fas fa-ellipsis-v"></i>
-                                </Dropdown.Toggle>
-                                <Dropdown.Menu>
-                                    <Dropdown.Item onClick={handleShowDatesModal}>
-                                        Edit Dates
-                                    </Dropdown.Item>
-                                    <Dropdown.Item onClick={handleShowTimeModal}>
-                                        Edit Time
-                                    </Dropdown.Item>
-                                </Dropdown.Menu>
-                            </Dropdown>
-                        </Row>
-                    </Col>
-                </Row> */}
-
                         {/* Scheduler manager based on dates */}
                         <Row className="mt-5 mb-2">
                             <Col lg={2}>
@@ -1122,10 +887,8 @@ const Scheduler = () => {
                                 <Form>
                                     <Form.Check
                                         type="switch"
-                                        id="custom-switch"
+                                        id="scheduler"
                                         label="Show Collapse view"
-                                        // checked={isSettingNotificationCreated ? true : false}
-                                        // disabled={isSettingNotificationCreated !== 0 ? true : false}
                                         onChange={() => {
                                             setShowCollapseView(!showCollapseView);
                                         }}
@@ -1136,7 +899,7 @@ const Scheduler = () => {
                         {showCollapseView ? (
                             <Row>
                                 <Col lg={11} className="pl-0 pr-0">
-                                    <CollapsibleScheduler
+                                    {/* <CollapsibleScheduler
                                         type="date"
                                         days={calculateDays(prevDate, nextDate)}
                                         callback={handleCallback}
@@ -1151,7 +914,7 @@ const Scheduler = () => {
                                         startDate={prevDate}
                                         duration={moment(nextDate).diff(moment(prevDate), 'days')}
                                         showRestDay={showRestDay}
-                                    />
+                                    /> */}
                                 </Col>
                             </Row>
                         ) : null}
@@ -1161,13 +924,14 @@ const Scheduler = () => {
                             <Col lg={11} className="pl-0 pr-0">
                                 <div className="mt-5">
                                     <SchedulerPage
+                                        show24HourFormat={show24HourFormat}
                                         type="date"
                                         days={calculateDays(prevDate, nextDate)}
                                         callback={handleCallback}
                                         restDays={tag?.sessions.filter(
                                             (ses) => ses.type === 'restday'
                                         )}
-                                        programId={tagId}
+                                        programId={tagId ? tagId : null}
                                         schedulerSessions={schedulerSessions}
                                         sessionIds={sessionIds}
                                         clientIds={clientIds}
@@ -1235,7 +999,7 @@ const Scheduler = () => {
                                             <TimePicker
                                                 showSecond={false}
                                                 minuteStep={15}
-                                                // onChange={(e) => {}}
+                                               
                                             />
                                         </Col>
                                     </Row>
@@ -1245,7 +1009,6 @@ const Scheduler = () => {
                                             <TimePicker
                                                 showSecond={false}
                                                 minuteStep={15}
-                                                // onChange={(e) => {}}
                                             />
                                         </Col>
                                     </Row>
@@ -1270,6 +1033,8 @@ const Scheduler = () => {
                 {/* Right sidebar */}
                 <Col lg={collapse ? '1' : '2'} className="d-lg-block">
                     <SideNav
+                        show24HourFormat={show24HourFormat}
+                        setShow24HourFormat={setShow24HourFormat}
                         collapse={collapse}
                         setCollapse={setCollapse}
                         accordionExpanded={accordionExpanded}
