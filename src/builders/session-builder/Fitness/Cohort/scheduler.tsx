@@ -19,7 +19,8 @@ import {
     Loader,
     DisplayImage,
     Calendar,
-    Button
+    Button,
+    SideNav
 } from './import';
 import '../../profilepicture.css';
 import '../Group/actionButton.css';
@@ -40,6 +41,17 @@ const Scheduler: React.FC = () => {
     const [cohortEndDate, setCohortEndDate] = useState('');
     // this is used for monthly toggle
     const [key, setKey] = useState('');
+    const [collapse, setCollapse] = useState<boolean>(true);
+    const [accordionExpanded, setAccordionExpanded] = useState(true);
+
+    const handleAccordionToggle = () => {
+        setAccordionExpanded(!accordionExpanded);
+    };
+
+    const [program, setProgram] = useState('none');
+    const [sessionFilter, setSessionFilter] = useState('none');
+    const [showRestDay, setShowRestDay] = useState<boolean>(false);
+
 
     const fitnessActionRef = useRef<any>(null);
 
@@ -82,10 +94,7 @@ const Scheduler: React.FC = () => {
     }
 
     function handleDatePicked(date: string) {
-        // setScheduleDate(moment(date).format('YYYY-MM-DD'));
-
         setPrevDate(moment(date).format('YYYY-MM-DD'));
-
         if (moment(date).add(30, 'days').isBefore(moment(cohortEndDate))) {
             setNextDate(moment(date).add(30, 'days').format('YYYY-MM-DD'));
         } else {
@@ -95,7 +104,6 @@ const Scheduler: React.FC = () => {
 
     function handleCurrentDate() {
         setPrevDate(moment().format('YYYY-MM-DD'));
-
         if (moment().add(30, 'days').isBefore(moment(cohortEndDate))) {
             setNextDate(moment().add(30, 'days').format('YYYY-MM-DD'));
         } else {
@@ -105,7 +113,6 @@ const Scheduler: React.FC = () => {
 
     function handleRangeDates(startDate: string, endDate: string) {
         setPrevDate(moment(startDate).format('YYYY-MM-DD'));
-
         if (moment(startDate).add(30, 'days').isBefore(moment(endDate))) {
             setNextDate(moment(startDate).add(30, 'days').format('YYYY-MM-DD'));
         } else {
@@ -115,7 +122,6 @@ const Scheduler: React.FC = () => {
 
     function handlePrevMonth(date: string) {
         setNextDate(moment(date).format('YYYY-MM-DD'));
-
         if (moment(date).subtract(30, 'days').isSameOrAfter(moment(cohortStartDate))) {
             setPrevDate(moment(date).subtract(30, 'days').format('YYYY-MM-DD'));
         } else {
@@ -125,7 +131,6 @@ const Scheduler: React.FC = () => {
 
     function handleNextMonth(date: string) {
         setPrevDate(moment(date).format('YYYY-MM-DD'));
-
         if (moment(date).add(30, 'days').isBefore(moment(cohortEndDate))) {
             setNextDate(moment(date).add(30, 'days').format('YYYY-MM-DD'));
         } else {
@@ -171,9 +176,30 @@ const Scheduler: React.FC = () => {
         mainQuery.refetch();
     }
 
+    function handleFloatingActionProgramCallback(event: any) {
+        setProgram(`${event}`);
+        handleCallback();
+    }
+
+    function handleFloatingActionProgramCallback2(event: any) {
+        setSessionFilter(`${event}`);
+        handleCallback();
+    }
+
+    function handleRefetch() {
+        handleCallback();
+    }
+
+    function handleShowRestDay() {
+        setShowRestDay(!showRestDay);
+    }
+
+
     if (!show) return <Loader msg="loading scheduler..." />;
     else
         return (
+            <Row noGutters className="bg-light  py-4 mb-5  min-vh-100">
+                <Col lg={collapse ? '11' : '10'} className="pr-2 pl-3 mb-5">
             <div className="col-lg-12">
                 <div className="mb-3">
                     <span style={{ fontSize: '30px' }}>
@@ -195,20 +221,21 @@ const Scheduler: React.FC = () => {
                                     onClick={() => {
                                         key === '' ? setKey('0') : setKey('');
                                     }}
+                                    style={{ background: '#343A40', color: '#fff' }}
                                 >
                                     <span className="d-inline-block">
                                         <b>{tag && tag.fitnesspackage?.packagename}</b>
                                     </span>
                                     <span className="d-inline-block btn float-right">
                                         {key === '0' ? (
-                                            <i className="fa fa-chevron-up d-flex justify-content-end" />
+                                            <i className="fa fa-chevron-up d-flex justify-content-end text-white" />
                                         ) : (
-                                            <i className="fa fa-chevron-down d-flex justify-content-end" />
+                                            <i className="fa fa-chevron-down d-flex justify-content-end text-white" />
                                         )}
                                     </span>
                                 </Accordion.Toggle>
                                 <Accordion.Collapse eventKey="0">
-                                    {/* Package details card */}
+                                    {/* Service details card */}
                                     <Card style={{ width: '100%' }}>
                                         <Card.Body>
                                             <Row>
@@ -240,19 +267,19 @@ const Scheduler: React.FC = () => {
                                                             <Dropdown.Menu>
                                                                 <Dropdown.Item
                                                                     key={2}
-                                                                    // onClick={() => updateAddress(currValue)}
+                                                                
                                                                 >
                                                                     Edit Program Name
                                                                 </Dropdown.Item>
                                                                 <Dropdown.Item
                                                                     key={2}
-                                                                    // onClick={() => updateAddress(currValue)}
+                                                                   
                                                                 >
                                                                     Reschedule
                                                                 </Dropdown.Item>
                                                                 <Dropdown.Item
                                                                     key={1}
-                                                                    // onClick={() => deleteUserAddress(currValue)}
+                                                                   
                                                                 >
                                                                     Send notification to subscribers
                                                                 </Dropdown.Item>
@@ -302,7 +329,7 @@ const Scheduler: React.FC = () => {
                                                     <Col>
                                                         <DisplayImage
                                                             imageName={
-                                                                'Photo_ID' in tag.client_packages &&
+                                                                tag && tag.client_packages &&
                                                                 tag.client_packages.length &&
                                                                 tag.client_packages[0]
                                                                     .users_permissions_user &&
@@ -344,6 +371,7 @@ const Scheduler: React.FC = () => {
                                     </Card>
                                 </Accordion.Collapse>
                             </Card>
+                           
                             <Card>
                                 <Accordion.Toggle
                                     as={Card.Header}
@@ -351,15 +379,16 @@ const Scheduler: React.FC = () => {
                                     onClick={() => {
                                         key === '' ? setKey('1') : setKey('');
                                     }}
+                                    style={{ background: '#343A40', color: '#fff' }}
                                 >
                                     <span className="d-inline-block">
                                         <b>Movement Sessions</b>
                                     </span>
                                     <span className="d-inline-block btn float-right">
                                         {key === '1' ? (
-                                            <i className="fa fa-chevron-up d-flex justify-content-end" />
+                                            <i className="fa fa-chevron-up d-flex justify-content-end text-white" />
                                         ) : (
-                                            <i className="fa fa-chevron-down d-flex justify-content-end" />
+                                            <i className="fa fa-chevron-down d-flex justify-content-end text-white" />
                                         )}
                                     </span>
                                 </Accordion.Toggle>
@@ -590,6 +619,7 @@ const Scheduler: React.FC = () => {
                 </Row>
                 {/* Scheduler manager based on dates */}
                 <Row className="mt-5 mb-2">
+                    {/* Today Button */}
                     <Col lg={2}>
                         {moment().isBefore(moment(cohortEndDate)) ? (
                             <Button
@@ -602,6 +632,7 @@ const Scheduler: React.FC = () => {
                             </Button>
                         ) : null}
                     </Col>
+                    {/* Previous and next button */}
                     <Col lg={8}>
                         <div className="text-center">
                             <input
@@ -630,7 +661,7 @@ const Scheduler: React.FC = () => {
                             >
                                 <i className="fa fa-chevron-left mr-4"></i>
                             </span>
-                            <span className="shadow-lg bg-white p-2 rounded-lg">
+                            <span className="shadow-lg bg-dark text-white p-2 rounded-lg">
                                 <b>
                                     {moment(prevDate).startOf('month').format('MMMM, YYYY')} -{' '}
                                     {moment(nextDate).endOf('month').format('MMMM, YYYY')}
@@ -649,6 +680,7 @@ const Scheduler: React.FC = () => {
                             </span>
                         </div>
                     </Col>
+                    {/* Collapse view Button */}
                     <Col lg={2}>
                         <Button variant="dark">Collapse</Button>
                     </Col>
@@ -707,12 +739,46 @@ const Scheduler: React.FC = () => {
                                 classType={'Cohort'}
                                 programId={tagId}
                                 startDate={tag?.fitnesspackage?.Start_date}
+                                showRestDay={showRestDay}
+                                handleFloatingActionProgramCallback={
+                                    handleFloatingActionProgramCallback
+                                }
+                                handleFloatingActionProgramCallback2={
+                                    handleFloatingActionProgramCallback2
+                                }
+                                handleRefetch={handleRefetch}
+                                sessionFilter={sessionFilter}
+                                program={program}
                             />
                         </div>
                     </Col>
                     <FitnessAction ref={fitnessActionRef} callback={() => mainQuery} />
                 </Row>
             </div>
+            </Col>
+            {/* Right sidebar */}
+            <Col lg={collapse ? '1' : '2'} className="d-lg-block">
+                    <SideNav
+                        collapse={collapse}
+                        setCollapse={setCollapse}
+                        accordionExpanded={accordionExpanded}
+                        onAccordionToggle={handleAccordionToggle}
+                        clientIds={clientIds}
+                        sessionIds={sessionIds}
+                        startDate={tag?.fitnesspackage?.Start_date}
+                        duration={calculateDuration(
+                            tag?.fitnesspackage?.Start_date,
+                            tag?.fitnesspackage?.End_date
+                        )}
+                        callback={handleFloatingActionProgramCallback}
+                        callback2={handleFloatingActionProgramCallback2}
+                        callback3={handleRefetch}
+                        restDayCallback={handleShowRestDay}
+                        showRestDayAction={showRestDay}
+                    />
+                </Col>
+
+            </Row>
         );
 };
 

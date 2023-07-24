@@ -14,7 +14,7 @@ import {
     Form,
     Spinner
 } from 'react-bootstrap';
-import './styles.css';
+// import './CollapsibleStyle.css';
 import {
     FETCH_WORKOUT,
     FETCH_ACTIVITY,
@@ -44,9 +44,8 @@ import AuthContext from 'context/auth-context';
 import { AvailabilityCheck } from './availabilityCheck';
 import SapienVideoPlayer from 'components/customWidgets/SpaienVideoPlayer';
 import Toaster from 'components/Toaster';
-// import SideNav from '../program-template/SchedulerSideBar';
 
-const Schedular = (props: any) => {
+const CollapsibleScheduler = (props: any) => {
     const auth = useContext(AuthContext);
     const [show, setShow] = useState<boolean>(false);
     const [showModal, setShowModal] = useState<boolean>(false);
@@ -58,12 +57,12 @@ const Schedular = (props: any) => {
     const [event, setEvent] = useState<any>({});
     const [arr, setArr] = useState<any[]>([]);
     const [arr2, setarr2] = useState<any>({});
-    // const [program, setProgram] = useState('none');
-    // const [sessionFilter, setSessionFilter] = useState('none');
+    const [program, setProgram] = useState('none');
+    const [sessionFilter, setSessionFilter] = useState('none');
     const [mode, setMode] = useState('');
     const [tag, setTag] = useState('');
     const program_id = window.location.pathname.split('/').pop();
-    const schedulerDay: Record<string, unknown> = require('./json/scheduler-day.json');
+    const schedulerDay: Record<string,unknown> = require('./json/scheduler-day.json');
     const [changeMakerAvailability, setChangeMakerAvailability] = useState<any>([]);
     const [sessionIds, setSessionsIds] = useState<any>(props.sessionIds);
     const [templateSessionsIds, setTemplateSessionsIds] = useState<any>([]);
@@ -562,15 +561,15 @@ const Schedular = (props: any) => {
         event.import === 'importedEvent' ? setOnDragAndDrop(false) : setOnDragAndDrop(true);
     }
 
-    // function handleFloatingActionProgramCallback(event: any) {
-    //     setProgram(`${event}`);
-    //     props.callback();
-    // }
+    function handleFloatingActionProgramCallback(event: any) {
+        setProgram(`${event}`);
+        props.callback();
+    }
 
-    // function handleFloatingActionProgramCallback2(event: any) {
-    //     setSessionFilter(`${event}`);
-    //     props.callback();
-    // }
+    function handleFloatingActionProgramCallback2(event: any) {
+        setSessionFilter(`${event}`);
+        props.callback();
+    }
 
     // this handles the displaying of rest days on the scheduler
     function handleRestDays(val: any) {
@@ -1665,7 +1664,9 @@ const Schedular = (props: any) => {
                         <div
                             className="cell"
                             style={{
-                                backgroundColor: `${handleRestDays(index + 1)}`,
+                                color: 'white',
+                                        backgroundColor: '#343A40',
+                                // backgroundColor: `${handleRestDays(index + 1)}`,
                                 minHeight: '70px',
                                 paddingTop: '10px'
                             }}
@@ -1678,7 +1679,11 @@ const Schedular = (props: any) => {
                             </div>
                             <div
                                 className="event-date text-center mt-1"
-                                style={{ backgroundColor: `${handleRestDays(index + 1)}` }}
+                                style={{ 
+                                color: 'white',
+                                        backgroundColor: '#343A40',
+                                    // `${handleRestDays(index + 1)}` 
+                                }}
                             >
                                 <span style={{ fontSize: '14px' }}>
                                     {moment(val).format('Do, MMM YY')}
@@ -1686,7 +1691,10 @@ const Schedular = (props: any) => {
                             </div>
                             <div
                                 className="event-date text-center"
-                                style={{ backgroundColor: `${handleRestDays(index + 1)}` }}
+                                style={{ color: 'white',
+                                backgroundColor: '#343A40'
+                                    // `${handleRestDays(index + 1)}` 
+                                }}
                             >
                                 <Badge
                                     variant="success"
@@ -1714,7 +1722,9 @@ const Schedular = (props: any) => {
                         key={index}
                         className="cell"
                         style={{
-                            backgroundColor: `${handleRestDays(val)}`,
+                            color: 'white',
+                                        backgroundColor: '#343A40',
+                            // backgroundColor: `${handleRestDays(val)}`,
                             minHeight: '70px'
                         }}
                     >{`Day ${val}`}</div>
@@ -1733,7 +1743,9 @@ const Schedular = (props: any) => {
                             key={index}
                             className="cell"
                             style={{
-                                backgroundColor: `${handleRestDays(index + 1)}`,
+                                color: 'white',
+                                        backgroundColor: '#343A40',
+                                // backgroundColor: `${handleRestDays(index + 1)}`,
                                 minHeight: '70px',
                                 paddingTop: '10px'
                             }}
@@ -1776,7 +1788,9 @@ const Schedular = (props: any) => {
                         key={index}
                         className="cell"
                         style={{
-                            backgroundColor: `${handleRestDays(val)}`,
+                            color: 'white',
+                                        backgroundColor: '#343A40',
+                            // backgroundColor: `${handleRestDays(val)}`,
                             minHeight: '70px'
                         }}
                     >
@@ -1832,89 +1846,62 @@ const Schedular = (props: any) => {
         });
     }
 
-    // function handleRefetch() {
-    //     props.callback();
-    // }
+    function handleRefetch() {
+        props.callback();
+    }
 
-    // function handleShowRestDay() {
-    //     setShowRestDay(!showRestDay);
-    // }
-
-    const handle12HourFormat = (hours: number) => {
-        const unit = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12 || 12;
-
-        const finalTime = hours + unit;
-        return finalTime;
-    };
-
-    const handleCovertTimeFormat = (hours: number, minutes: number) => {
-        const unit = hours >= 12 ? 'pm' : 'am';
-        hours = hours % 12 || 12;
-        const finalTime = `${hours} : ${minutes < 10 ? `0${minutes}`:minutes} ${unit}`;
-        return finalTime; 
-    };
+    function handleShowRestDay() {
+        setShowRestDay(!showRestDay);
+    }
 
     if (!show) {
         return (
-            <div className="text-center">
+               <div className="text-center">
                 <Spinner animation="border" variant="secondary" />
                 <br />
-                <div className="mt-3" style={{ font: 'small' }}>
-                    Loading Schedule...
+                <div className="mt-3" style={{ fontSize: 'small' }}>
+                    Loading schedule...
                 </div>
             </div>
         );
     } else
         return (
             <>
-                {/* Floating Action Buttons */}
-                {/* {props?.clientSchedular !== 'client' && (
-                    <FloatingButton
-                        clientIds={props.clientIds}
-                        sessionIds={props.sessionIds}
-                        startDate={props.startDate}
-                        duration={props.days}
-                        callback={handleFloatingActionProgramCallback}
-                        callback2={handleFloatingActionProgramCallback2}
-                        callback3={handleRefetch}
-                        restDayCallback={handleShowRestDay}
-                        showRestDayAction={showRestDay}
-                    />
-                )} */}
+             
                 {/* this program list is only for fitnesstemplate */}
                 <div
                     className="mb-5 shadow-lg p-3"
-                    style={{ display: `${props.program}`, borderRadius: '20px' }}
+                    style={{ display: `${program}`, borderRadius: '20px' }}
                 >
                     <ProgramList
                         sessionIds={props.sessionIds}
                         dayType={'programs'}
-                        callback={props.handleFloatingActionProgramCallback}
+                        callback={handleFloatingActionProgramCallback}
                     />
                 </div>
 
                 <div
                     className="mb-5 shadow-lg p-3"
-                    style={{ display: `${props.sessionFilter}`, borderRadius: '20px' }}
+                    style={{ display: `${sessionFilter}`, borderRadius: '20px' }}
                 >
                     <SessionList
                         duration={props?.duration}
                         sessionIds={props.sessionIds}
                         startDate={props.startDate}
                         days={dates}
-                        callback2={props.handleFloatingActionProgramCallback2}
+                        callback2={handleFloatingActionProgramCallback2}
                     />
                 </div>
 
                 <div className="wrapper shadow-lg">
                     <div className="schedular">
-                        {props.showRestDay && (
+                        {showRestDay && (
                             <div className="day-row">
                                 <div
                                     className="cell"
                                     style={{
-                                        backgroundColor: 'white',
+                                        color: 'white',
+                                        backgroundColor: '#343A40',
                                         position: 'relative',
                                         minHeight: `${props.type === 'date' ? '70px' : '70px'}`
                                     }}
@@ -1926,7 +1913,8 @@ const Schedular = (props: any) => {
                             <div
                                 className="cell"
                                 style={{
-                                    backgroundColor: 'white',
+                                    color: 'white',
+                                    backgroundColor: '#343A40',
                                     position: 'relative',
                                     minHeight: `${props.type === 'date' ? '70px' : '70px'}`
                                 }}
@@ -1937,7 +1925,7 @@ const Schedular = (props: any) => {
                             return (
                                 <div
                                     className="time-row"
-                                    style={{ backgroundColor: 'white' }}
+                                    style={{ backgroundColor: '#343A40', color: 'white' }}
                                     key={index}
                                 >
                                     <div className="cell" style={{ position: 'relative' }}>
@@ -1948,15 +1936,16 @@ const Schedular = (props: any) => {
                                                 top: '-8px',
                                                 fontSize: '14px',
                                                 width: '90%',
-                                                backgroundColor: 'white',
+                                                color: "white",
+                                                backgroundColor: '#343A40',
                                                 left: '0px',
                                                 textAlign: 'right',
                                                 paddingRight: '10px',
-                                                zIndex: 999
+                                                zIndex: 999,   
                                             }}
                                         >
-                                            {handle12HourFormat(h)}
-                                        </span>
+                                            {/* {h<10 ? `0${h}:00`: `${h}:00`} */}
+                                            </span>
                                     </div>
                                     {days.map((d, index) => {
                                         return (
@@ -1970,9 +1959,11 @@ const Schedular = (props: any) => {
                                                             data-hour={h}
                                                             data-min={m}
                                                             style={{
-                                                                backgroundColor: `${handleRestDays(
-                                                                    d
-                                                                )}`
+                                                                backgroundColor: "#343A40",
+                                                                color: "#fff"
+                                                                // `${handleRestDays(
+                                                                //     d
+                                                                // )}`
                                                             }}
                                                             onDrop={(e) => {
                                                                 changedEvent = JSON.parse(
@@ -2046,8 +2037,10 @@ const Schedular = (props: any) => {
                                                                                         ) /
                                                                                             60
                                                                                     }px`,
-                                                                                    backgroundColor:
-                                                                                        'rgb(135,206,235)',
+                                                                                    backgroundColor: '#d98bf7',
+                                                                                    color: "#000",
+                                                                                
+                                                                                        // background:'rgb(135,206,235)',
                                                                                     width: `${
                                                                                         val.type ===
                                                                                         'restday'
@@ -2107,25 +2100,22 @@ const Schedular = (props: any) => {
                                                                                         {val.type ===
                                                                                         'restday'
                                                                                             ? null
-                                                                                            : 
-                                                                                            // (val.hour ===
-                                                                                            //   '0'
-                                                                                            //       ? '00'
-                                                                                            //       : val.hour) +
-                                                                                            //   ':' +
-                                                                                            //   (val.min ===
-                                                                                            //   '0'
-                                                                                            //       ? '00'
-                                                                                            //       : val.min) +
-                                                                                            //   ' - ' +
-                                                                                            //   val.endHour +
-                                                                                            //   ':' +
-                                                                                            //   (val.endMin.toString() ===
-                                                                                            //   '0'
-                                                                                            //       ? '00'
-                                                                                            //       : val.endMin)
-                                                                                            `${handleCovertTimeFormat(Number(val.hour), Number(val.min))} - ${handleCovertTimeFormat(Number(val.endHour), Number(val.endMin))}`
-                                                                                        }
+                                                                                            : (val.hour ===
+                                                                                              '0'
+                                                                                                  ? '00'
+                                                                                                  : val.hour) +
+                                                                                              ':' +
+                                                                                              (val.min ===
+                                                                                              '0'
+                                                                                                  ? '00'
+                                                                                                  : val.min) +
+                                                                                              ' - ' +
+                                                                                              val.endHour +
+                                                                                              ':' +
+                                                                                              (val.endMin.toString() ===
+                                                                                              '0'
+                                                                                                  ? '00'
+                                                                                                  : val.endMin)}
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -2143,7 +2133,6 @@ const Schedular = (props: any) => {
                         })}
                     </div>
                 </div>
-
                 {/* Floating Action Buttons */}
                 {/* {props?.clientSchedular !== 'client' && (
                     <FloatingButton
@@ -2158,7 +2147,6 @@ const Schedular = (props: any) => {
                         showRestDayAction={showRestDay}
                     />
                 )} */}
-
                 {
                     <Modal
                         show={showModal}
@@ -2211,7 +2199,7 @@ const Schedular = (props: any) => {
                                         >
                                             <i
                                                 className="fas fa-copy fa-lg"
-                                                onClick={() => {
+                                                onClick={(e) => {
                                                     handleClose();
                                                     setDuplicate(true);
                                                 }}
@@ -2358,11 +2346,7 @@ const Schedular = (props: any) => {
                                     </Col>
                                 </Row>
                             )}
-                            {/* <Row className="pt-3 align-items-center">
-                            <Col>
-                                <TimeField eventType="edit" onChange={handleStart} endTime={event.endHour + ':' + event.endMin} startTime={event.hour + ':' + event.min} disabled={edit}/>
-                            </Col>
-                        </Row> */}
+                           
                             {event.type === 'workout' && (
                                 <Tabs
                                     defaultActiveKey="agenda"
@@ -2996,4 +2980,4 @@ const Schedular = (props: any) => {
         );
 };
 
-export default Schedular;
+export default CollapsibleScheduler;

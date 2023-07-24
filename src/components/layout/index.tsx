@@ -57,8 +57,8 @@ export default function Layout({
                                 <Col lg={collapse ? '1' : '2'} className="d-none d-lg-block">
                                     <SideNav collapse={collapse} setCollapse={setCollapse} />
                                 </Col>
-                                <Col lg={collapse ? '11' : '10'} className="pr-2 pl-3 mb-5">
-                                    <hr />
+                                <Col lg={collapse ? '11' : '10'} className="pr-2 pl-3 mb-5 mt-3">
+                    
                                     {children}
                                 </Col>
                             </Row>
