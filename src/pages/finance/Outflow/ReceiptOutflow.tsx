@@ -23,7 +23,6 @@ function Receipt(): JSX.Element {
         onCompleted: (data) => {
             const flattenReceiptData = flattenObj({ ...data.transaction });
             setReceiptData(flattenReceiptData);
-            // console.log("setReceiptData" , flattenReceiptData);
             fethclientPackages({
                 variables: { id: transactionId }
             });
@@ -36,7 +35,6 @@ function Receipt(): JSX.Element {
     const [fetchChangeMakerQuery] = useLazyQuery(FETCH_CHANGEMAKER, {
         onCompleted: (data) => {
             const flattenUserProfileData = flattenObj({ ...data.usersPermissionsUser });
-            // console.log("flattenUserProfileData" , flattenUserProfileData);
             setUserProfile(flattenUserProfileData);
         }
     });

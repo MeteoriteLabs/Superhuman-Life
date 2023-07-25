@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Table, Button } from 'react-bootstrap';
 import { useLazyQuery, useQuery } from '@apollo/client';
@@ -13,7 +12,13 @@ function Receipt(): JSX.Element {
     const [userProfile, setUserProfile] = useState<any>([]);
     const [clientPackages, setClientPackages] = useState<any>([]);
     const [fitnessPackages, setFitnessPackages] = useState<any>([]);
-    const [quota, setQuota] = useState<any>();
+    const [fitnessPackagesType, setFitnessPackagesType] = useState<any>([]);
+    const [quota, setQuota] = useState<any>({
+        Type: '',
+        Online: '',
+        Offline: '',
+        Recorded: ''
+    });
 
     const getIDFromURL = () => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -26,7 +31,6 @@ function Receipt(): JSX.Element {
         onCompleted: (data) => {
             const flattenReceiptData = flattenObj({ ...data.transaction });
             setReceiptData(flattenReceiptData);
-            // console.log('setReceiptData', flattenReceiptData);
             fethclientPackages({
                 variables: { id: transactionId }
             });
@@ -46,7 +50,6 @@ function Receipt(): JSX.Element {
     const [fetchChangeMakerQuery] = useLazyQuery(FETCH_CHANGEMAKER, {
         onCompleted: (data) => {
             const flattenUserProfileData = flattenObj({ ...data.usersPermissionsUser });
-            // console.log('flattenUserProfileData', flattenUserProfileData);
             setUserProfile(flattenUserProfileData);
         }
     });
@@ -55,54 +58,68 @@ function Receipt(): JSX.Element {
             const flattenClientPackages = flattenObj({ ...data.clientPackage });
             setClientPackages(flattenClientPackages);
             setFitnessPackages(flattenClientPackages.fitnesspackages[0]);
+            setFitnessPackagesType(
+                flattenClientPackages.fitnesspackages[0].fitness_package_type.type
+            );
 
-            if (
-                flattenClientPackages.fitnesspackages[0].fitness_package_type.type ==
-                'Classic Class'
-            ) {
-                setQuota(flattenClientPackages.fitnesspackages[0].recordedclasses);
-            } else if (
-                flattenClientPackages.fitnesspackages[0].fitness_package_type.type ==
-                'Live Stream Channel'
-            ) {
-                setQuota('Live Streaming');
-            } else if (
-                flattenClientPackages.fitnesspackages[0].fitness_package_type.type == 'One-On-One'
-            ) {
-                setQuota(
-                    'Online-' +
-                        flattenClientPackages.fitnesspackages[0].ptonline +
-                        ' / ' +
-                        'Offline-' +
-                        flattenClientPackages.fitnesspackages[0].ptoffline
-                );
-            } else if (
-                flattenClientPackages.fitnesspackages[0].fitness_package_type.type == 'On-Demand PT'
-            ) {
-                setQuota('On-Demand PT');
-            } else if (
-                flattenClientPackages.fitnesspackages[0].fitness_package_type.type == 'Group Class'
-            ) {
-                setQuota(
-                    'Online-' +
-                        flattenClientPackages.fitnesspackages[0].grouponline +
-                        ' / ' +
-                        'Offline-' +
-                        flattenClientPackages.fitnesspackages[0].groupoffline
-                );
-            } else if (
-                flattenClientPackages.fitnesspackages[0].fitness_package_type.type == 'Event'
-            ) {
-                setQuota('Event');
-            } else if (
-                flattenClientPackages.fitnesspackages[0].fitness_package_type.type ==
-                'Custom Fitness'
-            ) {
-                setQuota('Custom Fitness');
-            } else if (
-                flattenClientPackages.fitnesspackages[0].fitness_package_type.type == 'Cohort'
-            ) {
-                setQuota('Cohort');
+            const packageType = flattenClientPackages.fitnesspackages[0].fitness_package_type.type;
+
+            if (packageType === 'Classic Class') {
+                setQuota({
+                    Type: 'Classic Class',
+                    Online: null,
+                    Offline: null,
+                    Recorded: flattenClientPackages.fitnesspackages[0].recordedclasses
+                });
+            } else if (packageType === 'Live Stream Channel') {
+                setQuota({
+                    Type: 'Live Stream Channel',
+                    Online: null,
+                    Offline: null,
+                    Recorded: null
+                });
+            } else if (packageType === 'One-On-One') {
+                setQuota({
+                    Type: 'One-On-One',
+                    Online: flattenClientPackages.fitnesspackages[0].ptonline,
+                    Offline: flattenClientPackages.fitnesspackages[0].ptoffline,
+                    Recorded: null
+                });
+            } else if (packageType === 'On-Demand PT') {
+                setQuota({
+                    Type: 'On-Demand PT',
+                    Online: null,
+                    Offline: null,
+                    Recorded: null
+                });
+            } else if (packageType === 'Group Class') {
+                setQuota({
+                    Type: 'Group Class',
+                    Online: flattenClientPackages.fitnesspackages[0].grouponline,
+                    Offline: flattenClientPackages.fitnesspackages[0].groupoffline,
+                    Recorded: null
+                });
+            } else if (packageType === 'Event') {
+                setQuota({
+                    Type: 'Event',
+                    Online: null,
+                    Offline: null,
+                    Recorded: null
+                });
+            } else if (packageType === 'Custom Fitness') {
+                setQuota({
+                    Type: 'Custom Fitness',
+                    Online: null,
+                    Offline: null,
+                    Recorded: null
+                });
+            } else if (packageType === 'Cohort') {
+                setQuota({
+                    Type: 'Cohort',
+                    Online: null,
+                    Offline: null,
+                    Recorded: null
+                });
             }
         }
     });
@@ -219,11 +236,28 @@ function Receipt(): JSX.Element {
                             ) : (
                                 <th>Duration</th>
                             )}
+                            {receiptData.SenderType === 'Changemaker' ? null : (
+                                <th>Session Type</th>
+                            )}
 
                             {receiptData.SenderType === 'Changemaker' ? (
                                 <th>Department</th>
+                            ) : quota.Online !== null &&
+                              quota.Online !== 0 &&
+                              quota.Offline !== null &&
+                              quota.Offline !== 0 ? (
+                                <>
+                                    <th>No of Online Session</th>
+                                    <th>No of Offline Session</th>
+                                </>
+                            ) : quota.Online !== null && quota.Online !== 0 ? (
+                                <th>No of Online Session</th>
+                            ) : quota.Offline !== null && quota.Offline !== 0 ? (
+                                <th>No of Offline Session</th>
+                            ) : quota.Recorded !== null && quota.Recorded !== 0 ? (
+                                <th>No of Recorded Session</th>
                             ) : (
-                                <th>Number of Session</th>
+                                <th>No of Session</th>
                             )}
 
                             <th>Type of Payment</th>
@@ -255,11 +289,34 @@ function Receipt(): JSX.Element {
                                         : null}
                                 </td>
                             )}
+                            {receiptData.SenderType === 'Changemaker' ? (
+                                null
+                            ) : (
+                                <td>
+                                   {fitnessPackagesType}
+                                </td>
+                            )}
 
                             {receiptData.SenderType === 'Changemaker' ? (
                                 <td>N/A</td>
                             ) : (
-                                <td>{quota ? quota : null}</td>
+                                quota.Online !== null &&
+                            quota.Online !== 0 &&
+                            quota.Offline !== null &&
+                            quota.Offline !== 0 ? (
+                                <>
+                                    <td>{quota.Online}</td>
+                                    <td>{quota.Offline}</td>
+                                </>
+                            ) : quota.Online !== null && quota.Online !== 0 ? (
+                                <td>{quota.Online}</td>
+                            ) : quota.Offline !== null && quota.Offline !== 0 ? (
+                                <td>{quota.Offline}</td>
+                            ) : quota.Recorded !== null && quota.Recorded !== 0 ? (
+                                <td>{quota.Recorded}</td>
+                            ) : (
+                                <td>No Session Data</td>
+                            )
                             )}
 
                             <td>
@@ -285,7 +342,27 @@ function Receipt(): JSX.Element {
                             </td>
                             <td></td>
                             <td></td>
+                            {receiptData.SenderType === 'Client' ?(
+                            quota.Online !== null &&
+                            quota.Online !== 0 &&
+                            quota.Offline !== null &&
+                            quota.Offline !== 0 ? (
+                                <>
+                                    <td></td>
+                                    <td></td>
+                                </>
+                            ) : quota.Online !== null && quota.Online !== 0 ? (
+                                <td></td>
+                            ) : quota.Offline !== null && quota.Offline !== 0 ? (
+                                <td></td>
+                            ) : quota.Recorded !== null && quota.Recorded !== 0 ? (
+                                <td></td>
+                            ) : (
+                                <td></td>
+                            ) 
+                            ) : null}
                             <td></td>
+                         
 
                             <td>
                                 <b>
