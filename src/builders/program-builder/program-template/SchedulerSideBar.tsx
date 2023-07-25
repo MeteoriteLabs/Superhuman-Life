@@ -22,7 +22,8 @@ export default function SideNav({
     accordionExpanded,
     onAccordionToggle,
     show24HourFormat,
-    setShow24HourFormat
+    setShow24HourFormat,
+    handleScrollScheduler
 }: {
     collapse: boolean;
     setCollapse: (arg: boolean) => void;
@@ -38,6 +39,7 @@ export default function SideNav({
     accordionExpanded: any;
     onAccordionToggle: any;
     show24HourFormat: boolean;
+    handleScrollScheduler: () => void;
     setShow24HourFormat: (parmas: boolean) => void;
 }): JSX.Element {
     const createEditWorkoutTemplateComponent = useRef<any>(null);
@@ -171,6 +173,7 @@ export default function SideNav({
                                         <Nav.Link
                                             className="text-white"
                                             onClick={() => {
+                                                handleScrollScheduler();
                                                 createEditNewWorkoutComponent.current.TriggerForm({
                                                     id: null,
                                                     type: 'create'
@@ -182,6 +185,7 @@ export default function SideNav({
                                         <Nav.Link
                                             className="text-white"
                                             onClick={() => {
+                                                handleScrollScheduler();
                                                 createEditNewActivityComponent.current.TriggerForm({
                                                     id: null,
                                                     type: 'create'
@@ -234,6 +238,7 @@ export default function SideNav({
                                         <Nav.Link
                                             className="text-white"
                                             onClick={() => {
+                                                handleScrollScheduler();
                                                 createEditWorkoutTemplateComponent.current.TriggerForm(
                                                     {
                                                         id: null,
@@ -405,6 +410,7 @@ export default function SideNav({
                                         className='text-white'
                                         onChange={() => {
                                             setShow24HourFormat(!show24HourFormat)
+                                            handleScrollScheduler();
                                         }}
                                     />
                                      

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useRef, useContext, forwardRef } from 'react';
 import {
     Modal,
     Button,
@@ -46,7 +46,7 @@ import SapienVideoPlayer from 'components/customWidgets/SpaienVideoPlayer';
 import Toaster from 'components/Toaster';
 // import SideNav from '../program-template/SchedulerSideBar';
 
-const Schedular = (props: any) => { 
+const Schedular = (props: any, ref) => { 
     const auth = useContext(AuthContext);
     const [show, setShow] = useState<boolean>(false);
     const [showModal, setShowModal] = useState<boolean>(false);
@@ -1591,6 +1591,7 @@ const Schedular = (props: any) => {
             props.callback();
         }
     });
+
     const [createRestDay] = useMutation(CREATE_REST_DAY, {
         onCompleted: (r: any) => {
             const values = [...props.sessionIds];
@@ -1867,7 +1868,7 @@ const Schedular = (props: any) => {
         );
     } else
         return (
-            <>
+            <div  ref={ref}>
                 {/* Floating Action Buttons */}
                 {/* {props?.clientSchedular !== 'client' && (
                     <FloatingButton
@@ -1886,6 +1887,7 @@ const Schedular = (props: any) => {
                 <div
                     className="mb-5 shadow-lg p-3"
                     style={{ display: `${props.program}`, borderRadius: '20px' }}
+                   
                 >
                     <ProgramList
                         sessionIds={props.sessionIds}
@@ -2995,8 +2997,8 @@ const Schedular = (props: any) => {
                         msg="Schedule has been updated successfully"
                     />
                 )}
-            </>
+            </div>
         );
 };
 
-export default Schedular;
+export default forwardRef(Schedular);
