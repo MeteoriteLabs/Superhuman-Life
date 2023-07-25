@@ -44,6 +44,7 @@ function Receipt(): JSX.Element {
         onCompleted: (data) => {
             const flattenClientPackages = flattenObj({ ...data.clientPackage });
             setClientPackages(flattenClientPackages);
+            // console.log('flattenClientPackages', flattenClientPackages);
             setFitnessPackages(flattenClientPackages.fitnesspackages[0]);
 
             if (
@@ -59,7 +60,13 @@ function Receipt(): JSX.Element {
             } else if (
                 flattenClientPackages.fitnesspackages[0].fitness_package_type.type == 'One-On-One'
             ) {
-                setQuota('One-On-One');
+                setQuota(
+                    'Online-' +
+                        flattenClientPackages.fitnesspackages[0].ptonline +
+                        ' / ' +
+                        'Offline-' +
+                        flattenClientPackages.fitnesspackages[0].ptoffline
+                );
             } else if (
                 flattenClientPackages.fitnesspackages[0].fitness_package_type.type == 'On-Demand PT'
             ) {
@@ -67,7 +74,13 @@ function Receipt(): JSX.Element {
             } else if (
                 flattenClientPackages.fitnesspackages[0].fitness_package_type.type == 'Group Class'
             ) {
-                setQuota(flattenClientPackages.fitnesspackages[0].grouponline);
+                setQuota(
+                    'Online-'+
+                        flattenClientPackages.fitnesspackages[0].grouponline +
+                        ' / ' +
+                        'Offline-' +
+                        flattenClientPackages.fitnesspackages[0].groupoffline
+                );
             } else if (
                 flattenClientPackages.fitnesspackages[0].fitness_package_type.type == 'Event'
             ) {
@@ -167,7 +180,7 @@ function Receipt(): JSX.Element {
                         <tr>
                             <th>Service name</th>
                             <th>Duration</th>
-                            <th>Quota</th>
+                            <th>Number of Session</th>
                             <th>Type of payment</th>
                             <th>Amount</th>
                         </tr>

@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Table, Button } from 'react-bootstrap';
 import { useLazyQuery, useQuery } from '@apollo/client';
@@ -11,6 +12,8 @@ function Receipt(): JSX.Element {
     const [receiptData, setReceiptData] = useState<any>([]);
     const [userProfile, setUserProfile] = useState<any>([]);
     const [clientPackages, setClientPackages] = useState<any>([]);
+    const [fitnessPackages, setFitnessPackages] = useState<any>([]);
+    const [quota, setQuota] = useState<any>();
 
     const getIDFromURL = () => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -51,6 +54,56 @@ function Receipt(): JSX.Element {
         onCompleted: (data) => {
             const flattenClientPackages = flattenObj({ ...data.clientPackage });
             setClientPackages(flattenClientPackages);
+            setFitnessPackages(flattenClientPackages.fitnesspackages[0]);
+
+            if (
+                flattenClientPackages.fitnesspackages[0].fitness_package_type.type ==
+                'Classic Class'
+            ) {
+                setQuota(flattenClientPackages.fitnesspackages[0].recordedclasses);
+            } else if (
+                flattenClientPackages.fitnesspackages[0].fitness_package_type.type ==
+                'Live Stream Channel'
+            ) {
+                setQuota('Live Streaming');
+            } else if (
+                flattenClientPackages.fitnesspackages[0].fitness_package_type.type == 'One-On-One'
+            ) {
+                setQuota(
+                    'Online-' +
+                        flattenClientPackages.fitnesspackages[0].ptonline +
+                        ' / ' +
+                        'Offline-' +
+                        flattenClientPackages.fitnesspackages[0].ptoffline
+                );
+            } else if (
+                flattenClientPackages.fitnesspackages[0].fitness_package_type.type == 'On-Demand PT'
+            ) {
+                setQuota('On-Demand PT');
+            } else if (
+                flattenClientPackages.fitnesspackages[0].fitness_package_type.type == 'Group Class'
+            ) {
+                setQuota(
+                    'Online-' +
+                        flattenClientPackages.fitnesspackages[0].grouponline +
+                        ' / ' +
+                        'Offline-' +
+                        flattenClientPackages.fitnesspackages[0].groupoffline
+                );
+            } else if (
+                flattenClientPackages.fitnesspackages[0].fitness_package_type.type == 'Event'
+            ) {
+                setQuota('Event');
+            } else if (
+                flattenClientPackages.fitnesspackages[0].fitness_package_type.type ==
+                'Custom Fitness'
+            ) {
+                setQuota('Custom Fitness');
+            } else if (
+                flattenClientPackages.fitnesspackages[0].fitness_package_type.type == 'Cohort'
+            ) {
+                setQuota('Cohort');
+            }
         }
     });
 
@@ -155,30 +208,66 @@ function Receipt(): JSX.Element {
                 <Table striped bordered responsive className="text-center">
                     <thead>
                         <tr>
-                            <th>Payment Cycle</th>
+                            {receiptData.SenderType === 'Changemaker' ? (
+                                <th>Payment Cycle</th>
+                            ) : (
+                                <th>Service name</th>
+                            )}
+
                             {receiptData.SenderType === 'Changemaker' ? (
                                 <th>Payment Frequency</th>
-                            ) : null}
+                            ) : (
+                                <th>Duration</th>
+                            )}
+
+                            {receiptData.SenderType === 'Changemaker' ? (
+                                <th>Department</th>
+                            ) : (
+                                <th>Number of Session</th>
+                            )}
+
                             <th>Type of Payment</th>
-                            <th>Department</th>
                             <th>Amount</th>
                         </tr>
                     </thead>
                     <thead>
                         <tr>
-                            {clientPackages && clientPackages.package_duration ? (
-                                <td>{clientPackages.package_duration}</td>
-                            ) : null}
-
-                            <td>N/A</td>
                             {receiptData.SenderType === 'Changemaker' ? (
                                 <td>
-                                    {receiptData && receiptData.PaymentMode
-                                        ? receiptData.PaymentMode
+                                    {clientPackages && clientPackages.package_duration
+                                        ? clientPackages.package_duration
                                         : null}
                                 </td>
-                            ) : null}
-                            <td>N/A</td>
+                            ) : (
+                                <td>
+                                    {fitnessPackages && fitnessPackages.packagename
+                                        ? fitnessPackages.packagename
+                                        : null}
+                                </td>
+                            )}
+
+                            {receiptData.SenderType === 'Changemaker' ? (
+                                <td>N/A</td>
+                            ) : (
+                                <td>
+                                    {clientPackages && clientPackages.package_duration
+                                        ? clientPackages.package_duration
+                                        : null}
+                                </td>
+                            )}
+
+                            {receiptData.SenderType === 'Changemaker' ? (
+                                <td>N/A</td>
+                            ) : (
+                                <td>{quota ? quota : null}</td>
+                            )}
+
+                            <td>
+                                {receiptData && receiptData.PaymentMode
+                                    ? receiptData.PaymentMode
+                                    : null}
+                            </td>
+
                             <td>
                                 {receiptData &&
                                 receiptData.Currency &&
@@ -194,7 +283,7 @@ function Receipt(): JSX.Element {
                             <td>
                                 <b>Net Amount</b>
                             </td>
-                            {receiptData.SenderType === 'Changemaker' ? <td></td> : null}
+                            <td></td>
                             <td></td>
                             <td></td>
 
