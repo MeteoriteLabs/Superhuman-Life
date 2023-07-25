@@ -71,6 +71,13 @@ const Scheduler = () => {
     const [program, setProgram] = useState('none');
     const [sessionFilter, setSessionFilter] = useState('none');
     const [show24HourFormat, setShow24HourFormat] = useState(false);
+    const ref = useRef<any>(null);
+
+    const handleScrollScheduler = () => {
+        ref.current?.scrollIntoView({ behaviour: "smooth",
+        inline: "nearest"});
+        window.scrollBy(0, -200);
+    }
 
     const handleAccordionToggle = () => {
         setAccordionExpanded(!accordionExpanded);
@@ -405,11 +412,13 @@ const Scheduler = () => {
     function handleFloatingActionProgramCallback(event: any) {
         setProgram(`${event}`);
         handleCallback();
+        handleScrollScheduler();
     }
 
     function handleFloatingActionProgramCallback2(event: any) {
         setSessionFilter(`${event}`);
         handleCallback();
+        handleScrollScheduler();
     }
 
     function handleRefetch() {
@@ -418,6 +427,7 @@ const Scheduler = () => {
 
     function handleShowRestDay() {
         setShowRestDay(!showRestDay);
+        handleScrollScheduler();
     }
 
     function calculateLastSession(sessions) {
@@ -924,6 +934,7 @@ const Scheduler = () => {
                             <Col lg={11} className="pl-0 pr-0">
                                 <div className="mt-5">
                                     <SchedulerPage
+                                        ref={ref}
                                         show24HourFormat={show24HourFormat}
                                         type="date"
                                         days={calculateDays(prevDate, nextDate)}
@@ -1033,6 +1044,7 @@ const Scheduler = () => {
                 {/* Right sidebar */}
                 <Col lg={collapse ? '1' : '2'} className="d-lg-block">
                     <SideNav
+                    handleScrollScheduler={handleScrollScheduler}
                         show24HourFormat={show24HourFormat}
                         setShow24HourFormat={setShow24HourFormat}
                         collapse={collapse}

@@ -44,6 +44,13 @@ const Scheduler: React.FC = () => {
     const [collapse, setCollapse] = useState<boolean>(true);
     const [accordionExpanded, setAccordionExpanded] = useState(true);
     const [show24HourFormat, setShow24HourFormat] = useState(false);
+    const ref = useRef<any>(null);
+
+    const handleScrollScheduler = () => {
+        ref.current?.scrollIntoView({ behaviour: "smooth",
+        inline: "nearest"});
+        window.scrollBy(0, -200);
+    }
 
     const handleAccordionToggle = () => {
         setAccordionExpanded(!accordionExpanded);
@@ -86,11 +93,13 @@ const Scheduler: React.FC = () => {
     function handleFloatingActionProgramCallback(event: any) {
         setProgram(`${event}`);
         handleCallback();
+        handleScrollScheduler();
     }
 
     function handleFloatingActionProgramCallback2(event: any) {
         setSessionFilter(`${event}`);
         handleCallback();
+        handleScrollScheduler();
     }
 
     function handleRefetch() {
@@ -99,6 +108,7 @@ const Scheduler: React.FC = () => {
 
     function handleShowRestDay() {
         setShowRestDay(!showRestDay);
+        handleScrollScheduler();
     }
 
     function loadTagData(data: any) {
@@ -860,6 +870,7 @@ const Scheduler: React.FC = () => {
                     <Col lg={11} className="pl-0 pr-0">
                         <div className="mt-5">
                             <SchedulerPage
+                               ref={ref}
                                 callback={handleCallback}
                                 type="day"
                                 sessionIds={sessionIds}
@@ -892,6 +903,7 @@ const Scheduler: React.FC = () => {
             {/* Right sidebar */}
             <Col lg={collapse ? '1' : '2'} className="d-lg-block">
                     <SideNav
+                      handleScrollScheduler={handleScrollScheduler}
                       show24HourFormat={show24HourFormat}
                       setShow24HourFormat={setShow24HourFormat}
                         collapse={collapse}
