@@ -1865,14 +1865,7 @@ const Schedular = (props: any, ref) => {
             .add(sessionEndMinute, 'minutes');
         const diff = expirySessionTime.diff(currentTime);
         
-        if(props && props.restDays && props.restDays.findIndex(curr => curr.session_date
-            === sessionDate) !== -1){
-            
-            return false;
-           
-        }
-        
-        else if (diff < 0) {
+        if (diff < 0) {
             return true;
         }
         return false;
