@@ -219,8 +219,7 @@ const Scheduler: React.FC = () => {
     function handleCallback() {
         mainQuery.refetch();
     }
-    if(tag)
-console.log(tag);
+  
     if (!show) return <Loader msg="loading scheduler..." />;
     else
         return (
