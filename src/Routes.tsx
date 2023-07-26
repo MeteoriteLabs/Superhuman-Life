@@ -54,12 +54,12 @@ const EventProgramSchedulerPage = React.lazy(
 const ChannelProgramSchedulerPage = React.lazy(
     () => import('builders/session-builder/Fitness/Channel/scheduler')
 );
-const clientSchedulerPage = React.lazy(() => import('./builders/changemaker-builder'));
-const AvailabilityPage = React.lazy(() => import('./builders/changemaker-builder/availability'));
-const RosterPage = React.lazy(() => import('./builders/changemaker-builder/roster'));
-const ReceiptOutflow = React.lazy(() => import('./pages/finance/Outflow/ReceiptOutflow'));
-const ReceiptEarning = React.lazy(() => import('./pages/finance/Earnings/ReceiptEarning'));
-const ReceiptTransaction = React.lazy(() => import('./pages/finance/Transactions/ReceiptTransaction'));
+const clientSchedulerPage = React.lazy(() => import('builders/changemaker-builder'));
+const AvailabilityPage = React.lazy(() => import('builders/changemaker-builder/availability'));
+const RosterPage = React.lazy(() => import('builders/changemaker-builder/roster'));
+const ReceiptOutflow = React.lazy(() => import('pages/finance/Outflow/ReceiptOutflow'));
+const ReceiptEarning = React.lazy(() => import('pages/finance/Earnings/ReceiptEarning'));
+const ReceiptTransaction = React.lazy(() => import('pages/finance/Transactions/ReceiptTransaction'));
 const PaymentScheduleSettingsPage = React.lazy(
     () => import('builders/client-builder/PaymentScheduleSettings')
 );
