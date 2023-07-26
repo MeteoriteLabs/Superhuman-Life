@@ -18,6 +18,7 @@ import DisplayImage from 'components/DisplayImage';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import '../../profilepicture.css';
+import { SideNav } from '../Event/import';
 
 const Scheduler: React.FC = () => {
     const auth = useContext(AuthContext);
@@ -40,6 +41,24 @@ const Scheduler: React.FC = () => {
     const [nextDate, setNextDate] = useState('');
     const [classicStartDate, setClassicStartDate] = useState('');
     const [classicEndDate, setClassicEndDate] = useState('');
+    const [collapse, setCollapse] = useState<boolean>(true);
+    const [accordionExpanded, setAccordionExpanded] = useState(true);
+    const [show24HourFormat, setShow24HourFormat] = useState(false);
+    const ref = useRef<any>(null);
+
+    const handleScrollScheduler = () => {
+        ref.current?.scrollIntoView({ behaviour: "smooth",
+        inline: "nearest"});
+        window.scrollBy(0, -200);
+    }
+
+    const handleAccordionToggle = () => {
+        setAccordionExpanded(!accordionExpanded);
+    };
+
+    const [program, setProgram] = useState('none');
+    const [sessionFilter, setSessionFilter] = useState('none');
+    const [showRestDay, setShowRestDay] = useState<boolean>(false);
 
     const fitnessActionRef = useRef<any>(null);
 
@@ -53,6 +72,44 @@ const Scheduler: React.FC = () => {
         variables: { id: tagId },
         onCompleted: (data) => loadTagData(data)
     });
+
+    function calculateDuration(sd: any, ed: any) {
+        const start = moment(sd);
+        const end = moment(ed);
+        return end.diff(start, 'days') + 1;
+    }
+
+    // function calculateDailySessions(sessions) {
+    //     const dailySessions = sessions.filter(
+    //         (ses: any) => ses.session_date === moment().format('YYYY-MM-DD')
+    //     );
+    //     return dailySessions.length ? dailySessions.length : 'N/A';
+    // }
+
+    function handleCallback() {
+        mainQuery.refetch();
+    }
+
+    function handleFloatingActionProgramCallback(event: any) {
+        setProgram(`${event}`);
+        handleCallback();
+        handleScrollScheduler();
+    }
+
+    function handleFloatingActionProgramCallback2(event: any) {
+        setSessionFilter(`${event}`);
+        handleCallback();
+        handleScrollScheduler();
+    }
+
+    function handleRefetch() {
+        handleCallback();
+    }
+
+    function handleShowRestDay() {
+        setShowRestDay(!showRestDay);
+        handleScrollScheduler();
+    }
 
     function loadTagData(data: any) {
         setSchedulerSessions(data);
@@ -280,11 +337,6 @@ const Scheduler: React.FC = () => {
         });
     }
 
-    function handleCallback() {
-        mainQuery.refetch();
-        // setSessionIds([]);
-    }
-
     function calculateLastSession(sessions) {
         if (sessions.length === 0) {
             return 'N/A';
@@ -329,6 +381,8 @@ const Scheduler: React.FC = () => {
     if (!show) return <Loader msg="loading scheduler..." />;
     else
         return (
+            <Row noGutters className="bg-light  py-4 mb-5  min-vh-100">
+                <Col lg={collapse ? '11' : '10'} className="pr-2 pl-3 mb-5">
             <div className="col-lg-12">
                 <div className="mb-3">
                     <span style={{ fontSize: '30px' }}>
@@ -343,15 +397,15 @@ const Scheduler: React.FC = () => {
                     <Col lg={11}>
                         <Accordion>
                             <Card>
-                                <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => {key==='' ? setKey('0') : setKey('')}}>
+                                <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => {key==='' ? setKey('0') : setKey('')}} style={{ background: '#343A40', color: '#fff' }}>
                                 <span className="d-inline-block">
                                         <b>{tag && tag.fitnesspackage?.packagename}</b>
                                     </span>
                                     <span className="d-inline-block btn float-right">
                                         {key === '0' ? (
-                                            <i className="fa fa-chevron-up d-flex justify-content-end" />
+                                            <i className="fa fa-chevron-up d-flex justify-content-end text-white" />
                                         ) : (
-                                            <i className="fa fa-chevron-down d-flex justify-content-end" />
+                                            <i className="fa fa-chevron-down d-flex justify-content-end text-white" />
                                         )}
                                     </span>
                                     
@@ -388,13 +442,13 @@ const Scheduler: React.FC = () => {
                                                             <Dropdown.Menu>
                                                                 <Dropdown.Item
                                                                     key={2}
-                                                                    // onClick={() => updateAddress(currValue)}
+                                                                   
                                                                 >
                                                                     Edit Program Name
                                                                 </Dropdown.Item>
                                                                 <Dropdown.Item
                                                                     key={1}
-                                                                    // onClick={() => deleteUserAddress(currValue)}
+                                                                    
                                                                 >
                                                                     Send notification to subscribers
                                                                 </Dropdown.Item>
@@ -464,16 +518,16 @@ const Scheduler: React.FC = () => {
                                 </Accordion.Collapse>
                             </Card>
                             <Card>
-                                <Accordion.Toggle as={Card.Header} eventKey="1" onClick={() => {key === '' ? setKey('1') : setKey('')}}>
+                                <Accordion.Toggle as={Card.Header} eventKey="1" onClick={() => {key === '' ? setKey('1') : setKey('')}} style={{ background: '#343A40', color: '#fff' }}>
                                     
                                     <span className="d-inline-block">
                                         <b>Movement Session</b>
                                     </span>
                                     <span className="d-inline-block btn float-right">
                                         {key === '1' ? (
-                                            <i className="fa fa-chevron-up d-flex justify-content-end" />
+                                            <i className="fa fa-chevron-up d-flex justify-content-end text-white" />
                                         ) : (
-                                            <i className="fa fa-chevron-down d-flex justify-content-end" />
+                                            <i className="fa fa-chevron-down d-flex justify-content-end text-white" />
                                         )}
                                     </span>
                                 </Accordion.Toggle>
@@ -816,6 +870,7 @@ const Scheduler: React.FC = () => {
                     <Col lg={11} className="pl-0 pr-0">
                         <div className="mt-5">
                             <SchedulerPage
+                               ref={ref}
                                 callback={handleCallback}
                                 type="day"
                                 sessionIds={sessionIds}
@@ -825,13 +880,52 @@ const Scheduler: React.FC = () => {
                                 restDays={tag?.sessions.filter((ses) => ses.type === 'restday')}
                                 classType={'Classic Class'}
                                 startDate={'2021-05-01'}
-                                programId={tagId}
+                                programId={tagId ? tagId : null}
+                                handleFloatingActionProgramCallback={
+                                    handleFloatingActionProgramCallback
+                                }
+                                handleFloatingActionProgramCallback2={
+                                    handleFloatingActionProgramCallback2
+                                }
+                                handleRefetch={handleRefetch}
+                                sessionFilter={sessionFilter}
+                                program={program}
+                                showRestDay={showRestDay}
+                                show24HourFormat={show24HourFormat}
+                                
                             />
                         </div>
                     </Col>
                     <FitnessAction ref={fitnessActionRef} callback={() => mainQuery} />
                 </Row>
             </div>
+            </Col>
+            {/* Right sidebar */}
+            <Col lg={collapse ? '1' : '2'} className="d-lg-block">
+                    <SideNav
+                      handleScrollScheduler={handleScrollScheduler}
+                      show24HourFormat={show24HourFormat}
+                      setShow24HourFormat={setShow24HourFormat}
+                        collapse={collapse}
+                        setCollapse={setCollapse}
+                        accordionExpanded={accordionExpanded}
+                        onAccordionToggle={handleAccordionToggle}
+                        clientIds={clientIds}
+                        sessionIds={sessionIds}
+                        startDate={tag?.fitnesspackage?.Start_date}
+                        duration={calculateDuration(
+                            tag?.fitnesspackage?.Start_date,
+                            tag?.fitnesspackage?.End_date
+                        )}
+                        callback={handleFloatingActionProgramCallback}
+                        callback2={handleFloatingActionProgramCallback2}
+                        callback3={handleRefetch}
+                        restDayCallback={handleShowRestDay}
+                        showRestDayAction={showRestDay}
+                    />
+                </Col>
+
+            </Row>
         );
 };
 

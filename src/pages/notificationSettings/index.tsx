@@ -10,8 +10,7 @@ const NotificationSetting: React.FC = () => {
     const auth = useContext(authContext);
     const [isSettingNotificationCreated, setIsSettingNotificationCreated] = useState<number>(0);
 
-    // eslint-disable-next-line
-    const { data: get_notifications, refetch: refetch_notifications } = useQuery(
+    const { refetch: refetch_notifications } = useQuery(
         GET_NOTIFICATION_SETTINGS,
         {
             variables: { id: auth.userid },

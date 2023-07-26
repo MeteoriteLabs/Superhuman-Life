@@ -1,0 +1,29 @@
+/* Custom CSS for the Sidebar */
+#sidebar-wrapper {
+    transition: width 0.3s ease-in-out;
+}
+
+.collapsed #sidebar-wrapper {
+    width: 30px !important; /* Adjust the width as per your design */
+}
+
+.expanded #sidebar-wrapper {
+    width: 600px !important; /* Adjust the width as per your design */
+}
+
+.nav-link {
+    color: #fff;
+    font-size: 15px;
+}
+
+.collapse .nav-link {
+    padding-left: 20px;
+}
+
+.accordion-toggle:hover {
+    cursor: pointer;
+}
+
+.nav-item .active {
+    background-color: #666;
+}

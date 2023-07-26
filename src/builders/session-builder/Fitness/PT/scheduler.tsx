@@ -138,19 +138,17 @@ const Scheduler: React.FC = () => {
                     </span>
                 </div>
 
-                
-
                 {/* Cards for service details and movement sessions */}
                 <Row>
                     <Col lg={11}>
                         <Accordion>
                             <Card>
-                                <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => {key==='' ? setKey("0") : setKey('')}}>
+                                <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => {key==='' ? setKey("0") : setKey('')}} style={{ backgroundColor: '#343A40', color: 'white' }}>
                                     <span className="d-inline-block">
                                         <b>{tag && tag.fitnesspackage?.packagename}</b>
                                     </span>
                                     <span className="d-inline-block btn float-right">
-                                        {key === "0" ? <i className="fa fa-chevron-up d-flex justify-content-end"/> : <i className="fa fa-chevron-down d-flex justify-content-end"/>}
+                                        {key === "0" ? <i className="fa fa-chevron-up d-flex justify-content-end text-white"/> : <i className="fa fa-chevron-down d-flex justify-content-end text-white"/>}
                                     </span>
                                 </Accordion.Toggle>
                                 <Accordion.Collapse eventKey="0">
@@ -302,12 +300,12 @@ const Scheduler: React.FC = () => {
                                 </Accordion.Collapse>
                             </Card>
                             <Card>
-                                <Accordion.Toggle as={Card.Header} eventKey="1" onClick={() => {key==='' ? setKey("1") : setKey('')}}>
+                                <Accordion.Toggle as={Card.Header} eventKey="1" onClick={() => {key==='' ? setKey("1") : setKey('')}} style={{ backgroundColor: '#343A40', color: 'white' }}>
                                     <span className="d-inline-block">
                                         <b>Movement Sessions</b>
                                     </span>
                                     <span className="d-inline-block btn float-right">
-                                        {key === "1" ? <i className="fa fa-chevron-up d-flex justify-content-end"></i> : <i className="fa fa-chevron-down d-flex justify-content-end"></i>}
+                                        {key === "1" ? <i className="fa fa-chevron-up d-flex justify-content-end text-white"></i> : <i className="fa fa-chevron-down d-flex justify-content-end text-white"></i>}
                                     </span>
                                 </Accordion.Toggle>
                                 <Accordion.Collapse eventKey="1">
@@ -738,10 +736,11 @@ const Scheduler: React.FC = () => {
                                         ? 1
                                         : tag?.fitnesspackage?.duration
                                 }
-                                classType={'One-On-One'}
+                                classType={tag?.fitnesspackage?.fitness_package_type.type ===
+                                    'On-Demand PT'? 'On-Demand PT' : 'One-On-One'}
                                 restDays={tag?.sessions.filter((ses) => ses.type === 'restday')}
                                 schedulerSessions={schedulerSessions}
-                                programId={tagId}
+                                programId={tagId ? tagId : null}
                                 startDate={
                                     tag &&
                                     tag.client_packages &&
