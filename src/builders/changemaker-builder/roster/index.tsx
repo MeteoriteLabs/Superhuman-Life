@@ -42,7 +42,6 @@ const Roster = () => {
         },
         onCompleted: (data) => {
             const flattenData = flattenObj({ ...data });
-            console.log(flattenData);
             setBookingStatusDetails(flattenData.sessionsBookings);
         }
     });
