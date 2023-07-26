@@ -11,6 +11,9 @@ const Scheduler = (): JSX.Element => {
     const [clientIds, setClientIds] = useState<string[]>([]);
     // these are the sessions that will passed onto the scheduler
     const [schedulerSessions, setSchedulerSessions] = useState<any>([]);
+    const [program, setProgram] = useState('none');
+    const [sessionFilter, setSessionFilter] = useState('none');
+    const [showRestDay, setShowRestDay] = useState<boolean>(false);
     const [tag, setTag] = useState<any>();
     const [key, setKey] = useState('');
     const [collapse, setCollapse] = useState<boolean>(true);
@@ -27,10 +30,6 @@ const Scheduler = (): JSX.Element => {
     const handleAccordionToggle = () => {
         setAccordionExpanded(!accordionExpanded);
     };
-
-    const [program, setProgram] = useState('none');
-    const [sessionFilter, setSessionFilter] = useState('none');
-    const [showRestDay, setShowRestDay] = useState<boolean>(false);
 
     const fitnessActionRef = useRef<any>(null);
 

@@ -46,7 +46,7 @@ import SapienVideoPlayer from 'components/customWidgets/SpaienVideoPlayer';
 import Toaster from 'components/Toaster';
 // import SideNav from '../program-template/SchedulerSideBar';
 
-const Schedular = (props: any, ref) => { 
+const Schedular = (props: any, ref) => {
     const auth = useContext(AuthContext);
     const [show, setShow] = useState<boolean>(false);
     const [showModal, setShowModal] = useState<boolean>(false);
@@ -604,7 +604,7 @@ const Schedular = (props: any, ref) => {
                 }
             }
         }
-        return 'white';
+        return '##343A40';
     }
 
     //this return the data for adding and removing the rest days
@@ -612,6 +612,7 @@ const Schedular = (props: any, ref) => {
         // this if block is to check if we are in the program template page
         if (props?.type === 'day') {
             if (props.restDays) {
+                
                 for (let j = 0; j < props.restDays.length; j++) {
                     if (val === props.restDays[j].day_of_program) {
                         return {
@@ -641,6 +642,7 @@ const Schedular = (props: any, ref) => {
                 }
             }
         } else if (props.restDays && props?.type !== 'day') {
+           
             for (let i = 0; i < props.restDays.length; i++) {
                 if (val === calculateDay(props.startDate, props.restDays[i].session_date)) {
                     return {
@@ -692,8 +694,8 @@ const Schedular = (props: any, ref) => {
             dateUpperLimit: moment(dates[0]).format('YYYY-MM-DD'),
             dateLowerLimit: moment(dates[dates.length - 1]).format('YYYY-MM-DD')
         },
-        onCompleted: (r: any) => {
-            const flattenData = flattenObj({ ...r });
+        onCompleted: (response: any) => {
+            const flattenData = flattenObj({ ...response });
             setChangeMakerAvailability(flattenData);
         }
     });
@@ -1856,6 +1858,26 @@ const Schedular = (props: any, ref) => {
         return finalTime;
     };
 
+    const handleSessionPastDates = (sessionDate: string, sessionEndHour: number, sessionEndMinute: number) => {
+        const currentTime = moment.utc();
+        const expirySessionTime = moment(sessionDate)
+            .add(sessionEndHour, 'hours')
+            .add(sessionEndMinute, 'minutes');
+        const diff = expirySessionTime.diff(currentTime);
+        
+        if(props && props.restDays && props.restDays.findIndex(curr => curr.session_date
+            === sessionDate) !== -1){
+            
+            return false;
+           
+        }
+        
+        else if (diff < 0) {
+            return true;
+        }
+        return false;
+    };
+
     if (!show) {
         return (
             <div className="text-center">
@@ -1868,7 +1890,7 @@ const Schedular = (props: any, ref) => {
         );
     } else
         return (
-            <div  ref={ref}>
+            <div ref={ref}>
                 {/* Floating Action Buttons */}
                 {/* {props?.clientSchedular !== 'client' && (
                     <FloatingButton
@@ -1887,7 +1909,6 @@ const Schedular = (props: any, ref) => {
                 <div
                     className="mb-5 shadow-lg p-3"
                     style={{ display: `${props.program}`, borderRadius: '20px' }}
-                   
                 >
                     <ProgramList
                         sessionIds={props.sessionIds}
@@ -1957,7 +1978,9 @@ const Schedular = (props: any, ref) => {
                                                 zIndex: 999
                                             }}
                                         >
-                                            {props.show24HourFormat ? `${h<10 ? `0${h}` : h}: 00`: handle12HourFormat(h)}
+                                            {props.show24HourFormat
+                                                ? `${h < 10 ? `0${h}` : h}: 00`
+                                                : handle12HourFormat(h)}
                                         </span>
                                     </div>
                                     {days.map((d, index) => {
@@ -2009,6 +2032,7 @@ const Schedular = (props: any, ref) => {
                                                                 arr[d][h][m]?.map(
                                                                     (val, index: number) => {
                                                                         val.index = index;
+                                                                        
                                                                         return (
                                                                             <div
                                                                                 key={index}
@@ -2099,17 +2123,71 @@ const Schedular = (props: any, ref) => {
                                                                                             'hidden'
                                                                                     }}
                                                                                 >
-                                                                                    <div className="event-desc">
-                                                                                        {val.type ===
-                                                                                        'restday'
-                                                                                            ? null
-                                                                                            : val.title}
+                                                                                    <div className="event-desc d-flex justify-content-between">
+                                                                                        <div>
+                                                                                            {val.type ===
+                                                                                            'restday'
+                                                                                                ? null
+                                                                                                : val.title}
+                                                                                        </div>
+                                                                                        <div>
+                                                                                            {props.showRestDay ? null : handleSessionPastDates(
+                                                                                                val.sessionDate,
+                                                                                                val.endHour,
+                                                                                                val.endMin
+                                                                                            ) ? (
+                                                                                                <img
+                                                                                                    style={{
+                                                                                                        height: '20px',
+                                                                                                        position:
+                                                                                                            'absolute',
+                                                                                                        right: '0'
+                                                                                                    }}
+                                                                                                    title="session attended"
+                                                                                                    src="/assets/attended.svg"
+                                                                                                    alt="attended"
+                                                                                                />
+                                                                                            ) : null}
+                                                                                        </div>
                                                                                     </div>
                                                                                     <div className="event-time">
                                                                                         {val.type ===
                                                                                         'restday'
                                                                                             ? null
-                                                                                            : (props.show24HourFormat ? `${val.hour === '0' ? '00': val.hour}:${val.min === '0' ? '00': val.min} - ${val.endHour}:${val.endMin.toString() === '0' ? '00' : val.endMin}` : `${handleConvertTimeFormat(Number(val.hour), Number(val.min))}-${handleConvertTimeFormat(Number(val.endHour), Number(val.endMin))}`)}
+                                                                                            : props.show24HourFormat
+                                                                                            ? `${
+                                                                                                  val.hour ===
+                                                                                                  '0'
+                                                                                                      ? '00'
+                                                                                                      : val.hour
+                                                                                              }:${
+                                                                                                  val.min ===
+                                                                                                  '0'
+                                                                                                      ? '00'
+                                                                                                      : val.min
+                                                                                              } - ${
+                                                                                                  val.endHour
+                                                                                              }:${
+                                                                                                  val.endMin.toString() ===
+                                                                                                  '0'
+                                                                                                      ? '00'
+                                                                                                      : val.endMin
+                                                                                              }`
+                                                                                            : `${handleConvertTimeFormat(
+                                                                                                  Number(
+                                                                                                      val.hour
+                                                                                                  ),
+                                                                                                  Number(
+                                                                                                      val.min
+                                                                                                  )
+                                                                                              )}-${handleConvertTimeFormat(
+                                                                                                  Number(
+                                                                                                      val.endHour
+                                                                                                  ),
+                                                                                                  Number(
+                                                                                                      val.endMin
+                                                                                                  )
+                                                                                              )}`}
                                                                                         {/* : ({
                                                                                             //   true ?
                                                                                             

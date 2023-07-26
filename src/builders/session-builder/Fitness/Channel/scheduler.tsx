@@ -219,7 +219,7 @@ const Scheduler: React.FC = () => {
     function handleCallback() {
         mainQuery.refetch();
     }
-
+  
     if (!show) return <Loader msg="loading scheduler..." />;
     else
         return (
@@ -332,7 +332,7 @@ const Scheduler: React.FC = () => {
                                                     <Col>
                                                         <DisplayImage
                                                             imageName={
-                                                                'Photo_ID' in tag &&
+                                                                tag &&
                                                                 tag.client_packages &&
                                                                 tag.client_packages.length &&
                                                                 tag.client_packages[0]
@@ -367,7 +367,7 @@ const Scheduler: React.FC = () => {
                                                             View all
                                                         </Badge>
                                                         <p className="ml-3">
-                                                            {tag.client_packages.length} people
+                                                            {tag && tag.client_packages ? tag.client_packages.length : null} people
                                                         </p>
                                                     </Col>
                                                 </Row>
@@ -405,7 +405,7 @@ const Scheduler: React.FC = () => {
                                             </Card.Title>
                                             <Card.Text>
                                                 Last planned session{' '}
-                                                {calculateLastSession(tag.sessions)}
+                                                {tag && tag.sessions && calculateLastSession(tag.sessions)}
                                             </Card.Text>
                                             <Row>
                                                 <Col lg={8}>

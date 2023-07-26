@@ -618,7 +618,7 @@ const Scheduler = () => {
                                                                     View all
                                                                 </Badge>
                                                                 <p className="ml-3">
-                                                                    {tag.client_packages.length}{' '}
+                                                                    {tag && tag.client_packages && tag.client_packages.length}{' '}
                                                                     people
                                                                 </p>
                                                             </Col>
