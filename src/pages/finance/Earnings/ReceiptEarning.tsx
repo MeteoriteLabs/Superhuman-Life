@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Table, Button } from 'react-bootstrap';
 import { useLazyQuery, useQuery } from '@apollo/client';
-import { GET_TRANSACTION, FETCH_CHANGEMAKER, FETH_CLIENTPACKAGES } from '../Outflow/queries';
+import { GET_TRANSACTION, FETCH_CHANGEMAKER, FETCH_CLIENTPACKAGES } from '../Outflow/queries';
 import { flattenObj } from 'components/utils/responseFlatten';
 
 function Receipt(): JSX.Element {
@@ -46,7 +46,8 @@ function Receipt(): JSX.Element {
             setUserProfile(flattenUserProfileData);
         }
     });
-    const [fethclientPackages] = useLazyQuery(FETH_CLIENTPACKAGES, {
+    
+    const [fetchclientPackages] = useLazyQuery(FETCH_CLIENTPACKAGES, {
         onCompleted: (data) => {
             const flattenClientPackages = flattenObj({ ...data.clientPackage });
             setClientPackages(flattenClientPackages);
