@@ -16,7 +16,8 @@ export const ChangeMakerWebsiteContext = createContext<changeMakerWebsiteTs>({
         thumbnail: null,
         templateUrl: null,
         loading: false,
-        section: null
+        section: null,
+        page: null
     },
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     setChangemakerWebsiteState: () => {}
@@ -33,7 +34,8 @@ function ChangemakerWebsiteContextProvider({ children }: { children: ReactNode }
             thumbnail: '',
             templateUrl: '',
             loading: false,
-            section: ''
+            section: '',
+            page: ''
         });
 
     const [getUserWebsite, { data, error }] = useLazyQuery(FETCH_USER_WEBSITE, {

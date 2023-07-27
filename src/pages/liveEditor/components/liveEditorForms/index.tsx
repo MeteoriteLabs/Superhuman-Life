@@ -11,6 +11,7 @@ export default function LiveEditorSideNav(): JSX.Element {
                 section={
                     changemakerWebsiteState.section ? changemakerWebsiteState.section : 'Home: Hero'
                 }
+                page={changemakerWebsiteState.page ? changemakerWebsiteState.page : 'Home'}
             />
         </aside>
     );

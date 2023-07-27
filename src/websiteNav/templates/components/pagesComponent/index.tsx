@@ -5,12 +5,12 @@ import Home from './home';
 
 function Index({ page }: { page: string }): JSX.Element {
     const Page = {
-        navbar: <></>,
-        footer: <></>,
-        '': <Home />,
-        classes: <Classes />,
-        about: <About />,
-        contact: <Contact />
+        Navbar: <></>,
+        Footer: <></>,
+        Home: <Home />,
+        Classes: <Classes />,
+        About: <About />,
+        Contact: <Contact />
     };
     return Page[page];
 }

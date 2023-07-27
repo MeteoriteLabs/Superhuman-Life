@@ -1,5 +1,26 @@
-function Contact(): JSX.Element {
-    return <div>Contact</div>;
+import { useContext } from 'react';
+import styles from './style.module.css';
+import { ChangeMakerWebsiteContext } from '../../../../context/changemakerWebsite-context';
+import { WindowFullscreen } from 'react-bootstrap-icons';
+
+function Home(): JSX.Element {
+    const { setChangemakerWebsiteState, changemakerWebsiteState } =
+        useContext(ChangeMakerWebsiteContext);
+    return (
+        <div className="mt-2">
+            <div
+                className={styles.sectionTitleCont}
+                onClick={() => {
+                    setChangemakerWebsiteState({
+                        ...changemakerWebsiteState,
+                        section: 'Contact: Form'
+                    });
+                }}
+            >
+                <WindowFullscreen /> <span className={styles.sectionTitle}> Testimonials</span>
+            </div>
+        </div>
+    );
 }
 
-export default Contact;
+export default Home;

@@ -1,18 +1,11 @@
-import CallToAction from './home/CallToAction';
-import Features from './home/features';
-import Hero from './home/hero';
-import Pricing from './home/pricing';
-import Testimonials from './home/testimonials';
+import Home from './home';
 
-function Index({ section }: { section: string }): JSX.Element {
-    const Section = {
-        'Home: Hero': <Hero />,
-        'Home: Features': <Features />,
-        'Home: Cta': <CallToAction />,
-        'Home: Pricing': <Pricing />,
-        'Home: Testimonials': <Testimonials />
+function Index({ section, page }: { section: string; page: string }): JSX.Element {
+    const Page = {
+        Home: <Home section={section} />
+        // About: <About />
     };
-    return Section[section];
+    return Page[page];
 }
 
 export default Index;

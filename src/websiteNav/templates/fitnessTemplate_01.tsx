@@ -6,11 +6,18 @@ import styles from '../styles/fitnessTemplate_01.module.css';
 function FitnessTemplate_01(): JSX.Element {
     const [page, setPage] = useState<string>('');
 
-    const { changemakerWebsiteState } = useContext(ChangeMakerWebsiteContext);
+    const { changemakerWebsiteState, setChangemakerWebsiteState } =
+        useContext(ChangeMakerWebsiteContext);
 
     useEffect(() => {
         changemakerWebsiteState.subdomain &&
             setPage(changemakerWebsiteState.subdomain.split('/')[3] || '');
+        setChangemakerWebsiteState({
+            ...changemakerWebsiteState,
+            page: changemakerWebsiteState.subdomain
+                ? changemakerWebsiteState.subdomain.split('/')[3]
+                : ''
+        });
     }, []);
 
     return (

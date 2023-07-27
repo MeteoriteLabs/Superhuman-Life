@@ -7,7 +7,7 @@ function Index(): JSX.Element {
 
     const selectedTemplate = changemakerWebsiteState.selectedTemplate;
     const templates = {
-        'Fitness Theme 01': <FitnessTemplate_01 />
+        '': <FitnessTemplate_01 />
     };
 
     return templates[selectedTemplate || ''];
