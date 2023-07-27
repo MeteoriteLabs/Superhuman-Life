@@ -6,8 +6,8 @@ import {
     GET_USERS_JOINED_DATE
 } from './Queries';
 import { Row, Col, Card } from 'react-bootstrap';
-import { flattenObj } from '../../../components/utils/responseFlatten';
-import AuthContext from '../../../context/auth-context';
+import { flattenObj } from 'components/utils/responseFlatten';
+import AuthContext from 'context/auth-context';
 import FinanceGraph from './FinanceGraph';
 import moment from 'moment';
 import './Summary.css';
@@ -203,7 +203,7 @@ const Summary: React.FC = () => {
                                 <Col lg={9} xs={10}>
                                     <b>Earnings</b>
                                 </Col>
-                                <Col>
+                                <Col xs={2}>
                                     <img src="assets/summary/earnings.svg" alt="earnings" />
                                 </Col>
                             </Row>
@@ -218,7 +218,7 @@ const Summary: React.FC = () => {
                                 <Col lg={9} xs={10}>
                                     <b>Expenses</b>
                                 </Col>
-                                <Col>
+                                <Col xs={2}>
                                     <img src="assets/summary/expenses.svg" alt="expenses" />
                                 </Col>
                             </Row>

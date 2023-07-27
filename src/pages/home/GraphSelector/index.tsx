@@ -5,7 +5,7 @@ import ClientsGraph from '../ClientsGraph';
 import SalesGraph from '../SalesGraph';
 import OfferingBookingGraph from '../OfferingBookingGraph';
 
-function GraphSelector() {
+function GraphSelector(): JSX.Element {
     const [isSales, setIsSales] = useState<boolean>(false);
     const [isLeads, setIsLeads] = useState<boolean>(true);
     const [isClients, setIsClients] = useState<boolean>(false);

@@ -3,7 +3,7 @@ import MonthlyClientGraph from './MonthlyClientGraph';
 import WeeklyClientGraph from './WeeklyClientGraph';
 import '../Styles/navTabStyles.css';
 
-function ClientsGraph() {
+function ClientsGraph(): JSX.Element {
     return (
         <div>
             <Tabs defaultActiveKey="monthly">

@@ -1,6 +1,6 @@
 import React, { useImperativeHandle, useState, useContext, useEffect } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
-import ModalView from '../../../../components/modal';
+import ModalView from 'components/modal';
 import {
     FETCH_USER_PROFILE_DATA,
     CREATE_EDUCATION_DETAILS,
@@ -9,16 +9,16 @@ import {
     DELETE_EDUCATION_DETAILS,
     FETCH_USERS_PROFILE_DATA
 } from '../../queries/queries';
-import AuthContext from '../../../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { Subject } from 'rxjs';
 import { schema, widgets } from '../../profileSchema';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
-import StatusModal from '../../../../components/StatusModal/StatusModal';
-import Toaster from '../../../../components/Toaster';
+import { flattenObj } from 'components/utils/responseFlatten';
+import StatusModal from 'components/StatusModal/StatusModal';
+import Toaster from 'components/Toaster';
 import {
     yearCustomFormats,
     yearTransformErrors
-} from '../../../../components/utils/ValidationPatterns';
+} from 'components/utils/ValidationPatterns';
 
 interface Operation {
     id: string;
@@ -35,7 +35,7 @@ interface BasicEducationDetails {
 
 // eslint-disable-next-line
 const CreateEducation = (props: { callback: () => void }, ref: any) => {
-    const educationJson: unknown = require('./Education.json');
+    const educationJson: Record<string, unknown> = require('./Education.json');
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [educationID, setEducationID] = useState<string[]>([]);
     const [educationDetails, setEducationDetails] = useState({} as BasicEducationDetails);
@@ -169,15 +169,15 @@ const CreateEducation = (props: { callback: () => void }, ref: any) => {
     }
 
     // Update Education Details
-    function UpdateUserEducation(frm) {
+    function UpdateUserEducation(form) {
         updateEducationalDetail({
             variables: {
                 id: operation.id,
                 data: {
-                    Institute_Name: frm.Institute_Name,
-                    Specialization: frm.Specialization,
-                    Type_of_degree: frm.Type_of_degree,
-                    Year: frm.Year
+                    Institute_Name: form.Institute_Name,
+                    Specialization: form.Specialization,
+                    Type_of_degree: form.Type_of_degree,
+                    Year: form.Year
                 }
             }
         });
@@ -187,13 +187,13 @@ const CreateEducation = (props: { callback: () => void }, ref: any) => {
         deleteEducationData({ variables: { id: id } });
     }
 
-    function OnSubmit(frm) {
+    function OnSubmit(form) {
         switch (operation.type) {
             case 'create':
-                CreateUserEducation(frm);
+                CreateUserEducation(form);
                 break;
             case 'edit':
-                UpdateUserEducation(frm);
+                UpdateUserEducation(form);
                 break;
         }
     }
@@ -211,8 +211,8 @@ const CreateEducation = (props: { callback: () => void }, ref: any) => {
                 formUISchema={schema}
                 formSchema={educationJson}
                 showing={operation.modal_status}
-                formSubmit={(frm) => {
-                    OnSubmit(frm);
+                formSubmit={(form) => {
+                    OnSubmit(form);
                 }}
                 widgets={widgets}
                 modalTrigger={modalTrigger}

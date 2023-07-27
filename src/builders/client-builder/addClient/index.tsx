@@ -28,7 +28,6 @@ const AddClient: React.FC = () => {
     const history = useHistory();
 
     const [createClientBooking] = useMutation(CREATE_CLIENT_BOOKING);
-
     const [createClient] = useMutation(CREATE_CLIENT);
     const [updateBookingStatus] = useMutation(UPDATE_BOOKING_STATUS);
 
@@ -51,7 +50,7 @@ const AddClient: React.FC = () => {
                     frm.formData.offeringFilter === 'Class'
                         ? JSON.parse(frm.formData.classBasedOfferings)
                         : null;
-                console.log(frm.formData.offerings, frm.formData);
+                
                 createClientBooking({
                     variables: {
                         data: {
@@ -71,7 +70,7 @@ const AddClient: React.FC = () => {
                     },
                     onCompleted: (response) => {
                         const flattenReponse = flattenObj({ ...response.createClientBooking });
-                        console.log(flattenReponse);
+                        
                         if (
                             flattenReponse.fitnesspackages[0].fitness_package_type.type ===
                                 'Custom Fitness' ||

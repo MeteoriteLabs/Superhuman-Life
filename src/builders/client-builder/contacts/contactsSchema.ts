@@ -1,14 +1,13 @@
+import PhoneEmailInput from "./PhoneEmailInput";
+
+export const widgets = {
+    emailAndPhone: PhoneEmailInput,
+};
 interface Schema {
     firstname: {
         'ui:placeholder': string;
     };
     lastname: {
-        'ui:placeholder': string;
-    };
-    phone: {
-        'ui:placeholder': string;
-    };
-    email: {
         'ui:placeholder': string;
     };
     nameOfPayee: {
@@ -72,6 +71,11 @@ interface Schema {
             inline: boolean;
         };
     };
+    emailAndPhone: {
+        'ui:widget': 'emailAndPhone';
+    };
+
+
 }
 export const schema: Schema = {
     firstname: {
@@ -79,12 +83,6 @@ export const schema: Schema = {
     },
     lastname: {
         'ui:placeholder': 'Enter Last Name'
-    },
-    phone: {
-        'ui:placeholder': 'Enter Phone Number'
-    },
-    email: {
-        'ui:placeholder': 'Enter Email address'
     },
     nameOfPayee: {
         'ui:placeholder': 'Enter Payee name'
@@ -146,5 +144,8 @@ export const schema: Schema = {
         'ui:options': {
             inline: true
         }
+    },
+    emailAndPhone: {
+        'ui:widget': 'emailAndPhone'
     }
 };

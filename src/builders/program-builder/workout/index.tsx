@@ -1,4 +1,4 @@
-import { useMemo, useContext, useState, useRef } from 'react';
+import { useMemo, useContext, useState, useRef ,useEffect} from 'react';
 import {
     Button,
     Card,
@@ -212,6 +212,12 @@ export default function EventsTab(): JSX.Element {
         setPage(selectedPageNumber);
     };
 
+    useEffect(() => {
+        if (tableData.length === 0 && page > 1) {
+            setPage(page - 1);
+        }
+    }, [tableData]);
+
     return (
         <TabContent>
             <hr />
@@ -241,7 +247,7 @@ export default function EventsTab(): JSX.Element {
                     <Col>
                         <Card.Title className="text-right">
                             <Button
-                                variant="outline-secondary"
+                                variant="dark"
                                 size="sm"
                                 onClick={() => {
                                     createEditWorkoutComponent.current.TriggerForm({

@@ -165,3 +165,20 @@ export const CREATE_NOTIFICATION = gql`
         }
     }
 `;
+
+export const FETCH_CONTACTS = gql`
+        query contacts($id: ID!, $email: String, $phone: String) {
+            contacts(
+                filters: { ownedBy: { id: { eq: $id } } or: [{ phone: { eq: $phone } }, { email: { eq: $email } }] }
+                pagination:  {pageSize: 500}
+            ) {
+                data {
+                    id
+                    attributes {
+                        email
+                        phone
+                    }
+                }
+            }
+        }
+    `;

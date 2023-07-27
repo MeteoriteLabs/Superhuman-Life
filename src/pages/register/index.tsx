@@ -3,10 +3,10 @@ import { withTheme } from '@rjsf/core';
 import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
 import { Button, Carousel, Col, Container, Modal, ProgressBar, Row } from 'react-bootstrap';
 // import SocialLogin from "./SocialLogin";
-import ChangeMakerSelect from '../../components/customWidgets/changeMakerList';
+import ChangeMakerSelect from 'components/customWidgets/changeMakerList';
 import LanguageSelect from '../../components/customWidgets/languagesList';
 // import OrganizationSelect from "../../components/customWidgets/organizationTypeList";
-import TimeZoneSelect from '../../components/customWidgets/timeZoneSelect';
+import TimeZoneSelect from 'components/customWidgets/timeZoneSelect';
 import { useMutation } from '@apollo/client';
 import {
     CREATE_ADDRESS,

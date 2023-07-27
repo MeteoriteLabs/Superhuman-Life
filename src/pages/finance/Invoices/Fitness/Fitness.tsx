@@ -1,11 +1,11 @@
 import React from 'react';
 import { Badge, Row, Col } from 'react-bootstrap';
 import { useContext, useMemo, useRef, useState } from 'react';
-import Table from '../../../../components/table/index';
-import ActionButton from '../../../../components/actionbutton';
+import Table from 'components/table/index';
+import ActionButton from 'components/actionbutton';
 import { GET_ALL_BOOKINGS_FINANCE } from '../../graphQL/queries';
 import { useQuery } from '@apollo/client';
-import authContext from '../../../../context/auth-context';
+import authContext from 'context/auth-context';
 import moment from 'moment';
 import InvoicesAction from '../InvoicesAction';
 

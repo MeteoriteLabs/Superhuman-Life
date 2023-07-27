@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
-import Icon from '../Icons/index';
+import Icon from 'components/Icons';
 
 export function SideNav({
     collapse,
@@ -166,7 +166,7 @@ export function SideNav({
                 <OverlayTrigger
                     placement="right"
                     delay={{ show: 250, hide: 400 }}
-                    overlay={renderTooltip('Offerings')}
+                    overlay={renderTooltip('Services')}
                 >
                     {selectedOption === 'offerings' ? (
                         <NavLink
@@ -175,7 +175,7 @@ export function SideNav({
                             onClick={() => setSelectedOption(location.pathname.slice(1))}
                         >
                             <Icon name="offering" width={24} height={24} />
-                            <span className="ml-1">{!collapse && 'Offerings'}</span>
+                            <span className="ml-1">{!collapse && 'Services'}</span>
                         </NavLink>
                     ) : (
                         <NavLink
@@ -185,7 +185,7 @@ export function SideNav({
                             style={{ color: '#cebaa8' }}
                         >
                             <Icon name="lightoffering" width={24} height={24} />
-                            <span className="ml-1">{!collapse && 'Offerings'}</span>
+                            <span className="ml-1">{!collapse && 'Services'}</span>
                         </NavLink>
                     )}
                 </OverlayTrigger>
@@ -193,7 +193,7 @@ export function SideNav({
                 <OverlayTrigger
                     placement="right"
                     delay={{ show: 250, hide: 400 }}
-                    overlay={renderTooltip('Resources')}
+                    overlay={renderTooltip('Library')}
                 >
                     {selectedOption === 'resources' ? (
                         <NavLink
@@ -202,7 +202,7 @@ export function SideNav({
                             onClick={() => setSelectedOption(location.pathname.slice(1))}
                         >
                             <Icon name="resource" width={24} height={24} />
-                            <span className="ml-1">{!collapse && 'Resources'}</span>
+                            <span className="ml-1">{!collapse && 'Library'}</span>
                         </NavLink>
                     ) : (
                         <NavLink
@@ -212,7 +212,7 @@ export function SideNav({
                             style={{ color: '#cebaa8' }}
                         >
                             <Icon name="lightresource" width={24} height={24} />
-                            <span className="ml-1">{!collapse && 'Resources'}</span>
+                            <span className="ml-1">{!collapse && 'Library'}</span>
                         </NavLink>
                     )}
                 </OverlayTrigger>
@@ -306,8 +306,9 @@ export function SideNav({
                 {collapse ? (
                     <i className="fas fa-angle-double-right"></i>
                 ) : (
-                    <>
-                        <i className="fas fa-angle-double-left mr-sm-2"></i>Collapse
+                    <><div className='mb-1'>
+                        <i className="fas fa-angle-double-left mr-sm-2 mt-1"></i>Collapse
+                        </div>
                     </>
                 )}
             </Button>

@@ -3,7 +3,7 @@ import { Col, Row, Navbar, Nav } from 'react-bootstrap';
 import { SideNav } from './side';
 import { AuthenticatedNav, UnauthenticatedNav } from './top';
 import { useLocation } from 'react-router-dom';
-import Icon from '../Icons';
+import Icon from 'components/Icons';
 import './bottomBar.css';
 
 export default function Layout({
@@ -43,7 +43,7 @@ export default function Layout({
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
-
+    
     return (
         <>
             <header>
@@ -57,8 +57,8 @@ export default function Layout({
                                 <Col lg={collapse ? '1' : '2'} className="d-none d-lg-block">
                                     <SideNav collapse={collapse} setCollapse={setCollapse} />
                                 </Col>
-                                <Col lg={collapse ? '11' : '10'} className="pr-2 pl-3 mb-5">
-                                    <hr />
+                                <Col lg={collapse ? '11' : '10'} className="pr-2 pl-3 mb-5 mt-3">
+                    
                                     {children}
                                 </Col>
                             </Row>
@@ -228,7 +228,7 @@ export default function Layout({
                                 style={{ color: '#cebaa8', display: 'flex' }}
                             >
                                 <Icon name="lightoffering" width={24} height={24} />
-                                <span className="ml-1">Offerings</span>
+                                <span className="ml-1">Services</span>
                             </Nav.Link>
 
                             <Nav.Link
@@ -236,7 +236,7 @@ export default function Layout({
                                 style={{ color: '#cebaa8', display: 'flex' }}
                             >
                                 <Icon name="lightresource" width={24} height={24} />
-                                <span className="ml-1">Resources</span>
+                                <span className="ml-1">Library</span>
                             </Nav.Link>
 
                             <Nav.Link

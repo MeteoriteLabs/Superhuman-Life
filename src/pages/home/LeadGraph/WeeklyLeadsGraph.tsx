@@ -1,13 +1,13 @@
 import { useContext, useState } from 'react';
-import BarGraph from '../../../components/Graphs/BarGraph/BarGraph';
+import BarGraph from 'components/Graphs/BarGraph/BarGraph';
 import { useQuery } from '@apollo/client';
 import { GET_LEADS } from '../LeadGraph/queries';
-import AuthContext from '../../../context/auth-context';
-import { flattenObj } from '../../../components/utils/responseFlatten';
+import AuthContext from 'context/auth-context';
+import { flattenObj } from 'components/utils/responseFlatten';
 import { Row, Col } from 'react-bootstrap';
 import moment from 'moment';
 
-function WeeklyLeadsGraph() {
+function WeeklyLeadsGraph(): JSX.Element {
     const [leadsData, setLeadData] = useState<{ index: string; Leads: number }[]>([]);
     const auth = useContext(AuthContext);
 

@@ -329,6 +329,7 @@ export const GET_CHANGEMAKER_AVAILABILITY_AND_TAGS = gql`
                     start_time
                     end_time
                     tag
+                    SessionTitle
                 }
             }
         }

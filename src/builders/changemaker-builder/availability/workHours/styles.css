@@ -43,3 +43,95 @@ input[type='reset'] {
     cursor: pointer;
     outline: inherit;
 }
+
+.row_border_bottom {
+    border-bottom: 3px solid gray;
+    width: 63%;
+    margin-left: 29vw;
+    letter-spacing: 2px;
+    font-size: 24px;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 5px;
+}
+.table_container {
+    margin-left: 10px;
+}
+.btn_nav {
+    text-align: end;
+}
+.btn_toolbar {
+    display: flex;
+    justify-content: flex-end;
+}
+.message_container {
+    margin-right: 50px;
+    margin-top: 10px;
+}
+.btn_delete {
+    margin-left: 50px;
+}
+@media (max-width: 767px) {
+    .btn_nav {
+        text-align: start;
+        margin-top: 10px;
+    }
+    .btn_toolbar {
+        display: block;
+        justify-content: flex-start;
+    }
+    .row_border_bottom {
+        width: 100%;
+        margin-left: 0;
+        text-align: center;
+        border-bottom-width: 2px;
+        margin-top: 30px;
+    }
+    .message_container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 20vh;
+        margin-right: 0px;
+    }
+    .table_container {
+        margin-left: 0;
+        width: 100%;
+        margin: 0 auto;
+        margin-top: 30px;
+        overflow: hidden;
+    }
+    .small_screen {
+        font-size: 12px;
+        font-weight: 400;
+        letter-spacing: 0;
+        display: flex;
+        flex-direction: row;
+    }
+    .table_col {
+        width: 81vw;
+    }
+    .time_picker {
+        margin: 10px;
+    }
+
+    .mode_picker {
+        margin: 0 auto;
+        width: 200px;
+        margin-bottom: 20px;
+    }
+    .btn_add {
+        width: 200px;
+    }
+    .btn_delete {
+        margin-left: 0px;
+        margin-top: 8px;
+    }
+}
+
+.time_picker {
+    width: 200px;
+}

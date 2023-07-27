@@ -1,4 +1,4 @@
-import { useMemo, useState, useContext, useRef } from 'react';
+import { useMemo, useState, useContext, useRef , useEffect } from 'react';
 import {
     Badge,
     Button,
@@ -10,15 +10,15 @@ import {
     Col,
     Form
 } from 'react-bootstrap';
-import Table from '../../../components/table/leads-table';
-import ActionButton from '../../../components/actionbutton/index';
+import Table from 'components/table/leads-table';
+import ActionButton from 'components/actionbutton/index';
 import { useQuery, useLazyQuery } from '@apollo/client';
 import { GET_TRANSACTIONS, GET_CONTACTS, FETCH_CHANGEMAKERS } from './queries';
-import { flattenObj } from '../../../components/utils/responseFlatten';
-import AuthContext from '../../../context/auth-context';
+import { flattenObj } from 'components/utils/responseFlatten';
+import AuthContext from 'context/auth-context';
 import moment from 'moment';
 import { useHistory } from 'react-router-dom';
-import containsSubstring from '../../../components/utils/containsSubstring';
+import containsSubstring from 'components/utils/containsSubstring';
 
 export default function Earnings(): JSX.Element {
     const auth = useContext(AuthContext);
@@ -95,7 +95,7 @@ export default function Earnings(): JSX.Element {
                 Cell: ({ row }: { row: Row }) => {
                     const history = useHistory();
                     const routeChange = () => {
-                        const path = `receipt/?id=${row.original.id}`;
+                        const path = `receiptearning/?id=${row.original.id}`;
                         history.push(path);
                     };
 
@@ -170,9 +170,9 @@ export default function Earnings(): JSX.Element {
 
                         amount: `${Detail.Currency} ${Detail.TransactionAmount}`,
                         remark: Detail.TransactionRemarks,
-                        transactionDate: moment(Detail.TransactionDateTime).format(
+                        transactionDate: Detail.TransactionDateTime ? moment(Detail.TransactionDateTime).format(
                             'DD/MM/YYYY, hh:mm'
-                        ),
+                        ) : 'N/A',
                         status: Detail.TransactionStatus,
                         paymentMode: Detail.PaymentMode
                     };
@@ -195,11 +195,16 @@ export default function Earnings(): JSX.Element {
         setPage(selectedPageNumber);
     };
 
+    useEffect(() => {
+        if (datatable.length === 0 && page > 1) {
+            setPage(page - 1);
+        }
+    }, [datatable]);
     return (
         <TabContent>
             <Container className="mt-3">
                 <Row>
-                    <Col lg={2}>
+                    <Col lg={2} className="mb-3 mb-lg-0">
                         <Form.Control
                             as="select"
                             aria-label="Default select example"
@@ -210,6 +215,7 @@ export default function Earnings(): JSX.Element {
                             <option value="name">Name</option>
                         </Form.Control>
                     </Col>
+
                     <Col lg={4}>
                         <InputGroup className="mb-3">
                             <FormControl

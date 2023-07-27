@@ -1,23 +1,29 @@
-import { useContext, useState } from 'react';
-import { Card, Row, Col } from 'react-bootstrap';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { Card, Row, Col, Button } from 'react-bootstrap';
 import { useQuery, useMutation } from '@apollo/client';
-import { UPDATE_SEEN_NEW } from '../../../builders/client-builder/leads/queries';
+import { UPDATE_SEEN_NEW } from 'builders/client-builder/leads/queries';
 import { GET_LEADS } from './queries';
-import { flattenObj } from '../../../components/utils/responseFlatten';
-import NoDataInCard from '../../../components/NoDataInCard';
-import AuthContext from '../../../context/auth-context';
+import { flattenObj } from 'components/utils/responseFlatten';
+import NoDataInCard from 'components/NoDataInCard';
+import AuthContext from 'context/auth-context';
 import moment from 'moment';
 import './lead.css';
 
-function LeadComponent() {
+function LeadComponent(): JSX.Element {
     const [leadData, setLeadData] = useState<any>([]);
     const auth = useContext(AuthContext);
+    const [page, setPage] = useState<number>(0);
+    const [loadingMore, setLoadingMore] = useState<boolean>(false); // Added loading state
+    const myElementRef = useRef<HTMLDivElement>(null);
+    const [positionTop, setPositionTop] = useState<number>(0);
+    const [innerHeight, setInnerHeight] = useState<number>(0);
+    const [scrollHeight, setScrollHeight] = useState<number>(0);
+    const [totalRecords, setTotalRecords] = useState<number>(0);
 
-    useQuery(GET_LEADS, {
-        variables: { id: Number(auth.userid) },
+    const { data, fetchMore } = useQuery(GET_LEADS, {
+        variables: { id: Number(auth.userid), start: page * 2 - 2, limit: 2 },
         onCompleted: (data) => {
-            const flattenLeadsData = flattenObj({ ...data.websiteContactForms });
-            setLeadData(flattenLeadsData);
+            setTotalRecords(data.websiteContactForms.meta.pagination.total);
         }
     });
 
@@ -25,12 +31,59 @@ function LeadComponent() {
         refetchQueries: [GET_LEADS]
     });
 
+    useEffect(() => {
+        const handleScroll = () => {
+            const el: HTMLDivElement | null = myElementRef.current;
+
+            if (el) {
+                setPositionTop(el.scrollTop);
+                setInnerHeight(el.clientHeight);
+                setScrollHeight(el.scrollHeight);
+            }
+        };
+
+        const element: HTMLDivElement | null = myElementRef.current;
+        if (element) {
+            element.addEventListener('scroll', handleScroll);
+        }
+
+        return () => {
+            if (element) {
+                element.removeEventListener('scroll', handleScroll);
+            }
+        };
+    }, []);
+
+    useEffect(() => {
+        try {
+            if (!loadingMore && positionTop + innerHeight + 1 >= scrollHeight) {
+                setLoadingMore(true);
+                setPage((prevPage) => prevPage + 1);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+        if (leadData.length === totalRecords) {
+            // All leads have been loaded, stop loading more
+            setLoadingMore(false);
+        }
+    }, [positionTop, innerHeight, scrollHeight]);
+
+    useEffect(() => {
+        // Handle the new data fetched when the page changes
+        if (data && data.websiteContactForms.data.length > 0) {
+            setLoadingMore(false);
+            const flattenLeadsData = flattenObj({ ...data.websiteContactForms });
+            setLeadData((prevData) => [...prevData, ...flattenLeadsData]);
+        }
+    }, [data]);
+
     return (
         <Card>
             <Card.Header as="h5" className="bg-dark text-light">
                 Lead
             </Card.Header>
-            <div className="scrollBar">
+            <div className="scrollBar" ref={myElementRef}>
                 <Card.Body>
                     {leadData && leadData.length ? (
                         leadData.map((currentValue) => {
@@ -54,7 +107,7 @@ function LeadComponent() {
                                             <Col md={{ span: 3, offset: 9 }}>
                                                 <a
                                                     href={`mailto:${
-                                                        currentValue.Details
+                                                        currentValue.Details && currentValue.Details.leadsdetails
                                                             ? currentValue.Details.leadsdetails
                                                                   .email
                                                             : null
@@ -68,7 +121,7 @@ function LeadComponent() {
                                                 </a>{' '}
                                                 <a
                                                     href={`tel:${
-                                                        currentValue.Details
+                                                        currentValue.Details && currentValue.Details.leadsdetails
                                                             ? currentValue.Details.leadsdetails
                                                                   .phonenumber
                                                             : null
@@ -85,7 +138,7 @@ function LeadComponent() {
                                         <Row>
                                             <Col>
                                                 <Card.Title>
-                                                    {currentValue.Details
+                                                    {currentValue.Details && currentValue.Details.leadsdetails
                                                         ? currentValue.Details.leadsdetails.name
                                                         : null}
                                                 </Card.Title>
@@ -94,7 +147,7 @@ function LeadComponent() {
 
                                         {/* Message */}
                                         <Card.Subtitle className="mb-2 text-secondary">
-                                            {currentValue.Details
+                                            {currentValue.Details && currentValue.Details.leadsdetails
                                                 ? currentValue.Details.leadsdetails.leadsmesssage
                                                 : null}
                                         </Card.Subtitle>
@@ -125,6 +178,18 @@ function LeadComponent() {
                         })
                     ) : (
                         <NoDataInCard msg={'No Leads cards to show'} />
+                    )}
+                    {loadingMore && (
+                        <div
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                fontSize: '17px',
+                                marginTop: '10px'
+                            }}
+                        >
+                            Loading more leads...
+                        </div>
                     )}
                 </Card.Body>
             </div>

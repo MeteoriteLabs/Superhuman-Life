@@ -154,7 +154,7 @@ function CreateEditChannel(props: any, ref: any) {
                     data: {
                         fitnesspackage: flattenData.createFitnesspackage.id,
                         ActiveBookings: 0,
-                        ClassSize: 5000,
+                        ClassSize: 5000,//keeping initial class for livestream as constant i.e., 5000
                         ClassAvailability: 5000,
                         changemaker_id: auth.userid,
                         InstantBooking: flattenData.createFitnesspackage.groupinstantbooking,
@@ -597,7 +597,7 @@ function CreateEditChannel(props: any, ref: any) {
             />
 
             {/* Delete modal validation (if classAvailability is greater than zero show this dailouge box) */}
-            {offeringInventoryDetails && offeringInventoryDetails.ActiveBookings > 0 ? (
+            {offeringInventoryDetails && offeringInventoryDetails.ActiveBookings > 0 && operation.type === 'delete' ? (
                 <Modal
                     size="lg"
                     aria-labelledby="contained-modal-title-vcenter"

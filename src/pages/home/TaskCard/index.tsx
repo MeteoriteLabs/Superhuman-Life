@@ -12,16 +12,16 @@ import {
     Col
 } from 'react-bootstrap';
 import { GET_ALL_BOOKINGS } from '../../booking/GraphQL/queries';
-import { GET_FITNESS, GET_TAGS } from '../../../builders/package-builder/fitness/graphQL/queries';
-import authContext from '../../../context/auth-context';
+import { GET_FITNESS, GET_TAGS } from 'builders/package-builder/fitness/graphQL/queries';
+import authContext from 'context/auth-context';
 import React, { useContext, useState, useRef } from 'react';
 import { useQuery, useLazyQuery } from '@apollo/client';
-import { flattenObj } from '../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 import BookingAction from '../../booking/Movement/BookingAction';
 import moment from 'moment';
 import './style.css';
 import { Link } from 'react-router-dom';
-import NoDataInCard from '../../../components/NoDataInCard';
+import NoDataInCard from 'components/NoDataInCard';
 
 const TaskCard: React.FC = () => {
     const auth = useContext(authContext);
@@ -33,9 +33,8 @@ const TaskCard: React.FC = () => {
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-
-    // eslint-disable-next-line
-    const { data: get_booking, refetch: refetchBookings } = useQuery(GET_ALL_BOOKINGS, {
+    
+    const {  refetch: refetchBookings } = useQuery(GET_ALL_BOOKINGS, {
         variables: {
             id: auth.userid
         },
@@ -44,9 +43,7 @@ const TaskCard: React.FC = () => {
 
     const sessionsObj = {};
 
-    //offerings
-    // eslint-disable-next-line
-    const [tags, { data: get_tags }] = useLazyQuery(GET_TAGS, {
+    const [tags ] = useLazyQuery(GET_TAGS, {
         variables: { id: auth.userid },
         onCompleted: (data) => {
             const tagsFlattenData = flattenObj({ ...data });
@@ -99,8 +96,7 @@ const TaskCard: React.FC = () => {
         }
     });
 
-    // eslint-disable-next-line
-    const { data: get_fitness, refetch: refetchFitness } = useQuery(GET_FITNESS, {
+    const { data: get_fitness } = useQuery(GET_FITNESS, {
         variables: { id: auth.userid },
         onCompleted: () => {
             tags({ variables: { id: auth.userid } });

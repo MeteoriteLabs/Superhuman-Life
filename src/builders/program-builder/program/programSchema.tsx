@@ -1,10 +1,10 @@
-import FitnessMultiSelect from '../../../components/customWidgets/fitnessMultiSelect';
+import FitnessMultiSelect from 'components/customWidgets/fitnessMultiSelect';
 
 export const widgets = {
     fitnessSelect: FitnessMultiSelect
 };
 
-export const schema: any = {
+export const schema: Record<string, unknown> = {
     level: {
         'ui:widget': 'radio',
         'ui:options': {

@@ -1,17 +1,16 @@
 import { useMutation, useQuery } from '@apollo/client';
 import React, { useContext, useState } from 'react';
-import authContext from '../../context/auth-context';
+import authContext from 'context/auth-context';
 import { Form, Card, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { CREATE_NOTIFICATION_SETTINGS, GET_NOTIFICATION_SETTINGS } from './queries';
-import { flattenObj } from '../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 
 const NotificationSetting: React.FC = () => {
     const auth = useContext(authContext);
     const [isSettingNotificationCreated, setIsSettingNotificationCreated] = useState<number>(0);
 
-    // eslint-disable-next-line
-    const { data: get_notifications, refetch: refetch_notifications } = useQuery(
+    const { refetch: refetch_notifications } = useQuery(
         GET_NOTIFICATION_SETTINGS,
         {
             variables: { id: auth.userid },

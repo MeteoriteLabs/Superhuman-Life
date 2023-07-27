@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { GET_AVAILABILITY, BOOKING_CONFIG, FETCH_USER_PROFILE_DATA } from './queries';
 import React, { useContext, useState } from 'react';
-import AuthContext from '../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import moment from 'moment';
-import { flattenObj } from '../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 
 interface Profile {
     updatedAt: string;

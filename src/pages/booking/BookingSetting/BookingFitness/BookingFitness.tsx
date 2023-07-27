@@ -1,12 +1,12 @@
 import { useContext, useMemo, useRef, useState } from 'react';
 import { Row, Col, Badge } from 'react-bootstrap';
-import authContext from '../../../../context/auth-context';
-import Table from '../../../../components/table/index';
-import ActionButton from '../../../../components/actionbutton';
+import authContext from 'context/auth-context';
+import Table from 'components/table/index';
+import ActionButton from 'components/actionbutton';
 import ConfirmRequestAction from './ConfirmRequestAction';
 import { BOOKING_CONFIG } from '../../GraphQL/queries';
 import { useQuery } from '@apollo/client';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 
 export default function BookingFitness() {
     const auth = useContext(authContext);
@@ -25,6 +25,7 @@ export default function BookingFitness() {
     const loadData = (data) => {
         const flattenData = flattenObj({ ...data });
         setBookingPackage([
+            // eslint-disable-next-line
             ...flattenData.bookingConfigs.map((fitnessPackage) => {
                 return {
                     id: fitnessPackage.id,

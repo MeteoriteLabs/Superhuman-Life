@@ -9,16 +9,16 @@ import {
     Button,
     FormControl
 } from 'react-bootstrap';
-import Table from '../../../components/table/leads-table';
-import ActionButton from '../../../components/actionbutton/index';
+import Table from 'components/table/leads-table';
+import ActionButton from 'components/actionbutton/index';
 import { useQuery, useLazyQuery } from '@apollo/client';
 import { GET_ALL_CLIENTS, GET_SESSION_BOOKINGS_FOR_CLIENTS } from './queries';
-import { flattenObj } from '../../../components/utils/responseFlatten';
-import AuthContext from '../../../context/auth-context';
+import { flattenObj } from 'components/utils/responseFlatten';
+import AuthContext from 'context/auth-context';
 import moment from 'moment';
 import { useHistory } from 'react-router-dom';
 import CancelComponent from './CancelComponent';
-import OfferingsDisplayImage from '../../../components/customWidgets/offeringsDisplayImage';
+import OfferingsDisplayImage from 'components/customWidgets/offeringsDisplayImage';
 import './Client.css';
 
 export default function Clients() {

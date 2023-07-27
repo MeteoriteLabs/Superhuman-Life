@@ -1,4 +1,4 @@
-import { useMemo, useContext, useRef, useState } from 'react';
+import { useMemo, useContext, useRef, useState, useEffect } from 'react';
 import ActionButton from '../../../components/actionbutton/index';
 import {
     Badge,
@@ -11,12 +11,12 @@ import {
     Row,
     Col
 } from 'react-bootstrap';
-import AuthContext from '../../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { useQuery } from '@apollo/client';
 import { GET_CLIENT_NEW } from './queries';
 import CreateClient from './addclientcomponent';
-import Table from '../../../components/table';
-import { flattenObj } from '../../../components/utils/responseFlatten';
+import Table from 'components/table';
+import { flattenObj } from 'components/utils/responseFlatten';
 
 function ClientListingPage() {
     const auth = useContext(AuthContext);
@@ -86,9 +86,9 @@ function ClientListingPage() {
 
                     const arrayAction = [
                         { actionName: 'Go to client', actionClick: actionClick1 },
-                        { actionName: 'Build Program', actionClick: actionClick2 },
-                        { actionName: 'Chat', actionClick: actionClick3 },
-                        { actionName: 'Build Package', actionClick: actionClick4 },
+                        // { actionName: 'Build Program', actionClick: actionClick2 },
+                        // { actionName: 'Chat', actionClick: actionClick3 },
+                        // { actionName: 'Build Package', actionClick: actionClick4 },
                         { actionName: 'Remove Client', actionClick: actionClick5 }
                     ];
 
@@ -158,6 +158,12 @@ function ClientListingPage() {
         setPage(selectedPageNumber);
     };
 
+    useEffect(() => {
+        if (datatable.length === 0 && page > 1) {
+            setPage(page - 1);
+        }
+    }, [datatable]);
+
     return (
         <TabContent>
             <Container>
@@ -185,7 +191,7 @@ function ClientListingPage() {
                     <Col>
                         <Card.Title className="text-center">
                             <Button
-                                variant="outline-secondary"
+                                variant="dark"
                                 size="sm"
                                 onClick={() => {
                                     window.open('/add_client', '_self');

@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { ChangeMakerWebsiteContext } from '../../../context/changemakerWebsite-context';
+import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
 import { ThreeDots } from 'react-bootstrap-icons';
 
 function WebsiteBuilder_settings(): JSX.Element {

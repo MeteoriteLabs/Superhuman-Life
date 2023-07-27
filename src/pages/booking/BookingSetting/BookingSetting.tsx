@@ -3,7 +3,7 @@ import * as Icon from 'react-bootstrap-icons';
 import { NavLink } from 'react-router-dom';
 import BookingFitness from './BookingFitness/BookingFitness';
 
-export default function BookingSetting(props) {
+export default function BookingSetting(): JSX.Element {
     return (
         <div>
             <div className="d-flex justify-content-start align-items-center">

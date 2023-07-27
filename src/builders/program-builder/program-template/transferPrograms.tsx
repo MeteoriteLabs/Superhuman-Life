@@ -3,8 +3,8 @@ import { Button, Modal } from 'react-bootstrap';
 import TransferProgramsTable from './transferProgramTable';
 import { UPDATE_FITNESSPORGRAMS_SESSIONS, PROGRAM_EVENTS, CREATE_SESSION } from './queries';
 import { useMutation, useQuery } from '@apollo/client';
-import { flattenObj } from '../../../components/utils/responseFlatten';
-import Toaster from '../../../components/Toaster';
+import { flattenObj } from 'components/utils/responseFlatten';
+import Toaster from 'components/Toaster';
 
 const TransferPrograms = (props: any) => {
     const [show, setShow] = useState(false);
@@ -13,7 +13,7 @@ const TransferPrograms = (props: any) => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [updateProgram] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, {
-        onCompleted: (r: any) => {
+        onCompleted: () => {
             handleClose();
             props.callback();
         }

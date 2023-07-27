@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import { Card, Row, Col, Button, Dropdown } from 'react-bootstrap';
 import { EDUCATIONAL_DETAILS } from '../../queries/queries';
 import { useQuery } from '@apollo/client';
@@ -17,6 +17,13 @@ const EducationDetails: React.FC = () => {
     const [educationData, setEducationData] = useState<any>([]);
     const [page, setPage] = useState<number>(1);
     const [totalRecords, setTotalRecords] = useState<number>(0);
+
+        
+    useEffect(() => {
+        if (educationData.length === 0 && page > 1) {
+            setPage(page - 1);
+        }
+    }, [educationData]);
 
     const {
         // eslint-disable-next-line
@@ -64,7 +71,7 @@ const EducationDetails: React.FC = () => {
             <Col md={{ offset: 9, span: 3 }}>
                 <Card.Title className="text-center">
                     <Button
-                        variant="outline-secondary"
+                        variant="dark"
                         size="sm"
                         onClick={() => {
                             CreateEducationComponent.current.TriggerForm({
@@ -93,7 +100,7 @@ const EducationDetails: React.FC = () => {
                                         <Dropdown key={currValue.id}>
                                             <Dropdown.Toggle variant="bg-light" id="dropdown-basic">
                                                 <img
-                                                    src="/assets/kebabcase.svg"
+                                                    src="/assets/cardsKebab.svg"
                                                     alt="notification"
                                                     className="img-responsive "
                                                     style={{ height: '20px', width: '20px' }}

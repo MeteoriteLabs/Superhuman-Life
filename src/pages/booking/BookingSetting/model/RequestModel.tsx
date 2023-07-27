@@ -111,7 +111,7 @@ const RequestModel: React.FC<{ render: boolean; setRender: (args: boolean) => vo
                                         checked={state.peopleChecked.some(
                                             ({ id }) => id === person.id
                                         )}
-                                        onChange={(e) => handleSelect(person)}
+                                        onChange={() => handleSelect(person)}
                                     />
                                 </Form.Group>
                             );

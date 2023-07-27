@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { useContext, useMemo, useRef, useState } from 'react';
-import { Badge, Row, Col, Form } from 'react-bootstrap';
+import { Badge, Row, Col, Button } from 'react-bootstrap';
 import AuthContext from '../../../../context/auth-context';
 import PTTable from '../../../../components/table/PtTable/PTTable';
 import { GET_SESSIONS_FROM_TAGS_FOR_ONE_ON_ONE_OR_ON_DEMAND } from '../../graphQL/queries';
@@ -9,24 +9,29 @@ import ActionButton from '../../../../components/actionbutton';
 import FitnessAction from '../FitnessAction';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
 
-export default function PT() {
+export default function PT(): JSX.Element {
     const auth = useContext(AuthContext);
     const [userPackage, setUserPackage] = useState<any>([]);
-    const [showHistory, setShowHistory] = useState<boolean>(false);
     const fitnessActionRef = useRef<any>(null);
+    const [page, setPage] = useState<number>(1);
+    const [totalRecords, setTotalRecords] = useState<number>(0);
 
-    const { data: get_tags, refetch: refetch_tags } = useQuery(
-        GET_SESSIONS_FROM_TAGS_FOR_ONE_ON_ONE_OR_ON_DEMAND,
-        {
-            variables: {
-                id: auth.userid
-            },
-            onCompleted: (data) => {
-                loadData(data);
-            },
-            fetchPolicy: 'no-cache'
-        }
-    );
+    const { refetch: refetch_tags } = useQuery(GET_SESSIONS_FROM_TAGS_FOR_ONE_ON_ONE_OR_ON_DEMAND, {
+        variables: {
+            id: auth.userid,
+            start: page * 10 - 10,
+            limit: 10
+        },
+        onCompleted: (data) => {
+            loadData(data);
+            setTotalRecords(data.tags.meta.pagination.total);
+        },
+        fetchPolicy: 'no-cache'
+    });
+
+    const pageHandler = (selectedPageNumber: number) => {
+        setPage(selectedPageNumber);
+    };
 
     const loadData = (data) => {
         const flattenData = flattenObj({ ...data });
@@ -272,85 +277,39 @@ export default function PT() {
         []
     );
 
-    function handleHistoryPackage(data: any) {
-        const flattenData = flattenObj({ ...data });
-
-        setUserPackage(
-            [...flattenData.tags].map((packageItem) => {
-                let renewDay: any = '';
-                if (packageItem.client_packages[0].fitnesspackages[0].length !== 0) {
-                    renewDay = new Date(packageItem.client_packages[0].effective_date);
-                    renewDay.setDate(
-                        renewDay.getDate() +
-                            packageItem.client_packages[0].fitnesspackages[0].duration
-                    );
-                }
-                return {
-                    tagId: packageItem.id,
-                    id: packageItem.client_packages[0].fitnesspackages[0].id,
-                    packageName: packageItem.client_packages[0].fitnesspackages[0].packagename,
-                    duration: packageItem.client_packages[0].fitnesspackages[0].duration,
-                    effectiveDate: moment(packageItem.client_packages[0].effective_date).format(
-                        'MMMM DD,YYYY'
-                    ),
-                    packageStatus: packageItem.client_packages[0].fitnesspackages[0].Status
-                        ? 'Active'
-                        : 'Inactive',
-                    packageRenewal: moment(renewDay).format('MMMM DD,YYYY'),
-
-                    client: packageItem.client_packages[0].users_permissions_user.username,
-                    clientId: packageItem.client_packages[0].users_permissions_user.id,
-                    programName: packageItem.tag_name,
-                    programStatus: handleStatus(
-                        packageItem.sessions,
-                        packageItem.client_packages[0].effective_date,
-                        renewDay
-                    ),
-                    programRenewal: calculateProgramRenewal(
-                        packageItem.sessions,
-                        packageItem.client_packages[0].effective_date
-                    )
-                };
-            })
-        );
-    }
-
-    if (!showHistory) {
-        if (userPackage.length > 0) {
-            userPackage.filter((item: any, index: any) =>
-                moment(item.packageRenewal).isBefore(moment()) === true
-                    ? userPackage.splice(index, 1)
-                    : null
-            );
-        }
-    }
-
     return (
         <div className="mt-5">
-            <Row>
-                <div className="mb-3">
-                    <Form>
-                        <Form.Check
-                            type="switch"
-                            id="custom-switch"
-                            label="Show History"
-                            defaultChecked={showHistory}
-                            onClick={() => {
-                                setShowHistory(!showHistory);
-                                refetch_tags().then((res: any) => {
-                                    handleHistoryPackage(res.data);
-                                });
-                            }}
-                        />
-                    </Form>
-                </div>
-            </Row>
             <Row>
                 <Col>
                     <PTTable columns={columns} data={userPackage} />
                     <FitnessAction ref={fitnessActionRef} callback={() => refetch_tags()} />
                 </Col>
             </Row>
+            {/* Pagination */}
+            {userPackage && userPackage.length ? (
+                <Row className="justify-content-end">
+                    <Button
+                        variant="outline-dark"
+                        className="m-2"
+                        onClick={() => pageHandler(page - 1)}
+                        disabled={page === 1 ? true : false}
+                    >
+                        Previous
+                    </Button>
+
+                    <Button
+                        variant="outline-dark"
+                        className="m-2"
+                        onClick={() => pageHandler(page + 1)}
+                        disabled={totalRecords > page * 10 - 10 + userPackage.length ? false : true}
+                    >
+                        Next
+                    </Button>
+                    <span className="m-2 bold pt-2">{`${page * 10 - 10 + 1} - ${
+                        page * 10 - 10 + userPackage.length
+                    }`}</span>
+                </Row>
+            ) : null}
         </div>
     );
 }

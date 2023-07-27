@@ -2,15 +2,14 @@ import React, { useState, useContext, useEffect } from 'react';
 import {
     Row,
     Col,
-    Dropdown,
-    DropdownButton,
     Modal,
     Button,
     Form,
     Alert,
     FormControl,
     InputGroup,
-    Spinner
+    Spinner,
+    ButtonToolbar
 } from 'react-bootstrap';
 import moment from 'moment';
 import Calendar from 'react-calendar';
@@ -81,7 +80,6 @@ const WorkHours: React.FC = () => {
     const [holidays, setHolidays] = useState<any>([]);
     const [month, setMonth] = useState<number>(0);
     const [showDaysModal, setShowDaysModal] = useState<boolean>(false);
-    const [showDatesModal, setShowDatesModal] = useState<boolean>(false);
     const [showDatesRangeModal, setShowDatesRangeModal] = useState(false);
     const [masterSettings, setMasterSettings] = useState<any>([]);
     const [slots, setSlots] = useState<any>([]);
@@ -94,8 +92,6 @@ const WorkHours: React.FC = () => {
     const [startDate, setStartDate] = useState(moment().format('YYYY-MM-DD'));
     const [endDate, setEndDate] = useState(moment().add(1, 'months').format('YYYY-MM-DD'));
     const [userConfig, setUserConfig] = useState<any>(configTemplate);
-    const [checkState, setCheckState] = useState<boolean>(false);
-    const [holidayCheckState, setHolidayCheckState] = useState<boolean>(false);
     const [dayHoliday, setDayHoliday] = useState<boolean>(false);
     const [desc, setDesc] = useState<string>('');
     const [rangeValue, rangeOnChange] = useState([new Date(), new Date()]);
@@ -112,18 +108,6 @@ const WorkHours: React.FC = () => {
     useEffect(() => {
         setDate(moment(value).format('YYYY-MM-DD'));
     }, [value]);
-
-    useEffect(() => {
-        if (holidays.length > 0) {
-            setHolidayCheckState(holidays[0]?.Is_Holiday);
-            setCheckState(holidays[0]?.Is_Holiday);
-            setDesc(holidays[0]?.holiday_title);
-        } else {
-            setCheckState(false);
-            setHolidayCheckState(false);
-            setDesc('');
-        }
-    }, [holidays]);
 
     const mainQuery = useQuery(GET_CHANGEMAKER_AVAILABILITY_AND_TAGS, {
         variables: {
@@ -788,50 +772,32 @@ const WorkHours: React.FC = () => {
                         </div>
                     </Col>
                     <Col lg={6}>
-                        <div style={{ textAlign: 'end' }}>
-                            <DropdownButton variant="info" title="Master Settings" drop="left">
-                                <Dropdown.Item
-                                    eventKey="1"
-                                    onClick={() => {
-                                        setShowDaysModal(true);
-                                    }}
-                                >
-                                    Work Hours
-                                </Dropdown.Item>
-                                <Dropdown.Item
-                                    eventKey="2"
-                                    onClick={() => {
-                                        setShowDatesModal(true);
-                                    }}
-                                >
-                                    Booking Time
-                                </Dropdown.Item>
-                                <Dropdown.Item
-                                    eventKey="2"
+                        <div className="btn_nav">
+                            <ButtonToolbar className="btn_toolbar">
+                                <Button
                                     onClick={() => {
                                         setShowDatesRangeModal(true);
                                     }}
+                                    variant="dark"
                                 >
-                                    Dates
-                                </Dropdown.Item>
-                            </DropdownButton>
+                                    Add Holidays
+                                </Button>
+                                <Button
+                                    onClick={() => {
+                                        setShowDaysModal(true);
+                                    }}
+                                    style={{ marginLeft: '15px' }}
+                                    variant="dark"
+                                >
+                                    Add Bulk Slots
+                                </Button>
+                            </ButtonToolbar>
                         </div>
                     </Col>
                 </Row>
-                <div style={{ borderRadius: '20px' }} className="text-center mt-3 p-5 shadow-lg">
-                    <Row style={{ borderBottom: '3px solid gray' }}>
-                        <Col lg={4}>
-                            <h5>Calendar</h5>
-                        </Col>
-                        <Col lg={5}>
-                            <h5>Slots</h5>
-                        </Col>
-                        <Col lg={2}>
-                            <h5>Mode</h5>
-                        </Col>
-                        <Col lg={1}>
-                            <h5>Edit</h5>
-                        </Col>
+                <div style={{ borderRadius: '20px' }} className="text-center mt-3 p-0">
+                    <Row className="row_border_bottom">
+                        {moment(date).format('Do MMMM YYYY, dddd')}
                     </Row>
                     <Row className="mt-3">
                         <Col lg={4}>
@@ -857,7 +823,7 @@ const WorkHours: React.FC = () => {
                         </Col>
                         <Col lg={8}>
                             {slots?.length === 0 && (
-                                <div>
+                                <div className="message_container">
                                     You have nothing assigned for{' '}
                                     {moment(value).format('Do MMM, YYYY')}
                                 </div>
@@ -879,6 +845,7 @@ const WorkHours: React.FC = () => {
                                     overflow: 'auto',
                                     overflowX: 'hidden'
                                 }}
+                                className="table_container"
                             >
                                 {slots[0] !== null &&
                                     slots?.map((item, index: number) => {
@@ -886,77 +853,104 @@ const WorkHours: React.FC = () => {
                                             <Row
                                                 id={item.id}
                                                 key={index}
-                                                className="mt-3 pt-1 pb-1 items-center"
+                                                className="mt-3 pt-1 pb-1 items-center small_screen"
+                                                style={{ fontWeight: '600', letterSpacing: '2px' }}
                                             >
-                                                <Col lg={8}>
-                                                    <Row>
-                                                        <Col lg={5}>
+                                                <Col
+                                                    style={{
+                                                        borderRadius: '10px',
+                                                        backgroundColor: '#E5E5E5',
+                                                        overflow: 'hidden'
+                                                    }}
+                                                    md={10}
+                                                    className="shadow p-1 mb-0 bg-white table_col"
+                                                >
+                                                    <Row className="align-items-center">
+                                                        <Col
+                                                            className="p-2"
+                                                            style={{
+                                                                flex: '0 0 140px',
+                                                                color: 'white',
+                                                                borderRadius: '10px',
+                                                                marginLeft: '5px',
+                                                                fontSize: item.SessionTitle
+                                                                    ? '14px'
+                                                                    : 'inherit',
+                                                                backgroundColor: item.SessionTitle
+                                                                    ? '#0D6EBA'
+                                                                    : '#339B31'
+                                                            }}
+                                                        >
+                                                            {item.SessionTitle
+                                                                ? item.SessionTitle
+                                                                : 'Available'}
+                                                        </Col>
+
+                                                        <Col className="p-2" style={{ flex: '1' }}>
                                                             <div
-                                                                className="shadow-sm"
                                                                 style={{
-                                                                    border: '1px solid gray',
-                                                                    backgroundColor: 'whitesmoke',
-                                                                    padding: '5px',
-                                                                    borderRadius: '10px'
+                                                                    display: 'flex',
+                                                                    justifyContent: 'center'
                                                                 }}
                                                             >
                                                                 <span>
                                                                     {moment(
                                                                         item.start_time,
                                                                         'HH:mm'
-                                                                    ).format('HH:mm')}
+                                                                    ).format('HH:mm A')}
+                                                                    &nbsp;&nbsp;&nbsp;
                                                                 </span>
-                                                            </div>
-                                                        </Col>
-                                                        <Col lg={2}>To</Col>
-                                                        <Col lg={5}>
-                                                            <div
-                                                                className="shadow-sm"
-                                                                style={{
-                                                                    border: '1px solid gray',
-                                                                    backgroundColor: 'whitesmoke',
-                                                                    padding: '5px',
-                                                                    borderRadius: '10px'
-                                                                }}
-                                                            >
+                                                                <span>To&nbsp;&nbsp;&nbsp;</span>
                                                                 <span>
                                                                     {moment(
                                                                         item.end_time,
                                                                         'HH:mm'
-                                                                    ).format('HH:mm')}
+                                                                    ).format('hh:mm A')}
                                                                 </span>
                                                             </div>
                                                         </Col>
+                                                        <Col
+                                                            className="p-2"
+                                                            style={{ flex: '0 0 100px' }}
+                                                        >
+                                                            <span
+                                                                style={{
+                                                                    color:
+                                                                        item.mode === 'Hybrid'
+                                                                            ? '#B79C0C'
+                                                                            : item.mode === 'Online'
+                                                                            ? '#339B31'
+                                                                            : '#D33325'
+                                                                }}
+                                                            >
+                                                                {item.mode}
+                                                            </span>
+                                                        </Col>
                                                     </Row>
                                                 </Col>
-                                                <Col lg={2} className="ml-3">
-                                                    <div
-                                                        style={{
-                                                            border: '1px solid gray',
-                                                            backgroundColor: 'whitesmoke',
-                                                            padding: '5px',
-                                                            borderRadius: '10px'
-                                                        }}
-                                                    >
-                                                        <span>{item.mode}</span>
-                                                    </div>
-                                                </Col>
-                                                <Col lg={1}>
-                                                    <img
-                                                        style={{
-                                                            cursor: 'pointer',
-                                                            marginLeft: '50px',
-                                                            display: `${
-                                                                item.tag ? 'none' : 'block'
-                                                            }`
-                                                        }}
-                                                        src="/assets/delete.svg"
-                                                        alt="delete"
-                                                        onClick={() => {
-                                                            setConfirmModal(true);
-                                                            setSlotId(item.id);
-                                                        }}
-                                                    />
+
+                                                <Col className="p-2">
+                                                    {' '}
+                                                    {item.SessionTitle ? (
+                                                        ''
+                                                    ) : (
+                                                        <img
+                                                            style={{
+                                                                cursor: 'pointer',
+
+                                                                display: `${
+                                                                    item.tag ? 'none' : 'block'
+                                                                }`
+                                                            }}
+                                                            className="btn_delete"
+                                                            src="/assets/delete.svg"
+                                                            alt="delete"
+                                                            onClick={() => {
+                                                                setConfirmModal(true);
+                                                                setSlotId(item.id);
+                                                            }}
+                                                        />
+                                                    )}
                                                 </Col>
                                             </Row>
                                         );
@@ -966,147 +960,75 @@ const WorkHours: React.FC = () => {
                     </Row>
                     <Row className="mt-3">
                         <Col>
-                            <Row style={{ borderTop: '3px solid gray' }}></Row>
+                            <Row className="row_border_bottom"></Row>
                         </Col>
                     </Row>
-                    {checkState && (
-                        <Row className="mt-3 mb-3">
-                            <Col>
-                                <Form>
-                                    <Form.Check
-                                        type="switch"
-                                        defaultChecked={checkState}
-                                        onClick={() => setCheckState(!checkState)}
-                                        id="custom-switch"
-                                        label="Set Holiday"
-                                    />
-                                </Form>
-                            </Col>
-                            <Col lg={{ span: 1, offset: 2 }}></Col>
-                            <Col lg={5} className="pl-0 pr-0">
-                                <input
-                                    type="text"
-                                    className="shadow-lg p-1"
-                                    value={desc}
-                                    onChange={(e) => setDesc(e.target.value)}
-                                    placeholder="Enter the event"
-                                    style={{
-                                        width: '100%',
-                                        border: '1px solid gray',
-                                        borderRadius: '10px'
-                                    }}
-                                ></input>
-                                <span className="text-start">
-                                    <b>Enter holiday Description above</b>
-                                </span>
-                            </Col>
-                            {!holidayCheckState && (
-                                <Col lg={2}>
-                                    <Button
-                                        className="pl-3 pr-3 pt-1 pb-1 shadow-lg"
-                                        disabled={desc === '' ? true : false}
-                                        style={{ borderRadius: '10px' }}
-                                        variant="info"
-                                        onClick={() => {
-                                            handleAddHoliday(date, desc);
-                                            handleToast();
+
+                    <Row className="mt-3 mb-3 mr-3">
+                        <Col></Col>
+                        <Col lg={{ span: 5 }}>
+                            <Row>
+                                <Col lg={5}>
+                                    <TimePicker
+                                        className="time_picker"
+                                        value={convertToMoment(fromTime)}
+                                        showSecond={false}
+                                        minuteStep={15}
+                                        onChange={(e) => {
+                                            handleFromTimeInput(moment(e).format('HH:mm'));
                                         }}
-                                    >
-                                        Set Holiday
-                                    </Button>
-                                </Col>
-                            )}
-                            {holidayCheckState && (
-                                <Col lg={2}>
-                                    <Button
-                                        className="pl-3 pr-3 pt-1 pb-1 shadow-lg"
-                                        disabled={desc === '' ? true : false}
-                                        style={{ borderRadius: '10px' }}
-                                        variant="danger"
-                                        onClick={() => {
-                                            handleDeleteHoliday(holidays);
-                                            handleDeleteToast();
-                                        }}
-                                    >
-                                        Delete Holiday
-                                    </Button>
-                                </Col>
-                            )}
-                        </Row>
-                    )}
-                    {!checkState && (
-                        <Row className="mt-3 mb-3">
-                            <Col>
-                                <Form>
-                                    <Form.Check
-                                        type="switch"
-                                        defaultChecked={checkState}
-                                        onClick={() => setCheckState(!checkState)}
-                                        id="custom-switch"
-                                        label="Set Holiday"
                                     />
-                                </Form>
-                            </Col>
-                            <Col lg={{ span: 5 }}>
-                                <Row>
-                                    <Col lg={5}>
-                                        <TimePicker
-                                            value={convertToMoment(fromTime)}
-                                            showSecond={false}
-                                            minuteStep={15}
-                                            onChange={(e) => {
-                                                handleFromTimeInput(moment(e).format('HH:mm'));
-                                            }}
-                                        />
-                                    </Col>
-                                    <Col lg={2}>To</Col>
-                                    <Col lg={5}>
-                                        <TimePicker
-                                            value={convertToMoment(toTime)}
-                                            showSecond={false}
-                                            minuteStep={15}
-                                            onChange={(e) => {
-                                                handleToTimeInput(moment(e).format('HH:mm'));
-                                            }}
-                                        />
-                                    </Col>
-                                </Row>
-                                <div className="text-center mt-2">{handleTimeValidation()}</div>
-                            </Col>
-                            <Col lg={2} className="pl-0 pr-0">
-                                <Form.Control
-                                    as="select"
-                                    onChange={(e) => {
-                                        setClassMode(e.target.value);
-                                    }}
-                                >
-                                    <option value="none">Select Mode</option>
-                                    <option value="Offline">Online</option>
-                                    <option value="Online">Offline</option>
-                                    <option value="Hybrid">Hybrid</option>
-                                </Form.Control>
-                            </Col>
-                            <Col lg={1}>
-                                <Button
-                                    className="pl-3 pr-3 pt-1 pb-1 shadow-lg"
-                                    title={
-                                        disableAdd || classMode === ''
-                                            ? 'please enter valid details'
-                                            : ''
-                                    }
-                                    disabled={disableAdd || classMode === ''}
-                                    style={{ borderRadius: '10px' }}
-                                    variant="info"
-                                    onClick={() => {
-                                        handleWorkTime(fromTime, toTime, classMode, date, holidays);
-                                        handleToast();
-                                    }}
-                                >
-                                    Add
-                                </Button>
-                            </Col>
-                        </Row>
-                    )}
+                                </Col>
+                                <Col lg={2}>To</Col>
+                                <Col lg={5}>
+                                    <TimePicker
+                                        className="time_picker"
+                                        value={convertToMoment(toTime)}
+                                        showSecond={false}
+                                        minuteStep={15}
+                                        onChange={(e) => {
+                                            handleToTimeInput(moment(e).format('HH:mm'));
+                                        }}
+                                    />
+                                </Col>
+                            </Row>
+                            <div className="text-center mt-2">{handleTimeValidation()}</div>
+                        </Col>
+                        <Col lg={2} className="pl-0 pr-0">
+                            <Form.Control
+                                className="mode_picker"
+                                as="select"
+                                onChange={(e) => {
+                                    setClassMode(e.target.value);
+                                }}
+                            >
+                                <option value="none">Select Mode</option>
+                                <option value="Online">Online</option>
+                                <option value="Offline">Offline</option>
+                                <option value="Hybrid">Hybrid</option>
+                            </Form.Control>
+                        </Col>
+                        <Col lg={1}>
+                            <Button
+                                className="pl-3 pr-3 pt-1 pb-1 shadow-lg btn_add"
+                                title={
+                                    disableAdd || classMode === ''
+                                        ? 'please enter valid details'
+                                        : ''
+                                }
+                                disabled={disableAdd || classMode === ''}
+                                style={{ borderRadius: '10px' }}
+                                variant="dark"
+                                onClick={() => {
+                                    handleWorkTime(fromTime, toTime, classMode, date, holidays);
+                                    handleToast();
+                                }}
+                            >
+                                Add
+                            </Button>
+                        </Col>
+                    </Row>
+                    {/* )} */}
                     <Row>
                         <Col lg={{ span: 8, offset: 4 }}>
                             <div
@@ -1126,48 +1048,6 @@ const WorkHours: React.FC = () => {
                                     msg="Successfully Added Slot!"
                                 />
                             ) : null}
-                        </Col>
-                    </Row>
-                    <Row className="mt-4" style={{ textAlign: 'start' }}>
-                        <Col lg={4}>
-                            <span>
-                                <b>Clients can book session time prior to?</b>
-                            </span>
-                            <br />
-                        </Col>
-                    </Row>
-                    <Row className="mt-3" style={{ textAlign: 'start' }}>
-                        <Col lg={2}>
-                            <span>Online</span>
-                            <div
-                                className="p-2 shadow-sm mt-2"
-                                style={{
-                                    backgroundColor: 'whitesmoke',
-                                    borderRadius: '10px',
-                                    border: '1px solid gray'
-                                }}
-                            >
-                                {handleTimeConversion(
-                                    masterSettings[0]?.booking_lead_time_online_mins
-                                )}{' '}
-                                mins
-                            </div>
-                        </Col>
-                        <Col lg={2}>
-                            <span>Offline</span>
-                            <div
-                                className="p-2 shadow-sm mt-2"
-                                style={{
-                                    backgroundColor: 'whitesmoke',
-                                    borderRadius: '10px',
-                                    border: '1px solid gray'
-                                }}
-                            >
-                                {handleTimeConversion(
-                                    masterSettings[0]?.booking_lead_time_offline_mins
-                                )}{' '}
-                                mins
-                            </div>
                         </Col>
                     </Row>
                 </div>
@@ -1238,24 +1118,24 @@ const WorkHours: React.FC = () => {
                                     {daysOfWeek.map((item: any, index: number) => {
                                         return (
                                             <div key={index}>
-                                                <Col
+                                                <div
                                                     onClick={(e) => {
                                                         setDayIndex(index);
                                                     }}
                                                     key={index}
-                                                    lg={1}
                                                     style={{
                                                         cursor: 'pointer',
                                                         backgroundColor: `${
                                                             dayIndex === index ? '#647a8c' : ''
                                                         }`,
                                                         border: '1px solid black',
-                                                        borderRadius: '20px'
+                                                        borderRadius: '15px',
+                                                        width: '60px'
                                                     }}
-                                                    className="p-0 m-2"
+                                                    className="p-1 m-2"
                                                 >
                                                     {moment(item, 'ddd').format('ddd')}
-                                                </Col>
+                                                </div>
                                             </div>
                                         );
                                     })}
@@ -1492,7 +1372,7 @@ const WorkHours: React.FC = () => {
                                                     }
                                                     disabled={classMode === ''}
                                                     style={{ borderRadius: '10px' }}
-                                                    variant="info"
+                                                    variant="dark"
                                                     onClick={() => {
                                                         handleUserConfig({
                                                             fromTime: fromTime,
@@ -1526,86 +1406,6 @@ const WorkHours: React.FC = () => {
                                 variant="success"
                                 onClick={() => {
                                     handleUserConfigSubmit(userConfig);
-                                }}
-                            >
-                                Save
-                            </Button>
-                        </Modal.Footer>
-                    </Modal>
-                }
-                {
-                    <Modal
-                        size="lg"
-                        aria-labelledby="contained-modal-title-vcenter"
-                        show={showDatesModal}
-                        centered
-                    >
-                        <Modal.Header
-                            closeButton
-                            onHide={() => {
-                                setShowDatesModal(false);
-                            }}
-                        >
-                            <Modal.Title id="contained-modal-title-vcenter">
-                                Booking Time
-                            </Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <div className="text-center">
-                                <h4>
-                                    <b>Client can book session time prior to?</b>
-                                </h4>
-                                <Form.Group>
-                                    <label>Online Mode</label>
-                                    <div>
-                                        <Form.Control
-                                            as="select"
-                                            onChange={(e) => {
-                                                setUserOnlineTime(e.target.value);
-                                            }}
-                                        >
-                                            <option value={45}>45 min</option>
-                                            <option value={90}>90 min</option>
-                                            <option value={120}>120 min</option>
-                                            <option value={180}>180 min</option>
-                                        </Form.Control>
-                                    </div>
-                                </Form.Group>
-                                <Form.Group>
-                                    <label>Offline Mode</label>
-                                    <div>
-                                        <Form.Control
-                                            as="select"
-                                            onChange={(e) => {
-                                                setUserOfflineTime(e.target.value);
-                                            }}
-                                        >
-                                            <option value={45}>45 min</option>
-                                            <option value={90}>90 min</option>
-                                            <option value={120}>120 min</option>
-                                            <option value={180}>180 min</option>
-                                        </Form.Control>
-                                    </div>
-                                </Form.Group>
-                            </div>
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <Button
-                                variant="danger"
-                                onClick={() => {
-                                    setShowDatesModal(false);
-                                }}
-                            >
-                                Close
-                            </Button>
-                            <Button
-                                variant="success"
-                                onClick={() => {
-                                    handleBookingTimeUpdate(
-                                        parseInt(userOnlineTime),
-                                        parseInt(userOfflineTime)
-                                    );
-                                    setShowDatesModal(false);
                                 }}
                             >
                                 Save

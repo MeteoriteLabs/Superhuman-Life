@@ -10,14 +10,14 @@ import {
     GET_TEMPLATE_SESSIONS,
     UPDATE_FITNESSPORGRAMS_SESSIONS
 } from '../queries';
-import AuthContext from '../../../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { schema, widgets } from '../schema/newWorkoutSchema';
 import { Subject } from 'rxjs';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 import moment from 'moment';
 import { AvailabilityCheck } from './availabilityCheck';
 import { Modal, Button } from 'react-bootstrap';
-import Toaster from '../../../../components/Toaster';
+import Toaster from 'components/Toaster';
 
 interface Operation {
     id: string;
@@ -25,17 +25,15 @@ interface Operation {
     current_status: boolean;
 }
 
-function CreateEditNewWorkout(props: any, ref: any) {
+function CreateEditNewWorkout(props: any, ref: any): JSX.Element {
     const auth = useContext(AuthContext);
-    const programSchema: {
-        [name: string]: any;
-    } = require(window.location.pathname.includes('session')
+    const programSchema: Record<string,unknown> = require(window.location.pathname.includes('session')
         ? '../json/sessionManager/newWorkout.json'
         : '../json/newWorkout.json');
     const [programDetails, setProgramDetails] = useState<any>({});
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const program_id = window.location.pathname.split('/').pop();
-    let frmDetails: any;
+    const [formDetails, setFormDetails] = useState<any>();
     const [templateSessionsIds, setTemplateSessionsIds] = useState<any>([]);
     // userId here is the new sessionID.
     const [userId, setUserId] = useState<string>('');
@@ -74,16 +72,18 @@ function CreateEditNewWorkout(props: any, ref: any) {
 
     const [createWorkout] = useMutation(CREATE_WORKOUT, {
         onCompleted: (response) => {
-            updateSchedulerEvents(frmDetails, response.createWorkout.data.id);
+            updateSchedulerEvents(formDetails, response.createWorkout.data.id,response.createWorkout.data.attributes.workouttitle);
             modalTrigger.next(false);
         }
     });
+
     const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, {
         onCompleted: () => {
             modalTrigger.next(false);
             props.callback();
         }
     });
+
     const [upateSessions] = useMutation(UPDATE_TAG_SESSIONS, {
         onCompleted: () => {
             if (props?.clientIds.length > 0) {
@@ -101,12 +101,14 @@ function CreateEditNewWorkout(props: any, ref: any) {
             }
         }
     });
+
     const [updateFitenssProgram] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, {
         onCompleted: () => {
             modalTrigger.next(false);
             props.callback();
         }
     });
+
     const [createSession] = useMutation(CREATE_SESSION, {
         onCompleted: (response) => {
             setIsCreated(!isCreated);
@@ -173,7 +175,7 @@ function CreateEditNewWorkout(props: any, ref: any) {
         High
     }
 
-    function FillDetails(data: any) {
+    function FillDetails() {
         const details: any = {};
         setProgramDetails(details);
 
@@ -186,8 +188,8 @@ function CreateEditNewWorkout(props: any, ref: any) {
         useQuery(GET_SCHEDULEREVENTS, {
             variables: { id: program_id },
             skip: !operation.id || operation.type === 'toggle-status',
-            onCompleted: (response) => {
-                FillDetails(response);
+            onCompleted: () => {
+                FillDetails();
             }
         });
     }
@@ -203,7 +205,15 @@ function CreateEditNewWorkout(props: any, ref: any) {
         return timeString.toString();
     }
 
-    async function updateSchedulerEvents(frm: any, workout_id: any) {
+    function handleTimeInMinutes(time: string) {
+        const timeArray = time.split(':');
+        const hours = +timeArray[0] * 60;
+        const minutes = +timeArray[1];
+        const timeInMinutes = hours + minutes;
+        return timeInMinutes;
+    }
+
+    async function updateSchedulerEvents(frm: any, workout_id: string, title: string) {
         const existingEvents = props.events === null ? [] : [...props.events];
 
         if (frm && frm.day) {
@@ -212,7 +222,7 @@ function CreateEditNewWorkout(props: any, ref: any) {
 
         if (window.location.pathname.split('/')[1] !== 'programs') {
             const variables = {
-                date: moment(frm.day[0].day, 'Do, MMM YY').format('YYYY-MM-DD')
+                date: frm ? moment(frm.day[0].day, 'Do, MMM YY').format('YYYY-MM-DD') : null
             };
 
             const result = await query.refetch(variables);
@@ -284,7 +294,9 @@ function CreateEditNewWorkout(props: any, ref: any) {
                     day_of_program: eventJson.day,
                     changemaker: auth.userid,
                     session_date: null,
-                    isProgram: true
+                    isProgram: true,
+                    SessionTitle: title,
+                    SessionDurationMinutes: (handleTimeInMinutes(eventJson.endTime) - handleTimeInMinutes(eventJson.startTime)).toString()
                 };
             } else {
                 data = {
@@ -297,7 +309,9 @@ function CreateEditNewWorkout(props: any, ref: any) {
                     day_of_program: eventJson.day,
                     session_date: moment(frm.day[0].day, 'Do, MMM YY').format('YYYY-MM-DD'),
                     changemaker: auth.userid,
-                    isProgram: false
+                    isProgram: false,
+                    SessionTitle: title,
+                    SessionDurationMinutes: (handleTimeInMinutes(eventJson.endTime) - handleTimeInMinutes(eventJson.startTime)).toString()
                 };
             }
 
@@ -308,7 +322,6 @@ function CreateEditNewWorkout(props: any, ref: any) {
     }
 
     function UpdateProgram(frm: any) {
-        frmDetails = frm;
         frm.discipline = JSON.parse(frm.discipline);
         frm.equipment = JSON.parse(frm.equipment);
         frm.muscleGroup = JSON.parse(frm.muscleGroup);
@@ -383,7 +396,7 @@ function CreateEditNewWorkout(props: any, ref: any) {
     function OnSubmit(frm: any) {
         //bind user id
         if (frm) frm.user_permissions_user = auth.userid;
-
+        setFormDetails(frm);
         switch (operation.type) {
             case 'create':
                 UpdateProgram(frm);
@@ -415,8 +428,8 @@ function CreateEditNewWorkout(props: any, ref: any) {
                         ? () => {
                               modalTrigger.next(false);
                           }
-                        : (frm: any) => {
-                              OnSubmit(frm);
+                        : (form: any) => {
+                              OnSubmit(form);
                           }
                 }
                 formData={programDetails}

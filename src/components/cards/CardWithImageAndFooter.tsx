@@ -1,9 +1,8 @@
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import style from './cardStyles.module.css';
-
 import { Col, Row } from 'react-bootstrap';
-import { Template } from '../../pages/website-builder/@types/websiteTemplates';
+import { Template } from 'pages/website-builder/@types/websiteTemplates';
 
 function CardWithImageAndFooter({
     infoHandler,

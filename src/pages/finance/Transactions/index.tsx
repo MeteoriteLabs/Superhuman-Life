@@ -10,15 +10,15 @@ import {
     Col,
     Form
 } from 'react-bootstrap';
-import Table from '../../../components/table/leads-table';
-import ActionButton from '../../../components/actionbutton/index';
+import Table from 'components/table/leads-table';
+import ActionButton from 'components/actionbutton/index';
 import { useQuery, useLazyQuery } from '@apollo/client';
 import { GET_TRANSACTIONS, GET_CONTACTS, FETCH_CHANGEMAKERS } from './queries';
-import { flattenObj } from '../../../components/utils/responseFlatten';
-import AuthContext from '../../../context/auth-context';
+import { flattenObj } from 'components/utils/responseFlatten';
+import AuthContext from 'context/auth-context';
 import moment from 'moment';
 import { useHistory } from 'react-router-dom';
-import containsSubstring from '../../../components/utils/containsSubstring';
+import containsSubstring from 'components/utils/containsSubstring';
 
 export default function Transactions(): JSX.Element {
     const auth = useContext(AuthContext);
@@ -114,7 +114,7 @@ export default function Transactions(): JSX.Element {
                 Cell: ({ row }: { row: { original: { id: string } } }) => {
                     const history = useHistory();
                     const routeChange = () => {
-                        const path = `receipt/?id=${row.original.id}`;
+                        const path = `receipttransaction/?id=${row.original.id}`;
                         history.push(path);
                     };
 
@@ -205,9 +205,9 @@ export default function Transactions(): JSX.Element {
                                 ? `-${Detail.Currency} ${Detail.TransactionAmount}`
                                 : null,
                         remark: Detail.TransactionRemarks,
-                        transactionDate: moment(Detail.TransactionDateTime).format(
+                        transactionDate: Detail.TransactionDateTime ? moment(Detail.TransactionDateTime).format(
                             'DD/MM/YYYY, hh:mm'
-                        ),
+                        ): "N/A",
                         status: Detail.TransactionStatus,
                         type: Detail.ReceiverID === auth.userid ? 'Credited' : 'Debited'
                     };
@@ -230,7 +230,7 @@ export default function Transactions(): JSX.Element {
         <TabContent>
             <Container className="mt-3">
                 <Row>
-                    <Col lg={2}>
+                    <Col lg={2} className="mb-3 mb-lg-0">
                         <Form.Control
                             as="select"
                             aria-label="Default select example"

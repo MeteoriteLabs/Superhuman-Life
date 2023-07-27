@@ -1,8 +1,8 @@
 import React from 'react';
 import { Badge, Row, Col, Button } from 'react-bootstrap';
 import { useContext, useMemo, useRef, useState } from 'react';
-import Table from '../../../../components/table/index';
-import ActionButton, { ArrayAction } from '../../../../components/actionbutton';
+import Table from 'components/table/index';
+import ActionButton, { ArrayAction } from 'components/actionbutton';
 
 export default function Nutrition() {
     // const financeActionsRef = useRef<any>(null)

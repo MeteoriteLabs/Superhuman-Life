@@ -3,8 +3,8 @@ import { Form } from 'react-bootstrap';
 import { gql, useQuery } from '@apollo/client';
 import { flattenObj } from '../../components/utils/responseFlatten';
 
-const Email = (props: any) => {
-    const [userEmail, setUserEmail] = useState(props.value);
+const Email: React.FC<{value: string; onChange: (params: string) => void;}> = (props) => {
+    const [userEmail, setUserEmail] = useState<string>(props.value);
     const [user, setUser] = useState<any>([]);
 
     const FETCH_USER = gql`

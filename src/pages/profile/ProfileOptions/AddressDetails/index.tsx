@@ -1,12 +1,12 @@
-import { useState, useContext, useRef, forwardRef } from 'react';
+import { useState, useContext, useRef, forwardRef , useEffect } from 'react';
 import { Card, Row, Col, Button, Dropdown } from 'react-bootstrap';
 import { ADDRESSES } from '../../queries/queries';
-import AuthContext from '../../../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { useQuery } from '@apollo/client';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 import CreateAddress from './CreateAddress';
-import Loader from '../../../../components/Loader/Loader';
-import NoDataFound from '../../../../components/NoDataFound';
+import Loader from 'components/Loader/Loader';
+import NoDataFound from 'components/NoDataFound';
 import { BasicAddressDetails } from './CreateAddress';
 
 const AddressDetails = () => {
@@ -16,6 +16,12 @@ const AddressDetails = () => {
     const CreateAddressComponent = useRef<any>(null);
     const [page, setPage] = useState<number>(1);
     const [totalRecords, setTotalRecords] = useState<number>(0);
+    
+    useEffect(() => {
+        if (addressData.length === 0 && page > 1) {
+            setPage(page - 1);
+        }
+    }, [addressData]);
 
     const {
         // eslint-disable-next-line
@@ -55,13 +61,14 @@ const AddressDetails = () => {
     const pageHandler = (selectedPageNumber: number) => {
         setPage(selectedPageNumber);
     };
+  
 
     return (
         <Col md={{ span: 8, offset: 2 }}>
             <Col md={{ offset: 9, span: 3 }}>
                 <Card.Title className="text-center">
                     <Button
-                        variant="outline-secondary"
+                        variant="dark"
                         size="sm"
                         onClick={() => {
                             CreateAddressComponent.current.TriggerForm({
@@ -90,7 +97,7 @@ const AddressDetails = () => {
                                         <Dropdown key={currValue.id}>
                                             <Dropdown.Toggle variant="bg-light" id="dropdown-basic">
                                                 <img
-                                                    src="/assets/kebabcase.svg"
+                                                    src="/assets/cardsKebab.svg"
                                                     alt="notification"
                                                     className="img-responsive "
                                                     style={{ height: '20px', width: '20px' }}

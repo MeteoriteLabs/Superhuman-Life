@@ -1,4 +1,4 @@
-import { useMemo, useState, useContext, useRef } from 'react';
+import { useMemo, useState, useContext, useRef , useEffect } from 'react';
 import { useQuery, useLazyQuery } from '@apollo/client';
 import {
     Badge,
@@ -127,7 +127,7 @@ export default function FitnessTab() {
 
     const columns = useMemo<any>(
         () => [
-            { accessor: 'packagename', Header: 'Offering Name' },
+            { accessor: 'packagename', Header: 'Service Name' },
             {
                 accessor: 'type',
                 Header: 'Type',
@@ -481,7 +481,10 @@ export default function FitnessTab() {
                                             <img
                                                 src="./assets/offeringImages/group-class-online.svg"
                                                 title={`${
-                                                    row.original.pricing &&
+                                                    row.original.pricing && row.original.pricing.length &&
+                                                    row.original.pricing[
+                                                        selectedDuration[row.index]
+                                                    ] &&
                                                     row.original.pricing[
                                                         selectedDuration[row.index]
                                                     ].classes
@@ -491,7 +494,10 @@ export default function FitnessTab() {
                                             <br />
                                             <p>
                                                 {' '}
-                                                {row.original.pricing &&
+                                                {row.original.pricing && row.original.pricing.length &&
+                                                 row.original.pricing[
+                                                    selectedDuration[row.index]
+                                                ] &&
                                                     row.original.pricing[
                                                         selectedDuration[row.index]
                                                     ].classes}{' '}
@@ -500,7 +506,10 @@ export default function FitnessTab() {
                                         <div>
                                             <img
                                                 title={`${
-                                                    row.original.pricing &&
+                                                    row.original.pricing && row.original.pricing.length &&
+                                                    row.original.pricing[
+                                                        selectedDuration[row.index]
+                                                    ] &&
                                                     row.original.pricing[
                                                         selectedDuration[row.index]
                                                     ].classes
@@ -511,7 +520,10 @@ export default function FitnessTab() {
                                             <br />
                                             <p>
                                                 {' '}
-                                                {row.original.pricing &&
+                                                {row.original.pricing && row.original.pricing.length &&
+                                                  row.original.pricing[
+                                                    selectedDuration[row.index]
+                                                ] &&
                                                     row.original.pricing[
                                                         selectedDuration[row.index]
                                                     ].classes}{' '}
@@ -779,7 +791,7 @@ export default function FitnessTab() {
                                     variant="success"
                                     now={
                                         (lengthOfobject * 100) /
-                                        differenceBetweenStartDateandEndDate
+                                        3
                                     }
                                 />
                                 {lengthOfobject}/3{' '}
@@ -842,7 +854,7 @@ export default function FitnessTab() {
                         </div>
                     ) : (
                         <div>
-                            {value.row.original.status ? (
+                            {value.row.original && value.row.original.status ? (
                                 <Badge
                                     className="px-3 py-1"
                                     style={{ fontSize: '1rem', borderRadius: '10px' }}
@@ -920,8 +932,10 @@ export default function FitnessTab() {
                             name = 'classic';
                         } else if (type === 'Live Stream Channel') {
                             name = 'channel';
-                        } else if (type === 'Cohort' || type === 'Event') {
+                        } else if (type === 'Cohort') {
                             name = 'cohort';
+                        }  else if (type === 'Event') {
+                            name = 'event';
                         } else if (type === 'Group Class') {
                             name = 'group';
                         }
@@ -1065,6 +1079,12 @@ export default function FitnessTab() {
         setPage(selectedPageNumber);
     };
 
+    useEffect(() => {
+        if (dataTable.length === 0 && page > 1) {
+            setPage(page - 1);
+        }
+    }, [dataTable]);
+
     return (
         <>
             <Drawer
@@ -1078,7 +1098,7 @@ export default function FitnessTab() {
                 <div className="justify-content-lg-center d-flex overflow-auto p-3">
                     <DropdownButton
                         className="mx-3"
-                        variant="outline-secondary"
+                        variant="dark"
                         id="dropdown-basic-button"
                         title={
                             <span>
@@ -1104,7 +1124,7 @@ export default function FitnessTab() {
                     <Button
                         style={{ whiteSpace: 'nowrap', textAlign: 'center' }}
                         className="mx-3"
-                        variant="outline-secondary"
+                        variant="dark"
                         size="sm"
                         onClick={() => {
                             handleModalRender(null, 'create', 'Group Class');
@@ -1115,7 +1135,7 @@ export default function FitnessTab() {
                     <Button
                         style={{ whiteSpace: 'nowrap', textAlign: 'center' }}
                         className="mx-3"
-                        variant="outline-secondary"
+                        variant="dark"
                         size="sm"
                         onClick={() => {
                             handleModalRender(null, 'create', 'Classic Class');
@@ -1126,7 +1146,7 @@ export default function FitnessTab() {
                     <Button
                         style={{ whiteSpace: 'nowrap', textAlign: 'center' }}
                         className="mx-3"
-                        variant="outline-secondary"
+                        variant="dark"
                         size="sm"
                         onClick={() => {
                             handleModalRender(null, 'create', 'Custom Fitness');
@@ -1137,7 +1157,7 @@ export default function FitnessTab() {
                     <Button
                         style={{ whiteSpace: 'nowrap', textAlign: 'center' }}
                         className="mx-3"
-                        variant="outline-secondary"
+                        variant="dark"
                         size="sm"
                         onClick={() => {
                             handleModalRender(null, 'create', 'Live Stream Channel');
@@ -1148,7 +1168,7 @@ export default function FitnessTab() {
                     <Button
                         style={{ whiteSpace: 'nowrap', textAlign: 'center' }}
                         className="mx-3"
-                        variant="outline-secondary"
+                        variant="dark"
                         size="sm"
                         onClick={() => {
                             handleModalRender(null, 'create', 'Cohort');
@@ -1159,7 +1179,7 @@ export default function FitnessTab() {
                     <Button
                         style={{ whiteSpace: 'nowrap', textAlign: 'center' }}
                         className="mx-3"
-                        variant="outline-secondary"
+                        variant="dark"
                         size="sm"
                         onClick={() => {
                             handleModalRender(null, 'create', 'Event');

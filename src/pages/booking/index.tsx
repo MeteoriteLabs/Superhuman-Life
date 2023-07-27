@@ -3,7 +3,7 @@ import { Card, Tab, Tabs } from 'react-bootstrap';
 import Movement from './Movement/Movement';
 import Sessions from './Sessions';
 
-export default function BookingPage() {
+export default function BookingPage(): JSX.Element {
     // const history = useHistory();
 
     // const routeChange = () => {

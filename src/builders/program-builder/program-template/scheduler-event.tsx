@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './styles.css';
 import { Row } from 'react-bootstrap';
 import TransferPrograms from './transferPrograms';
-import Loader from '../../../components/Loader/Loader';
+import Loader from 'components/Loader/Loader';
 import moment from 'moment';
 
 const SchedulerEvent = (props: any) => {

@@ -9,7 +9,7 @@ import {
 } from './queries';
 import { useQuery, useLazyQuery } from '@apollo/client';
 import { flattenObj } from '../utils/responseFlatten';
-import AuthContext from '../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import moment from 'moment';
 
 const classBasedOffering: React.FC<{
@@ -222,8 +222,11 @@ const classBasedOffering: React.FC<{
 
         setOfferingList(
             [
+                // eslint-disable-next-line
                 ...flattenedRecordedOffering.fitnesspackages,
+                // eslint-disable-next-line
                 ...flattenedLivestreamAndGroupOffering.fitnesspackages,
+                // eslint-disable-next-line
                 ...flattenedOnDemandOffering.fitnesspackages
             ].map((currValue) => {
                 return {

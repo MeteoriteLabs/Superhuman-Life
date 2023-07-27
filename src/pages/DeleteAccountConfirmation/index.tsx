@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Modal, Button, Row } from 'react-bootstrap';
 import Form from '@rjsf/core';
-import AuthContext from '../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { useMutation, useQuery } from '@apollo/client';
 import {
     UPDATE_USER_PROFILE_DATA,

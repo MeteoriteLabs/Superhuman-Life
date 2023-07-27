@@ -1,15 +1,15 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
-import ModalView from '../../../components/modal/index';
+import ModalView from 'components/modal/index';
 import { ADD_PAYMENT_SCHEDULE, UPDATE_CONTACT } from './queries';
 import { useMutation } from '@apollo/client';
-import AuthContext from '../../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { schema, widgets } from './PayeeSchema';
 import { Subject } from 'rxjs';
-import Toaster from '../../../components/Toaster';
+import Toaster from 'components/Toaster';
 import {
     phoneCustomFormats,
     phoneTransformErrors
-} from '../../../components/utils/ValidationPatterns';
+} from 'components/utils/ValidationPatterns';
 
 interface Operation {
     id: string;
@@ -61,7 +61,7 @@ function CreateContactAsPayee(props: any, ref: any) {
                     }
                 }
             },
-            onCompleted: (r: any) => {
+            onCompleted: () => {
                 createPaymentSchedule({
                     variables: {
                         data: {
@@ -100,7 +100,7 @@ function CreateContactAsPayee(props: any, ref: any) {
                             }
                         }
                     },
-                    onCompleted: (data) => {
+                    onCompleted: () => {
                         props.refetchContacts();
                         props.refetchChangemakersPaymentSchedules();
                         modalTrigger.next(false);

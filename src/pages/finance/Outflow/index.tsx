@@ -1,4 +1,4 @@
-import { useMemo, useState, useContext, useRef } from 'react';
+import { useMemo, useState, useContext, useRef , useEffect } from 'react';
 import {
     Badge,
     Button,
@@ -10,15 +10,15 @@ import {
     Col,
     Form
 } from 'react-bootstrap';
-import Table from '../../../components/table/leads-table';
-import ActionButton from '../../../components/actionbutton/index';
+import Table from 'components/table/leads-table';
+import ActionButton from 'components/actionbutton/index';
 import { useQuery, useLazyQuery } from '@apollo/client';
 import { GET_TRANSACTIONS, GET_CONTACTS, FETCH_CHANGEMAKERS } from './queries';
-import { flattenObj } from '../../../components/utils/responseFlatten';
-import AuthContext from '../../../context/auth-context';
+import { flattenObj } from 'components/utils/responseFlatten';
+import AuthContext from 'context/auth-context';
 import moment from 'moment';
 import { useHistory } from 'react-router-dom';
-import containsSubstring from '../../../components/utils/containsSubstring';
+import containsSubstring from 'components/utils/containsSubstring';
 
 export default function Expenses(): JSX.Element {
     const auth = useContext(AuthContext);
@@ -77,7 +77,7 @@ export default function Expenses(): JSX.Element {
                 Cell: ({ row }: { row: { original: { id: string } } }) => {
                     const history = useHistory();
                     const routeChange = () => {
-                        const path = `receipt/?id=${row.original.id}`;
+                        const path = `receiptoutflow/?id=${row.original.id}`;
                         history.push(path);
                     };
 
@@ -173,12 +173,17 @@ export default function Expenses(): JSX.Element {
     const pageHandler = (selectedPageNumber: number) => {
         setPage(selectedPageNumber);
     };
+    useEffect(() => {
+        if (datatable.length === 0 && page > 1) {
+            setPage(page - 1);
+        }
+    }, [datatable]);
 
     return (
         <TabContent>
             <Container className="mt-3">
                 <Row>
-                    <Col lg={2}>
+                    <Col lg={2} className="mb-3 mb-lg-0">
                         <Form.Control
                             as="select"
                             aria-label="Default select example"

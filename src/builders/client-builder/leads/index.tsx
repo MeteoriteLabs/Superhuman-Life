@@ -269,6 +269,12 @@ export default function Leads() {
         setPage(selectedPageNumber);
     };
 
+    useEffect(() => {
+        if (datatable.length === 0 && page > 1) {
+            setPage(page - 1);
+        }
+    }, [datatable]);
+
     return (
         <TabContent>
             <Container>
@@ -296,7 +302,7 @@ export default function Leads() {
                     <Col>
                         <Card.Title className="text-center">
                             <Button
-                                variant="outline-secondary"
+                                variant="dark"
                                 size="sm"
                                 onClick={() => {
                                     createEditMessageComponent.current.TriggerForm({

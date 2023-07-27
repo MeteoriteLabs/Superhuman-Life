@@ -1,6 +1,6 @@
 import React, { useContext, useImperativeHandle, useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-import ModalView from '../../../../components/modal';
+import ModalView from 'components/modal';
 import {
     GET_SINGLE_PACKAGE_BY_ID,
     GET_FITNESS_PACKAGE_TYPES,
@@ -18,17 +18,17 @@ import {
     DELETE_OFFERING_INVENTORY
 } from '../graphQL/mutations';
 import { Modal, Button } from 'react-bootstrap';
-import AuthContext from '../../../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { schema, widgets } from './classicSchema';
 import { schemaView } from './schemaView';
 import { Subject } from 'rxjs';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 import moment from 'moment';
-import Toaster from '../../../../components/Toaster';
+import Toaster from 'components/Toaster';
 import {
     youtubeUrlCustomFormats,
     youtubeUrlTransformErrors
-} from '../../../../components/utils/ValidationPatterns';
+} from 'components/utils/ValidationPatterns';
 import { OfferingInventory } from '../../interface/offeringInventory';
 
 interface Operation {
@@ -39,9 +39,7 @@ interface Operation {
 
 function CreateEditPackage(props: any, ref: any) {
     const auth = useContext(AuthContext);
-    const personalTrainingSchema: {
-        [name: string]: any;
-    } = require('./classic.json');
+    const personalTrainingSchema: Record<string, unknown> = require('./classic.json');
     const [classicDetails, setClassicDetails] = useState<any>({});
     const [fitnessTypes, setFitnessType] = useState<any[]>([]);
     const [operation, setOperation] = useState<Operation>({} as Operation);
@@ -500,7 +498,7 @@ function CreateEditPackage(props: any, ref: any) {
             />
 
             {/* Delete modal validation (if classAvailability is greater than zero show this dailouge box) */}
-            {offeringInventoryDetails && offeringInventoryDetails.ActiveBookings > 0 ? (
+            {offeringInventoryDetails && offeringInventoryDetails.ActiveBookings > 0  && operation.type === 'delete' ? (
                 <Modal
                     size="lg"
                     aria-labelledby="contained-modal-title-vcenter"

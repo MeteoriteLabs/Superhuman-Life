@@ -1,19 +1,18 @@
 import React, { useRef, useContext, useState } from 'react';
 import { Button, Row, Col, Card, Dropdown, Badge } from 'react-bootstrap';
 import PaymentMethodsAction from '../PaymentMethodsAction';
-import Loader from '../../../../components/Loader/Loader';
+import Loader from 'components/Loader/Loader';
 import { useQuery } from '@apollo/client';
 import { GET_UPI_DETAILS } from '../queries';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
-import AuthContext from '../../../../context/auth-context';
+import { flattenObj } from 'components/utils/responseFlatten';
+import AuthContext from 'context/auth-context';
 
 const UPIDetails: React.FC = () => {
     const paymentMethodActionRef = useRef<any>(null);
     const auth = useContext(AuthContext);
     const [upiDetails, setUpiDetails] = useState<Record<string, unknown>[]>([]);
 
-    // eslint-disable-next-line
-    const { data: get_upi_details, refetch: refetch_upi } = useQuery(GET_UPI_DETAILS, {
+    const { refetch: refetch_upi } = useQuery(GET_UPI_DETAILS, {
         variables: { id: auth.userid },
         onCompleted: (data) => {
             const flattenUPIData = flattenObj({ ...data.upiDetailsChangemakers });

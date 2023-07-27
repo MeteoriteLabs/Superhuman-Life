@@ -1,72 +1,77 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
-import Layout from './components/layout';
-import Loader from './components/Loader/Loader';
-import PageNotFound from './pages/PageNotFound';
+import Layout from 'components/layout';
+import Loader from 'components/Loader/Loader';
+import PageNotFound from 'pages/PageNotFound';
 
-const MainLobby = React.lazy(() => import('./pages/dashboard'));
-const WebsiteBuilder = React.lazy(() => import('./pages/website-builder'));
-const TemplatePage = React.lazy(() => import('./pages/website-builder/sub-page/templates'));
-const LiveEditor = React.lazy(() => import('./pages/liveEditor'));
-const BookingPage = React.lazy(() => import('./pages/booking'));
-const BookingSetting = React.lazy(() => import('./pages/booking/BookingSetting/BookingSetting'));
-const ChatPage = React.lazy(() => import('./pages/chat'));
+const MainLobby = React.lazy(() => import('pages/dashboard'));
+const WebsiteBuilder = React.lazy(() => import('pages/website-builder'));
+const TemplatePage = React.lazy(() => import('pages/website-builder/sub-page/templates'));
+const LiveEditor = React.lazy(() => import('pages/liveEditor'));
+const BookingPage = React.lazy(() => import('pages/booking'));
+const BookingSetting = React.lazy(() => import('pages/booking/BookingSetting/BookingSetting'));
+const ChatPage = React.lazy(() => import('pages/chat'));
 
-const HomePage = React.lazy(() => import('./pages/home'));
-const LoginPage = React.lazy(() => import('./pages/login'));
-const DeactiveAccountPage = React.lazy(() => import('./pages/DeactiveAccount'));
-const ForgotPasswordPage = React.lazy(() => import('./pages/forgotPassword'));
-const ResetPasswordPage = React.lazy(() => import('./pages/resetPassword'));
-const ConfirmAccountPage = React.lazy(() => import('./pages/emailConfirmation'));
-const ChangePasswordPage = React.lazy(() => import('./pages/changePassword'));
-const ProfilePage = React.lazy(() => import('./pages/profile'));
-const RegisterPage = React.lazy(() => import('./pages/register'));
-const SchedulePage = React.lazy(() => import('./pages/schedule'));
-const SettingsPage = React.lazy(() => import('./pages/settings'));
-const FinancePage = React.lazy(() => import('./pages/finance'));
-const SummaryPage = React.lazy(() => import('./pages/Summary'));
-const FailedPage = React.lazy(() => import('./pages/failed'));
+const HomePage = React.lazy(() => import('pages/home'));
+const LoginPage = React.lazy(() => import('pages/login'));
+const DeactiveAccountPage = React.lazy(() => import('pages/DeactiveAccount'));
+const ForgotPasswordPage = React.lazy(() => import('pages/forgotPassword'));
+const ResetPasswordPage = React.lazy(() => import('pages/resetPassword'));
+const ConfirmAccountPage = React.lazy(() => import('pages/emailConfirmation'));
+const ChangePasswordPage = React.lazy(() => import('pages/changePassword'));
+const ProfilePage = React.lazy(() => import('pages/profile'));
+const RegisterPage = React.lazy(() => import('pages/register'));
+const SchedulePage = React.lazy(() => import('pages/schedule'));
+const SettingsPage = React.lazy(() => import('pages/settings'));
+const FinancePage = React.lazy(() => import('pages/finance'));
+const SummaryPage = React.lazy(() => import('pages/Summary'));
+const FailedPage = React.lazy(() => import('pages/failed'));
 
-const ClientHomePage = React.lazy(() => import('./builders/client-builder/clientlisting/client'));
-const PackagePage = React.lazy(() => import('./builders/package-builder'));
-const ResourcePage = React.lazy(() => import('./builders/resource-builder'));
-const ProgramPage = React.lazy(() => import('./builders/program-builder'));
-const ClientPage = React.lazy(() => import('./builders/client-builder'));
-const ProgramManagerPage = React.lazy(() => import('./builders/program-builder/program-template'));
+const ClientHomePage = React.lazy(() => import('builders/client-builder/clientlisting/client'));
+const PackagePage = React.lazy(() => import('builders/package-builder'));
+const ResourcePage = React.lazy(() => import('builders/resource-builder'));
+const ProgramPage = React.lazy(() => import('builders/program-builder'));
+const ClientPage = React.lazy(() => import('builders/client-builder'));
+const ProgramManagerPage = React.lazy(() => import('builders/program-builder/program-template'));
 const ClassicProgramSchedulerPage = React.lazy(
-    () => import('./builders/session-builder/Fitness/Classic/scheduler')
+    () => import('builders/session-builder/Fitness/Classic/scheduler')
 );
 const PTProgramSchedulerPage = React.lazy(
-    () => import('./builders/session-builder/Fitness/PT/scheduler')
+    () => import('builders/session-builder/Fitness/PT/scheduler')
 );
 const GroupProgramSchedulerPage = React.lazy(
-    () => import('./builders/session-builder/Fitness/Group/scheduler')
+    () => import('builders/session-builder/Fitness/Group/scheduler')
 );
 const CustomProgramSchedulerPage = React.lazy(
-    () => import('./builders/session-builder/Fitness/Custom/scheduler')
+    () => import('builders/session-builder/Fitness/Custom/scheduler')
 );
 const CohortProgramSchedulerPage = React.lazy(
-    () => import('./builders/session-builder/Fitness/Cohort/scheduler')
+    () => import('builders/session-builder/Fitness/Cohort/scheduler')
+);
+const EventProgramSchedulerPage = React.lazy(
+    () => import('builders/session-builder/Fitness/Event/scheduler')
 );
 const ChannelProgramSchedulerPage = React.lazy(
-    () => import('./builders/session-builder/Fitness/Channel/scheduler')
+    () => import('builders/session-builder/Fitness/Channel/scheduler')
 );
-const clientSchedulerPage = React.lazy(() => import('./builders/changemaker-builder'));
-const AvailabilityPage = React.lazy(() => import('./builders/changemaker-builder/availability'));
-const RosterPage = React.lazy(() => import('./builders/changemaker-builder/roster'));
-const Receipt = React.lazy(() => import('./pages/finance/Outflow/Receipt'));
+const clientSchedulerPage = React.lazy(() => import('builders/changemaker-builder'));
+const AvailabilityPage = React.lazy(() => import('builders/changemaker-builder/availability'));
+const RosterPage = React.lazy(() => import('builders/changemaker-builder/roster'));
+const ReceiptOutflow = React.lazy(() => import('pages/finance/Outflow/ReceiptOutflow'));
+const ReceiptEarning = React.lazy(() => import('pages/finance/Earnings/ReceiptEarning'));
+const ReceiptTransaction = React.lazy(() => import('pages/finance/Transactions/ReceiptTransaction'));
 const PaymentScheduleSettingsPage = React.lazy(
-    () => import('./builders/client-builder/PaymentScheduleSettings')
+    () => import('builders/client-builder/PaymentScheduleSettings')
 );
 const NotificationsPage = React.lazy(
-    () => import('./components/layout/NavbarOptions/Notifications')
+    () => import('components/layout/NavbarOptions/Notifications')
 );
-const NotificationsSettings = React.lazy(() => import('./pages/notificationSettings'));
-const PrivacyPolicy = React.lazy(() => import('./pages/privacyPolicy'));
-const TermsOfService = React.lazy(() => import('./pages/termsOfService'));
-const SessionPage = React.lazy(() => import('./builders/session-builder/'));
-const AddClient = React.lazy(() => import('./builders/client-builder/addClient'));
-const SuccessfulBooking = React.lazy(() => import('./pages/SuccessfulBooking'));
+const NotificationsSettings = React.lazy(() => import('pages/notificationSettings'));
+const PrivacyPolicy = React.lazy(() => import('pages/privacyPolicy'));
+const TermsOfService = React.lazy(() => import('pages/termsOfService'));
+const SessionPage = React.lazy(() => import('builders/session-builder/'));
+const AddClient = React.lazy(() => import('builders/client-builder/addClient'));
+const SuccessfulBooking = React.lazy(() => import('pages/SuccessfulBooking'));
 
 //auth logins
 // const GoogleAuthCallbackPage = React.lazy(() => import("./pages/register/oAuthLogins/googleAuthCallback"));
@@ -128,6 +133,10 @@ export default function Routes({ token }: { token: string }): JSX.Element {
                                 component={CohortProgramSchedulerPage}
                             />
                             <Route
+                                path="/event/session/scheduler"
+                                component={EventProgramSchedulerPage}
+                            />
+                            <Route
                                 path="/channel/session/scheduler"
                                 component={ChannelProgramSchedulerPage}
                             />
@@ -140,7 +149,9 @@ export default function Routes({ token }: { token: string }): JSX.Element {
                             <Route path="/settings" component={SettingsPage} />
                             <Route path="/finance" component={FinancePage} />
                             <Route path="/change-password" component={ChangePasswordPage} />
-                            <Route path="/receipt" component={Receipt} />
+                            <Route path="/receiptoutflow" component={ReceiptOutflow} />
+                            <Route path="/receiptearning" component={ReceiptEarning} />
+                            <Route path="/receipttransaction" component={ReceiptTransaction} />
                             <Route
                                 path="/payment_settings"
                                 component={PaymentScheduleSettingsPage}

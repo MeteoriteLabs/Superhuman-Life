@@ -1,8 +1,8 @@
 import React, { useContext, useImperativeHandle, useState, useEffect } from 'react';
 import { useMutation, useQuery, useLazyQuery } from '@apollo/client';
-import ModalView from '../../components/modal';
-import StatusModal from '../../components/StatusModal/StatusModal';
-import AuthContext from '../../context/auth-context';
+import ModalView from 'components/modal';
+import StatusModal from 'components/StatusModal/StatusModal';
+import AuthContext from 'context/auth-context';
 import { Subject } from 'rxjs';
 import {
     widgets,

@@ -8,10 +8,14 @@
     max-width: 150px;
     line-height: 50px;
     vertical-align: middle;
+    background-color: #343A40;
+    color: #fff;
 }
 
 .event-cell {
     max-width: 150px;
+    background-color: #343A40;
+    color: #fff;
 }
 
 .day-row,
@@ -20,21 +24,25 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    background-color: #343A40;
+    color: #fff;
 }
 
 .day-row {
     position: sticky;
-    background-color: #fff;
+    /* background-color: #fff; */
     top: 0;
     z-index: 998;
+    background-color: #343A40;
+    color: #fff;
 }
 
 .wrapper {
-    width: 100%;
+    /* width: 85vw; */
     overflow: auto;
     position: relative;
     min-height: 50px;
-    height: 500px;
+    height: 90vh;
 }
 
 .schedular-content {
@@ -63,6 +71,8 @@
     position: relative;
     display: flex;
     flex-direction: row;
+    background-color: #343A40;
+    color: #fff;
 }
 
 .right-floating-menu .btn-primary {
@@ -126,6 +136,8 @@
     line-height: 7px;
     vertical-align: middle;
     text-align: start;
+    /* background-color: #343A40; */
+    color: #fff;
 }
 
 .event-date {
@@ -138,7 +150,7 @@
 }
 
 .schedular-content:hover {
-    background-color: rgb(140, 190, 214) !important;
+    background-color: #EBEBF2 !important;
     width: 150px !important;
     z-index: 998;
     box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.75);
@@ -153,3 +165,39 @@
 #fitness-dropdown {
     width: 200px;
 }
+
+/* Sidebar  */
+.sidebar {
+    height: 100%;
+    width: 85px;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    right: 0;
+    background-color: #343a40;
+    transition: 0.5s;
+    overflow-x: hidden;
+    padding-top: 60px;
+    white-space: nowrap;
+    margin-top: 15px;
+}
+
+.sidebar a {
+    padding: 0 0 0 10px;
+    text-decoration: none;
+    font-size: 10px;
+    display: flex;
+    color: #f1f1f1;
+}
+
+.sidebar a:hover {
+    font-weight: bold;
+}
+
+.icon-text {
+    font-size: 20px;
+    vertical-align: middle;
+    color: '#fff';
+    position: relative;
+    bottom: 12px;
+} 

@@ -263,8 +263,10 @@ export const GET_TABLEDATA = gql`
 `;
 
 export const GET_TAGS_FOR_GROUP = gql`
-    query getTagsforGroup($id: ID!) {
+    query getTagsforGroup($id: ID!, $start: Int, $limit: Int) {
         tags(
+            pagination: { start: $start, limit: $limit }
+            sort: ["updatedAt:desc"]
             filters: {
                 fitnesspackage: {
                     users_permissions_user: { id: { eq: $id } }
@@ -272,6 +274,12 @@ export const GET_TAGS_FOR_GROUP = gql`
                 }
             }
         ) {
+            meta {
+                pagination {
+                    pageCount
+                    total
+                }
+            }
             data {
                 id
                 attributes {
@@ -353,8 +361,10 @@ export const GET_TAGS_FOR_GROUP = gql`
 `;
 
 export const GET_TAGS_FOR_CLASSIC = gql`
-    query getTagsforRecorded($id: ID!) {
+    query getTagsforRecorded($id: ID!, $start: Int, $limit: Int) {
         tags(
+            pagination: { start: $start, limit: $limit }
+            sort: ["updatedAt:desc"]
             filters: {
                 fitnesspackage: {
                     users_permissions_user: { id: { eq: $id } }
@@ -362,6 +372,12 @@ export const GET_TAGS_FOR_CLASSIC = gql`
                 }
             }
         ) {
+            meta {
+                pagination {
+                    pageCount
+                    total
+                }
+            }
             data {
                 id
                 attributes {
@@ -404,8 +420,10 @@ export const GET_TAGS_FOR_CLASSIC = gql`
 `;
 
 export const GET_TAGS_FOR_CHANNEL = gql`
-    query getTagsforGroup($id: ID!) {
+    query getTagsforLiveStream($id: ID!, $start: Int, $limit: Int) {
         tags(
+            pagination: { start: $start, limit: $limit }
+            sort: ["updatedAt:desc"]
             filters: {
                 fitnesspackage: {
                     users_permissions_user: { id: { eq: $id } }
@@ -413,6 +431,12 @@ export const GET_TAGS_FOR_CHANNEL = gql`
                 }
             }
         ) {
+            meta {
+                pagination {
+                    pageCount
+                    total
+                }
+            }
             data {
                 id
                 attributes {
@@ -475,6 +499,12 @@ export const GET_TAGS_FOR_EVENT = gql`
                 }
             }
         ) {
+            meta {
+                pagination {
+                    pageCount
+                    total
+                }
+            }
             data {
                 id
                 attributes {
@@ -527,10 +557,10 @@ export const GET_TAGS_FOR_EVENT = gql`
 `;
 
 export const GET_TAGS_FOR_COHORT = gql`
-    query getTagsforCohort($id: ID!) {
+    query getTagsforCohort($id: ID!, $start: Int, $limit: Int) {
         tags(
-            sort: ["UpdatedAt:desc"]
-            pagination: { pageSize: 100 }
+            pagination: { start: $start, limit: $limit }
+            sort: ["updatedAt:desc"]
             filters: {
                 fitnesspackage: {
                     users_permissions_user: { id: { eq: $id } }
@@ -538,6 +568,12 @@ export const GET_TAGS_FOR_COHORT = gql`
                 }
             }
         ) {
+            meta {
+                pagination {
+                    pageCount
+                    total
+                }
+            }
             data {
                 id
                 attributes {
@@ -605,6 +641,14 @@ export const GET_TAG_BY_ID = gql`
                         data {
                             id
                             attributes {
+                                fitness_package_type{
+                                    data{
+                                        id
+                                        attributes{
+                                            type
+                                        }
+                                    }
+                                }
                                 packagename
                                 duration
                                 mode
@@ -621,6 +665,7 @@ export const GET_TAG_BY_ID = gql`
                                 End_date
                                 Status
                                 residential_type
+                                classsize
                             }
                         }
                     }
@@ -663,6 +708,7 @@ export const GET_TAG_BY_ID = gql`
                             attributes {
                                 effective_date
                                 accepted_date
+                                package_duration
                                 users_permissions_user {
                                     data {
                                         id
@@ -670,6 +716,7 @@ export const GET_TAG_BY_ID = gql`
                                             username
                                             First_Name
                                             Last_Name
+                                            Photo_ID
                                         }
                                     }
                                 }
@@ -683,15 +730,23 @@ export const GET_TAG_BY_ID = gql`
 `;
 
 export const GET_SESSIONS_FROM_TAGS = gql`
-    query getSessionsFromTags($id: ID!, $tagType: String!) {
+    query getSessionsFromTags($id: ID!, $start: Int, $limit: Int) {
         tags(
+            pagination: { start: $start, limit: $limit }
+            sort: ["updatedAt:desc"]
             filters: {
                 fitnesspackage: {
                     users_permissions_user: { id: { eq: $id } }
-                    fitness_package_type: { type: { eq: $tagType } }
+                    fitness_package_type: { type: { eq: "Custom Fitness" } }
                 }
             }
         ) {
+            meta {
+                pagination {
+                    pageCount
+                    total
+                }
+            }
             data {
                 id
                 attributes {
@@ -728,6 +783,7 @@ export const GET_SESSIONS_FROM_TAGS = gql`
                             }
                         }
                     }
+                    
                     client_packages {
                         data {
                             id
@@ -764,8 +820,10 @@ export const GET_SESSIONS_FROM_TAGS = gql`
 `;
 
 export const GET_SESSIONS_FROM_TAGS_FOR_ONE_ON_ONE_OR_ON_DEMAND = gql`
-    query getSessionsFromTags($id: ID!) {
+    query getSessionsFromTags($id: ID!, $start: Int, $limit: Int) {
         tags(
+            pagination: { start: $start, limit: $limit }
+            sort: ["updatedAt:desc"]
             filters: {
                 fitnesspackage: {
                     users_permissions_user: { id: { eq: $id } }
@@ -776,6 +834,12 @@ export const GET_SESSIONS_FROM_TAGS_FOR_ONE_ON_ONE_OR_ON_DEMAND = gql`
                 }
             }
         ) {
+            meta {
+                pagination {
+                    pageCount
+                    total
+                }
+            }
             data {
                 id
                 attributes {

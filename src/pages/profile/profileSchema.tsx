@@ -4,8 +4,7 @@ export const widgets = {
     uploadImageToS3WithNativeSdk: UploadImageToS3WithNativeSdk
 };
 
-// eslint-disable-next-line
-export const schema: any = {
+export const schema: Record<string, unknown> = {
     Institute_Name: {
         'ui:placeholder': 'Enter Institute Name'
     },

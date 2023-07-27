@@ -1,6 +1,6 @@
 import React, { useContext, useImperativeHandle, useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-import ModalView from '../../../../components/modal';
+import ModalView from 'components/modal';
 import {
     CREATE_CHANNEL_PACKAGE,
     DELETE_PACKAGE,
@@ -15,20 +15,20 @@ import {
 import {
     youtubeUrlCustomFormats,
     youtubeUrlTransformErrors
-} from '../../../../components/utils/ValidationPatterns';
+} from 'components/utils/ValidationPatterns';
 import {
     GET_FITNESS_PACKAGE_TYPE,
     GET_SINGLE_PACKAGE_BY_ID,
     GET_INVENTORY
 } from '../graphQL/queries';
-import AuthContext from '../../../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { schema, widgets } from './cohortSchema';
 import { schemaView } from './schemaView';
 import { Subject } from 'rxjs';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 import moment from 'moment';
 import { Modal, Button } from 'react-bootstrap';
-import Toaster from '../../../../components/Toaster';
+import Toaster from 'components/Toaster';
 import { OfferingInventory } from '../../interface/offeringInventory';
 
 interface Operation {
@@ -592,7 +592,7 @@ function CreateEditCohort(props: any, ref: any) {
             </Modal>
 
             {/* Delete modal validation (if classAvailability is greater than zero show this dailouge box) */}
-            {offeringInventoryDetails && offeringInventoryDetails.ActiveBookings > 0 ? (
+            {offeringInventoryDetails && offeringInventoryDetails.ActiveBookings > 0  && operation.type === 'delete' ? (
                 <Modal
                     size="lg"
                     aria-labelledby="contained-modal-title-vcenter"

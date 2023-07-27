@@ -29,7 +29,7 @@ export const GET_CHANGEMAKER_NOTIFICATION = gql`
     }
 `;
 
-export const GET_CHANGEMAKER_NOTIFICATION_All_RECORS = gql`
+export const GET_CHANGEMAKER_NOTIFICATION_All_RECORDS = gql`
     query changemakerNotifications($id: ID, $pageSize: Int) {
         changemakerNotifications(
             pagination: { pageSize: $pageSize }

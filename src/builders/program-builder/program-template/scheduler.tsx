@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useRef, useContext, forwardRef } from 'react';
 import {
     Modal,
     Button,
@@ -30,22 +30,23 @@ import {
     UPDATE_FITNESSPORGRAMS_SESSIONS
 } from './queries';
 import { useQuery, useMutation, gql } from '@apollo/client';
-import ProgramList from '../../../components/customWidgets/programList';
-import SessionList from '../../../components/customWidgets/sessionList';
-import FloatingButton from './FloatingButtons';
-import TimeField from '../../../components/customWidgets/multipleTimeFields';
-import TextEditor from '../../../components/customWidgets/textEditor';
+import ProgramList from 'components/customWidgets/programList';
+import SessionList from 'components/customWidgets/sessionList';
+// import FloatingButton from './FloatingButtons';
+import TimeField from 'components/customWidgets/multipleTimeFields';
+import TextEditor from 'components/customWidgets/textEditor';
 import CreateoreditWorkout from '../workout/createoredit-workout';
 import ReplaceWorkout from './create-edit/replaceWorkout';
 import DaysInput from './daysInput';
 import moment from 'moment';
-import { flattenObj } from '../../../components/utils/responseFlatten';
-import AuthContext from '../../../context/auth-context';
+import { flattenObj } from 'components/utils/responseFlatten';
+import AuthContext from 'context/auth-context';
 import { AvailabilityCheck } from './availabilityCheck';
-import SapienVideoPlayer from '../../../components/customWidgets/SpaienVideoPlayer';
-import Toaster from '../../../components/Toaster';
+import SapienVideoPlayer from 'components/customWidgets/SpaienVideoPlayer';
+import Toaster from 'components/Toaster';
+// import SideNav from '../program-template/SchedulerSideBar';
 
-const Schedular = (props: any) => {
+const Schedular = (props: any, ref) => {
     const auth = useContext(AuthContext);
     const [show, setShow] = useState<boolean>(false);
     const [showModal, setShowModal] = useState<boolean>(false);
@@ -57,20 +58,20 @@ const Schedular = (props: any) => {
     const [event, setEvent] = useState<any>({});
     const [arr, setArr] = useState<any[]>([]);
     const [arr2, setarr2] = useState<any>({});
-    const [program, setProgram] = useState('none');
-    const [sessionFilter, setSessionFilter] = useState('none');
+    // const [program, setProgram] = useState('none');
+    // const [sessionFilter, setSessionFilter] = useState('none');
     const [mode, setMode] = useState('');
     const [tag, setTag] = useState('');
     const program_id = window.location.pathname.split('/').pop();
-    const schedulerDay: any = require('./json/scheduler-day.json');
+    const schedulerDay: Record<string, unknown> = require('./json/scheduler-day.json');
     const [changeMakerAvailability, setChangeMakerAvailability] = useState<any>([]);
-    const [sessionIds, setSessionsIds] = useState<any>(props.sessionIds);
+    // const [sessionIds, setSessionsIds] = useState<string[]>(props.sessionIds);
     const [templateSessionsIds, setTemplateSessionsIds] = useState<any>([]);
     const [dropConflict, setDropConflict] = useState<boolean>(false);
     const [groupDropConflict, setGroupDropConflict] = useState<boolean>(false);
     const [sessionBookings, setSessionBooking] = useState<any>([]);
     const [clickedSessionId, setClickedSessionId] = useState('');
-    const [showRestDay, setShowRestDay] = useState<boolean>(false);
+    // const [showRestDay, setShowRestDay] = useState<boolean>(false);
     const [isUpdated, setIsUpdated] = useState<boolean>(false);
 
     const DELETE_REST_DAY = gql`
@@ -302,14 +303,13 @@ const Schedular = (props: any) => {
     // this incase of the scheduler in the client page
     function handleRenderClientTable(data: any) {
         const flattenData = flattenObj({ ...data });
-        console.log(sessionIds);
         // const sessionsExistingValues = [...sessionIds];
         const sessionsExistingValues: any = [];
 
         for (let q = 0; q < flattenData?.sessionsBookings?.length; q++) {
             sessionsExistingValues.push(flattenData.sessionsBookings[q]?.session.id);
         }
-        setSessionsIds(sessionsExistingValues);
+        // setSessionsIds(sessionsExistingValues);
         for (let d = 1; d <= props.days; d++) {
             arr[d] = JSON.parse(JSON.stringify(schedulerDay));
         }
@@ -420,7 +420,7 @@ const Schedular = (props: any) => {
 
     // this incase of the scheduler in the session manager page
     function handleRenderTable(data: any) {
-        setSessionsIds(props.sessionIds);
+        // setSessionsIds(props.sessionIds);
         const flattenData = flattenObj({ ...data });
 
         if (window.location.pathname.split('/')[1] === 'programs') {
@@ -562,15 +562,15 @@ const Schedular = (props: any) => {
         event.import === 'importedEvent' ? setOnDragAndDrop(false) : setOnDragAndDrop(true);
     }
 
-    function handleFloatingActionProgramCallback(event: any) {
-        setProgram(`${event}`);
-        props.callback();
-    }
+    // function handleFloatingActionProgramCallback(event: any) {
+    //     setProgram(`${event}`);
+    //     props.callback();
+    // }
 
-    function handleFloatingActionProgramCallback2(event: any) {
-        setSessionFilter(`${event}`);
-        props.callback();
-    }
+    // function handleFloatingActionProgramCallback2(event: any) {
+    //     setSessionFilter(`${event}`);
+    //     props.callback();
+    // }
 
     // this handles the displaying of rest days on the scheduler
     function handleRestDays(val: any) {
@@ -604,7 +604,7 @@ const Schedular = (props: any) => {
                 }
             }
         }
-        return 'white';
+        return '#343A40';
     }
 
     //this return the data for adding and removing the rest days
@@ -612,6 +612,7 @@ const Schedular = (props: any) => {
         // this if block is to check if we are in the program template page
         if (props?.type === 'day') {
             if (props.restDays) {
+                
                 for (let j = 0; j < props.restDays.length; j++) {
                     if (val === props.restDays[j].day_of_program) {
                         return {
@@ -641,6 +642,7 @@ const Schedular = (props: any) => {
                 }
             }
         } else if (props.restDays && props?.type !== 'day') {
+           
             for (let i = 0; i < props.restDays.length; i++) {
                 if (val === calculateDay(props.startDate, props.restDays[i].session_date)) {
                     return {
@@ -692,8 +694,8 @@ const Schedular = (props: any) => {
             dateUpperLimit: moment(dates[0]).format('YYYY-MM-DD'),
             dateLowerLimit: moment(dates[dates.length - 1]).format('YYYY-MM-DD')
         },
-        onCompleted: (r: any) => {
-            const flattenData = flattenObj({ ...r });
+        onCompleted: (response: any) => {
+            const flattenData = flattenObj({ ...response });
             setChangeMakerAvailability(flattenData);
         }
     });
@@ -703,20 +705,22 @@ const Schedular = (props: any) => {
     const [duplicatedDay, setDuplicatedDay] = useState<any>([]);
     const [updateSessionBooking] = useMutation(UPDATE_SESSION_BOOKING);
     const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, {
-        onCompleted: (r: any) => {
+        onCompleted: () => {
             setEvent({});
             props.callback();
         }
     });
+
     const [createSession] = useMutation(CREATE_SESSION, {
-        onCompleted: (r: any) => {
+        onCompleted: (response: any) => {
             if (window.location.pathname.split('/')[1] === 'programs') {
-                handleUpdateFitnessPrograms(r.createSession.data.id);
+                handleUpdateFitnessPrograms(response.createSession.data.id);
             } else {
-                handleUpdateTag(r.createSession.data.id);
+                handleUpdateTag(response.createSession.data.id);
             }
         }
     });
+
     const [updateSession] = useMutation(UPDATE_SESSION, {
         onCompleted: () => {
             setEvent({});
@@ -724,6 +728,7 @@ const Schedular = (props: any) => {
             setIsUpdated(!isUpdated);
         }
     });
+
     const [updateTagSessions] = useMutation(UPDATE_TAG_SESSIONS, {
         onCompleted: () => {
             if (props.classType !== 'Group Class' && newSessionId !== '') {
@@ -739,6 +744,7 @@ const Schedular = (props: any) => {
             }
         }
     });
+
     const [updateFitnessProgramSessions] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, {
         onCompleted: () => {
             setEvent({});
@@ -1587,6 +1593,7 @@ const Schedular = (props: any) => {
             props.callback();
         }
     });
+
     const [createRestDay] = useMutation(CREATE_REST_DAY, {
         onCompleted: (r: any) => {
             const values = [...props.sessionIds];
@@ -1828,60 +1835,103 @@ const Schedular = (props: any) => {
         });
     }
 
-    function handleRefetch() {
-        props.callback();
-    }
+    // function handleRefetch() {
+    //     props.callback();
+    // }
 
-    function handleShowRestDay() {
-        setShowRestDay(!showRestDay);
-    }
+    // function handleShowRestDay() {
+    //     setShowRestDay(!showRestDay);
+    // }
+
+    const handle12HourFormat = (hours: number) => {
+        const unit = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12;
+
+        const finalTime = `${hours} ${unit}`;
+        return finalTime;
+    };
+
+    const handleConvertTimeFormat = (hours: number, minutes: number) => {
+        const unit = hours >= 12 ? 'pm' : 'am';
+        hours = hours % 12 || 12;
+        const finalTime = `${hours}:${minutes < 10 ? `0${minutes}` : minutes} ${unit}`;
+        return finalTime;
+    };
+
+    const handleSessionPastDates = (sessionDate: string, sessionEndHour: number, sessionEndMinute: number) => {
+        const currentTime = moment.utc();
+        const expirySessionTime = moment(sessionDate)
+            .add(sessionEndHour, 'hours')
+            .add(sessionEndMinute, 'minutes');
+        const diff = expirySessionTime.diff(currentTime);
+        
+        if (diff < 0) {
+            return true;
+        }
+        return false;
+    };
 
     if (!show) {
         return (
             <div className="text-center">
                 <Spinner animation="border" variant="secondary" />
                 <br />
-                <div className="mt-3" style={{ fontWeight: 'bold' }}>
+                <div className="mt-3" style={{ fontSize: 'small' }}>
                     Loading Schedule...
                 </div>
             </div>
         );
     } else
         return (
-            <>
+            <div ref={ref}>
+                {/* Floating Action Buttons */}
+                {/* {props?.clientSchedular !== 'client' && (
+                    <FloatingButton
+                        clientIds={props.clientIds}
+                        sessionIds={props.sessionIds}
+                        startDate={props.startDate}
+                        duration={props.days}
+                        callback={handleFloatingActionProgramCallback}
+                        callback2={handleFloatingActionProgramCallback2}
+                        callback3={handleRefetch}
+                        restDayCallback={handleShowRestDay}
+                        showRestDayAction={showRestDay}
+                    />
+                )} */}
                 {/* this program list is only for fitnesstemplate */}
                 <div
                     className="mb-5 shadow-lg p-3"
-                    style={{ display: `${program}`, borderRadius: '20px' }}
+                    style={{ display: `${props.program}`, borderRadius: '20px' }}
                 >
                     <ProgramList
                         sessionIds={props.sessionIds}
                         dayType={'programs'}
-                        callback={handleFloatingActionProgramCallback}
+                        callback={props.handleFloatingActionProgramCallback}
                     />
                 </div>
 
                 <div
                     className="mb-5 shadow-lg p-3"
-                    style={{ display: `${sessionFilter}`, borderRadius: '20px' }}
+                    style={{ display: `${props.sessionFilter}`, borderRadius: '20px' }}
                 >
                     <SessionList
-                        duration={props?.duration}
+                        duration={props?.days}
                         sessionIds={props.sessionIds}
                         startDate={props.startDate}
                         days={dates}
-                        callback2={handleFloatingActionProgramCallback2}
+                        callback2={props.handleFloatingActionProgramCallback2}
                     />
                 </div>
 
                 <div className="wrapper shadow-lg">
                     <div className="schedular">
-                        {showRestDay && (
+                        {props.showRestDay && (
                             <div className="day-row">
                                 <div
                                     className="cell"
                                     style={{
-                                        backgroundColor: 'white',
+                                        backgroundColor: '#343A40', color:'#fff',
+                                        // backgroundColor: 'white',
                                         position: 'relative',
                                         minHeight: `${props.type === 'date' ? '70px' : '70px'}`
                                     }}
@@ -1893,7 +1943,8 @@ const Schedular = (props: any) => {
                             <div
                                 className="cell"
                                 style={{
-                                    backgroundColor: 'white',
+                                    backgroundColor: '#343A40', color:'#fff',
+                                    // backgroundColor: 'white',
                                     position: 'relative',
                                     minHeight: `${props.type === 'date' ? '70px' : '70px'}`
                                 }}
@@ -1904,7 +1955,7 @@ const Schedular = (props: any) => {
                             return (
                                 <div
                                     className="time-row"
-                                    style={{ backgroundColor: 'white' }}
+                                    style={{ backgroundColor: '#343A40', color:'#fff' }}
                                     key={index}
                                 >
                                     <div className="cell" style={{ position: 'relative' }}>
@@ -1915,13 +1966,19 @@ const Schedular = (props: any) => {
                                                 top: '-8px',
                                                 fontSize: '14px',
                                                 width: '90%',
-                                                backgroundColor: 'white',
+                                                backgroundColor: '#343A40',
+                                                color: '#fff',
+                                                // backgroundColor: 'white',
                                                 left: '0px',
                                                 textAlign: 'right',
                                                 paddingRight: '10px',
                                                 zIndex: 999
                                             }}
-                                        >{`${h}:00`}</span>
+                                        >
+                                            {props.show24HourFormat
+                                                ? `${h < 10 ? `0${h}` : h}: 00`
+                                                : handle12HourFormat(h)}
+                                        </span>
                                     </div>
                                     {days.map((d, index) => {
                                         return (
@@ -1972,6 +2029,7 @@ const Schedular = (props: any) => {
                                                                 arr[d][h][m]?.map(
                                                                     (val, index: number) => {
                                                                         val.index = index;
+                                                                        
                                                                         return (
                                                                             <div
                                                                                 key={index}
@@ -2011,8 +2069,9 @@ const Schedular = (props: any) => {
                                                                                         ) /
                                                                                             60
                                                                                     }px`,
-                                                                                    backgroundColor:
-                                                                                        'rgb(135,206,235)',
+                                                                                    backgroundColor:'#FFFDD1',
+                                                                                    color:'#000',
+                                                                                        // 'rgb(135,206,235)',
                                                                                     width: `${
                                                                                         val.type ===
                                                                                         'restday'
@@ -2062,32 +2121,92 @@ const Schedular = (props: any) => {
                                                                                             'hidden'
                                                                                     }}
                                                                                 >
-                                                                                    <div className="event-desc">
-                                                                                        {val.type ===
-                                                                                        'restday'
-                                                                                            ? null
-                                                                                            : val.title}
+                                                                                    <div className="event-desc d-flex justify-content-between">
+                                                                                        <div>
+                                                                                            {val.type ===
+                                                                                            'restday'
+                                                                                                ? null
+                                                                                                : val.title}
+                                                                                        </div>
+                                                                                        <div>
+                                                                                            {props.showRestDay ? null : handleSessionPastDates(
+                                                                                                val.sessionDate,
+                                                                                                val.endHour,
+                                                                                                val.endMin
+                                                                                            ) ? (
+                                                                                                <img
+                                                                                                    style={{
+                                                                                                        height: '20px',
+                                                                                                        position:
+                                                                                                            'absolute',
+                                                                                                        right: '0'
+                                                                                                    }}
+                                                                                                    title="session attended"
+                                                                                                    src="/assets/attended.svg"
+                                                                                                    alt="attended"
+                                                                                                />
+                                                                                            ) : null}
+                                                                                        </div>
                                                                                     </div>
                                                                                     <div className="event-time">
                                                                                         {val.type ===
                                                                                         'restday'
                                                                                             ? null
-                                                                                            : (val.hour ===
-                                                                                              '0'
-                                                                                                  ? '00'
-                                                                                                  : val.hour) +
-                                                                                              ':' +
-                                                                                              (val.min ===
-                                                                                              '0'
-                                                                                                  ? '00'
-                                                                                                  : val.min) +
-                                                                                              ' - ' +
-                                                                                              val.endHour +
-                                                                                              ':' +
-                                                                                              (val.endMin.toString() ===
-                                                                                              '0'
-                                                                                                  ? '00'
-                                                                                                  : val.endMin)}
+                                                                                            : props.show24HourFormat
+                                                                                            ? `${
+                                                                                                  val.hour ===
+                                                                                                  '0'
+                                                                                                      ? '00'
+                                                                                                      : val.hour
+                                                                                              }:${
+                                                                                                  val.min ===
+                                                                                                  '0'
+                                                                                                      ? '00'
+                                                                                                      : val.min
+                                                                                              } - ${
+                                                                                                  val.endHour
+                                                                                              }:${
+                                                                                                  val.endMin.toString() ===
+                                                                                                  '0'
+                                                                                                      ? '00'
+                                                                                                      : val.endMin
+                                                                                              }`
+                                                                                            : `${handleConvertTimeFormat(
+                                                                                                  Number(
+                                                                                                      val.hour
+                                                                                                  ),
+                                                                                                  Number(
+                                                                                                      val.min
+                                                                                                  )
+                                                                                              )}-${handleConvertTimeFormat(
+                                                                                                  Number(
+                                                                                                      val.endHour
+                                                                                                  ),
+                                                                                                  Number(
+                                                                                                      val.endMin
+                                                                                                  )
+                                                                                              )}`}
+                                                                                        {/* : ({
+                                                                                            //   true ?
+                                                                                            
+                                                                                            // ((val.hour ===
+                                                                                            //   '0'
+                                                                                            //       ? '00'
+                                                                                            //       : val.hour) +
+                                                                                            //   ':' +
+                                                                                            //   (val.min ===
+                                                                                            //   '0'
+                                                                                            //       ? '00'
+                                                                                            //       : val.min) +
+                                                                                            //   ' - ' +
+                                                                                            //   val.endHour +
+                                                                                            //   ':' +
+                                                                                            //   (val.endMin.toString() ===
+                                                                                            //   '0'
+                                                                                            //       ? '00'
+                                                                                            //       : val.endMin)) :
+                                                                                            // `${handleCovertTimeFormat(Number(val.hour), Number(val.min))}-${handleCovertTimeFormat(Number(val.endHour), Number(val.endMin))}`
+                                                                                            // })} */}
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -2105,8 +2224,9 @@ const Schedular = (props: any) => {
                         })}
                     </div>
                 </div>
+
                 {/* Floating Action Buttons */}
-                {props?.clientSchedular !== 'client' && (
+                {/* {props?.clientSchedular !== 'client' && (
                     <FloatingButton
                         clientIds={props.clientIds}
                         sessionIds={props.sessionIds}
@@ -2118,7 +2238,8 @@ const Schedular = (props: any) => {
                         restDayCallback={handleShowRestDay}
                         showRestDayAction={showRestDay}
                     />
-                )}
+                )} */}
+
                 {
                     <Modal
                         show={showModal}
@@ -2171,7 +2292,7 @@ const Schedular = (props: any) => {
                                         >
                                             <i
                                                 className="fas fa-copy fa-lg"
-                                                onClick={(e) => {
+                                                onClick={() => {
                                                     handleClose();
                                                     setDuplicate(true);
                                                 }}
@@ -2194,7 +2315,7 @@ const Schedular = (props: any) => {
                                             >
                                                 <i
                                                     className="fas fa-trash-alt fa-lg"
-                                                    onClick={(e) => {
+                                                    onClick={() => {
                                                         setDel(true);
                                                     }}
                                                     style={{ cursor: 'pointer', color: 'red' }}
@@ -2215,7 +2336,7 @@ const Schedular = (props: any) => {
                                     >
                                         <i
                                             className="fas fa-times fa-lg"
-                                            onClick={(e) => {
+                                            onClick={() => {
                                                 handleClose();
                                                 setData([]);
                                                 setEdit(true);
@@ -2952,8 +3073,8 @@ const Schedular = (props: any) => {
                         msg="Schedule has been updated successfully"
                     />
                 )}
-            </>
+            </div>
         );
 };
 
-export default Schedular;
+export default forwardRef(Schedular);

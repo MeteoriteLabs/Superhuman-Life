@@ -5,7 +5,7 @@ import { useTable } from 'react-table';
 import { useSortBy, usePagination } from 'react-table';
 import './bookingTable.css';
 import * as Icon from 'react-bootstrap-icons';
-import NoDataInCard from '../../NoDataInCard';
+import NoDataInCard from 'components/NoDataInCard';
 
 function Table({ data, columns, newPackageCount, loading, pageCount: controlledPageCount }: any) {
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(

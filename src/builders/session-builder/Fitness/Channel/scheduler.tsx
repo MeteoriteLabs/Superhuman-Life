@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     // GET_TABLEDATA,
     // GET_ALL_FITNESS_PACKAGE_BY_TYPE,
@@ -7,28 +6,26 @@ import {
     GET_TAG_BY_ID
 } from '../../graphQL/queries';
 import { useQuery } from '@apollo/client';
-import { Row, Col, Dropdown } from 'react-bootstrap';
-import SchedulerPage from '../../../program-builder/program-template/scheduler';
+import { Row, Col, Dropdown, Card, Badge, Table, Accordion, Button } from 'react-bootstrap';
+import SchedulerPage from 'builders/program-builder/program-template/scheduler';
 import moment from 'moment';
 import FitnessAction from '../FitnessAction';
-import AuthContext from '../../../../context/auth-context';
 import { Link } from 'react-router-dom';
-// import YoutubeActive from "./assets/youtube_active.svg";
-
-import { flattenObj } from '../../../../components/utils/responseFlatten';
+import '../../profilepicture.css';
+import { flattenObj } from 'components/utils/responseFlatten';
 import '../Group/actionButton.css';
-import Loader from '../../../../components/Loader/Loader';
+import Loader from 'components/Loader/Loader';
+import DisplayImage from 'components/DisplayImage';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+import { SideNav } from '../Event/import';
 
 const Scheduler: React.FC = () => {
-    const auth = useContext(AuthContext);
     const last = window.location.pathname.split('/').reverse();
     const tagId = window.location.pathname.split('/').pop();
     const [show, setShow] = useState(false);
     // const [totalClasses, setTotalClasses] = useState<any>([]);
     const [tag, setTag] = useState<any>();
-    const [scheduleDate, setScheduleDate] = useState(
-        moment().startOf('month').format('YYYY-MM-DD')
-    );
     const [channelStartDate, setChannelStartDate] = useState('');
     const [channelEndDate, setChannelEndDate] = useState('');
     // this is used for monthly toggle
@@ -38,6 +35,25 @@ const Scheduler: React.FC = () => {
     const [clientIds, setClientIds] = useState<any>([]);
     // these are the sessions that will passed onto the scheduler
     const [schedulerSessions, setSchedulerSessions] = useState<any>([]);
+    const [key, setKey] = useState('');
+    const [collapse, setCollapse] = useState<boolean>(true);
+    const [accordionExpanded, setAccordionExpanded] = useState(true);
+    const [show24HourFormat, setShow24HourFormat] = useState(false);
+    const ref = useRef<any>(null);
+
+    const handleScrollScheduler = () => {
+        ref.current?.scrollIntoView({ behaviour: "smooth",
+        inline: "nearest"});
+        window.scrollBy(0, -200);
+    }
+
+    const handleAccordionToggle = () => {
+        setAccordionExpanded(!accordionExpanded);
+    };
+
+    const [program, setProgram] = useState('none');
+    const [sessionFilter, setSessionFilter] = useState('none');
+    const [showRestDay, setShowRestDay] = useState<boolean>(false);
 
     const fitnessActionRef = useRef<any>(null);
 
@@ -68,7 +84,7 @@ const Scheduler: React.FC = () => {
 
         const total = [0];
         const clientValues = [...clientIds];
-        const values = [...flattenData.tags[0].sessions];
+        const values = flattenData.tags ? [...flattenData.tags[0].sessions] : [];
         const ids = [...sessionIds];
         for (let i = 0; i < values.length; i++) {
             ids.push(values[i].id);
@@ -95,27 +111,35 @@ const Scheduler: React.FC = () => {
             return 'N/A';
         }
 
-        const moments = sessions.map((d) => moment(d.session_date));
+        const moments = sessions.map((currentDate) => moment(currentDate.session_date));
         const maxDate = moment.max(moments);
 
         return maxDate.format('MMM Do,YYYY');
     }
 
-    function calculateDailySessions(sessions) {
-        const dailySessions = sessions.filter(
-            (ses: any) => ses.session_date === moment().format('YYYY-MM-DD')
-        );
-        return dailySessions.length >= 1 ? dailySessions.length : 'N/A';
-    }
+    // function calculateDailySessions(sessions) {
+    //     const dailySessions = sessions.filter(
+    //         (ses: any) => ses.session_date === moment().format('YYYY-MM-DD')
+    //     );
+    //     return dailySessions.length >= 1 ? dailySessions.length : 'N/A';
+    // }
 
     function calculateDays(sd: string, ed: string) {
         const days = moment(ed).diff(moment(sd), 'days');
         return days + 1;
     }
 
-    function handleDatePicked(date: string) {
-        // setScheduleDate(moment(date).format('YYYY-MM-DD'));
+    function handleCurrentDate() {
+        setPrevDate(moment().format('YYYY-MM-DD'));
 
+        if (moment().add(30, 'days').isBefore(moment(channelEndDate))) {
+            setNextDate(moment().add(30, 'days').format('YYYY-MM-DD'));
+        } else {
+            setNextDate(moment(channelEndDate).format('YYYY-MM-DD'));
+        }
+    }
+
+    function handleDatePicked(date: string) {
         setPrevDate(moment(date).format('YYYY-MM-DD'));
 
         if (moment(date).add(30, 'days').isBefore(moment(channelEndDate))) {
@@ -146,6 +170,41 @@ const Scheduler: React.FC = () => {
         }
     }
 
+    function calculateDuration(sd: any, ed: any) {
+        const start = moment(sd);
+        const end = moment(ed);
+        return end.diff(start, 'days') + 1;
+    }
+
+    // function calculateDailySessions(sessions) {
+    //     const dailySessions = sessions.filter(
+    //         (ses: any) => ses.session_date === moment().format('YYYY-MM-DD')
+    //     );
+    //     return dailySessions.length ? dailySessions.length : 'N/A';
+    // }
+
+    function handleFloatingActionProgramCallback(event: any) {
+        setProgram(`${event}`);
+        handleScrollScheduler();
+        handleCallback();
+    }
+
+    function handleFloatingActionProgramCallback2(event: any) {
+        handleScrollScheduler();
+        handleCallback();
+        setSessionFilter(`${event}`);
+    }
+
+    function handleRefetch() {
+        handleCallback();
+    }
+
+    function handleShowRestDay() {
+        setShowRestDay(!showRestDay);
+        handleScrollScheduler();
+    }
+
+
     function handleNextMonth(date: string) {
         // setScheduleDate(moment(date).add(1, 'month').format('YYYY-MM-DD'));
         setPrevDate(moment(date).format('YYYY-MM-DD'));
@@ -159,12 +218,13 @@ const Scheduler: React.FC = () => {
 
     function handleCallback() {
         mainQuery.refetch();
-        // setSessionIds([]);
     }
-
-    if (!show) return <Loader />;
+  
+    if (!show) return <Loader msg="loading scheduler..." />;
     else
         return (
+            <Row noGutters className="bg-light  py-4 mb-5  min-vh-100">
+            <Col lg={collapse ? '11' : '10'} className="pr-2 pl-3 mb-5">
             <div className="col-lg-12">
                 <div className="mb-3">
                     <span style={{ fontSize: '30px' }}>
@@ -174,7 +234,254 @@ const Scheduler: React.FC = () => {
                         <b> back</b>
                     </span>
                 </div>
+
+                {/* Cards for service details and movement sessions */}
                 <Row>
+                    <Col lg={11}>
+                        <Accordion>
+                            {/* Service details card */}
+                            <Card>
+                                <Accordion.Toggle
+                                    as={Card.Header}
+                                    eventKey="0"
+                                    onClick={() => {
+                                        key === '' ? setKey('0') : setKey('');
+                                    }}
+                                    style={{ background: '#343A40', color: '#fff' }}
+                                >
+                                    <span className="d-inline-block">
+                                        <b>{tag && tag.fitnesspackage?.packagename}</b>
+                                    </span>
+                                    <span className="d-inline-block btn float-right">
+                                        {key === '0' ? (
+                                            <i className="fa fa-chevron-up d-flex justify-content-end text-white" />
+                                        ) : (
+                                            <i className="fa fa-chevron-down d-flex justify-content-end text-white" />
+                                        )}
+                                    </span>
+                                </Accordion.Toggle>
+                                <Accordion.Collapse eventKey="0">
+                                    <Card style={{ width: '100%' }}>
+                                        <Card.Body>
+                                            <Row>
+                                                <Col lg={10} sm={8}>
+                                                    <Card.Title>
+                                                        <h4>
+                                                            {tag && tag.fitnesspackage?.packagename}
+                                                            {tag?.tag_name
+                                                                ? ` (${tag?.tag_name})`
+                                                                : null}
+                                                        </h4>
+                                                    </Card.Title>
+                                                </Col>
+                                                <Col>
+                                                    <Row className="justify-content-end">
+                                                        <Dropdown>
+                                                            <Dropdown.Toggle
+                                                                variant="bg-light"
+                                                                id="dropdown-basic"
+                                                            >
+                                                                <img
+                                                                    src="/assets/cardsKebab.svg"
+                                                                    alt="edit"
+                                                                    className="img-responsive "
+                                                                    style={{
+                                                                        height: '20px',
+                                                                        width: '20px'
+                                                                    }}
+                                                                />
+                                                            </Dropdown.Toggle>
+
+                                                            <Dropdown.Menu>
+                                                                <Dropdown.Item key={2}>
+                                                                    Edit Program Name
+                                                                </Dropdown.Item>
+                                                                <Dropdown.Item key={1}>
+                                                                    Extend program and offering
+                                                                </Dropdown.Item>
+                                                                <Dropdown.Item key={1}>
+                                                                    Send notification to subscribers
+                                                                </Dropdown.Item>
+                                                                <Dropdown.Item key={1}>
+                                                                    Request Renewal
+                                                                </Dropdown.Item>
+                                                            </Dropdown.Menu>
+                                                        </Dropdown>
+                                                    </Row>
+                                                </Col>
+                                            </Row>
+
+                                            <Card.Text>
+                                                <Row>
+                                                    <Col lg={9} sm={5}>
+                                                        <Badge
+                                                            pill
+                                                            variant="dark"
+                                                            className="py-2 px-3 my-2"
+                                                        >
+                                                            {tag && tag.fitnesspackage
+                                                                ? tag.fitnesspackage.level
+                                                                : null}
+                                                        </Badge>
+                                                        <br />
+                                                        <b>Start Date:</b> {channelStartDate}
+                                                        <br />
+                                                        <b>End Date: </b>
+                                                        {channelEndDate}
+                                                    </Col>
+                                                    <Col>
+                                                        <DisplayImage
+                                                            imageName={
+                                                                tag &&
+                                                                tag.client_packages &&
+                                                                tag.client_packages.length &&
+                                                                tag.client_packages[0]
+                                                                    .users_permissions_user &&
+                                                                tag.client_packages[0]
+                                                                    .users_permissions_user.Photo_ID
+                                                                    ? tag.client_packages[0]
+                                                                          .users_permissions_user
+                                                                          .Photo_ID
+                                                                    : null
+                                                            }
+                                                            defaultImageUrl="assets/image_placeholder.svg"
+                                                            imageCSS="rounded-circle profile_pic text-center img-fluid ml-2"
+                                                        />
+                                                        <br />
+                                                        <br />
+                                                        <Badge
+                                                            pill
+                                                            variant="dark"
+                                                            className="py-2 px-4 "
+                                                            style={{ cursor: 'pointer' }}
+                                                            onClick={() => {
+                                                                fitnessActionRef.current.TriggerForm(
+                                                                    {
+                                                                        id: last[0],
+                                                                        actionType: 'allClients',
+                                                                        type: 'Live Stream Channel'
+                                                                    }
+                                                                );
+                                                            }}
+                                                        >
+                                                            View all
+                                                        </Badge>
+                                                        <p className="ml-3">
+                                                            {tag && tag.client_packages ? tag.client_packages.length : null} people
+                                                        </p>
+                                                    </Col>
+                                                </Row>
+                                            </Card.Text>
+                                        </Card.Body>
+                                    </Card>
+                                </Accordion.Collapse>
+                            </Card>
+                            {/* Movement Card */}
+                            <Card>
+                                <Accordion.Toggle
+                                    as={Card.Header}
+                                    eventKey="1"
+                                    onClick={() => {
+                                        key === '' ? setKey('1') : setKey('');
+                                    }}
+                                    style={{ background: '#343A40', color: '#fff' }}
+                                >
+                                    <span className="d-inline-block">
+                                        <b>Movement Sessions</b>
+                                    </span>
+                                    <span className="d-inline-block btn float-right">
+                                        {key === '1' ? (
+                                            <i className="fa fa-chevron-up d-flex justify-content-end text-white" />
+                                        ) : (
+                                            <i className="fa fa-chevron-down d-flex justify-content-end text-white" />
+                                        )}
+                                    </span>
+                                </Accordion.Toggle>
+                                <Accordion.Collapse eventKey="1">
+                                    <Card style={{ width: '100%' }}>
+                                        <Card.Body>
+                                            <Card.Title>
+                                                <h4>Movement Sessions</h4>
+                                            </Card.Title>
+                                            <Card.Text>
+                                                Last planned session{' '}
+                                                {tag && tag.sessions && calculateLastSession(tag.sessions)}
+                                            </Card.Text>
+                                            <Row>
+                                                <Col lg={8}>
+                                                    <Table
+                                                        striped
+                                                        bordered
+                                                        hover
+                                                        size="sm"
+                                                        responsive
+                                                    >
+                                                        <thead className="text-center">
+                                                            <tr>
+                                                                <th>Type</th>
+                                                                <th>Total</th>
+                                                                <th>Plan</th>
+                                                                <th>Completed</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody className="text-center">
+                                                            <tr>
+                                                                <td>
+                                                                    {tag &&
+                                                                    tag.fitnesspackage &&
+                                                                    tag.fitnesspackage
+                                                                        .fitness_package_type
+                                                                        ? tag.fitnesspackage
+                                                                              .fitness_package_type
+                                                                              .type
+                                                                        : null}
+                                                                </td>
+                                                                <td>
+                                                                    {moment(channelEndDate).diff(
+                                                                        moment(channelStartDate),
+                                                                        'days'
+                                                                    )}
+                                                                </td>
+                                                                <td></td>
+                                                                <td></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </Table>
+                                                </Col>
+                                                <Col className="h-25">
+                                                    <Calendar
+                                                        className="disabled"
+                                                        // tileClassName={tileContent}
+                                                        // onChange={onChange}
+                                                        // onActiveStartDateChange={({ action }) => {
+                                                        //     action === 'next'
+                                                        //         ? setMonth(month + 1)
+                                                        //         : setMonth(month - 1);
+                                                        // }}
+                                                        // value={value}
+                                                        minDate={moment().startOf('month').toDate()}
+                                                        maxDate={moment().add(2, 'months').toDate()}
+                                                        maxDetail="month"
+                                                        minDetail="month"
+                                                        next2Label={null}
+                                                        prev2Label={null}
+                                                    />
+                                                </Col>
+                                            </Row>
+                                            <p className="text-dark">
+                                                Note: Create atleast 3 sessions to start accepting
+                                                bookings
+                                            </p>
+                                        </Card.Body>
+                                    </Card>
+                                </Accordion.Collapse>
+                            </Card>
+                        </Accordion>
+                    </Col>
+                </Row>
+
+                {/* old code */}
+                {/* <Row>
                     <Col
                         lg={11}
                         className="p-4 shadow-lg bg-white"
@@ -320,9 +627,25 @@ const Scheduler: React.FC = () => {
                             </Col>
                         </Row>
                     </Col>
-                </Row>
-                <Row className="mt-5 mb-3">
-                    <Col lg={11}>
+                </Row> */}
+
+                {/* Scheduler manager based on dates */}
+                <Row className="mt-5 mb-2">
+                    {/* Today Button */}
+                    <Col lg={2}>
+                        {moment().isBefore(moment(channelEndDate)) ? (
+                            <Button
+                                variant="dark"
+                                onClick={() => {
+                                    handleCurrentDate();
+                                }}
+                            >
+                                Today
+                            </Button>
+                        ) : null}
+                    </Col>
+                    {/* Previous and Next button */}
+                    <Col lg={8}>
                         <div className="text-center">
                             <input
                                 min={moment(channelStartDate).format('YYYY-MM-DD')}
@@ -350,7 +673,7 @@ const Scheduler: React.FC = () => {
                             >
                                 <i className="fa fa-chevron-left mr-4"></i>
                             </span>
-                            <span className="shadow-lg bg-white p-2 rounded-lg">
+                            <span className="shadow-lg bg-dark text-white p-2 rounded-lg">
                                 <b>
                                     {moment(prevDate).startOf('month').format('MMMM, YYYY')} -{' '}
                                     {moment(nextDate).endOf('month').format('MMMM, YYYY')}
@@ -369,12 +692,18 @@ const Scheduler: React.FC = () => {
                             </span>
                         </div>
                     </Col>
+                    {/* Collapse View */}
+                    <Col lg={2}>
+                        <Button variant="dark">Collapse</Button>
+                    </Col>
                 </Row>
+                
                 {/* Scheduler */}
                 <Row>
                     <Col lg={11} className="pl-0 pr-0">
                         <div className="mt-3">
                             <SchedulerPage
+                                ref={ref}
                                 type="date"
                                 callback={handleCallback}
                                 sessionIds={sessionIds}
@@ -383,14 +712,53 @@ const Scheduler: React.FC = () => {
                                 schedulerSessions={schedulerSessions}
                                 clientIds={clientIds}
                                 classType={'Live Stream Channel'}
-                                programId={tagId}
+                                programId={tagId ? tagId : null}
                                 startDate={prevDate}
+                                handleFloatingActionProgramCallback={
+                                    handleFloatingActionProgramCallback
+                                }
+                                handleFloatingActionProgramCallback2={
+                                    handleFloatingActionProgramCallback2
+                                }
+                                handleRefetch={handleRefetch}
+                                sessionFilter={sessionFilter}
+                                program={program}
+                                showRestDay={showRestDay}
+                                show24HourFormat={show24HourFormat}
+                                
                             />
                         </div>
                     </Col>
                     <FitnessAction ref={fitnessActionRef} callback={() => mainQuery} />
                 </Row>
             </div>
+            </Col>
+            {/* Right sidebar */}
+            <Col lg={collapse ? '1' : '2'} className="d-lg-block">
+                    <SideNav
+                    handleScrollScheduler={handleScrollScheduler}
+                      show24HourFormat={show24HourFormat}
+                      setShow24HourFormat={setShow24HourFormat}
+                        collapse={collapse}
+                        setCollapse={setCollapse}
+                        accordionExpanded={accordionExpanded}
+                        onAccordionToggle={handleAccordionToggle}
+                        clientIds={clientIds}
+                        sessionIds={sessionIds}
+                        startDate={tag?.fitnesspackage?.Start_date}
+                        duration={calculateDuration(
+                            tag?.fitnesspackage?.Start_date,
+                            tag?.fitnesspackage?.End_date
+                        )}
+                        callback={handleFloatingActionProgramCallback}
+                        callback2={handleFloatingActionProgramCallback2}
+                        callback3={handleRefetch}
+                        restDayCallback={handleShowRestDay}
+                        showRestDayAction={showRestDay}
+                    />
+                </Col>
+
+            </Row>
         );
 };
 

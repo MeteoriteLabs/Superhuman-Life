@@ -1,6 +1,6 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation, gql } from '@apollo/client';
-import ModalView from '../../../../components/modal';
+import ModalView from 'components/modal';
 import {
     GET_SCHEDULEREVENTS,
     CREATE_SESSION,
@@ -9,14 +9,14 @@ import {
     GET_TEMPLATE_SESSIONS,
     UPDATE_FITNESSPORGRAMS_SESSIONS
 } from '../queries';
-import AuthContext from '../../../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { schema, widgets } from '../schema/workoutTemplateSchema';
 import { Subject } from 'rxjs';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 import moment from 'moment';
 import { AvailabilityCheck } from './availabilityCheck';
 import { Modal, Button } from 'react-bootstrap';
-import Toaster from '../../../../components/Toaster';
+import Toaster from 'components/Toaster';
 
 interface Operation {
     id: string;
@@ -72,21 +72,21 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
     });
 
     const [updateFitenssProgram] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, {
-        onCompleted: (data: any) => {
+        onCompleted: () => {
             modalTrigger.next(false);
             props.callback();
         }
     });
 
     const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, {
-        onCompleted: (data: any) => {
+        onCompleted: () => {
             modalTrigger.next(false);
             props.callback();
         }
     });
 
     const [upateSessions] = useMutation(UPDATE_TAG_SESSIONS, {
-        onCompleted: (data: any) => {
+        onCompleted: () => {
             if (props?.clientIds.length > 0) {
                 for (let i = 0; i < props?.clientIds.length; i++) {
                     createSessionBooking({
@@ -162,7 +162,7 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
         }
     }));
 
-    function FillDetails(data: any) {
+    function FillDetails() {
         const details: any = {};
 
         setProgramDetails(details);
@@ -176,8 +176,8 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
         useQuery(GET_SCHEDULEREVENTS, {
             variables: { id: program_id },
             skip: !operation.id || operation.type === 'toggle-status',
-            onCompleted: (e: any) => {
-                FillDetails(e);
+            onCompleted: () => {
+                FillDetails();
             }
         });
     }

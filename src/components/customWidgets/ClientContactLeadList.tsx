@@ -4,8 +4,8 @@ import 'react-bootstrap-typeahead/css/Typeahead.css';
 import { GET_CONTACTS, FETCH_CLIENTS } from './queries';
 import { useQuery } from '@apollo/client';
 import { flattenObj } from '../utils/responseFlatten';
-import AuthContext from '../../context/auth-context';
-import { GET_LEADS_NEW } from '../../builders/client-builder/leads/queries';
+import AuthContext from 'context/auth-context';
+import { GET_LEADS_NEW } from 'builders/client-builder/leads/queries';
 
 const ClientContactLeadList: React.FC<{
     value: string;

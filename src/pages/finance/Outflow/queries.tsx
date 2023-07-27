@@ -40,6 +40,36 @@ export const GET_TRANSACTIONS = gql`
         }
     }
 `;
+export const GET_TRANSACTION = gql`
+    query TransactionQuery($id: ID) {
+        transaction(id: $id) {
+            data {
+                id
+                attributes {
+                    Currency
+                    TransactionStatus
+                    TransactionRemarks
+                    TransactionRefrenceID
+                    ReceiverID
+                    ReceiverType
+                    ChangemakerAmount
+                    SenderID
+                    SenderType
+                    SapienAmount
+                    SapienGSTAmount
+                    SapienGSTPercentage
+                    createdAt
+                    TransactionDateTime
+                    TransactionStatus
+                    TransactionAmount
+                    PaymentScheduleID
+                    TransactionRemarks
+                    PaymentMode
+                }
+            }
+        }
+    }
+`;
 
 export const FETCH_CHANGEMAKERS = gql`
     query fetchUsersProfileData {
@@ -49,6 +79,55 @@ export const FETCH_CHANGEMAKERS = gql`
                 attributes {
                     First_Name
                     Last_Name
+                }
+            }
+        }
+    }
+`;
+
+export const FETCH_CHANGEMAKER = gql`
+    query fetchUsersProfileData($id: ID) {
+        usersPermissionsUser(id: $id) {
+            data {
+                id
+                attributes {
+                    First_Name
+                    Last_Name
+                    Phone_Number
+                    DOB
+                    email
+                }
+            }
+        }
+    }
+`;
+
+export const FETCH_CLIENTPACKAGES = gql`
+    query fetchclientPackages($id: ID) {
+        clientPackage(id: $id) {
+            data {
+                id
+                attributes {
+                    package_duration
+                    fitnesspackages {
+                        data {
+                            attributes {
+                                packagename
+                                ptoffline
+                                ptonline
+                                grouponline
+                                groupoffline
+                                recordedclasses
+                                fitness_package_type{
+                                    data{
+                                        attributes{
+                                            type
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

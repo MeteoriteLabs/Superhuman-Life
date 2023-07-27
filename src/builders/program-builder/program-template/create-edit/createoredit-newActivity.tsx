@@ -1,6 +1,6 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-import ModalView from '../../../../components/modal';
+import ModalView from 'components/modal';
 import {
     GET_SCHEDULEREVENTS,
     CREATE_SESSION,
@@ -9,12 +9,12 @@ import {
     GET_TEMPLATE_SESSIONS,
     UPDATE_FITNESSPORGRAMS_SESSIONS
 } from '../queries';
-import AuthContext from '../../../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { schema, widgets } from '../schema/newActivitySchema';
 import { Subject } from 'rxjs';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 import moment from 'moment';
-import Toaster from '../../../../components/Toaster';
+import Toaster from 'components/Toaster';
 
 interface Operation {
     id: string;
@@ -22,17 +22,22 @@ interface Operation {
     current_status: boolean;
 }
 
-function CreateEditActivity(props: any, ref: any) {
+interface Form {
+    user_permissions_user: string;
+    time: {startTime: string; endTime: string;};
+    day: {key: number; day: string;}[];
+    newActivity: string;
+    name?: string;
+}
+
+function CreateEditActivity(props: any, ref: any): JSX.Element {
     const auth = useContext(AuthContext);
-    const programSchema: {
-        [name: string]: any;
-    } = require('../json/newActivity.json');
+    const programSchema: Record<string, unknown> = require('../json/newActivity.json');
     const [programDetails, setProgramDetails] = useState<any>({});
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const program_id = window.location.pathname.split('/').pop();
     const [isCreated, setIsCreated] = useState<boolean>(false);
     const [isFormUpdated, setIsFormUpdated] = useState<boolean>(false);
-
     const [templateSessionsIds, setTemplateSessionsIds] = useState<any>([]);
 
     useQuery(GET_TEMPLATE_SESSIONS, {
@@ -54,6 +59,7 @@ function CreateEditActivity(props: any, ref: any) {
             props.callback();
         }
     });
+
     const [upateSessions] = useMutation(UPDATE_TAG_SESSIONS, {
         onCompleted: () => {
             modalTrigger.next(false);
@@ -61,6 +67,7 @@ function CreateEditActivity(props: any, ref: any) {
             setIsFormUpdated(!isFormUpdated);
         }
     });
+
     const [createSession] = useMutation(CREATE_SESSION, {
         onCompleted: () => {
             setIsCreated(!isCreated);
@@ -89,20 +96,20 @@ function CreateEditActivity(props: any, ref: any) {
         }
     }));
 
-    function FillDetails(data: any) {
+    function FillDetails() {
         const details: any = {};
         setProgramDetails(details);
 
         //if message exists - show form only for edit and view
         if (['edit', 'view'].indexOf(operation.type) > -1) modalTrigger.next(true);
-        else OnSubmit(null);
+        else OnSubmit({} as Form);
     }
 
     useQuery(GET_SCHEDULEREVENTS, {
         variables: { id: program_id },
         skip: !operation.id || operation.type === 'toggle-status',
-        onCompleted: (e: any) => {
-            FillDetails(e);
+        onCompleted: () => {
+            FillDetails();
         }
     });
 
@@ -117,17 +124,26 @@ function CreateEditActivity(props: any, ref: any) {
         return timeString.toString();
     }
 
+    function handleTimeInMinutes(time: string) {
+        const timeArray = time.split(':');
+        const hours = +timeArray[0] * 60;
+        const minutes = +timeArray[1];
+        const timeInMinutes = hours + minutes;
+        return timeInMinutes;
+    }
+
     function UpdateProgram(frm: any) {
         const existingEvents = props.events === null ? [] : [...props.events];
         const daysArray: any = [];
         let id: any;
-
+        
         if (frm.day && frm.newActivity) {
             frm.day = JSON.parse(frm.day);
             frm.time = JSON.parse(frm.time);
             frm.newActivity = JSON.parse(frm.newActivity);
 
-            const name: any = frm.newActivity[0].activity;
+            const name: string = frm.newActivity[0].activity;
+           
             id = frm.newActivity[0].id;
             delete frm.newActivity[0].activity;
             delete frm.newActivity[0].id;
@@ -184,11 +200,11 @@ function CreateEditActivity(props: any, ref: any) {
         }
 
         const sessionIds_new: any = [];
-        // const sessionIds_old: string[] = [...props.sessionIds];
-        const sessionIds_old: string[] = [];
+        const sessionIds_old: string[] = [...props.sessionIds];
+        // const sessionIds_old: string[] = [];
         const templateIds_old: string[] = [...templateSessionsIds];
 
-        function updateSessionFunc(id: any) {
+        function updateSessionFunc(id: string) {
             sessionIds_new.push(id);
             if (frm.day.length === sessionIds_new.length) {
                 upateSessions({
@@ -223,7 +239,9 @@ function CreateEditActivity(props: any, ref: any) {
                     type: 'activity',
                     session_date: moment(frm.day[z].day, 'Do, MMM YY').format('YYYY-MM-DD'),
                     changemaker: auth.userid,
-                    isProgram: true
+                    isProgram: true,
+                    SessionTitle: frm.newActivity[0].activity,
+                    SessionDurationMinutes: (handleTimeInMinutes(frm.time.endTime) - handleTimeInMinutes(frm.time.startTime)).toString()
                 },
                 onCompleted: (data) => {
                     if (window.location.pathname.split('/')[1] === 'client') {
@@ -245,17 +263,18 @@ function CreateEditActivity(props: any, ref: any) {
         }
     }
 
-    function OnSubmit(frm: any) {
-        if (frm) frm.user_permissions_user = auth.userid;
-        if (frm.name === 'edit' || frm.name === 'view') {
-            if (frm.name === 'edit') {
+    function OnSubmit(form: Form) {
+       
+        if (form) form.user_permissions_user = auth.userid;
+        if (form.name === 'edit' || form.name === 'view') {
+            if (form.name === 'edit') {
                 //EditMessage(frm);
             }
-            if (frm.name === 'view') {
+            if (form.name === 'view') {
                 modalTrigger.next(false);
             }
         } else {
-            UpdateProgram(frm);
+            UpdateProgram(form);
         }
     }
 
@@ -267,8 +286,8 @@ function CreateEditActivity(props: any, ref: any) {
                 showErrorList={false}
                 formUISchema={schema}
                 formSchema={programSchema}
-                formSubmit={(frm: any) => {
-                    OnSubmit(frm);
+                formSubmit={(form: Form) => {
+                    OnSubmit(form);
                 }}
                 stepperValues={['Schedule', 'Activity']}
                 formData={programDetails}

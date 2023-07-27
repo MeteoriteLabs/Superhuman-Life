@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Button, Modal, Row } from 'react-bootstrap';
 import { useMutation, gql } from '@apollo/client';
 import { useLocation } from 'react-router-dom';
 
-export default function ForgotPassword() {
+export default function ForgotPassword(): JSX.Element {
     const query = new URLSearchParams(useLocation().search);
     const confirmation = query.get('confirmation');
     const [emailSent, setEmailSent] = useState(false);

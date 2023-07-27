@@ -1,4 +1,4 @@
-import { useMemo, useContext, useState, useRef } from 'react';
+import { useMemo, useContext, useState, useRef  , useEffect} from 'react';
 import {
     Button,
     Card,
@@ -10,15 +10,15 @@ import {
     Row,
     Container
 } from 'react-bootstrap';
-import Table from '../../../components/table';
+import Table from 'components/table';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_TABLEDATA, CREATE_PROGRAM, CREATE_SESSION } from './queries';
-import AuthContext from '../../../context/auth-context';
-import ActionButton from '../../../components/actionbutton';
+import AuthContext from 'context/auth-context';
+import ActionButton from 'components/actionbutton';
 import CreateEditProgram from './createoredit-program';
-import { flattenObj } from '../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 import moment from 'moment';
-import Toaster from '../../../components/Toaster';
+import Toaster from 'components/Toaster';
 
 export default function EventsTab(): JSX.Element {
     const auth = useContext(AuthContext);
@@ -39,7 +39,7 @@ export default function EventsTab(): JSX.Element {
     const [totalRecords, setTotalRecords] = useState<number>(0);
 
     const [createProgram] = useMutation(CREATE_PROGRAM, {
-        onCompleted: (e: any) => {
+        onCompleted: () => {
             refetchQueryCallback();
         }
     });
@@ -219,6 +219,11 @@ export default function EventsTab(): JSX.Element {
         setPage(selectedPageNumber);
     };
 
+    useEffect(() => {
+        if (tableData.length === 0 && page > 1) {
+            setPage(page - 1);
+        }
+    }, [tableData]);
     return (
         <TabContent>
             <hr />
@@ -248,7 +253,7 @@ export default function EventsTab(): JSX.Element {
                     <Col>
                         <Card.Title className="text-right">
                             <Button
-                                variant="outline-secondary"
+                                variant="dark"
                                 size="sm"
                                 onClick={() => {
                                     createEditProgramComponent.current.TriggerForm({

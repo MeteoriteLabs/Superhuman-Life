@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState, useRef } from 'react';
+import { useContext, useMemo, useState, useRef  , useEffect} from 'react';
 import {
     Button,
     Card,
@@ -9,13 +9,13 @@ import {
     Row,
     TabContent
 } from 'react-bootstrap';
-import Table from '../../../components/table';
+import Table from 'components/table';
 import { useQuery } from '@apollo/client';
 import { GET_TABLEDATA } from './queries';
-import AuthContext from '../../../context/auth-context';
-import ActionButton from '../../../components/actionbutton';
+import AuthContext from 'context/auth-context';
+import ActionButton from 'components/actionbutton';
 import CreateEditExercise from './createoredit-exercise';
-import { flattenObj } from '../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 import moment from 'moment';
 import { Exercise, FlattenExercise } from './@exercisesTypes';
 
@@ -153,6 +153,11 @@ export default function EventsTab(): JSX.Element {
     const pageHandler = (selectedPageNumber: number) => {
         setPage(selectedPageNumber);
     };
+    useEffect(() => {
+        if (tableData.length === 0 && page > 1) {
+            setPage(page - 1);
+        }
+    }, [tableData]);
 
     return (
         <TabContent>
@@ -183,7 +188,7 @@ export default function EventsTab(): JSX.Element {
                     <Col>
                         <Card.Title className="text-right">
                             <Button
-                                variant="outline-secondary"
+                                variant="dark"
                                 size="sm"
                                 onClick={() => {
                                     createEditExerciseComponent.current &&

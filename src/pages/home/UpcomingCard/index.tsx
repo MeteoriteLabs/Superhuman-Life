@@ -2,11 +2,11 @@ import React, { useContext, useState } from 'react';
 import { Card, Row, Col } from 'react-bootstrap';
 import { useQuery } from '@apollo/client';
 import { GET_SESSIONS } from './queries';
-import { flattenObj } from '../../../components/utils/responseFlatten';
-import AuthContext from '../../../context/auth-context';
+import { flattenObj } from 'components/utils/responseFlatten';
+import AuthContext from 'context/auth-context';
 import moment from 'moment';
 import '../LeadCard/lead.css';
-import NoDataInCard from '../../../components/NoDataInCard';
+import NoDataInCard from 'components/NoDataInCard';
 
 const UpcomingCard: React.FC = () => {
     const [sessionData, setSessionData] = useState<any>([]);
@@ -42,7 +42,6 @@ const UpcomingCard: React.FC = () => {
                     +minutes,
                     0
                 );
-
                 return date >= currentTime;
             });
 

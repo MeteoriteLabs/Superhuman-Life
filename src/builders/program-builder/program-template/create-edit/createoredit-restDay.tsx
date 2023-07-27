@@ -1,6 +1,6 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-import ModalView from '../../../../components/modal';
+import ModalView from 'components/modal';
 import {
     GET_SCHEDULEREVENTS,
     GET_SCHEDULEREVENTS_PROGRAM_MANAGER,
@@ -11,10 +11,10 @@ import {
     GET_TEMPLATE_SESSIONS,
     UPDATE_FITNESSPORGRAMS_SESSIONS
 } from '../queries';
-import AuthContext from '../../../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { schema, widgets } from '../schema/restDaySchema';
 import { Subject } from 'rxjs';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 import moment from 'moment';
 
 interface Operation {
@@ -23,9 +23,9 @@ interface Operation {
     current_status: boolean;
 }
 
-function CreateEditRestDay(props: any, ref: any) {
+function CreateEditRestDay(props: any, ref: any): JSX.Element {
     const auth = useContext(AuthContext);
-    const programSchema: { [name: string]: any } = require('../json/restDay.json');
+    const programSchema: Record<string, unknown> = require('../json/restDay.json');
     const [programDetails, setProgramDetails] = useState<any>({});
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const program_id = window.location.pathname.split('/').pop();
@@ -64,19 +64,19 @@ function CreateEditRestDay(props: any, ref: any) {
     });
 
     const [createSessionBooking] = useMutation(CREATE_SESSION_BOOKING, {
-        onCompleted: (data: any) => {
+        onCompleted: () => {
             modalTrigger.next(false);
         }
     });
     const [upateSessions] = useMutation(UPDATE_TAG_SESSIONS, {
-        onCompleted: (data: any) => {
+        onCompleted: () => {
             modalTrigger.next(false);
         }
     });
     const [createSession] = useMutation(CREATE_SESSION);
 
     const [updateTemplateSessions] = useMutation(UPDATE_FITNESSPORGRAMS_SESSIONS, {
-        onCompleted: (data: any) => {
+        onCompleted: () => {
             modalTrigger.next(false);
         }
     });

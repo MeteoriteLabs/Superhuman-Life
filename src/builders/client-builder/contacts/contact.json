@@ -1,7 +1,7 @@
 {
-    "1": {
+    "1": { 
         "type": "object",
-        "required": ["firstname", "lastname", "phone", "email", "type"],
+        "required": ["firstname", "lastname","emailAndPhone","type"],
         "properties": {
             "firstname": {
                 "type": "string",
@@ -11,16 +11,8 @@
                 "type": "string",
                 "title": "Last Name"
             },
-            "phone": {
-                "type": "string",
-                "title": "Phone Number",
-                "minLength": 10,
-                "format": "phone-in"
-            },
-            "email": {
-                "type": "string",
-                "title": "Email ID",
-                "format": "email"
+            "emailAndPhone":{
+                "type":"string"  
             },
             "type": {
                 "title": "Type of contact",
@@ -40,6 +32,7 @@
                 "enum": [true, false],
                 "default": false
             }
+           
         }
     },
     "2": {

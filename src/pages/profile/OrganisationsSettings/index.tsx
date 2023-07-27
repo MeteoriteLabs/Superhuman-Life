@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { Row, Button, Container, Card, Dropdown, Col } from 'react-bootstrap';
-import AuthContext from '../../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { GET_USER_ORGANIZATIONS } from './queries';
-import { flattenObj } from '../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 import { useQuery } from '@apollo/client';
 import './organisation.css';
 
