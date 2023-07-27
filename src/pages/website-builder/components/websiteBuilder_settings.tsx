@@ -10,9 +10,11 @@ function WebsiteBuilder_settings(): JSX.Element {
             <h1>Website Builder</h1>
             <hr />
             <div>
-                <div className="mt-5 d-flex" style={{ width: '100%', gap: '60px' }}>
+                <div
+                    className="my-5 d-flex flex-column flex-md-row "
+                    style={{ width: '100%', gap: '30px' }}
+                >
                     <div
-                        className="mb-4"
                         style={{
                             width: '100%',
                             background: '#000',
@@ -42,11 +44,10 @@ function WebsiteBuilder_settings(): JSX.Element {
                         >
                             {changemakerWebsiteState.subdomain
                                 ? changemakerWebsiteState.subdomain
-                                : ''}
+                                : 'Not Selected'}
                         </div>
                     </div>
                     <div
-                        className="mb-4"
                         style={{
                             width: '100%',
                             background: '#000',

@@ -1,14 +1,14 @@
-import { FC, useState, useContext, useEffect } from 'react';
-import SideNav from './layout/sidenav';
-import 'react-toggle/style.css';
 import { Button, Container, Row, Col, Nav, Navbar } from 'react-bootstrap';
 import WebsiteBuilder_settings from './components/websiteBuilder_settings';
 import WebsiteBuilder_template from './components/websiteBuilder_template';
+import { FC, useState, useContext, useEffect } from 'react';
+import MobileIcon from 'components/Icons/mobile';
 import { useLocation } from 'react-router-dom';
 import AuthContext from 'context/auth-context';
+import SideNav from './layout/sidenav';
 import Icon from 'components/Icons';
-import MobileIcon from 'components/Icons/mobile';
 import Icons from 'components/Icons';
+import 'react-toggle/style.css';
 
 const WebsiteBuilder: FC = () => {
     const [collapse, setCollapse] = useState<boolean>(true);
@@ -79,7 +79,7 @@ const WebsiteBuilder: FC = () => {
                                     id="basic-navbar-nav"
                                     style={{
                                         height: '18vh',
-                                        width: '100vw', 
+                                        width: '100vw',
                                         position: 'fixed',
                                         bottom: '16vh',
                                         backgroundColor: '#343a40'
@@ -132,10 +132,10 @@ const WebsiteBuilder: FC = () => {
                                     id="basic-navbar-nav"
                                     style={{
                                         height: '20vh',
-                                        width: '100vw', 
-                                        position: 'fixed', 
-                                        bottom: '16vh', 
-                                        backgroundColor: '#343a40' 
+                                        width: '100vw',
+                                        position: 'fixed',
+                                        bottom: '16vh',
+                                        backgroundColor: '#343a40'
                                     }}
                                 >
                                     <Nav
