@@ -604,7 +604,7 @@ const Schedular = (props: any, ref) => {
                 }
             }
         }
-        return '##343A40';
+        return '#343A40';
     }
 
     //this return the data for adding and removing the rest days
@@ -1930,7 +1930,8 @@ const Schedular = (props: any, ref) => {
                                 <div
                                     className="cell"
                                     style={{
-                                        backgroundColor: 'white',
+                                        backgroundColor: '#343A40', color:'#fff',
+                                        // backgroundColor: 'white',
                                         position: 'relative',
                                         minHeight: `${props.type === 'date' ? '70px' : '70px'}`
                                     }}
@@ -1942,7 +1943,8 @@ const Schedular = (props: any, ref) => {
                             <div
                                 className="cell"
                                 style={{
-                                    backgroundColor: 'white',
+                                    backgroundColor: '#343A40', color:'#fff',
+                                    // backgroundColor: 'white',
                                     position: 'relative',
                                     minHeight: `${props.type === 'date' ? '70px' : '70px'}`
                                 }}
@@ -1953,7 +1955,7 @@ const Schedular = (props: any, ref) => {
                             return (
                                 <div
                                     className="time-row"
-                                    style={{ backgroundColor: 'white' }}
+                                    style={{ backgroundColor: '#343A40', color:'#fff' }}
                                     key={index}
                                 >
                                     <div className="cell" style={{ position: 'relative' }}>
@@ -1964,7 +1966,9 @@ const Schedular = (props: any, ref) => {
                                                 top: '-8px',
                                                 fontSize: '14px',
                                                 width: '90%',
-                                                backgroundColor: 'white',
+                                                backgroundColor: '#343A40',
+                                                color: '#fff',
+                                                // backgroundColor: 'white',
                                                 left: '0px',
                                                 textAlign: 'right',
                                                 paddingRight: '10px',
@@ -2065,8 +2069,9 @@ const Schedular = (props: any, ref) => {
                                                                                         ) /
                                                                                             60
                                                                                     }px`,
-                                                                                    backgroundColor:
-                                                                                        'rgb(135,206,235)',
+                                                                                    backgroundColor:'#FFFDD1',
+                                                                                    color:'#000',
+                                                                                        // 'rgb(135,206,235)',
                                                                                     width: `${
                                                                                         val.type ===
                                                                                         'restday'
