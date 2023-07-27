@@ -47,7 +47,7 @@ function CustomTabs({
                 </div>
                 <div
                     className={clsx(
-                        style.borderHeilight,
+                        style.borderHighlight,
                         activeTab === 'website'
                             ? style.websitePos
                             : activeTab === 'theme'

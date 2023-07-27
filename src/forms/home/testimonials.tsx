@@ -76,7 +76,7 @@ function Hero(): JSX.Element {
     const onSubmit = handleSubmit(async (formData) => {
         // ! Need to add image upload
         const { title, testimonials } = formData;
-        console.log('formData', formData);
+
         await mutateFunction({
             variables: {
                 id: initialValues.sectionId,

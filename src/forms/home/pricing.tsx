@@ -195,10 +195,7 @@ function Hero(): JSX.Element {
                           </Accordion>
                       ))
                     : null}
-                {/* add */}
-                {errorMsg ? (
-                    <Toaster type="error" msg={errorMsg} handleCallback={() => setErrorMsg('')} />
-                ) : null}
+
                 <Button variant="light" type="submit" className={style.submit_button}>
                     Submit
                 </Button>
