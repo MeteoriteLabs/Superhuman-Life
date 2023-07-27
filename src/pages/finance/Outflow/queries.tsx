@@ -102,8 +102,8 @@ export const FETCH_CHANGEMAKER = gql`
     }
 `;
 
-export const FETH_CLIENTPACKAGES = gql`
-    query fethclientPackages($id: ID) {
+export const FETCH_CLIENTPACKAGES = gql`
+    query fetchclientPackages($id: ID) {
         clientPackage(id: $id) {
             data {
                 id
