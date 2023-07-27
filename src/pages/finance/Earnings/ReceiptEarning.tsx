@@ -31,7 +31,7 @@ function Receipt(): JSX.Element {
         onCompleted: (data) => {
             const flattenReceiptData = flattenObj({ ...data.transaction });
             setReceiptData(flattenReceiptData);
-            fethclientPackages({
+            fetchclientPackages({
                 variables: { id: transactionId }
             });
             fetchChangeMakerQuery({
