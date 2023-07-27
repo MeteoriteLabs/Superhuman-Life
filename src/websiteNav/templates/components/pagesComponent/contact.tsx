@@ -17,7 +17,7 @@ function Home(): JSX.Element {
                     });
                 }}
             >
-                <WindowFullscreen /> <span className={styles.sectionTitle}> Testimonials</span>
+                <WindowFullscreen /> <span className={styles.sectionTitle}> Contact Form</span>
             </div>
         </div>
     );
