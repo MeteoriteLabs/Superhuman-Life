@@ -114,7 +114,7 @@ export default function Transactions(): JSX.Element {
                 Cell: ({ row }: { row: { original: { id: string } } }) => {
                     const history = useHistory();
                     const routeChange = () => {
-                        const path = `receipt/?id=${row.original.id}`;
+                        const path = `receipttransaction/?id=${row.original.id}`;
                         history.push(path);
                     };
 
