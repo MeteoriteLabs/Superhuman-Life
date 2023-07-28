@@ -9,7 +9,7 @@ function Home(): JSX.Element {
     return (
         <div className="mt-2">
             <div
-                className={styles.sectionTitleCont}
+                className={styles.section_title_cont}
                 onClick={() => {
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
@@ -17,10 +17,10 @@ function Home(): JSX.Element {
                     });
                 }}
             >
-                <WindowFullscreen /> <span className={styles.sectionTitle}>Hero</span>
+                <WindowFullscreen /> <span className={styles.section_title}>Hero</span>
             </div>
             <div
-                className={styles.sectionTitleCont}
+                className={styles.section_title_cont}
                 onClick={() => {
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
@@ -28,10 +28,10 @@ function Home(): JSX.Element {
                     });
                 }}
             >
-                <WindowFullscreen /> <span className={styles.sectionTitle}>Features</span>
+                <WindowFullscreen /> <span className={styles.section_title}>Features</span>
             </div>
             <div
-                className={styles.sectionTitleCont}
+                className={styles.section_title_cont}
                 onClick={() => {
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
@@ -40,11 +40,11 @@ function Home(): JSX.Element {
                 }}
             >
                 <WindowFullscreen />
-                <span className={styles.sectionTitle}> Cta </span>
+                <span className={styles.section_title}> Cta </span>
             </div>
 
             <div
-                className={styles.sectionTitleCont}
+                className={styles.section_title_cont}
                 onClick={() => {
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
@@ -53,10 +53,10 @@ function Home(): JSX.Element {
                 }}
             >
                 <WindowFullscreen />
-                <span className={styles.sectionTitle}> Pricing</span>
+                <span className={styles.section_title}> Pricing</span>
             </div>
             <div
-                className={styles.sectionTitleCont}
+                className={styles.section_title_cont}
                 onClick={() => {
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
@@ -64,7 +64,7 @@ function Home(): JSX.Element {
                     });
                 }}
             >
-                <WindowFullscreen /> <span className={styles.sectionTitle}> Testimonials</span>
+                <WindowFullscreen /> <span className={styles.section_title}> Testimonials</span>
             </div>
         </div>
     );

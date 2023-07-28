@@ -1,4 +1,4 @@
-.topTabs {
+.top_tabs {
     gap: 40px;
     border-bottom: 0.2px solid #ffffff60;
     display: flex;
@@ -7,7 +7,7 @@
     position: relative;
 }
 
-.borderHighlight {
+.border_highlight {
     position: absolute;
     bottom: -0.5px;
     left: 0;
@@ -17,19 +17,19 @@
     transition: all 0.18s ease-in-out;
 }
 
-.tabsCont {
+.tabs_cont {
     cursor: pointer;
 }
-.websitePos {
+.website_pos {
     left: 16px;
 }
-.themePos {
+.theme_pos {
     left: 100px;
 }
-.settingsPos {
+.settings_pos {
     left: 185px;
 }
-.hText {
+.h_text {
     margin-bottom: 0;
     font-size: 12px;
     font-weight: 600;

@@ -1,10 +1,10 @@
-.topNav {
+.top_nav {
     padding: 10px 30px;
     border-bottom: 0.2px solid #ffffff60;
     background-color: #242424;
     height: 50px;
 }
-.topNavCol{
+.top_nav_col{
         display: flex;
         align-items: center;
         gap: 15px;
@@ -13,14 +13,14 @@
 
     }
 
-.topNavCol:hover{
+.top_nav_col:hover{
     text-decoration: none;
     color: #cccccc;
 }
-.svgCont {
+.svg_cont {
     margin-bottom: -15px;
 }
-.btnCont {
+.btn_cont {
     margin-bottom: 0;
     font-size: 12px;
 }

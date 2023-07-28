@@ -32,27 +32,27 @@ function CustomTabs({
     }, [activeTab]);
     return (
         <div>
-            <div className={style.topTabs}>
-                <div onClick={() => setActiveTab('website')} className={style.tabsCont}>
+            <div className={style.top_tabs}>
+                <div onClick={() => setActiveTab('website')} className={style.tabs_cont}>
                     <WindowFullscreen fontSize={15} className="mb-2" />
-                    <p className={style.hText}>Website</p>
+                    <p className={style.h_text}>Website</p>
                 </div>
-                <div onClick={() => setActiveTab('theme')} className={style.tabsCont}>
+                <div onClick={() => setActiveTab('theme')} className={style.tabs_cont}>
                     <img src="/assets/colour 1.png" width={15} className="mb-2" />
-                    <p className={style.hText}>Theme</p>
+                    <p className={style.h_text}>Theme</p>
                 </div>
-                <div onClick={() => setActiveTab('settings')} className={style.tabsCont}>
+                <div onClick={() => setActiveTab('settings')} className={style.tabs_cont}>
                     <Gear fontSize={15} className="mb-2" />
-                    <p className={style.hText}>Settings</p>
+                    <p className={style.h_text}>Settings</p>
                 </div>
                 <div
                     className={clsx(
-                        style.borderHighlight,
+                        style.border_highlight,
                         activeTab === 'website'
-                            ? style.websitePos
+                            ? style.website_pos
                             : activeTab === 'theme'
-                            ? style.themePos
-                            : style.settingsPos
+                            ? style.theme_pos
+                            : style.settings_pos
                     )}
                 ></div>
             </div>
