@@ -34,8 +34,8 @@ function ChangemakerWebsiteContextProvider({ children }: { children: ReactNode }
             thumbnail: '',
             templateUrl: '',
             loading: false,
-            section: '',
-            page: ''
+            section: 'Home: Hero',
+            page: 'Home'
         });
 
     const [getUserWebsite, { data, error }] = useLazyQuery(FETCH_USER_WEBSITE, {

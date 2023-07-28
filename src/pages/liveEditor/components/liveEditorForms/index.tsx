@@ -8,10 +8,8 @@ export default function LiveEditorSideNav(): JSX.Element {
     return (
         <aside className={style.sideNavCont}>
             <Forms
-                section={
-                    changemakerWebsiteState.section ? changemakerWebsiteState.section : 'Home: Hero'
-                }
-                page={changemakerWebsiteState.page ? changemakerWebsiteState.page : 'Home'}
+                section={changemakerWebsiteState.section ? changemakerWebsiteState.section : ''}
+                page={changemakerWebsiteState.page ? changemakerWebsiteState.page : ''}
             />
         </aside>
     );
