@@ -43,6 +43,8 @@
     position: relative;
     min-height: 50px;
     height: 90vh;
+    margin-left: 10px;
+    width: 98%;
 }
 
 .schedular-content {
