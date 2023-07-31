@@ -14,7 +14,6 @@ import { FormatStateToServerData, SetReceivingDataAndReset } from './libs/pricin
 
 function Hero(): JSX.Element {
     const auth = useContext(authContext);
-    const [errorMsg, setErrorMsg] = useState<string>('');
     const [activeKey, setActiveKey] = useState('');
     const planData: InputProps[] = [
         'actual',
@@ -105,7 +104,6 @@ function Hero(): JSX.Element {
         loading
             ? setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: true })
             : setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: false });
-        error ? setErrorMsg(`${error.name}: ${error.message}`) : setErrorMsg('');
     }, [loading, error]);
 
     return (

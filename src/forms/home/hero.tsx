@@ -6,7 +6,6 @@ import { GET_WEBSITE_SECTION } from './queries';
 import authContext from 'context/auth-context';
 import { useContext, useEffect, useState } from 'react';
 import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
-import Toaster from 'components/Toaster';
 import UploadImageToS3WithNativeSdk from 'components/upload/upload';
 import style from '../style.module.css';
 
@@ -18,7 +17,6 @@ type FormData = {
 
 function Hero(): JSX.Element {
     const auth = useContext(authContext);
-    const [errorMsg, setErrorMsg] = useState<string>('');
     const [initialValues, setInitialValues] = useState({
         title: '',
         description: '',
@@ -82,7 +80,6 @@ function Hero(): JSX.Element {
         loading
             ? setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: true })
             : setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: false });
-        error ? setErrorMsg(`${error.name}: ${error.message}`) : setErrorMsg('');
     }, [loading, error]);
 
     return (
@@ -149,10 +146,6 @@ function Hero(): JSX.Element {
                     <Form.Control.Feedback tooltip>{errors.image.message}</Form.Control.Feedback>
                 )}
 
-                {/* add */}
-                {errorMsg ? (
-                    <Toaster type="error" msg={errorMsg} handleCallback={() => setErrorMsg('')} />
-                ) : null}
                 <Button variant="light" type="submit" className={style.submit_button}>
                     Submit
                 </Button>
