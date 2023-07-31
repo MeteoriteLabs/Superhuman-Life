@@ -7,7 +7,6 @@ import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
 import { GET_WEBSITE_SECTION } from './queries';
 import { useMutation, useQuery } from '@apollo/client';
 import { UPDATE_WEBSITE_SECTION } from './queries/cta';
-import Toaster from 'components/Toaster';
 
 type FormData = {
     sectionId: number;
