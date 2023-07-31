@@ -1,5 +1,5 @@
 import { Control, Controller } from 'react-hook-form';
-import { SetFirstLetterToUpperCase, SplitAtUpperCase } from '../../../lib/StringManipulation';
+import { SetFirstLetterToUpperCase, SplitAtUpperCase } from 'lib/StringManipulation';
 import { Form } from 'react-bootstrap';
 import { FormData, InputProps } from '../@types/testimonialsType';
 
