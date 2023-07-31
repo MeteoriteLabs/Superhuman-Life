@@ -1,0 +1,19 @@
+.side_nav_proxy{
+    width:80px;
+    height:90vh;
+    content:''
+}
+.side_nav_proxy_active{
+    width:200px
+}
+
+@media screen and (max-width: 992px) {
+    .side_nav_proxy{
+        width:0px;
+        height:90vh;
+        content:''
+    }
+    .side_nav_proxy_active{
+        width:0px
+    }
+}

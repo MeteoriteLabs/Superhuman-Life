@@ -9,6 +9,8 @@ import SideNav from './layout/sidenav';
 import Icon from 'components/Icons';
 import Icons from 'components/Icons';
 import 'react-toggle/style.css';
+import clsx from 'clsx';
+import classes from './style.module.css';
 
 const WebsiteBuilder: FC = () => {
     const [collapse, setCollapse] = useState<boolean>(true);
@@ -191,20 +193,21 @@ const WebsiteBuilder: FC = () => {
 
             <div className="d-flex">
                 {collapse ? (
-                    <div style={{ width: '80px', height: '90vh', content: '' }} />
+                    <div className={`${clsx(classes.side_nav_proxy)}`} />
                 ) : (
-                    <div style={{ width: '200px', height: '90vh', content: '' }} />
+                    <div
+                        className={`${clsx(classes.side_nav_proxy, classes.side_nav_proxy_active)}`}
+                    />
                 )}
                 <Container className="mt-5 pt-3 px-3" style={{ position: 'relative' }}>
                     <WebsiteBuilder_settings />
                     <WebsiteBuilder_template />
 
                     <div
-                        className="d-flex"
+                        className="d-flex bg-dark flex-wrap flex-md-nowrap"
                         style={{
                             width: '100%',
-                            gap: '60px',
-                            background: '#000',
+                            gap: '20px',
                             marginBottom: '100px',
                             marginTop: '90px',
                             padding: '35px',
@@ -214,6 +217,7 @@ const WebsiteBuilder: FC = () => {
                             color: '#fff',
                             textAlign: 'center',
                             borderRadius: '15px',
+
                             boxShadow:
                                 'rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px'
                         }}

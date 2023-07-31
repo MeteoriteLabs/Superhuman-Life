@@ -17,12 +17,12 @@ function WebsiteBuilder_settings(): JSX.Element {
                     <div
                         style={{
                             width: '100%',
-                            background: '#000',
                             padding: 20,
                             borderRadius: 10,
                             boxShadow:
                                 'rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px'
                         }}
+                        className="bg-dark"
                     >
                         <div className="d-flex justify-content-between align-items-center">
                             <h4
@@ -50,12 +50,13 @@ function WebsiteBuilder_settings(): JSX.Element {
                     <div
                         style={{
                             width: '100%',
-                            background: '#000',
+
                             padding: 20,
                             borderRadius: 10,
                             boxShadow:
                                 'rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px'
                         }}
+                        className="bg-dark"
                     >
                         <div className="d-flex justify-content-between align-items-center">
                             <h4
@@ -74,6 +75,7 @@ function WebsiteBuilder_settings(): JSX.Element {
                                 alignItems: 'center',
                                 padding: '20px 0px'
                             }}
+                            className="bg-dark"
                         >
                             {changemakerWebsiteState.domain
                                 ? changemakerWebsiteState.domain
