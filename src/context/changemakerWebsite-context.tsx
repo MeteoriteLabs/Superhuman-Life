@@ -36,7 +36,7 @@ function ChangemakerWebsiteContextProvider({ children }: { children: ReactNode }
             section: ''
         });
 
-    const [getUserWebsite, { data, error }] = useLazyQuery(FETCH_USER_WEBSITE, {
+    const [getUserWebsite, { data }] = useLazyQuery(FETCH_USER_WEBSITE, {
         variables: {
             id: auth.userid
         },
@@ -47,11 +47,6 @@ function ChangemakerWebsiteContextProvider({ children }: { children: ReactNode }
                 selectedTemplate: data.changemakerWebsites.data[0].attributes
                     .selectedTemplate as string
             });
-        },
-        onError: () => {
-            if (error?.message) {
-                console.log('not error:', error.message);
-            }
         }
     });
 
