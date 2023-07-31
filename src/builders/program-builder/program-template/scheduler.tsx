@@ -461,6 +461,7 @@ const Schedular = (props: any, ref) => {
             sessions
                 .filter((itm) => itm.Is_restday === false)
                 .forEach((val) => {
+                   
                     const startTimeHour: any = `${
                         val.start_time
                             ? Number(val.start_time.split(':')[0]) < 10
@@ -490,6 +491,7 @@ const Schedular = (props: any, ref) => {
                         type: val.type,
                         endHour: endTimeHour,
                         endMin: endTimeMin,
+                        sessions_bookings: val.sessions_bookings.length,
                         id: val.activity === null ? val.workout?.id : val.activity.id,
                         mode: val.mode,
                         tag: val.tag,
@@ -2029,7 +2031,7 @@ const Schedular = (props: any, ref) => {
                                                                 arr[d][h][m]?.map(
                                                                     (val, index: number) => {
                                                                         val.index = index;
-                                                                        
+                                                                        console.log(val)
                                                                         return (
                                                                             <div
                                                                                 key={index}
@@ -2208,6 +2210,7 @@ const Schedular = (props: any, ref) => {
                                                                                             // `${handleCovertTimeFormat(Number(val.hour), Number(val.min))}-${handleCovertTimeFormat(Number(val.endHour), Number(val.endMin))}`
                                                                                             // })} */}
                                                                                     </div>
+                                                                                    <div className="event-time">Client bookings: {val.sessions_bookings}</div>
                                                                                 </div>
                                                                             </div>
                                                                         );
