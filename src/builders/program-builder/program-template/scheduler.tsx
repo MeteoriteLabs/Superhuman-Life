@@ -2031,7 +2031,7 @@ const Schedular = (props: any, ref) => {
                                                                 arr[d][h][m]?.map(
                                                                     (val, index: number) => {
                                                                         val.index = index;
-                                                                        console.log(val)
+                                                                       
                                                                         return (
                                                                             <div
                                                                                 key={index}
