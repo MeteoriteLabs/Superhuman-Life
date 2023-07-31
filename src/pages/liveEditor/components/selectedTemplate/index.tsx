@@ -1,6 +1,6 @@
 import { useContext } from 'react';
-import { ChangeMakerWebsiteContext } from '../../../../context/changemakerWebsite-context';
-import Loader from '../../../../components/Loader/Loader';
+import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
+import Loader from 'components/Loader/Loader';
 
 function Index(): JSX.Element {
     const { changemakerWebsiteState } = useContext(ChangeMakerWebsiteContext);

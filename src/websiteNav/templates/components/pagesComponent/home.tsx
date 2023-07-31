@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import styles from './style.module.css';
-import { ChangeMakerWebsiteContext } from '../../../../context/changemakerWebsite-context';
+import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
 import { WindowFullscreen } from 'react-bootstrap-icons';
 
 function Home(): JSX.Element {

@@ -1,5 +1,5 @@
 import style from './style.module.css';
-import WebsiteNavigation from '../../../../../../websiteNav';
+import WebsiteNavigation from 'websiteNav';
 
 function WebsiteNav(): JSX.Element {
     return (
