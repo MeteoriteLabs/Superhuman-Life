@@ -19,7 +19,7 @@ export function SetReceivingDataAndReset({
             ...initialValues,
             sectionId: data.websiteSections.data[0].id,
             title: sectionData.title,
-            testimonials: sectionData.testimonials
+            testimonials: sectionData.testimonials,
         });
 
         reset({

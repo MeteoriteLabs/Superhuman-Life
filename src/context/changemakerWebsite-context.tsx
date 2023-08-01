@@ -15,7 +15,8 @@ export const ChangeMakerWebsiteContext = createContext<changeMakerWebsiteTs>({
         selectedTemplate: null,
         thumbnail: null,
         templateUrl: null,
-        loading: false
+        loading: false,
+        section: null
     },
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     setChangemakerWebsiteState: () => {}
@@ -31,13 +32,11 @@ function ChangemakerWebsiteContextProvider({ children }: { children: ReactNode }
             selectedTemplate: '',
             thumbnail: '',
             templateUrl: '',
-            loading: false
+            loading: false,
+            section: ''
         });
 
-    //  * changemaker website query starts here
-
-    // * from the below query, we are getting the subdomain and selectedTemplate
-    const [getUserWebsite, { data, error }] = useLazyQuery(FETCH_USER_WEBSITE, {
+    const [getUserWebsite, { data }] = useLazyQuery(FETCH_USER_WEBSITE, {
         variables: {
             id: auth.userid
         },
@@ -48,24 +47,14 @@ function ChangemakerWebsiteContextProvider({ children }: { children: ReactNode }
                 selectedTemplate: data.changemakerWebsites.data[0].attributes
                     .selectedTemplate as string
             });
-        },
-        onError: () => {
-            if (error?.message) {
-                console.log('not error:', error.message);
-            }
         }
     });
 
-    //   * we fetch the queries everytime their is a change in the state of subdomain and selectedTemplate
     useEffect(() => {
         if (auth.userid) {
             getUserWebsite();
         }
     }, [changemakerWebsiteState.subdomain, changemakerWebsiteState.selectedTemplate, auth.userid]);
-
-    //   * changemaker website query ends here
-
-    //  * user selected template to get the thumbnail and templateUrl starts here
 
     const [getUserSelectedTemplate, { data: templateData, error: templateError }] = useLazyQuery(
         FETECH_SELECTED_TEMPLATE,

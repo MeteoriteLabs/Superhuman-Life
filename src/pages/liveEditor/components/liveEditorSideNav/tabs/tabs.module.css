@@ -1,34 +1,35 @@
-.topTabs {
-    gap: 45px;
+.top_tabs {
+    gap: 40px;
     border-bottom: 0.2px solid #ffffff60;
     display: flex;
     text-align: center;
-    padding: 15px 50px 10px 50px;
+    padding: 15px 30px 10px 20px;
     position: relative;
 }
-.borderHeilight {
+
+.border_highlight {
     position: absolute;
     bottom: -0.5px;
     left: 0;
-    width: 80px;
+    width: 50px;
     height: 2px;
-
     background-color: #704dff;
     transition: all 0.18s ease-in-out;
 }
-.tabsCont {
+
+.tabs_cont {
     cursor: pointer;
 }
-.websitePos {
-    left: 33px;
+.website_pos {
+    left: 16px;
 }
-.themePos {
-    left: 120px;
+.theme_pos {
+    left: 100px;
 }
-.settingsPos {
-    left: 212px;
+.settings_pos {
+    left: 185px;
 }
-.hText {
+.h_text {
     margin-bottom: 0;
     font-size: 12px;
     font-weight: 600;

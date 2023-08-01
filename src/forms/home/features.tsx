@@ -1,5 +1,4 @@
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
-import style from '../style.module.css';
 import { Accordion, Button, Card, Form } from 'react-bootstrap';
 import { UPDATE_WEBSITE_SECTION } from './queries/features';
 import { GET_WEBSITE_SECTION } from './queries';
@@ -8,8 +7,8 @@ import authContext from 'context/auth-context';
 import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
 import { useMutation, useQuery } from '@apollo/client';
 import { ArrowDownShort } from 'react-bootstrap-icons';
-import Toaster from 'components/Toaster';
 
+import style from '../style.module.css';
 // * --------------------- Types ---------------------
 
 type FormData = {
@@ -24,7 +23,6 @@ type FormData = {
 
 function Hero(): JSX.Element {
     const auth = useContext(authContext);
-    const [errorMsg, setErrorMsg] = useState<string>('');
     const [activeKey, setActiveKey] = useState('');
 
     const handleToggle = (val: string) => {
@@ -110,7 +108,6 @@ function Hero(): JSX.Element {
         loading
             ? setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: true })
             : setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: false });
-        error ? setErrorMsg(`${error.name}: ${error.message}`) : setErrorMsg('');
     }, [loading, error]);
 
     return (
@@ -147,9 +144,9 @@ function Hero(): JSX.Element {
                                   >
                                       <p
                                           style={{
-                                              fontWeight: 600,
                                               marginBottom: 8,
-                                              color: 'white'
+                                              color: 'white',
+                                              fontSize: 14
                                           }}
                                       >
                                           Feature {index + 1}
@@ -218,10 +215,7 @@ function Hero(): JSX.Element {
                       ))
                     : null}
 
-                {errorMsg ? (
-                    <Toaster type="error" msg={errorMsg} handleCallback={() => setErrorMsg('')} />
-                ) : null}
-                <Button variant="primary" type="submit" className={style.submit_button}>
+                <Button variant="light" type="submit" className={style.submit_button}>
                     Submit
                 </Button>
             </Form>

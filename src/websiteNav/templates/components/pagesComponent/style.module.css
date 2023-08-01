@@ -1,0 +1,17 @@
+.section_title_cont{
+    margin-block: 0;
+    padding-top: 1rem;
+    padding-inline: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: top;
+}
+.section_title {
+    line-height: 14px;
+    margin-left: 10px;
+    width:100%
+}
+.section_title_cont:hover {
+    background-color: #3f3f3f;
+}

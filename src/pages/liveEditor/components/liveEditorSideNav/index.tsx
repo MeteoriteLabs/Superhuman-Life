@@ -20,7 +20,7 @@ export default function LiveEditorSideNav({
     }, [location]);
 
     return (
-        <aside className={style.sideNavCont}>
+        <aside className={style.side_nav_cont}>
             <Nav className="flex-column"></Nav>
             <CustomTabs setActiveTab={setActiveTab} activeTab={activeTab} />
         </aside>
