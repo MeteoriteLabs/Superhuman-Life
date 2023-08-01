@@ -8,6 +8,7 @@ export type changeMakerWebsiteStateTs = {
     templateUrl: string | null;
     loading: boolean;
     section: string | null;
+    currentSelectedRoute: string | null;
 };
 export type changeMakerWebsiteTs = {
     changemakerWebsiteState: changeMakerWebsiteStateTs;

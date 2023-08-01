@@ -1,9 +1,21 @@
-import { useContext } from 'react';
-import { ChangeMakerWebsiteContext } from '../../../../context/changemakerWebsite-context';
-import Loader from '../../../../components/Loader/Loader';
+import { useContext, useEffect } from 'react';
+import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
+import Loader from 'components/Loader/Loader';
 
 function Index(): JSX.Element {
-    const { changemakerWebsiteState } = useContext(ChangeMakerWebsiteContext);
+    const { changemakerWebsiteState, setChangemakerWebsiteState } =
+        useContext(ChangeMakerWebsiteContext);
+
+    useEffect(() => {
+        window.addEventListener('message', function (event) {
+            event.data.event_id === 'current-page'
+                ? setChangemakerWebsiteState({
+                      ...changemakerWebsiteState,
+                      currentSelectedRoute: event.data.data.url
+                  })
+                : null;
+        });
+    }, []);
 
     return (
         <div
