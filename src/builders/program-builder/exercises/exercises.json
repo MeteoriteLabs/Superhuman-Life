@@ -14,13 +14,16 @@
         "properties": {
             "exercise": {
                 "type": "string",
-                "title": "Name exercise"
+                "title": "Name exercise",
+                "description": "Enter exercise name",
+                "Placeholder":"hh"
             },
             "level": {
                 "type": "number",
                 "title": "Level",
                 "enum": [0, 1, 2],
-                "enumNames": ["Beginner", "Intermediate", "Advance"]
+                "enumNames": ["Beginner", "Intermediate", "Advance"],
+                "default": 0
             },
             "discipline": {
                 "type": "string"
