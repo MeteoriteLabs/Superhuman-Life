@@ -1,13 +1,12 @@
 import { useForm, Controller } from 'react-hook-form';
 import style from '../style.module.css';
 import { Button, Form } from 'react-bootstrap';
-import authContext from '../../context/auth-context';
+import authContext from 'context/auth-context';
 import { useContext, useEffect, useState } from 'react';
-import { ChangeMakerWebsiteContext } from '../../context/changemakerWebsite-context';
+import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
 import { GET_WEBSITE_SECTION } from './queries';
 import { useMutation, useQuery } from '@apollo/client';
 import { UPDATE_WEBSITE_SECTION } from './queries/cta';
-import Toaster from '../../components/Toaster';
 
 type FormData = {
     sectionId: number;
@@ -18,7 +17,7 @@ type FormData = {
 
 function CallToAction(): JSX.Element {
     const auth = useContext(authContext);
-    const [errorMsg, setErrorMsg] = useState<string>('');
+
     const [initialValues, setInitialValues] = useState<FormData>({
         sectionId: 0,
         title: '',
@@ -85,7 +84,6 @@ function CallToAction(): JSX.Element {
         loading
             ? setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: true })
             : setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: false });
-        error ? setErrorMsg(`${error.name}: ${error.message}`) : setErrorMsg('');
     }, [loading, error]);
 
     return (
@@ -148,9 +146,7 @@ function CallToAction(): JSX.Element {
                         <Form.Control.Feedback tooltip>{errors.link.message}</Form.Control.Feedback>
                     )}
                 </Form.Group>
-                {errorMsg ? (
-                    <Toaster type="error" msg={errorMsg} handleCallback={() => setErrorMsg('')} />
-                ) : null}
+
                 <Button variant="light" type="submit" className={style.submit_button}>
                     Submit
                 </Button>

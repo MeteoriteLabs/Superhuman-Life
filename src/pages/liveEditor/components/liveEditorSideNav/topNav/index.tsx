@@ -1,10 +1,10 @@
 import { Button, Col, Row } from 'react-bootstrap';
 
 import style from './style.module.css';
-import ArrowDown from '../../../../../components/Icons/componentIcons/arrowDown';
-import ArrowRight from '../../../../../components/Icons/componentIcons/arrowRight';
+import ArrowDown from 'components/Icons/componentIcons/arrowDown';
+import ArrowRight from 'components/Icons/componentIcons/arrowRight';
 import { useContext } from 'react';
-import { ChangeMakerWebsiteContext } from '../../../../../context/changemakerWebsite-context';
+import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
 import { Link } from 'react-router-dom';
 
 function TopNav(): JSX.Element {

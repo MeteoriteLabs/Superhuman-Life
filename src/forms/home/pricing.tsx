@@ -4,18 +4,16 @@ import { Accordion, Button, Card, Form } from 'react-bootstrap';
 import { UPDATE_WEBSITE_SECTION } from './queries/pricing';
 import { GET_WEBSITE_SECTION } from './queries';
 import { useContext, useEffect, useState } from 'react';
-import authContext from '../../context/auth-context';
-import { ChangeMakerWebsiteContext } from '../../context/changemakerWebsite-context';
+import authContext from 'context/auth-context';
+import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
 import { useMutation, useQuery } from '@apollo/client';
 import { ArrowDownShort } from 'react-bootstrap-icons';
 import { Data, FormData, InputProps } from './@types/pricingType';
 import { InputComponent } from './components/PricingComponents';
 import { FormatStateToServerData, SetReceivingDataAndReset } from './libs/pricing';
-import Toaster from '../../components/Toaster';
 
 function Hero(): JSX.Element {
     const auth = useContext(authContext);
-    const [errorMsg, setErrorMsg] = useState<string>('');
     const [activeKey, setActiveKey] = useState('');
     const planData: InputProps[] = [
         'actual',
@@ -106,7 +104,6 @@ function Hero(): JSX.Element {
         loading
             ? setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: true })
             : setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: false });
-        error ? setErrorMsg(`${error.name}: ${error.message}`) : setErrorMsg('');
     }, [loading, error]);
 
     return (

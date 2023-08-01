@@ -3,20 +3,18 @@ import { Accordion, Button, Card, Form } from 'react-bootstrap';
 import { useContext, useEffect, useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import { UPDATE_WEBSITE_SECTION } from './queries/testimonials';
-import authContext from '../../context/auth-context';
+import authContext from 'context/auth-context';
 import { SetReceivingDataAndReset } from './libs/testimonials';
 import { Data, FormData, InputProps } from './@types/testimonialsType';
-import { ChangeMakerWebsiteContext } from '../../context/changemakerWebsite-context';
+import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
 import { GET_WEBSITE_SECTION } from './queries';
 import { InputComponent } from './components/TestimonialsComponents';
 import { ArrowDownShort } from 'react-bootstrap-icons';
-import Toaster from '../../components/Toaster';
 import style from '../style.module.css';
-import UploadImageToS3WithNativeSdk from '../../components/upload/upload';
+import UploadImageToS3WithNativeSdk from 'components/upload/upload';
 
 function Hero(): JSX.Element {
     const auth = useContext(authContext);
-    const [errorMsg, setErrorMsg] = useState<string>('');
     const [activeKey, setActiveKey] = useState('');
 
     const handleToggle = (val: string) => {
@@ -93,7 +91,6 @@ function Hero(): JSX.Element {
         loading
             ? setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: true })
             : setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: false });
-        error ? setErrorMsg(`${error.name}: ${error.message}`) : setErrorMsg('');
     }, [loading, error]);
 
     return (
@@ -191,9 +188,6 @@ function Hero(): JSX.Element {
                       ))
                     : null}
 
-                {errorMsg ? (
-                    <Toaster type="error" msg={errorMsg} handleCallback={() => setErrorMsg('')} />
-                ) : null}
                 <Button variant="light" type="submit" className={style.submit_button}>
                     Submit
                 </Button>

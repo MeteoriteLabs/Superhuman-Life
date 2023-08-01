@@ -9,7 +9,7 @@ import Toaster from 'components/Toaster';
 import { Col } from 'react-bootstrap';
 import UploadImageToS3WithNativeSdk, {
     UploadImageToS3WithNativeSdkProps
-} from '../../../../components/upload/upload';
+} from 'components/upload/upload';
 
 interface AccountVerificationDetail {
     Verification_ID: string;
