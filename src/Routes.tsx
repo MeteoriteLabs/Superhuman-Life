@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-d
 import Layout from 'components/layout';
 import Loader from 'components/Loader/Loader';
 import PageNotFound from 'pages/PageNotFound';
+import AnalogTimePicker from 'components/ClockTimePicker'
 
 const MainLobby = React.lazy(() => import('pages/dashboard'));
 const WebsiteBuilder = React.lazy(() => import('pages/website-builder'));
@@ -100,6 +101,7 @@ export default function Routes({ token }: { token: string }): JSX.Element {
                                 component={LiveEditor}
                             />
                             <Route path="/bookings" component={BookingPage} />
+                            <Route path="/timepicker" component={AnalogTimePicker} />
                             <Route exact path="/bookingSettings" component={BookingSetting} />
                             <Route path="/chats" component={ChatPage} />
                             <Route path="/clients" component={ClientPage} />
