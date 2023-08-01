@@ -383,18 +383,36 @@ const Schedular = (props: any, ref) => {
 
         if (data?.length > 0) {
             data?.forEach((val) => {
+                // const startTimeHour: any = `${
+                //     val.start_time === null ? '0' : val.start_time.split(':')[0]
+                // }`;
+                // const startTimeMinute: any = `${
+                //     val.start_time === null ? '0' : val.start_time.split(':')[1]
+                // }`;
+                // const endTimeHour: any = `${
+                //     val.end_time === null ? '0' : val.end_time.split(':')[0]
+                // }`;
+                // const endTimeMin: any = `${
+                //     val.end_time === null ? '0' : val.end_time.split(':')[1]
+                // }`;
+
                 const startTimeHour: any = `${
-                    val.start_time === null ? '0' : val.start_time.split(':')[0]
+                    val.start_time
+                        ? Number(val.start_time.split(':')[0]) < 10
+                            ? `${Number(val.start_time.split(':')[0])}`
+                            : val.start_time.split(':')[0]
+                        : '0'
                 }`;
                 const startTimeMinute: any = `${
-                    val.start_time === null ? '0' : val.start_time.split(':')[1]
+                    val.start_time
+                        ? Number(val.start_time.split(':')[1]) < 10
+                            ? `${Number(val.start_time.split(':')[1])}`
+                            : val.start_time.split(':')[1]
+                        : '0'
                 }`;
-                const endTimeHour: any = `${
-                    val.end_time === null ? '0' : val.end_time.split(':')[0]
-                }`;
-                const endTimeMin: any = `${
-                    val.end_time === null ? '0' : val.end_time.split(':')[1]
-                }`;
+                const endTimeHour: any = `${val.end_time ? val.end_time.split(':')[0] : '0'} `;
+                const endTimeMin: any = `${val.end_time ? val.end_time.split(':')[1] : '0'}`;
+
                 if (!arr[val.day_of_program][startTimeHour][startTimeMinute]) {
                     arr[val.day_of_program][startTimeHour][startTimeMinute] = [];
                 }
@@ -424,6 +442,7 @@ const Schedular = (props: any, ref) => {
         const flattenData = flattenObj({ ...data });
 
         if (window.location.pathname.split('/')[1] === 'programs') {
+            console.log('template', props?.templateSessions)
             return handleTemplateTable(props?.templateSessions);
         }
         // we dont need this as we are passing the previous session ids from the parent
@@ -733,6 +752,7 @@ const Schedular = (props: any, ref) => {
 
     const [updateTagSessions] = useMutation(UPDATE_TAG_SESSIONS, {
         onCompleted: () => {
+            console.log(props.clientId);
             if (props.classType !== 'Group Class' && newSessionId !== '') {
                 createSessionBooking({
                     variables: {
@@ -778,7 +798,7 @@ const Schedular = (props: any, ref) => {
 
         const values = [...props.sessionIds];
         values.push(newId);
-
+console.log(values);
         updateTagSessions({
             variables: {
                 id: program_id,
@@ -2073,7 +2093,7 @@ const Schedular = (props: any, ref) => {
                                                                                     }px`,
                                                                                     backgroundColor:'#FFFDD1',
                                                                                     color:'#000',
-                                                                                        // 'rgb(135,206,235)',
+                                                                                    // background: 'rgb(135,206,235)',
                                                                                     width: `${
                                                                                         val.type ===
                                                                                         'restday'
@@ -2210,7 +2230,7 @@ const Schedular = (props: any, ref) => {
                                                                                             // `${handleCovertTimeFormat(Number(val.hour), Number(val.min))}-${handleCovertTimeFormat(Number(val.endHour), Number(val.endMin))}`
                                                                                             // })} */}
                                                                                     </div>
-                                                                                    <div className="event-time">Client bookings: {val.sessions_bookings}</div>
+                                                                                    <div className="event-time d-flex justify-content-end" style={{position: 'absolute', right: '0', bottom: '0'}} title="bookings"><small>{val.sessions_bookings}</small></div>
                                                                                 </div>
                                                                             </div>
                                                                         );

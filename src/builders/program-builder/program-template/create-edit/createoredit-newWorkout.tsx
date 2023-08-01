@@ -1,6 +1,6 @@
 import React, { useContext, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation, gql } from '@apollo/client';
-import ModalView from '../../../../components/modal';
+import ModalView from 'components/modal';
 import {
     GET_SCHEDULEREVENTS,
     CREATE_WORKOUT,
@@ -26,6 +26,7 @@ interface Operation {
 }
 
 function CreateEditNewWorkout(props: any, ref: any): JSX.Element {
+    console.log(props);
     const auth = useContext(AuthContext);
     const programSchema: Record<string,unknown> = require(window.location.pathname.includes('session')
         ? '../json/sessionManager/newWorkout.json'
@@ -154,7 +155,8 @@ function CreateEditNewWorkout(props: any, ref: any): JSX.Element {
             setOperation(msg);
             schema.startDate = props.startDate;
             schema.duration = props.duration;
-            schema.type = window.location.pathname.split('/')[1] === 'programs' ? 'day' : '';
+            schema.type = props.type === 'date' ? 'date' : 'day';
+            // schema.type = window.location.pathname.split('/')[1] === 'programs' ? 'day' : '';
 
             if (msg && !msg.id)
                 //render form if no message id
@@ -393,13 +395,12 @@ function CreateEditNewWorkout(props: any, ref: any): JSX.Element {
         });
     }
 
-    function OnSubmit(frm: any) {
-        //bind user id
-        if (frm) frm.user_permissions_user = auth.userid;
-        setFormDetails(frm);
+    function OnSubmit(form: any) {
+        if (form) form.user_permissions_user = auth.userid;
+        setFormDetails(form);
         switch (operation.type) {
             case 'create':
-                UpdateProgram(frm);
+                UpdateProgram(form);
                 break;
         }
     }
