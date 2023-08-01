@@ -22,10 +22,7 @@
     bottom: 0%;
     transform: translate(-50%, -50%);
 }
-.modal-content{
-    margin-top: 15vh;
-    height: 70vh;
-}
+
 .uploadButton {
     position: absolute;
     bottom: -20%;
