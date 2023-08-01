@@ -7,7 +7,9 @@ import AuthContext from 'context/auth-context';
 import { flattenObj } from 'components/utils/responseFlatten';
 import Toaster from 'components/Toaster';
 import { Col } from 'react-bootstrap';
-import UploadImageToS3WithNativeSdk from 'components/upload/upload';
+import UploadImageToS3WithNativeSdk, {
+    UploadImageToS3WithNativeSdkProps
+} from 'components/upload/upload';
 
 interface AccountVerificationDetail {
     Verification_ID: string;
@@ -24,10 +26,10 @@ const SocialAccount: React.FC = () => {
 
     const schema: Record<string, unknown> = {
         Verification_ID: {
-            'ui:widget': (props: any) => (
+            'ui:widget': (props: UploadImageToS3WithNativeSdkProps) => (
                 <UploadImageToS3WithNativeSdk
                     value={props.value}
-                    onChange={(event: any) => {
+                    onChange={(event: string) => {
                         props.onChange(event);
                     }}
                     allowImage={true}
@@ -96,13 +98,12 @@ const SocialAccount: React.FC = () => {
                 schema={accountVerificationJson}
                 ref={formRef}
                 formData={webpageDetails}
-                widgets={widgets}
+                widgets={widgets as any}
                 onSubmit={(frm: any) => {
                     OnSubmit(frm);
                 }}
                 showErrorList={false}
             />
-
             {/* success toaster notification */}
             {isFormSubmitted ? (
                 <Toaster

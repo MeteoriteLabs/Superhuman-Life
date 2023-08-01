@@ -1,5 +1,4 @@
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
-import style from '../style.module.css';
 import { Accordion, Button, Card, Form } from 'react-bootstrap';
 import { useContext, useEffect, useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
@@ -11,11 +10,11 @@ import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
 import { GET_WEBSITE_SECTION } from './queries';
 import { InputComponent } from './components/TestimonialsComponents';
 import { ArrowDownShort } from 'react-bootstrap-icons';
-import Toaster from 'components/Toaster';
+import style from '../style.module.css';
+import UploadImageToS3WithNativeSdk from 'components/upload/upload';
 
 function Hero(): JSX.Element {
     const auth = useContext(authContext);
-    const [errorMsg, setErrorMsg] = useState<string>('');
     const [activeKey, setActiveKey] = useState('');
 
     const handleToggle = (val: string) => {
@@ -64,7 +63,6 @@ function Hero(): JSX.Element {
 
         onCompleted: (data: Data) => {
             const sectionData = data.websiteSections.data[0].attributes.sectionData;
-            console.log('sectionData', sectionData.testimonials[0].text);
             SetReceivingDataAndReset({ sectionData, reset, setInitialValues, data, initialValues });
         }
     });
@@ -93,7 +91,6 @@ function Hero(): JSX.Element {
         loading
             ? setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: true })
             : setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: false });
-        error ? setErrorMsg(`${error.name}: ${error.message}`) : setErrorMsg('');
     }, [loading, error]);
 
     return (
@@ -132,7 +129,7 @@ function Hero(): JSX.Element {
                                       >
                                           <p
                                               style={{
-                                                  fontWeight: 600,
+                                                  fontSize: 14,
                                                   marginBottom: 8,
                                                   color: 'white'
                                               }}
@@ -155,11 +152,32 @@ function Hero(): JSX.Element {
                                           <Card.Body>
                                               {testimonials.map((input: InputProps, id) => (
                                                   <span key={id + index}>
-                                                      <InputComponent
-                                                          input={input}
-                                                          index={index}
-                                                          control={control}
-                                                      />
+                                                      {input !== 'image' ? (
+                                                          <InputComponent
+                                                              input={input}
+                                                              index={index}
+                                                              control={control}
+                                                          />
+                                                      ) : (
+                                                          <Controller
+                                                              name={`testimonials.${index}.${input}`}
+                                                              control={control}
+                                                              render={({ field }) => (
+                                                                  <UploadImageToS3WithNativeSdk
+                                                                      {...field}
+                                                                      allowImage={true}
+                                                                      allowVideo={false}
+                                                                      title={'Website Images'}
+                                                                      aspectRatio={'1:1'}
+                                                                      onChange={(
+                                                                          event: React.ChangeEvent<HTMLInputElement>
+                                                                      ) => {
+                                                                          field.onChange(event);
+                                                                      }}
+                                                                  />
+                                                              )}
+                                                          />
+                                                      )}
                                                   </span>
                                               ))}
                                           </Card.Body>
@@ -170,12 +188,7 @@ function Hero(): JSX.Element {
                       ))
                     : null}
 
-                <hr className={style.break_line} />
-                {/* add */}
-                {errorMsg ? (
-                    <Toaster type="error" msg={errorMsg} handleCallback={() => setErrorMsg('')} />
-                ) : null}
-                <Button variant="primary" type="submit" className={style.submit_button}>
+                <Button variant="light" type="submit" className={style.submit_button}>
                     Submit
                 </Button>
             </Form>

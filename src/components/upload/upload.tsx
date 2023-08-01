@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { Image, ProgressBar } from 'react-bootstrap';
+import { Image, Modal, ProgressBar } from 'react-bootstrap';
 import AWS from 'aws-sdk';
 import Cropper from 'react-easy-crop';
 import Slider from 'react-rangeslider';
@@ -10,10 +10,10 @@ import getCroppedImg from './cropImage';
 import './upload.css';
 import _Jimp from 'jimp';
 
-const S3_BUCKET: any = process.env.REACT_APP_S3_BUCKET_NAME;
-const REGION: any = process.env.REACT_APP_S3_BUCKET_REGION;
+const S3_BUCKET: string | undefined = process.env.REACT_APP_S3_BUCKET_NAME;
+const REGION: string | undefined = process.env.REACT_APP_S3_BUCKET_REGION;
 
-const reader = new FileReader() as any;
+const reader = new FileReader();
 
 AWS.config.update({
     accessKeyId: process.env.REACT_APP_S3_ACCESS_KEY,
@@ -27,7 +27,20 @@ const myBucket = new AWS.S3({
 
 const tus: any = require('tus-js-client');
 
-const UploadImageToS3WithNativeSdk = (props: any): JSX.Element => {
+export interface UploadImageToS3WithNativeSdkProps {
+    removePicture?: any;
+    offering?: any;
+    allowImage: boolean;
+    allowVideo: boolean;
+    aspectRatio?: string;
+    value: any;
+    onChange: any;
+    title?: string;
+    readonly?: boolean;
+    uploadInterface?: string;
+}
+
+const UploadImageToS3WithNativeSdk = (props: UploadImageToS3WithNativeSdkProps): JSX.Element => {
     const [progress, setProgress] = useState<number>(0);
     const [selectedFile, setSelectedFile] = useState<any>(null);
     const [render, setRender] = useState<any>(null);
@@ -36,16 +49,14 @@ const UploadImageToS3WithNativeSdk = (props: any): JSX.Element => {
     const [videoUpload, setVideoUpload] = useState<any>(false);
     const [videoID, setVideoID] = useState<any>(null);
     const [videoSizeError, setVideoSizeError] = useState<boolean>(false);
-
-    const [imageSrc, setImageSrc] = useState<any>(null);
+    const [imageSrc, setImageSrc] = useState<string>('');
     const [crop, setCrop] = useState<Point>({ x: 0, y: 0 });
     const [zoom, setZoom] = useState<any>(1);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
-
     const allowedImageFormats = ['image/png', 'image/jpeg', 'image/jpg'];
     const allowedVideoFormats = ['video/mp4'];
-
     const albumPhotosKey = process.env.REACT_APP_S3_PREFIX_NAME;
+    const [show, setShow] = useState<boolean>(true);
 
     const onCropComplete = useCallback((croppedArea: Area, croppedAreaPixels: Area) => {
         setCroppedAreaPixels(croppedAreaPixels);
@@ -56,7 +67,8 @@ const UploadImageToS3WithNativeSdk = (props: any): JSX.Element => {
             const cropImage = await getCroppedImg(imageSrc, croppedAreaPixels);
             //setCroppedImage(cropImage);
             uploadFile(cropImage);
-            setImageSrc(null);
+
+            setImageSrc('');
         } catch (e) {
             console.error(e);
         }
@@ -97,7 +109,7 @@ const UploadImageToS3WithNativeSdk = (props: any): JSX.Element => {
         const deleteparams = {
             Bucket: S3_BUCKET,
             Key: keyName
-        };
+        } as AWS.S3.HeadObjectRequest;
         try {
             myBucket.headObject(deleteparams).promise();
             console.log('File Found in S3');
@@ -128,6 +140,7 @@ const UploadImageToS3WithNativeSdk = (props: any): JSX.Element => {
         if (props?.offering) {
             const file: any = e.target.files[0];
             const duration: any = await getVideoDuration(file);
+
             if (parseInt(duration) > 60) {
                 setVideoSizeError(true);
                 setRender(0);
@@ -167,7 +180,7 @@ const UploadImageToS3WithNativeSdk = (props: any): JSX.Element => {
     };
 
     function onImageLoadedSmall(fileName, filetype) {
-        _Jimp.read(reader.result).then((img) => {
+        _Jimp.read(reader.result as string).then((img) => {
             img.resize(500, _Jimp.AUTO)
                 .quality(100)
                 .getBase64(_Jimp.MIME_JPEG, (err, pic) => {
@@ -179,7 +192,7 @@ const UploadImageToS3WithNativeSdk = (props: any): JSX.Element => {
         });
     }
     function onImageLoadedMedium(fileName, filetype) {
-        _Jimp.read(reader.result).then((img) => {
+        _Jimp.read(reader.result as string).then((img) => {
             img.resize(750, _Jimp.AUTO)
                 .quality(100)
                 .getBase64(_Jimp.MIME_JPEG, (err, pic) => {
@@ -190,7 +203,7 @@ const UploadImageToS3WithNativeSdk = (props: any): JSX.Element => {
         });
     }
     function onImageLoadedLarge(fileName, filetype) {
-        _Jimp.read(reader.result).then((img) => {
+        _Jimp.read(reader.result as string).then((img) => {
             img.resize(1000, _Jimp.AUTO)
                 .quality(100)
                 .getBase64(_Jimp.MIME_JPEG, (err, pic) => {
@@ -209,7 +222,7 @@ const UploadImageToS3WithNativeSdk = (props: any): JSX.Element => {
             Key: filename,
             ContentEncoding: 'base64',
             ContentType: filetype
-        };
+        } as AWS.S3.PutObjectRequest;
         const paramUrl = {
             Bucket: S3_BUCKET,
             Key: filename
@@ -268,7 +281,7 @@ const UploadImageToS3WithNativeSdk = (props: any): JSX.Element => {
             Key: filename,
             ContentEncoding: 'base64',
             ContentType: filetype
-        };
+        } as AWS.S3.PutObjectRequest;
         myBucket
             .putObject(params)
             .on('httpUploadProgress', (evt) => {
@@ -289,7 +302,7 @@ const UploadImageToS3WithNativeSdk = (props: any): JSX.Element => {
             const fileType = '.' + file.type.split('/')[1];
 
             const fileName = uuidv4() + fileType;
-            reader.onload = function (e) {
+            reader.onload = function () {
                 onImageLoadedSmall('sm-' + fileName, file.type);
                 onImageLoadedMedium('md-' + fileName, file.type);
                 onImageLoadedLarge('lg-' + fileName, file.type);
@@ -301,6 +314,7 @@ const UploadImageToS3WithNativeSdk = (props: any): JSX.Element => {
     };
 
     function handleVideoOrImageInputDragDrop(e): void {
+        setShow(true);
         if (props.allowImage && props.allowVideo) {
             if ([...allowedImageFormats, ...allowedVideoFormats].indexOf(e.type) === -1) {
                 setRender(0);
@@ -421,6 +435,57 @@ const UploadImageToS3WithNativeSdk = (props: any): JSX.Element => {
         // eslint-disable-next-line
     }, [imageid]);
 
+    const UploadImageUiBody = (type?: string): JSX.Element => {
+        return (
+            <>
+                <div className="crop-container">
+                    <Cropper
+                        image={imageSrc}
+                        crop={crop}
+                        zoom={zoom}
+                        aspect={handleAspectRatio(props.aspectRatio ? props.aspectRatio : '')}
+                        onCropChange={setCrop}
+                        onCropComplete={onCropComplete}
+                        onZoomChange={setZoom}
+                        objectFit="contain"
+                    />
+                </div>
+                <div className="mt-2 ">
+                    <Slider
+                        className={`controls ${type === 'modal' ? 'modal-controls' : ''}`}
+                        min={1}
+                        max={3}
+                        step={0.1}
+                        value={zoom}
+                        onChange={(zoom: any) => setZoom(zoom)}
+                    />
+                    <button
+                        type="button"
+                        className={`uploadButton btn-sm btn-success ml-5 ${
+                            type === 'modal' ? 'modal-btn' : ''
+                        }`}
+                        onClick={() => {
+                            showCroppedImage();
+                        }}
+                        disabled={props.readonly}
+                    >
+                        Upload
+                    </button>
+                </div>
+            </>
+        );
+    };
+
+    const UploadImageUi = (props: UploadImageToS3WithNativeSdkProps): JSX.Element => {
+        return props.uploadInterface === 'modal' ? (
+            <Modal show={imageSrc} onHide={() => setImageSrc('')} className="modalCont">
+                {UploadImageUiBody('modal')}
+            </Modal>
+        ) : (
+            <div>{UploadImageUiBody()}</div>
+        );
+    };
+
     return (
         <div>
             {props?.title && (
@@ -482,45 +547,8 @@ const UploadImageToS3WithNativeSdk = (props: any): JSX.Element => {
                 ) : (
                     ' '
                 )}
-                {imageSrc ? (
-                    <div className="">
-                        <div className="crop-container">
-                            <Cropper
-                                image={imageSrc}
-                                crop={crop}
-                                zoom={zoom}
-                                aspect={handleAspectRatio(props.aspectRatio)}
-                                onCropChange={setCrop}
-                                onCropComplete={onCropComplete}
-                                onZoomChange={setZoom}
-                                objectFit="contain"
-                            />
-                        </div>
 
-                        <div className="mt-2">
-                            <Slider
-                                className="controls"
-                                min={1}
-                                max={3}
-                                step={0.1}
-                                value={zoom}
-                                onChange={(zoom: any) => setZoom(zoom)}
-                            />
-                            <button
-                                type="button"
-                                className="uploadButton btn-sm btn-success ml-5"
-                                onClick={() => {
-                                    showCroppedImage();
-                                }}
-                                disabled={props.readonly}
-                            >
-                                Upload
-                            </button>
-                        </div>
-                    </div>
-                ) : (
-                    ' '
-                )}
+                {imageSrc ? UploadImageUi(props) : ' '}
                 <div>
                     {props.allowImage && !props.allowVideo ? (
                         <>

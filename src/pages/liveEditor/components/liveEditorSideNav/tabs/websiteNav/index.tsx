@@ -1,5 +1,5 @@
 import style from './style.module.css';
-import Forms from '../../../../../../forms';
+import WebsiteNavigation from 'websiteNav';
 
 function WebsiteNav(): JSX.Element {
     return (
@@ -7,7 +7,7 @@ function WebsiteNav(): JSX.Element {
             {/* <h3 className={style.websiteNav_h}>SITE NAVIGATION</h3> */}
 
             <div className={style.websiteNav_ul}>
-                <Forms />
+                <WebsiteNavigation />
             </div>
         </div>
     );

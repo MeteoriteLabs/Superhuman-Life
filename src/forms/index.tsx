@@ -1,16 +1,18 @@
-import { useContext } from 'react';
-import FitnessTemplate_01 from './templates/fitnessTemplate_01';
-import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
+import CallToAction from './home/CallToAction';
+import Features from './home/features';
+import Hero from './home/hero';
+import Pricing from './home/pricing';
+import Testimonials from './home/testimonials';
 
-function Index(): JSX.Element {
-    const { changemakerWebsiteState } = useContext(ChangeMakerWebsiteContext);
-
-    const selectedTemplate = changemakerWebsiteState.selectedTemplate;
-    const templates = {
-        'Fitness Theme 01': <FitnessTemplate_01 />
+function Index({ section }: { section: string }): JSX.Element {
+    const Section = {
+        'Home: Hero': <Hero />,
+        'Home: Features': <Features />,
+        'Home: Cta': <CallToAction />,
+        'Home: Pricing': <Pricing />,
+        'Home: Testimonials': <Testimonials />
     };
-
-    return templates[selectedTemplate || ''];
+    return Section[section];
 }
 
 export default Index;

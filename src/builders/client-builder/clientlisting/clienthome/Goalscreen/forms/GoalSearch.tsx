@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { InputGroup, FormControl, Container } from 'react-bootstrap';
 import { gql, useQuery } from '@apollo/client';
-import { flattenObj } from '../../../../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 
 const GoalSearch = (props: any) => {
     const [packageLists, setPackageLists] = useState<any[]>([]);

@@ -154,7 +154,7 @@ const BasicProfileForm: React.FC = () => {
                         OnSubmit(frm);
                     }}
                     formData={webpageDetails}
-                    widgets={widgets}
+                    widgets={widgets as any}
                     customFormats={phoneCustomFormats}
                     transformErrors={phoneTransformErrors}
                     showErrorList={false}
