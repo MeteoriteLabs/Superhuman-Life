@@ -6,11 +6,9 @@ export const widgets = {
 
 export const schema: Record<string, unknown> = {
     programName: {
-        'ui:readonly': true,
         'ui:placeholder': 'Enter program name'
     },
     duration: {
-        'ui:readonly': true,
         'ui:placeholder': 'Define the number of days'
     },
     level: {

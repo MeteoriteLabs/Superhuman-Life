@@ -20,7 +20,6 @@ export const schema: any = {
         }
     },
     exercise: {
-        'ui:readonly': true,
         'ui:placeholder': 'Enter exercise name'
     },
     description: {
@@ -53,7 +52,6 @@ export const schema: any = {
     },
     addExercise: {
         AddURL: {
-            'ui:readonly': true,
             'ui:placeholder': 'https://'
         },
         AddText: {

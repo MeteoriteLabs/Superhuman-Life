@@ -16,7 +16,6 @@ export const widgets = {
 
 export const schema: any = {
     workout: {
-        'ui:readonly': true,
         'ui:placeholder': 'Enter workout name'
     },
     level: {
@@ -46,7 +45,6 @@ export const schema: any = {
         'ui:placeholder': 'Explain the benefits of this workout'
     },
     calories: {
-        'ui:readonly': true,
         'ui:placeholder': 'Enter total calories'
     },
     equipment: {
