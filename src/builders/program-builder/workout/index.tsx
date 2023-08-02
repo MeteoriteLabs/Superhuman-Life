@@ -10,13 +10,13 @@ import {
     Row,
     Container
 } from 'react-bootstrap';
-import Table from '../../../components/table';
+import Table from 'components/table';
 import { useQuery, useMutation } from '@apollo/client';
 import { GET_TABLEDATA, CREATE_WORKOUT } from './queries';
-import AuthContext from '../../../context/auth-context';
-import ActionButton from '../../../components/actionbutton';
+import AuthContext from 'context/auth-context';
+import ActionButton from 'components/actionbutton';
 import CreateEditWorkout from './createoredit-workout';
-import { flattenObj } from '../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 import moment from 'moment';
 
 export default function EventsTab(): JSX.Element {
@@ -92,24 +92,24 @@ export default function EventsTab(): JSX.Element {
                 id: 'edit',
                 Header: 'Actions',
                 Cell: ({ row }: any) => {
-                    const actionClick1 = () => {
+                    const handleEdit = () => {
                         createEditWorkoutComponent.current.TriggerForm({
                             id: row.original.id,
                             type: 'edit'
                         });
                     };
-                    const actionClick2 = () => {
+                    const handleView = () => {
                         createEditWorkoutComponent.current.TriggerForm({
                             id: row.original.id,
                             type: 'view'
                         });
                     };
-                    const actionClick3 = () => {
+                    const handleDuplicate = () => {
                         setName(row.original.workoutName + ' copy');
                         setFrm(row.original);
                         handleShow();
                     };
-                    const actionClick4 = () => {
+                    const handleDelete = () => {
                         createEditWorkoutComponent.current.TriggerForm({
                             id: row.original.id,
                             type: 'delete'
@@ -117,10 +117,10 @@ export default function EventsTab(): JSX.Element {
                     };
 
                     const arrayAction = [
-                        { actionName: 'Edit', actionClick: actionClick1 },
-                        { actionName: 'View', actionClick: actionClick2 },
-                        { actionName: 'Duplicate', actionClick: actionClick3 },
-                        { actionName: 'Delete', actionClick: actionClick4 }
+                        { actionName: 'Edit', actionClick: handleEdit },
+                        { actionName: 'View', actionClick: handleView },
+                        { actionName: 'Duplicate', actionClick: handleDuplicate },
+                        { actionName: 'Delete', actionClick: handleDelete }
                     ];
 
                     return <ActionButton arrayAction={arrayAction}></ActionButton>;

@@ -1,7 +1,7 @@
 .cell,
 .event-cell {
-    border-bottom: 1px solid #fff;
-    border-right: 1px solid #fff;
+    /* border-bottom: 1px solid #ddd; */
+    border-right: 1px solid #ddd;
     min-height: 60px;
     text-align: center;
     min-width: 150px;
@@ -26,21 +26,25 @@
     align-items: center;
     background-color: #343A40;
     color: #fff;
-} 
+}
 
- .day-row {
+.day-row {
     position: sticky;
-    background-color: #343A40;
-    color: #fff;
+    /* background-color: #fff; */
     top: 0;
     z-index: 998;
-} 
+    background-color: #343A40;
+    color: #fff;
+}
 
- .wrapper {
+.wrapper {
+    /* width: 85vw; */
     overflow: auto;
     position: relative;
     min-height: 50px;
     height: 90vh;
+    margin-left: 10px;
+    width: 98%;
 }
 
 .schedular-content {
@@ -61,7 +65,6 @@
     height: 100%;
     padding: 0;
     margin: 0;
-    
 }
 
 .time {
@@ -149,7 +152,7 @@
 }
 
 .schedular-content:hover {
-    background-color: rgb(140, 190, 214) !important;
+    background-color: rgb(235, 227, 135) !important;
     width: 150px !important;
     z-index: 998;
     box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.75);
@@ -164,3 +167,39 @@
 #fitness-dropdown {
     width: 200px;
 }
+
+/* Sidebar  */
+.sidebar {
+    height: 100%;
+    width: 85px;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    right: 0;
+    background-color: #343a40;
+    transition: 0.5s;
+    overflow-x: hidden;
+    padding-top: 60px;
+    white-space: nowrap;
+    margin-top: 15px;
+}
+
+.sidebar a {
+    padding: 0 0 0 10px;
+    text-decoration: none;
+    font-size: 10px;
+    display: flex;
+    color: #f1f1f1;
+}
+
+.sidebar a:hover {
+    font-weight: bold;
+}
+
+.icon-text {
+    font-size: 20px;
+    vertical-align: middle;
+    color: '#fff';
+    position: relative;
+    bottom: 12px;
+} 

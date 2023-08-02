@@ -59,13 +59,12 @@ const classBasedOffering: React.FC<{
         }
     );
 
-    // eslint-disable-next-line
-    const { data: get_sessions, refetch: refetchSessions } = useQuery(FETCH_SESSIONS, {
+    const { refetch: refetchSessions } = useQuery(FETCH_SESSIONS, {
         variables: { id: offeringSelected },
         skip: offeringSelected === null || !offeringSelected,
         onCompleted: (data) => {
             const flattenedSessions = flattenObj({ ...data.tags });
-            console.log(data);
+        
             const currentTime = new Date(selectedSessionDate);
 
             const morningSlot = new Date(

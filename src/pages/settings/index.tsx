@@ -20,7 +20,6 @@ const SettingsPage: React.FC = () => {
     useQuery(FETCH_USER_PROFILE_DATA, {
         variables: { id: auth.userid },
         onCompleted: (response) => {
-            console.log(response, typeof response);
             setProfileData(response.usersPermissionsUser.data.attributes);
         }
     });

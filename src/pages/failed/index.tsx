@@ -51,7 +51,6 @@ const Failed: React.FC = () => {
                     config
                 )
                 .then((response) => {
-                    console.log(response.data.cfLink);
                     setPaymentDetails(response.data.cfLink);
                     setLinkId(response.data.cfLink.linkId);
                 });

@@ -419,6 +419,7 @@ const Scheduler = (): JSX.Element => {
                 {/* Right sidebar */}
                 <Col lg={collapse ? '1' : '2'} className="d-lg-block">
                     <SideNav
+                        type="date"
                         handleScrollScheduler={handleScrollScheduler}
                         show24HourFormat={show24HourFormat}
                         setShow24HourFormat={setShow24HourFormat}

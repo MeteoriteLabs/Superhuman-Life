@@ -4,6 +4,7 @@ import 'react-bootstrap-typeahead/css/Typeahead.css';
 import moment from 'moment';
 
 const DaysInput = (props: any) => {
+
     function handleReturnType(value: any) {
         if (typeof value === 'number') {
             return [`Day - ${value}`];

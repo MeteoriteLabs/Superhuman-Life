@@ -1,12 +1,12 @@
-import TextEditor from '../../../../components/customWidgets/textEditor';
-import EquipmentSearch from '../../../../components/customWidgets/equipmentListSelect';
-import MuscleGroupSearch from '../../../../components/customWidgets/muscleGroupMultiSelect';
-import ExerciseList from '../../../../components/customWidgets/exerciseList';
-import FitnessMultiSelect from '../../../../components/customWidgets/fitnessMultiSelect';
-import Upload from '../../../../components/upload/upload';
-import TimeField from '../../../../components/customWidgets/timeField';
+import TextEditor from 'components/customWidgets/textEditor';
+import EquipmentSearch from 'components/customWidgets/equipmentListSelect';
+import MuscleGroupSearch from 'components/customWidgets/muscleGroupMultiSelect';
+import ExerciseList from 'components/customWidgets/exerciseList';
+import FitnessMultiSelect from 'components/customWidgets/fitnessMultiSelect';
+import Upload from 'components/upload/upload';
+import TimeField from 'components/customWidgets/timeField';
 import DaysInput from '../daysInput';
-import ClassTypeSelect from '../../../../components/customWidgets/classTypeSelect';
+import ClassTypeSelect from 'components/customWidgets/classTypeSelect';
 
 export const widgets = {
     fitnessSelect: FitnessMultiSelect,
@@ -18,6 +18,9 @@ export const widgets = {
 };
 
 export const schema: any = {
+    workout: {
+        'ui:placeholder': 'Enter workout name'
+    },
     tag: {
         'ui:widget': (props: { onChange: () => void; value: string }) => {
             return <ClassTypeSelect onChange={props.onChange} value={props.value} />;
@@ -58,13 +61,15 @@ export const schema: any = {
         'ui:widget': 'textarea',
         'ui:options': {
             rows: 3
-        }
+        },
+        'ui:placeholder': 'Enter description about the workout'
     },
     benefits: {
         'ui:widget': 'textarea',
         'ui:options': {
             rows: 3
-        }
+        },
+        'ui:placeholder': 'Enter benefits of the workout'
     },
     equipment: {
         'ui:widget': 'equipmentSearch',
@@ -80,22 +85,28 @@ export const schema: any = {
         'ui:widget': 'fitnessSelect',
         'ui:help': 'Choose the relevant  discipline for the workout .It is required field'
     },
+    calories: {
+         'ui:placeholder': 'Enter calories'
+    },
     addWorkout: {
+        AddURL: {
+            'ui:placeholder': 'Enter youtube url'
+        },
         AddText: {
             'ui:widget': 'textEditor'
         },
-        Upload: {
-            'ui:widget': (props: { onChange: () => void; value: string }) => {
-                return (
-                    <Upload
-                        allowImage={false}
-                        allowVideo={true}
-                        onChange={props.onChange}
-                        value={props.value}
-                    />
-                );
-            }
-        },
+        // Upload: {
+        //     'ui:widget': (props: { onChange: () => void; value: string }) => {
+        //         return (
+        //             <Upload
+        //                 allowImage={false}
+        //                 allowVideo={true}
+        //                 onChange={props.onChange}
+        //                 value={props.value}
+        //             />
+        //         );
+        //     }
+        // },
         build: {
             'ui:widget': 'buildWorkout'
         },

@@ -911,20 +911,20 @@ const Scheduler = () => {
                             <Row>
                                 <Col lg={11} className="pl-0 pr-0">
                                     <CollapsibleScheduler
-                                        // type="date"
-                                        // days={calculateDays(prevDate, nextDate)}
-                                        // callback={handleCallback}
-                                        // restDays={tag?.sessions.filter(
-                                        //     (ses) => ses.type === 'restday'
-                                        // )}
-                                        // programId={tagId}
-                                        // schedulerSessions={schedulerSessions}
-                                        // sessionIds={sessionIds}
-                                        // clientIds={clientIds}
-                                        // classType={'Group Class'}
-                                        // startDate={prevDate}
-                                        // duration={moment(nextDate).diff(moment(prevDate), 'days')}
-                                        // showRestDay={showRestDay}
+                                        type="date"
+                                        days={calculateDays(prevDate, nextDate)}
+                                        callback={handleCallback}
+                                        restDays={tag?.sessions.filter(
+                                            (ses) => ses.type === 'restday'
+                                        )}
+                                        programId={tagId}
+                                        schedulerSessions={schedulerSessions}
+                                        sessionIds={sessionIds}
+                                        clientIds={clientIds}
+                                        classType={'Group Class'}
+                                        startDate={prevDate}
+                                        duration={moment(nextDate).diff(moment(prevDate), 'days')}
+                                        showRestDay={showRestDay}
                                     />
                                 </Col>
                             </Row>
@@ -1038,6 +1038,7 @@ const Scheduler = () => {
                 {/* Right sidebar */}
                 <Col lg={collapse ? '1' : '2'} className="d-lg-block">
                     <SideNav
+                        type="date"
                         handleScrollScheduler={handleScrollScheduler}
                         show24HourFormat={show24HourFormat}
                         setShow24HourFormat={setShow24HourFormat}

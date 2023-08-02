@@ -47,10 +47,9 @@ const Scheduler: React.FC = () => {
     const ref = useRef<any>(null);
 
     const handleScrollScheduler = () => {
-        ref.current?.scrollIntoView({ behaviour: "smooth",
-        inline: "nearest"});
+        ref.current?.scrollIntoView({ behaviour: 'smooth', inline: 'nearest' });
         window.scrollBy(0, -200);
-    }
+    };
 
     const handleAccordionToggle = () => {
         setAccordionExpanded(!accordionExpanded);
@@ -383,239 +382,272 @@ const Scheduler: React.FC = () => {
         return (
             <Row noGutters className="bg-light  py-4 mb-5  min-vh-100">
                 <Col lg={collapse ? '11' : '10'} className="pr-2 pl-3 mb-5">
-            <div className="col-lg-12">
-                <div className="mb-3">
-                    <span style={{ fontSize: '30px' }}>
-                        <Link to="/session">
-                            <i className="fa fa-arrow-circle-left" style={{ color: 'black' }}></i>
-                        </Link>
-                        <b> back</b>
-                    </span>
-                </div>
+                    <div className="col-lg-12">
+                        <div className="mb-3">
+                            <span style={{ fontSize: '30px' }}>
+                                <Link to="/session">
+                                    <i
+                                        className="fa fa-arrow-circle-left"
+                                        style={{ color: 'black' }}
+                                    ></i>
+                                </Link>
+                                <b> back</b>
+                            </span>
+                        </div>
 
-                <Row>
-                    <Col lg={11}>
-                        <Accordion>
-                            <Card>
-                                <Accordion.Toggle as={Card.Header} eventKey="0" onClick={() => {key==='' ? setKey('0') : setKey('')}} style={{ background: '#343A40', color: '#fff' }}>
-                                <span className="d-inline-block">
-                                        <b>{tag && tag.fitnesspackage?.packagename}</b>
-                                    </span>
-                                    <span className="d-inline-block btn float-right">
-                                        {key === '0' ? (
-                                            <i className="fa fa-chevron-up d-flex justify-content-end text-white" />
-                                        ) : (
-                                            <i className="fa fa-chevron-down d-flex justify-content-end text-white" />
-                                        )}
-                                    </span>
-                                    
-                                </Accordion.Toggle>
-                                <Accordion.Collapse eventKey="0">
-                                    <Card style={{ width: '100%' }}>
-                                        <Card.Body>
-                                            <Row>
-                                                <Col lg={10} sm={8}>
-                                                    <Card.Title>
-                                                        <h4>
-                                                            {tag && tag.fitnesspackage?.packagename}
-                                                        </h4>
-                                                    </Card.Title>
-                                                </Col>
-                                                <Col>
-                                                    <Row className="justify-content-end">
-                                                        <Dropdown>
-                                                            <Dropdown.Toggle
-                                                                variant="bg-light"
-                                                                id="dropdown-basic"
-                                                            >
-                                                                <img
-                                                                    src="/assets/cardsKebab.svg"
-                                                                    alt="edit"
-                                                                    className="img-responsive "
-                                                                    style={{
-                                                                        height: '20px',
-                                                                        width: '20px'
-                                                                    }}
-                                                                />
-                                                            </Dropdown.Toggle>
-
-                                                            <Dropdown.Menu>
-                                                                <Dropdown.Item
-                                                                    key={2}
-                                                                   
-                                                                >
-                                                                    Edit Program Name
-                                                                </Dropdown.Item>
-                                                                <Dropdown.Item
-                                                                    key={1}
-                                                                    
-                                                                >
-                                                                    Send notification to subscribers
-                                                                </Dropdown.Item>
-                                                            </Dropdown.Menu>
-                                                        </Dropdown>
-                                                    </Row>
-                                                </Col>
-                                            </Row>
-
-                                            <Card.Text>
-                                                <Row className="mt-2">
-                                                    <Col lg={9} sm={5}>
-                                                        <Badge pill variant="dark" className="p-2">
-                                                            {tag && tag.fitnesspackage ? tag.fitnesspackage.level : null}
-                                                        </Badge>
-
-                                                        <br />
-                                                        <b>
-                                                            {tag.fitnesspackage.duration === 1
-                                                                ? `${tag.fitnesspackage.duration} day program`
-                                                                : `${tag.fitnesspackage.duration} days program`}
-                                                        </b>
-                                                    </Col>
-                                                    <Col>
-                                                        <DisplayImage
-                                                            imageName={
-                                                                'Photo_ID' in tag.client_packages &&
-                                                                tag.client_packages.length &&
-                                                                tag.client_packages[0]
-                                                                    .users_permissions_user &&
-                                                                tag.client_packages[0]
-                                                                    .users_permissions_user.Photo_ID
-                                                                    ? tag.client_packages[0]
-                                                                          .users_permissions_user
-                                                                          .Photo_ID
-                                                                    : null
-                                                            }
-                                                            defaultImageUrl="assets/image_placeholder.svg"
-                                                            imageCSS="rounded-circle profile_pic text-center img-fluid ml-3 "
-                                                        />
-                                                        <br />
-                                                        <Badge
-                                                            pill
-                                                            variant="dark"
-                                                            className="py-2 px-4 ml-1 mt-2"
-                                                            style={{ cursor: 'pointer' }}
-                                                            onClick={() => {
-                                                                fitnessActionRef.current.TriggerForm(
-                                                                    {
-                                                                        id: last[0],
-                                                                        actionType: 'allClients',
-                                                                        type: 'Classic Class'
-                                                                    }
-                                                                );
-                                                            }}
-                                                        >
-                                                            View all
-                                                        </Badge>
-                                                        <p className="ml-3">
-                                                            {tag.client_packages.length} people
-                                                        </p>
-                                                    </Col>
-                                                </Row>
-                                            </Card.Text>
-                                        </Card.Body>
-                                    </Card>
-                                </Accordion.Collapse>
-                            </Card>
-                            <Card>
-                                <Accordion.Toggle as={Card.Header} eventKey="1" onClick={() => {key === '' ? setKey('1') : setKey('')}} style={{ background: '#343A40', color: '#fff' }}>
-                                    
-                                    <span className="d-inline-block">
-                                        <b>Movement Session</b>
-                                    </span>
-                                    <span className="d-inline-block btn float-right">
-                                        {key === '1' ? (
-                                            <i className="fa fa-chevron-up d-flex justify-content-end text-white" />
-                                        ) : (
-                                            <i className="fa fa-chevron-down d-flex justify-content-end text-white" />
-                                        )}
-                                    </span>
-                                </Accordion.Toggle>
-                                <Accordion.Collapse eventKey="1">
-                                    <Card style={{ width: '100%' }}>
-                                        <Card.Body>
-                                            <Card.Title>
-                                                <h4>Movement Sessions</h4>
-                                            </Card.Title>
-                                            <Card.Text>
-                                                Last planned session{' '}
-                                                {calculateLastSession(tag.sessions)}
-                                            </Card.Text>
-                                            <Row>
-                                                <Col lg={8}>
-                                                    <Table
-                                                        striped
-                                                        bordered
-                                                        hover
-                                                        size="sm"
-                                                        responsive
-                                                    >
-                                                        <thead className="text-center">
-                                                            <tr>
-                                                                <th>Type</th>
-                                                                <th>Total</th>
-                                                                <th>Plan Recorded</th>
-                                                                <th>Plan Rest</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody className="text-center">
-                                                            <tr>
-                                                                <td>Recorded</td>
-                                                                <td>
-                                                                    {
-                                                                        tag.fitnesspackage
-                                                                            .recordedclasses
-                                                                    }
-                                                                </td>
-                                                                <td>
-                                                                    {handleTimeFormatting(
-                                                                        totalClasses[0],
-                                                                        tag.fitnesspackage.duration
-                                                                    )}
-                                                                    /{tag.fitnesspackage.duration}
-                                                                </td>
-                                                                <td>
+                        <Row>
+                            <Col lg={11}>
+                                <Accordion>
+                                    <Card>
+                                        <Accordion.Toggle
+                                            as={Card.Header}
+                                            eventKey="0"
+                                            onClick={() => {
+                                                key === '' ? setKey('0') : setKey('');
+                                            }}
+                                            style={{ background: '#343A40', color: '#fff' }}
+                                        >
+                                            <span className="d-inline-block">
+                                                <b>{tag && tag.fitnesspackage?.packagename}</b>
+                                            </span>
+                                            <span className="d-inline-block btn float-right">
+                                                {key === '0' ? (
+                                                    <i className="fa fa-chevron-up d-flex justify-content-end text-white" />
+                                                ) : (
+                                                    <i className="fa fa-chevron-down d-flex justify-content-end text-white" />
+                                                )}
+                                            </span>
+                                        </Accordion.Toggle>
+                                        <Accordion.Collapse eventKey="0">
+                                            <Card style={{ width: '100%' }}>
+                                                <Card.Body>
+                                                    <Row>
+                                                        <Col lg={10} sm={8}>
+                                                            <Card.Title>
+                                                                <h4>
                                                                     {tag &&
-                                                                    tag.fitnesspackage &&
-                                                                    tag.fitnesspackage
-                                                                        ? tag.fitnesspackage
-                                                                              .restdays
-                                                                        : null}
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </Table>
-                                                </Col>
-                                                <Col>
-                                                    <Calendar
-                                                        className="disabled"
-                                                        // tileClassName={tileContent}
-                                                        // onChange={onChange}
-                                                        // onActiveStartDateChange={({ action }) => {
-                                                        //     action === 'next'
-                                                        //         ? setMonth(month + 1)
-                                                        //         : setMonth(month - 1);
-                                                        // }}
-                                                        // value={value}
-                                                        minDate={moment().startOf('month').toDate()}
-                                                        maxDate={moment().add(2, 'months').toDate()}
-                                                        maxDetail="month"
-                                                        minDetail="month"
-                                                        next2Label={null}
-                                                        prev2Label={null}
-                                                    />
-                                                </Col>
-                                            </Row>
-                                            <p>Note: Plan all the sessions in advance</p>
-                                        </Card.Body>
-                                    </Card>
-                                </Accordion.Collapse>
-                            </Card>
-                        </Accordion>
-                    </Col>
-                </Row>
+                                                                        tag.fitnesspackage
+                                                                            ?.packagename}
+                                                                </h4>
+                                                            </Card.Title>
+                                                        </Col>
+                                                        <Col>
+                                                            <Row className="justify-content-end">
+                                                                <Dropdown>
+                                                                    <Dropdown.Toggle
+                                                                        variant="bg-light"
+                                                                        id="dropdown-basic"
+                                                                    >
+                                                                        <img
+                                                                            src="/assets/cardsKebab.svg"
+                                                                            alt="edit"
+                                                                            className="img-responsive "
+                                                                            style={{
+                                                                                height: '20px',
+                                                                                width: '20px'
+                                                                            }}
+                                                                        />
+                                                                    </Dropdown.Toggle>
 
-                {/* <Row>
+                                                                    <Dropdown.Menu>
+                                                                        <Dropdown.Item key={2}>
+                                                                            Edit Program Name
+                                                                        </Dropdown.Item>
+                                                                        <Dropdown.Item key={1}>
+                                                                            Send notification to
+                                                                            subscribers
+                                                                        </Dropdown.Item>
+                                                                    </Dropdown.Menu>
+                                                                </Dropdown>
+                                                            </Row>
+                                                        </Col>
+                                                    </Row>
+
+                                                    <Card.Text>
+                                                        <Row className="mt-2">
+                                                            <Col lg={9} sm={5}>
+                                                                <Badge
+                                                                    pill
+                                                                    variant="dark"
+                                                                    className="p-2"
+                                                                >
+                                                                    {tag && tag.fitnesspackage
+                                                                        ? tag.fitnesspackage.level
+                                                                        : null}
+                                                                </Badge>
+
+                                                                <br />
+                                                                <b>
+                                                                    {tag.fitnesspackage.duration ===
+                                                                    1
+                                                                        ? `${tag.fitnesspackage.duration} day program`
+                                                                        : `${tag.fitnesspackage.duration} days program`}
+                                                                </b>
+                                                            </Col>
+                                                            <Col>
+                                                                <DisplayImage
+                                                                    imageName={
+                                                                        'Photo_ID' in
+                                                                            tag.client_packages &&
+                                                                        tag.client_packages
+                                                                            .length &&
+                                                                        tag.client_packages[0]
+                                                                            .users_permissions_user &&
+                                                                        tag.client_packages[0]
+                                                                            .users_permissions_user
+                                                                            .Photo_ID
+                                                                            ? tag.client_packages[0]
+                                                                                  .users_permissions_user
+                                                                                  .Photo_ID
+                                                                            : null
+                                                                    }
+                                                                    defaultImageUrl="assets/image_placeholder.svg"
+                                                                    imageCSS="rounded-circle profile_pic text-center img-fluid ml-3 "
+                                                                />
+                                                                <br />
+                                                                <Badge
+                                                                    pill
+                                                                    variant="dark"
+                                                                    className="py-2 px-4 ml-1 mt-2"
+                                                                    style={{ cursor: 'pointer' }}
+                                                                    onClick={() => {
+                                                                        fitnessActionRef.current.TriggerForm(
+                                                                            {
+                                                                                id: last[0],
+                                                                                actionType:
+                                                                                    'allClients',
+                                                                                type: 'Classic Class'
+                                                                            }
+                                                                        );
+                                                                    }}
+                                                                >
+                                                                    View all
+                                                                </Badge>
+                                                                <p className="ml-3">
+                                                                    {tag.client_packages.length}{' '}
+                                                                    people
+                                                                </p>
+                                                            </Col>
+                                                        </Row>
+                                                    </Card.Text>
+                                                </Card.Body>
+                                            </Card>
+                                        </Accordion.Collapse>
+                                    </Card>
+                                    <Card>
+                                        <Accordion.Toggle
+                                            as={Card.Header}
+                                            eventKey="1"
+                                            onClick={() => {
+                                                key === '' ? setKey('1') : setKey('');
+                                            }}
+                                            style={{ background: '#343A40', color: '#fff' }}
+                                        >
+                                            <span className="d-inline-block">
+                                                <b>Movement Session</b>
+                                            </span>
+                                            <span className="d-inline-block btn float-right">
+                                                {key === '1' ? (
+                                                    <i className="fa fa-chevron-up d-flex justify-content-end text-white" />
+                                                ) : (
+                                                    <i className="fa fa-chevron-down d-flex justify-content-end text-white" />
+                                                )}
+                                            </span>
+                                        </Accordion.Toggle>
+                                        <Accordion.Collapse eventKey="1">
+                                            <Card style={{ width: '100%' }}>
+                                                <Card.Body>
+                                                    <Card.Title>
+                                                        <h4>Movement Sessions</h4>
+                                                    </Card.Title>
+                                                    <Card.Text>
+                                                        Last planned session{' '}
+                                                        {calculateLastSession(tag.sessions)}
+                                                    </Card.Text>
+                                                    <Row>
+                                                        <Col lg={8}>
+                                                            <Table
+                                                                striped
+                                                                bordered
+                                                                hover
+                                                                size="sm"
+                                                                responsive
+                                                            >
+                                                                <thead className="text-center">
+                                                                    <tr>
+                                                                        <th>Type</th>
+                                                                        <th>Total</th>
+                                                                        <th>Plan Recorded</th>
+                                                                        <th>Plan Rest</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody className="text-center">
+                                                                    <tr>
+                                                                        <td>Recorded</td>
+                                                                        <td>
+                                                                            {
+                                                                                tag.fitnesspackage
+                                                                                    .recordedclasses
+                                                                            }
+                                                                        </td>
+                                                                        <td>
+                                                                            {handleTimeFormatting(
+                                                                                totalClasses[0],
+                                                                                tag.fitnesspackage
+                                                                                    .duration
+                                                                            )}
+                                                                            /
+                                                                            {
+                                                                                tag.fitnesspackage
+                                                                                    .duration
+                                                                            }
+                                                                        </td>
+                                                                        <td>
+                                                                            {tag &&
+                                                                            tag.fitnesspackage &&
+                                                                            tag.fitnesspackage
+                                                                                ? tag.fitnesspackage
+                                                                                      .restdays
+                                                                                : null}
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </Table>
+                                                        </Col>
+                                                        <Col>
+                                                            <Calendar
+                                                                className="disabled"
+                                                                // tileClassName={tileContent}
+                                                                // onChange={onChange}
+                                                                // onActiveStartDateChange={({ action }) => {
+                                                                //     action === 'next'
+                                                                //         ? setMonth(month + 1)
+                                                                //         : setMonth(month - 1);
+                                                                // }}
+                                                                // value={value}
+                                                                minDate={moment()
+                                                                    .startOf('month')
+                                                                    .toDate()}
+                                                                maxDate={moment()
+                                                                    .add(2, 'months')
+                                                                    .toDate()}
+                                                                maxDetail="month"
+                                                                minDetail="month"
+                                                                next2Label={null}
+                                                                prev2Label={null}
+                                                            />
+                                                        </Col>
+                                                    </Row>
+                                                    <p>Note: Plan all the sessions in advance</p>
+                                                </Card.Body>
+                                            </Card>
+                                        </Accordion.Collapse>
+                                    </Card>
+                                </Accordion>
+                            </Col>
+                        </Row>
+
+                        {/* <Row>
                     <Col
                         lg={11}
                         className="p-4 shadow-lg bg-white"
@@ -766,8 +798,8 @@ const Scheduler: React.FC = () => {
                         </Row>
                     </Col>
                 </Row> */}
-                {/* Scheduler manager based on dates */}
-                {/* <Row className="mt-5 mb-2">
+                        {/* Scheduler manager based on dates */}
+                        {/* <Row className="mt-5 mb-2">
                     <Col lg={2}>
                         <Button
                             variant="dark"
@@ -830,7 +862,7 @@ const Scheduler: React.FC = () => {
                     </Col>
                 </Row> */}
 
-                {/* <Row className="mt-5 mb-2">
+                        {/* <Row className="mt-5 mb-2">
                     <Col lg={11}>
                         <div className="text-center">
                             <span
@@ -865,58 +897,58 @@ const Scheduler: React.FC = () => {
                         </div>
                     </Col>
                 </Row> */}
-                {/* Scheduler */}
-                <Row>
-                    <Col lg={11} className="pl-0 pr-0">
-                        <div className="mt-5">
-                            <SchedulerPage
-                               ref={ref}
-                                callback={handleCallback}
-                                type="day"
-                                sessionIds={sessionIds}
-                                schedulerSessions={schedulerSessions}
-                                clientIds={clientIds}
-                                days={tag.fitnesspackage.duration}
-                                restDays={tag?.sessions.filter((ses) => ses.type === 'restday')}
-                                classType={'Classic Class'}
-                                startDate={'2021-05-01'}
-                                programId={tagId ? tagId : null}
-                                handleFloatingActionProgramCallback={
-                                    handleFloatingActionProgramCallback
-                                }
-                                handleFloatingActionProgramCallback2={
-                                    handleFloatingActionProgramCallback2
-                                }
-                                handleRefetch={handleRefetch}
-                                sessionFilter={sessionFilter}
-                                program={program}
-                                showRestDay={showRestDay}
-                                show24HourFormat={show24HourFormat}
-                                
-                            />
-                        </div>
-                    </Col>
-                    <FitnessAction ref={fitnessActionRef} callback={() => mainQuery} />
-                </Row>
-            </div>
-            </Col>
-            {/* Right sidebar */}
-            <Col lg={collapse ? '1' : '2'} className="d-lg-block">
+                        {/* Scheduler */}
+                        <Row>
+                            <Col lg={11} className="pl-0 pr-0">
+                                <div className="mt-5">
+                                    <SchedulerPage
+                                        ref={ref}
+                                        callback={handleCallback}
+                                        type="day"
+                                        sessionIds={sessionIds}
+                                        schedulerSessions={schedulerSessions}
+                                        clientIds={clientIds}
+                                        days={tag.fitnesspackage.duration}
+                                        restDays={tag?.sessions.filter(
+                                            (ses) => ses.type === 'restday'
+                                        )}
+                                        classType={'Classic Class'}
+                                        startDate={'2021-05-01'}
+                                        programId={tagId ? tagId : null}
+                                        handleFloatingActionProgramCallback={
+                                            handleFloatingActionProgramCallback
+                                        }
+                                        handleFloatingActionProgramCallback2={
+                                            handleFloatingActionProgramCallback2
+                                        }
+                                        handleRefetch={handleRefetch}
+                                        sessionFilter={sessionFilter}
+                                        program={program}
+                                        showRestDay={showRestDay}
+                                        show24HourFormat={show24HourFormat}
+                                    />
+                                </div>
+                            </Col>
+                            <FitnessAction ref={fitnessActionRef} callback={() => mainQuery} />
+                        </Row>
+                    </div>
+                </Col>
+                {/* Right sidebar */}
+                <Col lg={collapse ? '1' : '2'} className="d-lg-block">
                     <SideNav
-                      handleScrollScheduler={handleScrollScheduler}
-                      show24HourFormat={show24HourFormat}
-                      setShow24HourFormat={setShow24HourFormat}
+                        type="day"
+                        handleScrollScheduler={handleScrollScheduler}
+                        show24HourFormat={show24HourFormat}
+                        setShow24HourFormat={setShow24HourFormat}
                         collapse={collapse}
                         setCollapse={setCollapse}
                         accordionExpanded={accordionExpanded}
                         onAccordionToggle={handleAccordionToggle}
                         clientIds={clientIds}
                         sessionIds={sessionIds}
-                        startDate={tag?.fitnesspackage?.Start_date}
-                        duration={calculateDuration(
-                            tag?.fitnesspackage?.Start_date,
-                            tag?.fitnesspackage?.End_date
-                        )}
+                        startDate={'2021-05-01'}
+                       
+                        duration={tag.fitnesspackage.duration}
                         callback={handleFloatingActionProgramCallback}
                         callback2={handleFloatingActionProgramCallback2}
                         callback3={handleRefetch}
@@ -924,7 +956,6 @@ const Scheduler: React.FC = () => {
                         showRestDayAction={showRestDay}
                     />
                 </Col>
-
             </Row>
         );
 };

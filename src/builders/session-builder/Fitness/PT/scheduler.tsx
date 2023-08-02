@@ -853,7 +853,8 @@ const Scheduler: React.FC = () => {
                                 <div className="mt-5">
                                     <SchedulerPage
                                         show24HourFormat={show24HourFormat} //boolean
-                                        type="date"
+                                        type={tag?.fitnesspackage?.fitness_package_type.type ===
+                                            'On-Demand PT' ? 'day': "date"}
                                         days={
                                             tag?.fitnesspackage?.fitness_package_type.type ===
                                             'On-Demand PT'
@@ -944,6 +945,9 @@ const Scheduler: React.FC = () => {
                 {/* Right sidebar */}
                 <Col lg={collapse ? '1' : '2'} className="d-lg-block">
                     <SideNav
+                        type={tag?.fitnesspackage?.fitness_package_type.type ===
+                        'On-Demand PT'
+                            ? 'day' : 'date'}
                         handleScrollScheduler={handleScrollScheduler}
                         show24HourFormat={show24HourFormat}
                         setShow24HourFormat={setShow24HourFormat}
@@ -958,8 +962,22 @@ const Scheduler: React.FC = () => {
                             tag?.client_packages[0].users_permissions_user.id
                         }
                         sessionIds={sessionIds}
-                        startDate={tag?.fitnesspackage?.Start_date}
-                        duration={calculateDuration(
+                        startDate={tag?.fitnesspackage?.fitness_package_type.type ===
+                            'On-Demand PT'
+                                ? tag &&
+                                tag.client_packages &&
+                                tag.client_packages.length
+                                    ? moment(
+                                          tag
+                                              .client_packages[0]
+                                              .effective_date
+                                      ).format(
+                                          'DD MMMM, YY'
+                                      )
+                                    : null : tag?.fitnesspackage?.Start_date}
+                        duration={tag?.fitnesspackage?.fitness_package_type.type ===
+                            'On-Demand PT'
+                                ? 1 : calculateDuration(
                             tag?.fitnesspackage?.Start_date,
                             tag?.fitnesspackage?.End_date
                         )}
