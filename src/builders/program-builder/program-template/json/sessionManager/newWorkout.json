@@ -84,7 +84,7 @@
                     "AddWorkout": {
                         "type": "string",
                         "title": "Add workout",
-                        "enum": ["Build", "Add URL", "Text", "Upload"],
+                        "enum": ["Build", "Add URL", "Text"],
                         "default": "Build"
                     }
                 },
@@ -119,18 +119,7 @@
                                 },
                                 "required": ["AddText"]
                             },
-                            {
-                                "properties": {
-                                    "AddWorkout": {
-                                        "enum": ["Upload"]
-                                    },
-                                    "Upload": {
-                                        "type": "string",
-                                        "description": "Add video of the Workout."
-                                    }
-                                },
-                                "required": ["Upload"]
-                            },
+                           
                             {
                                 "required": ["warmup", "mainmovement", "cooldown"],
                                 "properties": {

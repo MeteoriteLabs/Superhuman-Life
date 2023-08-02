@@ -442,7 +442,6 @@ const Schedular = (props: any, ref) => {
         const flattenData = flattenObj({ ...data });
 
         if (window.location.pathname.split('/')[1] === 'programs') {
-            console.log('template', props?.templateSessions)
             return handleTemplateTable(props?.templateSessions);
         }
         // we dont need this as we are passing the previous session ids from the parent
@@ -752,7 +751,7 @@ const Schedular = (props: any, ref) => {
 
     const [updateTagSessions] = useMutation(UPDATE_TAG_SESSIONS, {
         onCompleted: () => {
-            console.log(props.clientId);
+        
             if (props.classType !== 'Group Class' && newSessionId !== '') {
                 createSessionBooking({
                     variables: {
@@ -798,7 +797,7 @@ const Schedular = (props: any, ref) => {
 
         const values = [...props.sessionIds];
         values.push(newId);
-console.log(values);
+
         updateTagSessions({
             variables: {
                 id: program_id,

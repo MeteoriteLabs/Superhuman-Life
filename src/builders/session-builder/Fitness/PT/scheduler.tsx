@@ -157,10 +157,7 @@ const Scheduler: React.FC = () => {
             useGrouping: false
         });
     }
-console.log(tag &&
-    tag.client_packages &&
-    tag.client_packages.length &&
-    tag?.client_packages[0].users_permissions_user.id);
+
     // function handleTotalClasses(data: any, duration: number) {
     //     let sum = 0;
     //     for (let i = 0; i < data.length; i++) {

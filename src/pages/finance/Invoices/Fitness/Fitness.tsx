@@ -71,7 +71,6 @@ export default function Fitness() {
     };
 
     FetchData();
-    console.log(dataTable);
 
     const columns = useMemo(
         () => [

@@ -95,18 +95,18 @@ export const schema: any = {
         AddText: {
             'ui:widget': 'textEditor'
         },
-        Upload: {
-            'ui:widget': (props: { onChange: () => void; value: string }) => {
-                return (
-                    <Upload
-                        allowImage={false}
-                        allowVideo={true}
-                        onChange={props.onChange}
-                        value={props.value}
-                    />
-                );
-            }
-        },
+        // Upload: {
+        //     'ui:widget': (props: { onChange: () => void; value: string }) => {
+        //         return (
+        //             <Upload
+        //                 allowImage={false}
+        //                 allowVideo={true}
+        //                 onChange={props.onChange}
+        //                 value={props.value}
+        //             />
+        //         );
+        //     }
+        // },
         build: {
             'ui:widget': 'buildWorkout'
         },

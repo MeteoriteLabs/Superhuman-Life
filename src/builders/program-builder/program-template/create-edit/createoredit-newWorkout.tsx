@@ -26,7 +26,6 @@ interface Operation {
 }
 
 function CreateEditNewWorkout(props: any, ref: any): JSX.Element {
-    console.log(props);
     const auth = useContext(AuthContext);
     const programSchema: Record<string,unknown> = require(window.location.pathname.includes('session')
         ? '../json/sessionManager/newWorkout.json'
