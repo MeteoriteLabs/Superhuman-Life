@@ -30,16 +30,11 @@ import {
 } from '../../graphql/mutations';
 import { useQuery, useMutation } from '@apollo/client';
 import AuthContext from '../../../../context/auth-context';
-// import TimePicker from 'rc-time-picker';
 import 'rc-time-picker/assets/index.css';
 import './styles.css';
 import Toaster from '../../../../components/Toaster';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { StyledEngineProvider } from '@mui/material/styles';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
+import ResponsiveTimePickers from 'components/ClockTimePicker';
 
 const configTemplate: any = {
     Sunday: {
@@ -320,6 +315,7 @@ const WorkHours: React.FC = () => {
         setFromTime(val.$H + ':' + (val.$m === 0 ? '00' : val.$m));
     }
 
+    console.log('from ttime', fromTime);
     function handleToTimeInput(val: any) {
         setToTime(val.$H + ':' + (val.$m === 0 ? '00' : val.$m));
     }
@@ -961,45 +957,24 @@ const WorkHours: React.FC = () => {
                         <Col></Col>
                         <Col lg={{ span: 5 }}>
                             <Row>
-                                <Col lg={5} >
+                                <Col lg={5}>
                                     <div>
-                                    <StyledEngineProvider injectFirst >
-                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                            <TimePicker
-                                                label="Choose start time"
-                                                viewRenderers={{
-                                                    hours: renderTimeViewClock,
-                                                    minutes: renderTimeViewClock
-                                                }}
-                                                minutesStep={15}
-                                                onChange={(e) => {
-                                                    handleFromTimeInput(e);
-                                                }}
-                                                
-                                            />
-                                        </LocalizationProvider>
-                                    </StyledEngineProvider>
+                                        <ResponsiveTimePickers
+                                            label="Choose start time"
+                                            disabled={false}
+                                            onChange={handleFromTimeInput}
+                                        />
                                     </div>
                                 </Col>
                                 <Col lg={2} style={{ fontSize: '20px', marginTop: '9px' }}>
                                     To
                                 </Col>
                                 <Col lg={5}>
-                                    <StyledEngineProvider injectFirst>
-                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                            <TimePicker
-                                                label="Choose end time"
-                                                viewRenderers={{
-                                                    hours: renderTimeViewClock,
-                                                    minutes: renderTimeViewClock
-                                                }}
-                                                minutesStep={15}
-                                                onChange={(e) => {
-                                                    handleToTimeInput(e);
-                                                }}
-                                            />
-                                        </LocalizationProvider>
-                                    </StyledEngineProvider>
+                                    <ResponsiveTimePickers
+                                        label="Choose end time"
+                                        disabled={false}
+                                        onChange={handleToTimeInput}
+                                    />
                                 </Col>
                             </Row>
                             <div className="text-center mt-2">{handleTimeValidation()}</div>
@@ -1335,45 +1310,25 @@ const WorkHours: React.FC = () => {
                                     )}
                                     {!userConfig[daysOfWeek[dayIndex]]?.isHoliday && (
                                         <Row className="mt-4">
-                                            <Col lg={3} style={{width:"30vw"}}>
-                                                <StyledEngineProvider injectFirst>
-                                                    <LocalizationProvider
-                                                        dateAdapter={AdapterDayjs}
-                                                    >
-                                                        <TimePicker
-                                                            label="start time"
-                                                            viewRenderers={{
-                                                                hours: renderTimeViewClock,
-                                                                minutes: renderTimeViewClock
-                                                            }}
-                                                            minutesStep={15}
-                                                            onChange={(e) => {
-                                                                handleFromTimeInput(e);
-                                                            }}
-                                                        />
-                                                    </LocalizationProvider>
-                                                </StyledEngineProvider>
+                                            <Col lg={3} style={{ width: '30vw' }}>
+                                                <ResponsiveTimePickers
+                                                    label="start time"
+                                                    disabled={false}
+                                                    onChange={handleFromTimeInput}
+                                                />
                                             </Col>
-                                            <Col lg={1} style={{ fontSize: '20px', marginTop: '9px' }}>To</Col>
+                                            <Col
+                                                lg={1}
+                                                style={{ fontSize: '20px', marginTop: '9px' }}
+                                            >
+                                                To
+                                            </Col>
                                             <Col lg={3}>
-                                              
-                                                <StyledEngineProvider injectFirst>
-                                                    <LocalizationProvider
-                                                        dateAdapter={AdapterDayjs}
-                                                    >
-                                                        <TimePicker
-                                                            label="End time"
-                                                            viewRenderers={{
-                                                                hours: renderTimeViewClock,
-                                                                minutes: renderTimeViewClock
-                                                            }}
-                                                            minutesStep={15}
-                                                            onChange={(e) => {
-                                                                handleToTimeInput(e);
-                                                            }}
-                                                        />
-                                                    </LocalizationProvider>
-                                                </StyledEngineProvider>
+                                                <ResponsiveTimePickers
+                                                    label="End time"
+                                                    disabled={false}
+                                                    onChange={handleToTimeInput}
+                                                />
                                             </Col>
                                             <Col lg={3}>
                                                 <Form.Control
