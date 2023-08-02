@@ -22,7 +22,7 @@ import { useHistory } from 'react-router-dom';
 import CancelComponent from './CancelComponent';
 import './CardsStyle.css';
 import DropdownItem from 'react-bootstrap/esm/DropdownItem';
-import ResponsiveTimePickers from 'components/ClockTimePicker';
+import TimePickers from 'components/ClockTimePicker';
 
 export default function Program() {
     const auth = useContext(AuthContext);
@@ -384,7 +384,7 @@ export default function Program() {
 
                                     <Col lg={6} className="mt-2">
                                         From time <br />
-                                        <ResponsiveTimePickers
+                                        <TimePickers
                                             label=""
                                             disabled={false}
                                             onChange={handleFromTimeInput}
@@ -392,7 +392,7 @@ export default function Program() {
                                     </Col>
                                     <Col lg={6} className="mt-2">
                                         To time <br />
-                                        <ResponsiveTimePickers
+                                        <TimePickers
                                             label=""
                                             disabled={false}
                                             onChange={handleToTimeInput}

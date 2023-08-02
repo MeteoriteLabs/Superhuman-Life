@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import 'rc-time-picker/assets/index.css';
-import ResponsiveTimePickers from 'components/ClockTimePicker';
+import TimePickers from 'components/ClockTimePicker';
 
 const TimeFieldInput = (props: any) => {
     const [startTime, setStartTime] = useState(
@@ -81,7 +81,7 @@ const TimeFieldInput = (props: any) => {
             <label>Start Time: </label>
             <Row>
                 <Col lg={4}>
-                    <ResponsiveTimePickers
+                    <TimePickers
                         label="Choose start time"
                         disabled={props.disabled}
                         onChange={handleStartTimeInput}
@@ -91,7 +91,7 @@ const TimeFieldInput = (props: any) => {
             <label style={{ marginTop: '10px' }}>End Time: </label>
             <Row>
                 <Col lg={4}>
-                    <ResponsiveTimePickers
+                    <TimePickers
                         label="Choose end time"
                         disabled={props.disabled}
                         onChange={handleEndTimeInput}

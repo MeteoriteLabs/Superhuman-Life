@@ -5,7 +5,6 @@ import DaysInput from './daysInput';
 // import React, { useState } from 'react';
 // import { Row, Col } from 'react-bootstrap';
 import moment from 'moment';
-import 'rc-time-picker/assets/index.css';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { StyledEngineProvider } from '@mui/material/styles';

@@ -5,7 +5,7 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
 import PropTypes from 'prop-types';
 
-export default function ResponsiveTimePickers({ label, disabled, onChange }) {
+export default function TimePickers({ label, disabled, onChange }) {
     return (
         <StyledEngineProvider injectFirst>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -24,7 +24,7 @@ export default function ResponsiveTimePickers({ label, disabled, onChange }) {
     );
 }
 
-ResponsiveTimePickers.propTypes = {
+TimePickers.propTypes = {
     label: PropTypes.string.isRequired,
     disabled: PropTypes.bool.isRequired,
     onChange: PropTypes.func.isRequired

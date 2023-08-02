@@ -34,7 +34,7 @@ import 'rc-time-picker/assets/index.css';
 import './styles.css';
 import Toaster from '../../../../components/Toaster';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
-import ResponsiveTimePickers from 'components/ClockTimePicker';
+import TimePickers from 'components/ClockTimePicker';
 
 const configTemplate: any = {
     Sunday: {
@@ -315,7 +315,6 @@ const WorkHours: React.FC = () => {
         setFromTime(val.$H + ':' + (val.$m === 0 ? '00' : val.$m));
     }
 
-    console.log('from ttime', fromTime);
     function handleToTimeInput(val: any) {
         setToTime(val.$H + ':' + (val.$m === 0 ? '00' : val.$m));
     }
@@ -959,7 +958,7 @@ const WorkHours: React.FC = () => {
                             <Row>
                                 <Col lg={5}>
                                     <div>
-                                        <ResponsiveTimePickers
+                                        <TimePickers
                                             label="Choose start time"
                                             disabled={false}
                                             onChange={handleFromTimeInput}
@@ -970,7 +969,7 @@ const WorkHours: React.FC = () => {
                                     To
                                 </Col>
                                 <Col lg={5}>
-                                    <ResponsiveTimePickers
+                                    <TimePickers
                                         label="Choose end time"
                                         disabled={false}
                                         onChange={handleToTimeInput}
@@ -1311,7 +1310,7 @@ const WorkHours: React.FC = () => {
                                     {!userConfig[daysOfWeek[dayIndex]]?.isHoliday && (
                                         <Row className="mt-4">
                                             <Col lg={3} style={{ width: '30vw' }}>
-                                                <ResponsiveTimePickers
+                                                <TimePickers
                                                     label="start time"
                                                     disabled={false}
                                                     onChange={handleFromTimeInput}
@@ -1324,7 +1323,7 @@ const WorkHours: React.FC = () => {
                                                 To
                                             </Col>
                                             <Col lg={3}>
-                                                <ResponsiveTimePickers
+                                                <TimePickers
                                                     label="End time"
                                                     disabled={false}
                                                     onChange={handleToTimeInput}
