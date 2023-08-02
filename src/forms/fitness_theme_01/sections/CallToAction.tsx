@@ -1,5 +1,5 @@
 import { useForm, Controller } from 'react-hook-form';
-import style from '../style.module.css';
+import style from './style.module.css';
 import { Button, Form } from 'react-bootstrap';
 import authContext from 'context/auth-context';
 import { useContext, useEffect, useState } from 'react';
@@ -15,7 +15,7 @@ type FormData = {
     link: string;
 };
 
-function CallToAction(): JSX.Element {
+function CallToAction({ page }: { page: string }): JSX.Element {
     const auth = useContext(authContext);
 
     const [initialValues, setInitialValues] = useState<FormData>({
@@ -44,7 +44,7 @@ function CallToAction(): JSX.Element {
     useQuery(GET_WEBSITE_SECTION, {
         variables: {
             id: auth.userid,
-            sectionPage: 'Home',
+            sectionPage: page,
             sectionType: 'CTA'
         },
         onCompleted: (data) => {

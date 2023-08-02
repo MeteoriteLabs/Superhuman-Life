@@ -1,10 +1,8 @@
 import { useContext } from 'react';
-import CallToAction from './CallToAction';
-import Features from './features';
-import Hero from './hero';
-import Pricing from './pricing';
-import Testimonials from './testimonials';
 import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
+import Scheduler from '../sections/scheduler';
+import Features from '../sections/features';
+import Hero from '../sections/hero';
 
 function Index(): JSX.Element {
     const { changemakerWebsiteState } = useContext(ChangeMakerWebsiteContext);
@@ -12,11 +10,9 @@ function Index(): JSX.Element {
     const { section } = changemakerWebsiteState;
 
     const Section = {
-        Hero: <Hero />,
-        Features: <Features />,
-        Cta: <CallToAction />,
-        Pricing: <Pricing />,
-        Testimonials: <Testimonials />
+        Hero: <Hero page="Classes" />,
+        Features: <Features page="Classes" />,
+        Scheduler: <Scheduler page="Classes" />
     };
     return Section[section || 'Hero'];
 }

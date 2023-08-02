@@ -8,22 +8,20 @@ import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
 import { useMutation, useQuery } from '@apollo/client';
 import { ArrowDownShort } from 'react-bootstrap-icons';
 
-import style from '../style.module.css';
+import style from './style.module.css';
 // * --------------------- Types ---------------------
 
 type FormData = {
     sectionId: number;
     title: string;
-    description: string;
-    team: {
-        name: string;
-        description: string;
-        image: string;
-        designation: string;
+    features: {
+        title: string;
+        text: string;
+        icons: string;
     }[];
 };
 
-function Team(): JSX.Element {
+function Features({ page }: { page: string }): JSX.Element {
     const auth = useContext(authContext);
     const [activeKey, setActiveKey] = useState('');
 
@@ -36,8 +34,7 @@ function Team(): JSX.Element {
     const [initialValues, setInitialValues] = useState<FormData>({
         title: '',
         sectionId: 0,
-        description: '',
-        team: []
+        features: []
     });
 
     const { setChangemakerWebsiteState, changemakerWebsiteState } =
@@ -53,14 +50,13 @@ function Team(): JSX.Element {
     } = useForm<FormData>({
         defaultValues: {
             title: '',
-            description: '',
-            team: [{}]
+            features: [{}]
         }
     });
 
     const { fields } = useFieldArray<FormData>({
         control,
-        name: 'team'
+        name: 'features'
     });
 
     // * --------------------- Get the Website Section Data ---------------------
@@ -68,24 +64,22 @@ function Team(): JSX.Element {
     useQuery(GET_WEBSITE_SECTION, {
         variables: {
             id: auth.userid,
-            sectionPage: 'About',
-            sectionType: 'Team'
+            sectionPage: page,
+            sectionType: 'Feature'
         },
 
         onCompleted: (data) => {
-            if (initialValues.team.length === 0) {
+            if (initialValues.features.length === 0) {
                 setInitialValues({
                     ...initialValues,
                     sectionId: data.websiteSections.data[0].id,
-                    title: data.websiteSections.data[0].attributes.sectionData.title,
-                    description: data.websiteSections.data[0].attributes.sectionData.description,
-                    team: data.websiteSections.data[0].attributes.sectionData.team
+                    title: data.websiteSections.data[0].attributes.sectionData.titile,
+                    features: data.websiteSections.data[0].attributes.sectionData.features
                 });
 
                 reset({
-                    title: data.websiteSections.data[0].attributes.sectionData.title,
-                    description: data.websiteSections.data[0].attributes.sectionData.description,
-                    team: data.websiteSections.data[0].attributes.sectionData.team
+                    title: data.websiteSections.data[0].attributes.sectionData.titile,
+                    features: data.websiteSections.data[0].attributes.sectionData.features
                 });
             }
         }
@@ -97,14 +91,14 @@ function Team(): JSX.Element {
 
     const onSubmit = handleSubmit(async (formData) => {
         // ! Need to add image upload
-        const { title, team } = formData;
+        const { title, features } = formData;
 
         await mutateFunction({
             variables: {
                 id: initialValues.sectionId,
                 data: JSON.stringify({
-                    title: title ? title : initialValues.title,
-                    team: team.length > 0 ? team : initialValues.team
+                    titile: title ? title : initialValues.title,
+                    features: features.length > 0 ? features : initialValues.features
                 })
             }
         });
@@ -136,23 +130,6 @@ function Team(): JSX.Element {
                     {errors.title && <p>{errors.title.message}</p>}
                 </Form.Group>
 
-                <Form.Group controlId="description">
-                    <Form.Label className={style.label_text}>Description</Form.Label>
-                    <Controller
-                        name="description"
-                        control={control}
-                        render={({ field }) => (
-                            <Form.Control
-                                type="text"
-                                className={style.input_text}
-                                as="input"
-                                {...field}
-                            ></Form.Control>
-                        )}
-                    />
-                    {errors.description && <p>{errors.description.message}</p>}
-                </Form.Group>
-
                 {fields.length > 0
                     ? fields.map((item, index) => (
                           <Accordion style={{ padding: 0 }} key={index}>
@@ -172,7 +149,7 @@ function Team(): JSX.Element {
                                               fontSize: 14
                                           }}
                                       >
-                                          {item.name}
+                                          Feature {index + 1}
                                       </p>
 
                                       <ArrowDownShort
@@ -190,7 +167,7 @@ function Team(): JSX.Element {
                                           <Form.Group>
                                               <Form.Label>Title</Form.Label>
                                               <Controller
-                                                  name={`team.${index}.name`}
+                                                  name={`features.${index}.title`}
                                                   control={control}
                                                   render={({ field }) => (
                                                       <Form.Control
@@ -205,7 +182,7 @@ function Team(): JSX.Element {
                                           <Form.Group>
                                               <Form.Label>Description</Form.Label>
                                               <Controller
-                                                  name={`team.${index}.description`}
+                                                  name={`features.${index}.text`}
                                                   control={control}
                                                   render={({ field }) => (
                                                       <Form.Control
@@ -220,7 +197,7 @@ function Team(): JSX.Element {
                                           <Form.Group>
                                               {/* <Form.Label>Image</Form.Label>
                         <Controller
-                          name={`team.${index}.icons`}
+                          name={`features.${index}.icons`}
                           control={control}
                           render={({ field }) => (
                             <Form.Control
@@ -246,4 +223,4 @@ function Team(): JSX.Element {
     );
 }
 
-export default Team;
+export default Features;

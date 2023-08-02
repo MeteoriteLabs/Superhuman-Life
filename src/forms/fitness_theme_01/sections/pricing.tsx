@@ -1,29 +1,30 @@
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
+import style from './style.module.css';
 import { Accordion, Button, Card, Form } from 'react-bootstrap';
-import { UPDATE_WEBSITE_SECTION } from '../@queries/features';
+import { UPDATE_WEBSITE_SECTION } from '../@queries/pricing';
 import { GET_WEBSITE_SECTION } from '../@queries';
 import { useContext, useEffect, useState } from 'react';
 import authContext from 'context/auth-context';
 import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
 import { useMutation, useQuery } from '@apollo/client';
 import { ArrowDownShort } from 'react-bootstrap-icons';
+import { Data, FormData, InputProps } from '../@types/pricingType';
+import { InputComponent } from '../@components/PricingComponents';
+import { FormatStateToServerData, SetReceivingDataAndReset } from '../@libs/pricing';
 
-import style from '../style.module.css';
-// * --------------------- Types ---------------------
-
-type FormData = {
-    sectionId: number;
-    title: string;
-    features: {
-        title: string;
-        text: string;
-        icons: string;
-    }[];
-};
-
-function Hero(): JSX.Element {
+function Pricing({ page }: { page: string }): JSX.Element {
     const auth = useContext(authContext);
     const [activeKey, setActiveKey] = useState('');
+    const planData: InputProps[] = [
+        'actual',
+        'buttonLink',
+        'buttonText',
+        'discount',
+        'features',
+        'price',
+        'recurring',
+        'title'
+    ];
 
     const handleToggle = (val: string) => {
         setActiveKey((prev) => (prev === val ? '' : val));
@@ -34,7 +35,8 @@ function Hero(): JSX.Element {
     const [initialValues, setInitialValues] = useState<FormData>({
         title: '',
         sectionId: 0,
-        features: []
+        plans: [],
+        currency: ''
     });
 
     const { setChangemakerWebsiteState, changemakerWebsiteState } =
@@ -50,13 +52,14 @@ function Hero(): JSX.Element {
     } = useForm<FormData>({
         defaultValues: {
             title: '',
-            features: [{}]
+            plans: [],
+            currency: '$'
         }
     });
 
     const { fields } = useFieldArray<FormData>({
         control,
-        name: 'features'
+        name: 'plans'
     });
 
     // * --------------------- Get the Website Section Data ---------------------
@@ -64,24 +67,13 @@ function Hero(): JSX.Element {
     useQuery(GET_WEBSITE_SECTION, {
         variables: {
             id: auth.userid,
-            sectionPage: 'Home',
-            sectionType: 'Feature'
+            sectionPage: page,
+            sectionType: 'Pricing'
         },
 
-        onCompleted: (data) => {
-            if (initialValues.features.length === 0) {
-                setInitialValues({
-                    ...initialValues,
-                    sectionId: data.websiteSections.data[0].id,
-                    title: data.websiteSections.data[0].attributes.sectionData.titile,
-                    features: data.websiteSections.data[0].attributes.sectionData.features
-                });
-
-                reset({
-                    title: data.websiteSections.data[0].attributes.sectionData.titile,
-                    features: data.websiteSections.data[0].attributes.sectionData.features
-                });
-            }
+        onCompleted: (data: Data) => {
+            const sectionData = data.websiteSections.data[0].attributes.sectionData;
+            SetReceivingDataAndReset({ sectionData, reset, setInitialValues, data, initialValues });
         }
     });
 
@@ -91,14 +83,18 @@ function Hero(): JSX.Element {
 
     const onSubmit = handleSubmit(async (formData) => {
         // ! Need to add image upload
-        const { title, features } = formData;
+        const { title, plans, currency } = formData;
 
         await mutateFunction({
             variables: {
                 id: initialValues.sectionId,
                 data: JSON.stringify({
-                    titile: title ? title : initialValues.title,
-                    features: features.length > 0 ? features : initialValues.features
+                    title: title ? title : initialValues.title,
+                    plans:
+                        plans.length > 0
+                            ? FormatStateToServerData(plans)
+                            : FormatStateToServerData(initialValues.plans),
+                    currency: currency ? currency : initialValues.currency
                 })
             }
         });
@@ -130,7 +126,24 @@ function Hero(): JSX.Element {
                     {errors.title && <p>{errors.title.message}</p>}
                 </Form.Group>
 
-                {fields.length > 0
+                <Form.Group controlId="currency">
+                    <Form.Label className={style.label_text}>Currency</Form.Label>
+                    <Controller
+                        name="currency"
+                        control={control}
+                        render={({ field }) => (
+                            <Form.Control
+                                type="text"
+                                className={style.input_text}
+                                as="input"
+                                {...field}
+                            ></Form.Control>
+                        )}
+                    />
+                    {errors.title && <p>{errors.title.message}</p>}
+                </Form.Group>
+
+                {fields.length
                     ? fields.map((item, index) => (
                           <Accordion style={{ padding: 0 }} key={index}>
                               <Card style={{ backgroundColor: 'transparent', border: 'none' }}>
@@ -149,7 +162,7 @@ function Hero(): JSX.Element {
                                               fontSize: 14
                                           }}
                                       >
-                                          Feature {index + 1}
+                                          Pricing {index + 1}
                                       </p>
 
                                       <ArrowDownShort
@@ -164,50 +177,15 @@ function Hero(): JSX.Element {
 
                                   <Accordion.Collapse eventKey={`${index}`}>
                                       <Card.Body>
-                                          <Form.Group>
-                                              <Form.Label>Title</Form.Label>
-                                              <Controller
-                                                  name={`features.${index}.title`}
-                                                  control={control}
-                                                  render={({ field }) => (
-                                                      <Form.Control
-                                                          type="text"
-                                                          style={{ fontSize: 14 }}
-                                                          as="input"
-                                                          {...field}
-                                                      ></Form.Control>
-                                                  )}
-                                              />
-                                          </Form.Group>
-                                          <Form.Group>
-                                              <Form.Label>Description</Form.Label>
-                                              <Controller
-                                                  name={`features.${index}.text`}
-                                                  control={control}
-                                                  render={({ field }) => (
-                                                      <Form.Control
-                                                          type="text"
-                                                          style={{ fontSize: 14 }}
-                                                          as="input"
-                                                          {...field}
-                                                      ></Form.Control>
-                                                  )}
-                                              />
-                                          </Form.Group>
-                                          <Form.Group>
-                                              {/* <Form.Label>Image</Form.Label>
-                        <Controller
-                          name={`features.${index}.icons`}
-                          control={control}
-                          render={({ field }) => (
-                            <Form.Control
-                              type="file"
-                              style={{ fontSize: 14 }}
-                              as="input"
-                              {...field}></Form.Control>
-                          )}
-                        /> */}
-                                          </Form.Group>
+                                          {planData.map((input: InputProps, id) => (
+                                              <span key={id + index}>
+                                                  <InputComponent
+                                                      input={input}
+                                                      index={index}
+                                                      control={control}
+                                                  />
+                                              </span>
+                                          ))}
                                       </Card.Body>
                                   </Accordion.Collapse>
                               </Card>
@@ -223,4 +201,4 @@ function Hero(): JSX.Element {
     );
 }
 
-export default Hero;
+export default Pricing;

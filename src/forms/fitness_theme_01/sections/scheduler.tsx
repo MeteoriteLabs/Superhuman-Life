@@ -1,4 +1,4 @@
-function Scheduler(): JSX.Element {
+function Scheduler({ page }: { page: string }): JSX.Element {
     return <div>Scheduler</div>;
 }
 

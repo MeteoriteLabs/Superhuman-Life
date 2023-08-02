@@ -1,10 +1,10 @@
 import { useContext } from 'react';
 import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
-import HomePageForm from './home';
-import ClassesPageForm from './classes';
-import AboutPageForm from './aboutUs';
-import ContactPageForm from './contact';
-import OfferingsPageForm from './offerings';
+import HomePageForm from './pages/home';
+import ClassesPageForm from './pages/classes';
+import AboutPageForm from './pages/aboutUs';
+import ContactPageForm from './pages/contact';
+import OfferingsPageForm from './pages/offerings';
 
 function Index(): JSX.Element {
     const { changemakerWebsiteState } = useContext(ChangeMakerWebsiteContext);
