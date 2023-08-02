@@ -1,18 +1,18 @@
-import CallToAction from './home/CallToAction';
-import Features from './home/features';
-import Hero from './home/hero';
-import Pricing from './home/pricing';
-import Testimonials from './home/testimonials';
+import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
+import { useContext } from 'react';
 
-function Index({ section }: { section: string }): JSX.Element {
-    const Section = {
-        'Home: Hero': <Hero />,
-        'Home: Features': <Features />,
-        'Home: Cta': <CallToAction />,
-        'Home: Pricing': <Pricing />,
-        'Home: Testimonials': <Testimonials />
+import FitnessTheme01 from './fitness_theme_01';
+
+const Index = (): JSX.Element => {
+    const { changemakerWebsiteState } = useContext(ChangeMakerWebsiteContext);
+
+    const { selectedTemplate } = changemakerWebsiteState;
+
+    const Page = {
+        'Fitness Theme 01': <FitnessTheme01 />
     };
-    return Section[section];
-}
+
+    return Page[selectedTemplate || ''];
+};
 
 export default Index;

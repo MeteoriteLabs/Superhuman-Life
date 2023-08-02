@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import FitnessTemplate_01 from './templates/fitnessTemplate_01';
+import FitnessTemplate_01 from './fitnessTemplate01/fitnessTemplate_01';
 import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
 
 function Index(): JSX.Element {

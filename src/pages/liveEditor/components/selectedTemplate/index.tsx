@@ -6,6 +6,7 @@ function Index(): JSX.Element {
     const { changemakerWebsiteState, setChangemakerWebsiteState } =
         useContext(ChangeMakerWebsiteContext);
 
+    const { currentSelectedRoute } = changemakerWebsiteState;
     useEffect(() => {
         window.addEventListener('message', function (event) {
             event.data.event_id === 'current-page'
@@ -43,7 +44,7 @@ function Index(): JSX.Element {
                     </div>
                 ) : (
                     <iframe
-                        src={`https://${changemakerWebsiteState.subdomain}`}
+                        src={`https://${changemakerWebsiteState.subdomain}${currentSelectedRoute}`}
                         allowFullScreen={true}
                         style={{
                             background: 'white',

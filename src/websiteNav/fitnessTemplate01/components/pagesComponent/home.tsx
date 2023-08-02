@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import styles from './style.module.css';
+import styles from '../../../style.module.css';
 import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
 import { WindowFullscreen } from 'react-bootstrap-icons';
 
@@ -13,7 +13,7 @@ function Home(): JSX.Element {
                 onClick={() => {
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
-                        section: 'Home: Hero'
+                        section: 'Hero'
                     });
                 }}
             >
@@ -24,7 +24,7 @@ function Home(): JSX.Element {
                 onClick={() => {
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
-                        section: 'Home: Features'
+                        section: 'Features'
                     });
                 }}
             >
@@ -35,7 +35,7 @@ function Home(): JSX.Element {
                 onClick={() => {
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
-                        section: 'Home: Cta'
+                        section: 'Cta'
                     });
                 }}
             >
@@ -48,7 +48,7 @@ function Home(): JSX.Element {
                 onClick={() => {
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
-                        section: 'Home: Pricing'
+                        section: 'Pricing'
                     });
                 }}
             >
@@ -60,7 +60,7 @@ function Home(): JSX.Element {
                 onClick={() => {
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
-                        section: 'Home: Testimonials'
+                        section: 'Testimonials'
                     });
                 }}
             >
