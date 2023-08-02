@@ -16,7 +16,7 @@ type FormData = {
     title: string;
     features: {
         title: string;
-        text: string;
+        description: string;
         icons: string;
     }[];
 };
@@ -64,21 +64,22 @@ function Hero(): JSX.Element {
     useQuery(GET_WEBSITE_SECTION, {
         variables: {
             id: auth.userid,
-            sectionPage: 'Home',
+            sectionPage: 'Classes',
             sectionType: 'Feature'
         },
 
         onCompleted: (data) => {
+            console.log(data);
             if (initialValues.features.length === 0) {
                 setInitialValues({
                     ...initialValues,
                     sectionId: data.websiteSections.data[0].id,
-                    title: data.websiteSections.data[0].attributes.sectionData.titile,
+                    title: data.websiteSections.data[0].attributes.sectionData.title,
                     features: data.websiteSections.data[0].attributes.sectionData.features
                 });
 
                 reset({
-                    title: data.websiteSections.data[0].attributes.sectionData.titile,
+                    title: data.websiteSections.data[0].attributes.sectionData.title,
                     features: data.websiteSections.data[0].attributes.sectionData.features
                 });
             }
@@ -182,7 +183,7 @@ function Hero(): JSX.Element {
                                           <Form.Group>
                                               <Form.Label>Description</Form.Label>
                                               <Controller
-                                                  name={`features.${index}.text`}
+                                                  name={`features.${index}.description`}
                                                   control={control}
                                                   render={({ field }) => (
                                                       <Form.Control

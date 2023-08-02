@@ -43,7 +43,7 @@ function Hero(): JSX.Element {
     useQuery(GET_WEBSITE_SECTION, {
         variables: {
             id: auth.userid,
-            sectionPage: 'Home',
+            sectionPage: 'Classes',
             sectionType: 'Hero'
         },
         onCompleted: (data) => {
