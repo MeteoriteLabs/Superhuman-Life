@@ -16,7 +16,6 @@ export const schema: Record<string, unknown> = {
         'ui:options': {
             inline: true
         },
-        'ui:placeholder': 'Write description'
     },
     details: {
         'ui:widget': 'textarea',
