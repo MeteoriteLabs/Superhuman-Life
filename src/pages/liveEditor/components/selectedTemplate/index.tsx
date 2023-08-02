@@ -1,9 +1,22 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
 import Loader from 'components/Loader/Loader';
 
 function Index(): JSX.Element {
-    const { changemakerWebsiteState } = useContext(ChangeMakerWebsiteContext);
+    const { changemakerWebsiteState, setChangemakerWebsiteState } =
+        useContext(ChangeMakerWebsiteContext);
+
+    const { currentSelectedRoute } = changemakerWebsiteState;
+    useEffect(() => {
+        window.addEventListener('message', function (event) {
+            event.data.event_id === 'current-page'
+                ? setChangemakerWebsiteState({
+                      ...changemakerWebsiteState,
+                      currentSelectedRoute: event.data.data.url
+                  })
+                : null;
+        });
+    }, []);
 
     return (
         <div
@@ -31,7 +44,7 @@ function Index(): JSX.Element {
                     </div>
                 ) : (
                     <iframe
-                        src={`https://${changemakerWebsiteState.subdomain}`}
+                        src={`https://${changemakerWebsiteState.subdomain}${currentSelectedRoute}`}
                         allowFullScreen={true}
                         style={{
                             background: 'white',

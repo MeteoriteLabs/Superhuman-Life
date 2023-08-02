@@ -12,6 +12,7 @@ export const ChangeMakerWebsiteContext = createContext<changeMakerWebsiteTs>({
     changemakerWebsiteState: {
         domain: null,
         subdomain: null,
+        currentSelectedRoute: null,
         selectedTemplate: null,
         thumbnail: null,
         templateUrl: null,
@@ -33,7 +34,8 @@ function ChangemakerWebsiteContextProvider({ children }: { children: ReactNode }
             thumbnail: '',
             templateUrl: '',
             loading: false,
-            section: ''
+            section: '',
+            currentSelectedRoute: ''
         });
 
     const [getUserWebsite, { data }] = useLazyQuery(FETCH_USER_WEBSITE, {
@@ -56,7 +58,7 @@ function ChangemakerWebsiteContextProvider({ children }: { children: ReactNode }
         }
     }, [changemakerWebsiteState.subdomain, changemakerWebsiteState.selectedTemplate, auth.userid]);
 
-    const [getUserSelectedTemplate, { data: templateData, error: templateError }] = useLazyQuery(
+    const [getUserSelectedTemplate, { data: templateData }] = useLazyQuery(
         FETECH_SELECTED_TEMPLATE,
         {
             variables: {
@@ -68,11 +70,6 @@ function ChangemakerWebsiteContextProvider({ children }: { children: ReactNode }
                     thumbnail: templateData?.templates?.data[0]?.attributes?.thumbnail as string,
                     templateUrl: templateData?.templates?.data[0]?.attributes?.templateUrl as string
                 });
-            },
-            onError: () => {
-                if (templateError?.message) {
-                    console.log(templateError?.message);
-                }
             }
         }
     );
