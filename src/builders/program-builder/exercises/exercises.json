@@ -15,8 +15,7 @@
             "exercise": {
                 "type": "string",
                 "title": "Name exercise",
-                "description": "Enter exercise name",
-                "Placeholder":"hh"
+                "description": "Enter exercise name"
             },
             "level": {
                 "type": "number",
