@@ -154,8 +154,7 @@ function CreateEditNewWorkout(props: any, ref: any): JSX.Element {
             setOperation(msg);
             schema.startDate = props.startDate;
             schema.duration = props.duration;
-            schema.type = props.type === 'date' ? 'date' : 'day';
-            // schema.type = window.location.pathname.split('/')[1] === 'programs' ? 'day' : '';
+            schema.type = window.location.pathname.split('/')[1] === 'programs' ? 'day' : (props.type === 'date' ? 'date' : 'day');
 
             if (msg && !msg.id)
                 //render form if no message id
