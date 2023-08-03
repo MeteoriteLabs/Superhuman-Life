@@ -83,10 +83,12 @@ function CreateEditNewWorkout(props: any, ref: any): JSX.Element {
             props.callback();
         }
     });
-
+   
     const [upateSessions] = useMutation(UPDATE_TAG_SESSIONS, {
         onCompleted: () => {
-            if (props?.clientIds.length > 0) {
+           
+            if (props?.clientIds.length > 0 && props.days, moment(props.sessionDate).add(props.days, 'days') > moment(props.sessionDate)) {
+               
                 for (let i = 0; i < props?.clientIds.length; i++) {
                     createSessionBooking({
                         variables: {

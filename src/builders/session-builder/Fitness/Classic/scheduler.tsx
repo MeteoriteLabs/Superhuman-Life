@@ -947,7 +947,6 @@ const Scheduler: React.FC = () => {
                         clientIds={clientIds}
                         sessionIds={sessionIds}
                         startDate={'2021-05-01'}
-                       
                         duration={tag.fitnesspackage.duration}
                         callback={handleFloatingActionProgramCallback}
                         callback2={handleFloatingActionProgramCallback2}

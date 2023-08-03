@@ -36,8 +36,8 @@ function CreateEditWorkout(props: any, ref: any) {
     useQuery(FETCH_FITNESS_PROGRAMS, {
         variables: { id: operation.id?.toString() },
         skip: operation.type !== 'delete',
-        onCompleted: (r: any) => {
-            const flattenData = flattenObj({ ...r });
+        onCompleted: (response: any) => {
+            const flattenData = flattenObj({ ...response });
             setProgramDetails(flattenData);
         }
     });
