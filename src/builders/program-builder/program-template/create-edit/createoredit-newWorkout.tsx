@@ -27,7 +27,9 @@ interface Operation {
 
 function CreateEditNewWorkout(props: any, ref: any): JSX.Element {
     const auth = useContext(AuthContext);
-    const programSchema: Record<string,unknown> = require(window.location.pathname.includes('session')
+    const programSchema: Record<string, unknown> = require(window.location.pathname.includes(
+        'session'
+    )
         ? '../json/sessionManager/newWorkout.json'
         : '../json/newWorkout.json');
     const [programDetails, setProgramDetails] = useState<any>({});
@@ -72,7 +74,11 @@ function CreateEditNewWorkout(props: any, ref: any): JSX.Element {
 
     const [createWorkout] = useMutation(CREATE_WORKOUT, {
         onCompleted: (response) => {
-            updateSchedulerEvents(formDetails, response.createWorkout.data.id,response.createWorkout.data.attributes.workouttitle);
+            updateSchedulerEvents(
+                formDetails,
+                response.createWorkout.data.id,
+                response.createWorkout.data.attributes.workouttitle
+            );
             modalTrigger.next(false);
         }
     });
@@ -86,7 +92,10 @@ function CreateEditNewWorkout(props: any, ref: any): JSX.Element {
 
     const [upateSessions] = useMutation(UPDATE_TAG_SESSIONS, {
         onCompleted: () => {
-            if (props?.clientIds.length > 0) {
+            if (
+                props?.clientIds.length > 0 &&
+                moment(props.sessionDate).add(props.days, 'days') > moment(props.sessionDate)
+            ) {
                 for (let i = 0; i < props?.clientIds.length; i++) {
                     createSessionBooking({
                         variables: {
@@ -154,7 +163,12 @@ function CreateEditNewWorkout(props: any, ref: any): JSX.Element {
             setOperation(msg);
             schema.startDate = props.startDate;
             schema.duration = props.duration;
-            schema.type = window.location.pathname.split('/')[1] === 'programs' ? 'day' : (props.type === 'date' ? 'date' : 'day');
+            schema.type =
+                window.location.pathname.split('/')[1] === 'programs'
+                    ? 'day'
+                    : props.type === 'date'
+                    ? 'date'
+                    : 'day';
 
             if (msg && !msg.id)
                 //render form if no message id
@@ -296,7 +310,10 @@ function CreateEditNewWorkout(props: any, ref: any): JSX.Element {
                     session_date: null,
                     isProgram: true,
                     SessionTitle: title,
-                    SessionDurationMinutes: (handleTimeInMinutes(eventJson.endTime) - handleTimeInMinutes(eventJson.startTime)).toString()
+                    SessionDurationMinutes: (
+                        handleTimeInMinutes(eventJson.endTime) -
+                        handleTimeInMinutes(eventJson.startTime)
+                    ).toString()
                 };
             } else {
                 data = {
@@ -311,7 +328,10 @@ function CreateEditNewWorkout(props: any, ref: any): JSX.Element {
                     changemaker: auth.userid,
                     isProgram: false,
                     SessionTitle: title,
-                    SessionDurationMinutes: (handleTimeInMinutes(eventJson.endTime) - handleTimeInMinutes(eventJson.startTime)).toString()
+                    SessionDurationMinutes: (
+                        handleTimeInMinutes(eventJson.endTime) -
+                        handleTimeInMinutes(eventJson.startTime)
+                    ).toString()
                 };
             }
 

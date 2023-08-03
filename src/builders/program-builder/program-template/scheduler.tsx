@@ -751,7 +751,6 @@ const Schedular = (props: any, ref) => {
 
     const [updateTagSessions] = useMutation(UPDATE_TAG_SESSIONS, {
         onCompleted: () => {
-        
             if (props.classType !== 'Group Class' && newSessionId !== '') {
                 createSessionBooking({
                     variables: {
