@@ -22,6 +22,7 @@ import { useHistory } from 'react-router-dom';
 import CancelComponent from './CancelComponent';
 import './CardsStyle.css';
 import DropdownItem from 'react-bootstrap/esm/DropdownItem';
+import TimePickers from 'components/ClockTimePicker';
 
 export default function Program() {
     const auth = useContext(AuthContext);
@@ -296,6 +297,14 @@ export default function Program() {
         // eslint-disable-next-line
     }, []);
 
+    function handleFromTimeInput(val: any) {
+        setSelectedFromTime(val.$H + ':' + (val.$m === 0 ? '00' : val.$m));
+    }
+
+    function handleToTimeInput(val: any) {
+        setSelectedToTime(val.$H + ':' + (val.$m === 0 ? '00' : val.$m));
+    }
+
     return (
         <>
             <div className="mt-3">
@@ -375,26 +384,18 @@ export default function Program() {
 
                                     <Col lg={6} className="mt-2">
                                         From time <br />
-                                        {/* start time  */}
-                                        <input
-                                            className="input"
-                                            type="time"
-                                            value={selectedFromTime}
-                                            onChange={(e) => {
-                                                setSelectedFromTime(e.target.value);
-                                            }}
+                                        <TimePickers
+                                            label=""
+                                            disabled={false}
+                                            onChange={handleFromTimeInput}
                                         />
                                     </Col>
                                     <Col lg={6} className="mt-2">
-                                        {/* end time */}
-                                        to time <br />
-                                        <input
-                                            className="input"
-                                            type="time"
-                                            value={selectedToTime}
-                                            onChange={(e) => {
-                                                setSelectedToTime(e.target.value);
-                                            }}
+                                        To time <br />
+                                        <TimePickers
+                                            label=""
+                                            disabled={false}
+                                            onChange={handleToTimeInput}
                                         />
                                     </Col>
                                     <Col className="mt-2">
