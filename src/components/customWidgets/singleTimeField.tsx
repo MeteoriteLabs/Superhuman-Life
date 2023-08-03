@@ -1,20 +1,12 @@
 import { useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
-import moment from 'moment';
-import TimePicker from 'rc-time-picker';
-import 'rc-time-picker/assets/index.css';
+import TimePickers from 'components/ClockTimePicker';
 
 const TimeFieldInput = (props: any) => {
     const [startTime, setStartTime] = useState('00:00');
 
     function handleStartTimeInput(val: any) {
-        var m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60;
-        setStartTime(val.slice(0, 2) + ':' + (m === 0 ? '00' : m));
-    }
-
-    function convertToMoment(time: string) {
-        var timeSplit = time.split(':').map(Number);
-        return moment().set({ hour: timeSplit[0], minute: timeSplit[1] });
+        setStartTime(val.$H + ':' + (val.$m === 0 ? '00' : val.$m));
     }
 
     function handleFormatting(time) {
@@ -30,15 +22,12 @@ const TimeFieldInput = (props: any) => {
         <>
             <Row>
                 <Col lg={4}>
-                    <TimePicker
-                        value={convertToMoment(startTime)}
+                     <TimePickers
+                        label="start time"
                         disabled={props.disabled ? props.disabled : false}
-                        showSecond={false}
-                        minuteStep={15}
-                        onChange={(e) => {
-                            handleStartTimeInput(moment(e).format('HH:mm'));
-                        }}
+                        onChange={handleStartTimeInput}
                     />
+                
                 </Col>
             </Row>
         </>
