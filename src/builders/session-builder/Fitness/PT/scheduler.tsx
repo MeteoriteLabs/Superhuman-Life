@@ -166,15 +166,7 @@ const Scheduler: React.FC = () => {
     //     const formattedSum = handleTimeFormatting(sum, duration);
     //     return formattedSum;
     // }
-console.log(tag &&
-    tag.client_packages &&
-    tag.client_packages.length
-        ? 
-              tag
-                  .client_packages[0]
-                  .effective_date
-         
-        : null)
+
     function calculateLastSession(sessions) {
         if (sessions.length === 0) {
             return 'N/A';
@@ -185,7 +177,7 @@ console.log(tag &&
 
         return maxDate.format('MMM Do,YYYY');
     }
-console.log(tag && tag.client_packages, tag);
+
     if (!show) return <Loader msg="loading scheduler..." />;
     else
         return (
