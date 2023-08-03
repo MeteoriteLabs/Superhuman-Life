@@ -67,10 +67,16 @@ const Scheduler = () => {
     const [collapse, setCollapse] = useState<boolean>(true);
     const [accordionExpanded, setAccordionExpanded] = useState(true);
     const [showRestDay, setShowRestDay] = useState<boolean>(false);
-    const [showCollapseView, setShowCollapseView] = useState(false);
+    const [showCollapseView, setShowCollapseView] = useState<boolean>(false);
     const [program, setProgram] = useState('none');
     const [sessionFilter, setSessionFilter] = useState('none');
     const [show24HourFormat, setShow24HourFormat] = useState(false);
+    const ref = useRef<any>(null);
+
+    const handleScrollScheduler = () => {
+        ref.current?.scrollIntoView({ behaviour: 'smooth', inline: 'nearest' });
+        window.scrollBy(0, -200);
+    };
 
     const handleAccordionToggle = () => {
         setAccordionExpanded(!accordionExpanded);
@@ -405,11 +411,13 @@ const Scheduler = () => {
     function handleFloatingActionProgramCallback(event: any) {
         setProgram(`${event}`);
         handleCallback();
+        handleScrollScheduler();
     }
 
     function handleFloatingActionProgramCallback2(event: any) {
         setSessionFilter(`${event}`);
         handleCallback();
+        handleScrollScheduler();
     }
 
     function handleRefetch() {
@@ -418,6 +426,7 @@ const Scheduler = () => {
 
     function handleShowRestDay() {
         setShowRestDay(!showRestDay);
+        handleScrollScheduler();
     }
 
     function calculateLastSession(sessions) {
@@ -608,7 +617,10 @@ const Scheduler = () => {
                                                                     View all
                                                                 </Badge>
                                                                 <p className="ml-3">
-                                                                    {tag.client_packages.length}{' '}
+                                                                    {tag &&
+                                                                        tag.client_packages &&
+                                                                        tag.client_packages
+                                                                            .length}{' '}
                                                                     people
                                                                 </p>
                                                             </Col>
@@ -837,7 +849,7 @@ const Scheduler = () => {
                         </Row>
 
                         {/* Scheduler manager based on dates */}
-                        <Row className="mt-5 mb-2">
+                        <Row className="mt-5 mb-2 d-flex align-items-center">
                             <Col lg={2}>
                                 {moment().isBefore(moment(groupEndDate)) ? (
                                     <Button
@@ -865,10 +877,8 @@ const Scheduler = () => {
                                         <i className="fa fa-chevron-left mr-4"></i>
                                     </span>
                                     <span className="shadow-lg bg-dark p-2 rounded-lg text-white">
-                                        <b>
-                                            {moment(prevDate).format('MMMM, YYYY')} -{' '}
-                                            {moment(nextDate).format('MMMM, YYYY')}
-                                        </b>
+                                        {moment(prevDate).format('MMMM, YYYY')} -{' '}
+                                        {moment(nextDate).format('MMMM, YYYY')}
                                     </span>
                                     <span
                                         style={{
@@ -896,10 +906,11 @@ const Scheduler = () => {
                                 </Form>
                             </Col>
                         </Row>
+                        {/* Collapse view */}
                         {showCollapseView ? (
                             <Row>
                                 <Col lg={11} className="pl-0 pr-0">
-                                    {/* <CollapsibleScheduler
+                                    <CollapsibleScheduler
                                         type="date"
                                         days={calculateDays(prevDate, nextDate)}
                                         callback={handleCallback}
@@ -914,7 +925,7 @@ const Scheduler = () => {
                                         startDate={prevDate}
                                         duration={moment(nextDate).diff(moment(prevDate), 'days')}
                                         showRestDay={showRestDay}
-                                    /> */}
+                                    />
                                 </Col>
                             </Row>
                         ) : null}
@@ -924,6 +935,7 @@ const Scheduler = () => {
                             <Col lg={11} className="pl-0 pr-0">
                                 <div className="mt-5">
                                     <SchedulerPage
+                                        ref={ref}
                                         show24HourFormat={show24HourFormat}
                                         type="date"
                                         days={calculateDays(prevDate, nextDate)}
@@ -996,20 +1008,13 @@ const Scheduler = () => {
                                     <label>Edit Group Start Time: </label>
                                     <Row>
                                         <Col lg={4}>
-                                            <TimePicker
-                                                showSecond={false}
-                                                minuteStep={15}
-                                               
-                                            />
+                                            <TimePicker showSecond={false} minuteStep={15} />
                                         </Col>
                                     </Row>
                                     <label>Edit Group End Time: </label>
                                     <Row>
                                         <Col lg={4}>
-                                            <TimePicker
-                                                showSecond={false}
-                                                minuteStep={15}
-                                            />
+                                            <TimePicker showSecond={false} minuteStep={15} />
                                         </Col>
                                     </Row>
                                 </Modal.Body>
@@ -1033,6 +1038,8 @@ const Scheduler = () => {
                 {/* Right sidebar */}
                 <Col lg={collapse ? '1' : '2'} className="d-lg-block">
                     <SideNav
+                        type="date"
+                        handleScrollScheduler={handleScrollScheduler}
                         show24HourFormat={show24HourFormat}
                         setShow24HourFormat={setShow24HourFormat}
                         collapse={collapse}

@@ -77,7 +77,7 @@ export default function Expenses(): JSX.Element {
                 Cell: ({ row }: { row: { original: { id: string } } }) => {
                     const history = useHistory();
                     const routeChange = () => {
-                        const path = `receipt/?id=${row.original.id}`;
+                        const path = `receiptoutflow/?id=${row.original.id}`;
                         history.push(path);
                     };
 

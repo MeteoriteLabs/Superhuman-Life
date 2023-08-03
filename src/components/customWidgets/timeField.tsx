@@ -1,11 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import 'rc-time-picker/assets/index.css';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { StyledEngineProvider } from '@mui/material/styles';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
+import TimePickers from 'components/ClockTimePicker';
 
 const TimeFieldInput = (props: any) => {
     const [startTime, setStartTime] = useState(
@@ -50,7 +46,6 @@ const TimeFieldInput = (props: any) => {
         }
     }
 
-
     function handleFormatting(time) {
         const inputTime: any = time.split(':');
         return `${parseInt(inputTime[0]) < 10 ? inputTime[0].charAt(1) : inputTime[0]}:${
@@ -86,43 +81,21 @@ const TimeFieldInput = (props: any) => {
             <label>Start Time: </label>
             <Row>
                 <Col lg={4}>
-                    <StyledEngineProvider injectFirst>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <TimePicker
-                                label="Choose start time"
-                                disabled={props.disabled}
-                                viewRenderers={{
-                                    hours: renderTimeViewClock,
-                                    minutes: renderTimeViewClock
-                                }}
-                                minutesStep={15}
-                                onChange={(e) => {
-                                    handleStartTimeInput(e);
-                                }}
-                            />
-                        </LocalizationProvider>
-                    </StyledEngineProvider>
+                    <TimePickers
+                        label="Choose start time"
+                        disabled={props.disabled}
+                        onChange={handleStartTimeInput}
+                    />
                 </Col>
             </Row>
-            <label style={{marginTop:"10px"}}>End Time: </label>
+            <label style={{ marginTop: '10px' }}>End Time: </label>
             <Row>
                 <Col lg={4}>
-                    <StyledEngineProvider injectFirst>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <TimePicker
-                                label="Choose end time"
-                                disabled={props.disabled}
-                                viewRenderers={{
-                                    hours: renderTimeViewClock,
-                                    minutes: renderTimeViewClock
-                                }}
-                                minutesStep={15}
-                                onChange={(e) => {
-                                    handleEndTimeInput(e);
-                                }}
-                            />
-                        </LocalizationProvider>
-                    </StyledEngineProvider>
+                    <TimePickers
+                        label="Choose end time"
+                        disabled={props.disabled}
+                        onChange={handleEndTimeInput}
+                    />
                 </Col>
             </Row>
             {handleTimeValidation()}

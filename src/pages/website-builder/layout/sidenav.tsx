@@ -205,7 +205,8 @@ export default function SideNav({
             <Button
                 variant="dark"
                 onClick={() => {
-                    setCollapse(!collapse);
+                    setCollapse(!collapse)
+            ;
                     setShowSubOptionsMobile(false);
                     setShowSubOptionsWebsite(false);
                 }}

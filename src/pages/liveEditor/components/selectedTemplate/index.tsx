@@ -1,26 +1,40 @@
-import { useContext } from 'react';
-import { ChangeMakerWebsiteContext } from '../../../../context/changemakerWebsite-context';
-import Loader from '../../../../components/Loader/Loader';
+import { useContext, useEffect } from 'react';
+import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
+import Loader from 'components/Loader/Loader';
 
 function Index(): JSX.Element {
-    const { changemakerWebsiteState } = useContext(ChangeMakerWebsiteContext);
+    const { changemakerWebsiteState, setChangemakerWebsiteState } =
+        useContext(ChangeMakerWebsiteContext);
+
+    const { currentSelectedRoute } = changemakerWebsiteState;
+    useEffect(() => {
+        window.addEventListener('message', function (event) {
+            event.data.event_id === 'current-page'
+                ? setChangemakerWebsiteState({
+                      ...changemakerWebsiteState,
+                      currentSelectedRoute: event.data.data.url
+                  })
+                : null;
+        });
+    }, []);
 
     return (
         <div
             style={{
                 color: 'white',
-                marginLeft: '115px',
+                width: '90%',
                 overflow: 'hidden',
-                padding: '20px 20px 0 20px'
+                paddingTop: '10px',
+                margin: 'auto'
             }}
         >
-            <div style={{ width: '100vw', height: '89vh' }}>
+            <div style={{ width: '100%', height: '92vh' }}>
                 {changemakerWebsiteState.loading ? (
                     <div
                         style={{
                             background: 'white',
                             width: '100%',
-                            height: '140%',
+                            height: '142%',
                             borderRadius: '10px 10px 0 0',
                             transform: 'scale(.7)',
                             transformOrigin: 'top center'
@@ -30,12 +44,12 @@ function Index(): JSX.Element {
                     </div>
                 ) : (
                     <iframe
-                        src={`https://${changemakerWebsiteState.subdomain}`}
+                        src={`https://${changemakerWebsiteState.subdomain}${currentSelectedRoute}`}
                         allowFullScreen={true}
                         style={{
                             background: 'white',
                             width: '100%',
-                            height: '140%',
+                            height: '142%',
                             borderRadius: '10px 10px 0 0',
                             transform: 'scale(.7)',
                             transformOrigin: 'top center'

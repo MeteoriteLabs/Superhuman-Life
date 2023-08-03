@@ -22,11 +22,7 @@ import { useHistory } from 'react-router-dom';
 import CancelComponent from './CancelComponent';
 import './CardsStyle.css';
 import DropdownItem from 'react-bootstrap/esm/DropdownItem';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { StyledEngineProvider } from '@mui/material/styles';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
+import TimePickers from 'components/ClockTimePicker';
 
 export default function Program() {
     const auth = useContext(AuthContext);
@@ -388,37 +384,19 @@ export default function Program() {
 
                                     <Col lg={6} className="mt-2">
                                         From time <br />
-                                        <StyledEngineProvider injectFirst>
-                                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                <TimePicker
-                                                    viewRenderers={{
-                                                        hours: renderTimeViewClock,
-                                                        minutes: renderTimeViewClock
-                                                    }}
-                                                    minutesStep={15}
-                                                    onChange={(e) => {
-                                                        handleFromTimeInput(e);
-                                                    }}
-                                                />
-                                            </LocalizationProvider>
-                                        </StyledEngineProvider>
+                                        <TimePickers
+                                            label=""
+                                            disabled={false}
+                                            onChange={handleFromTimeInput}
+                                        />
                                     </Col>
                                     <Col lg={6} className="mt-2">
-                                        to time <br />
-                                        <StyledEngineProvider injectFirst>
-                                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                <TimePicker
-                                                    viewRenderers={{
-                                                        hours: renderTimeViewClock,
-                                                        minutes: renderTimeViewClock
-                                                    }}
-                                                    minutesStep={15}
-                                                    onChange={(e) => {
-                                                        handleToTimeInput(e);
-                                                    }}
-                                                />
-                                            </LocalizationProvider>
-                                        </StyledEngineProvider>
+                                        To time <br />
+                                        <TimePickers
+                                            label=""
+                                            disabled={false}
+                                            onChange={handleToTimeInput}
+                                        />
                                     </Col>
                                     <Col className="mt-2">
                                         <Button

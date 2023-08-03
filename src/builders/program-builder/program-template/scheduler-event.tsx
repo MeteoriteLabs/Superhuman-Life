@@ -115,6 +115,7 @@ const SchedulerEvent = (props: any) => {
         }
         draganddrop();
     }
+    
     function calculateDay(startDate, sessionDate) {
         const startDateFormatted = moment(startDate);
         startDateFormatted.set({ hour: 12, minute: 0, second: 0, millisecond: 0 });
@@ -152,7 +153,7 @@ const SchedulerEvent = (props: any) => {
                                     <div
                                         key={index}
                                         className="cell"
-                                        style={{ backgroundColor: 'white' }}
+                                        style={{ backgroundColor: '#343A40' }}
                                     >{`Day - ${val}`}</div>
                                 );
                             })}
@@ -171,7 +172,8 @@ const SchedulerEvent = (props: any) => {
                                                             height: '50px',
                                                             borderRadius: '10px',
                                                             zIndex: 997,
-                                                            minWidth: '120px'
+                                                            minWidth: '120px',
+                                                            color: 'white'
                                                         }}
                                                         draggable="true"
                                                         className="draggable-event m-2"

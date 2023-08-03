@@ -7,7 +7,7 @@ function WebsiteBuilder_template(): JSX.Element {
     const { changemakerWebsiteState } = useContext(ChangeMakerWebsiteContext);
 
     return (
-        <div className="my-5" style={{ background: '#000', borderRadius: '15px' }}>
+        <div className="my-5 bg-dark" style={{ borderRadius: '15px' }}>
             <hr />
             <div
                 className="mb-2 mt-5 d-flex justify-content-between align-items-baseline"

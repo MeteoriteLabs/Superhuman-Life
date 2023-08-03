@@ -8,10 +8,14 @@
     max-width: 150px;
     line-height: 50px;
     vertical-align: middle;
+    background-color: #343A40;
+    color: #fff;
 }
 
 .event-cell {
     max-width: 150px;
+    background-color: #343A40;
+    color: #fff;
 }
 
 .day-row,
@@ -20,13 +24,17 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    background-color: #343A40;
+    color: #fff;
 }
 
 .day-row {
     position: sticky;
-    background-color: #fff;
+    /* background-color: #fff; */
     top: 0;
     z-index: 998;
+    background-color: #343A40;
+    color: #fff;
 }
 
 .wrapper {
@@ -35,6 +43,8 @@
     position: relative;
     min-height: 50px;
     height: 90vh;
+    margin-left: 10px;
+    width: 98%;
 }
 
 .schedular-content {
@@ -63,6 +73,8 @@
     position: relative;
     display: flex;
     flex-direction: row;
+    background-color: #343A40;
+    color: #fff;
 }
 
 .right-floating-menu .btn-primary {
@@ -126,6 +138,8 @@
     line-height: 7px;
     vertical-align: middle;
     text-align: start;
+    /* background-color: #343A40; */
+    color: #fff;
 }
 
 .event-date {
@@ -138,7 +152,7 @@
 }
 
 .schedular-content:hover {
-    background-color: rgb(140, 190, 214) !important;
+    background-color:#f9f6b6 !important;
     width: 150px !important;
     z-index: 998;
     box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.75);

@@ -22,13 +22,17 @@ export default function SideNav({
     accordionExpanded,
     onAccordionToggle,
     show24HourFormat,
-    setShow24HourFormat
+    setShow24HourFormat,
+    handleScrollScheduler,
+    type,
+    sessionDate,
+    days
 }: {
     collapse: boolean;
     setCollapse: (arg: boolean) => void;
-    clientIds: any;
+    clientIds?: any;
     sessionIds: any;
-    startDate: any;
+    startDate?: any;
     duration: any;
     callback: any;
     callback2: any;
@@ -38,7 +42,11 @@ export default function SideNav({
     accordionExpanded: any;
     onAccordionToggle: any;
     show24HourFormat: boolean;
+    handleScrollScheduler: () => void;
     setShow24HourFormat: (parmas: boolean) => void;
+    type?: string;
+    sessionDate?: string;
+    days?: number;
 }): JSX.Element {
     const createEditWorkoutTemplateComponent = useRef<any>(null);
     const createEditNewWorkoutComponent = useRef<any>(null);
@@ -171,6 +179,7 @@ export default function SideNav({
                                         <Nav.Link
                                             className="text-white"
                                             onClick={() => {
+                                                handleScrollScheduler();
                                                 createEditNewWorkoutComponent.current.TriggerForm({
                                                     id: null,
                                                     type: 'create'
@@ -182,6 +191,7 @@ export default function SideNav({
                                         <Nav.Link
                                             className="text-white"
                                             onClick={() => {
+                                                handleScrollScheduler();
                                                 createEditNewActivityComponent.current.TriggerForm({
                                                     id: null,
                                                     type: 'create'
@@ -234,6 +244,7 @@ export default function SideNav({
                                         <Nav.Link
                                             className="text-white"
                                             onClick={() => {
+                                                handleScrollScheduler();
                                                 createEditWorkoutTemplateComponent.current.TriggerForm(
                                                     {
                                                         id: null,
@@ -405,6 +416,7 @@ export default function SideNav({
                                         className='text-white'
                                         onChange={() => {
                                             setShow24HourFormat(!show24HourFormat)
+                                            handleScrollScheduler();
                                         }}
                                     />
                                      
@@ -445,6 +457,7 @@ export default function SideNav({
                 renewalDate={renewalDate}
             ></CreateEditProgramManager>
             <CreateEditNewWorkout
+                type={type}
                 clientIds={clientIds}
                 sessionIds={sessionIds}
                 callback={callback3}
@@ -452,6 +465,8 @@ export default function SideNav({
                 duration={duration}
                 ref={createEditNewWorkoutComponent}
                 events={existingEvents}
+                sessionDate={sessionDate}
+                days={days}
             ></CreateEditNewWorkout>
             <CreateEditNewActivity
                 clientIds={clientIds}

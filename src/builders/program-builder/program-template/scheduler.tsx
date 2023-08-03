@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useRef, useContext, forwardRef } from 'react';
 import {
     Modal,
     Button,
@@ -46,7 +46,7 @@ import SapienVideoPlayer from 'components/customWidgets/SpaienVideoPlayer';
 import Toaster from 'components/Toaster';
 // import SideNav from '../program-template/SchedulerSideBar';
 
-const Schedular = (props: any) => { 
+const Schedular = (props: any, ref) => {
     const auth = useContext(AuthContext);
     const [show, setShow] = useState<boolean>(false);
     const [showModal, setShowModal] = useState<boolean>(false);
@@ -383,18 +383,36 @@ const Schedular = (props: any) => {
 
         if (data?.length > 0) {
             data?.forEach((val) => {
+                // const startTimeHour: any = `${
+                //     val.start_time === null ? '0' : val.start_time.split(':')[0]
+                // }`;
+                // const startTimeMinute: any = `${
+                //     val.start_time === null ? '0' : val.start_time.split(':')[1]
+                // }`;
+                // const endTimeHour: any = `${
+                //     val.end_time === null ? '0' : val.end_time.split(':')[0]
+                // }`;
+                // const endTimeMin: any = `${
+                //     val.end_time === null ? '0' : val.end_time.split(':')[1]
+                // }`;
+
                 const startTimeHour: any = `${
-                    val.start_time === null ? '0' : val.start_time.split(':')[0]
+                    val.start_time
+                        ? Number(val.start_time.split(':')[0]) < 10
+                            ? `${Number(val.start_time.split(':')[0])}`
+                            : val.start_time.split(':')[0]
+                        : '0'
                 }`;
                 const startTimeMinute: any = `${
-                    val.start_time === null ? '0' : val.start_time.split(':')[1]
+                    val.start_time
+                        ? Number(val.start_time.split(':')[1]) < 10
+                            ? `${Number(val.start_time.split(':')[1])}`
+                            : val.start_time.split(':')[1]
+                        : '0'
                 }`;
-                const endTimeHour: any = `${
-                    val.end_time === null ? '0' : val.end_time.split(':')[0]
-                }`;
-                const endTimeMin: any = `${
-                    val.end_time === null ? '0' : val.end_time.split(':')[1]
-                }`;
+                const endTimeHour: any = `${val.end_time ? val.end_time.split(':')[0] : '0'} `;
+                const endTimeMin: any = `${val.end_time ? val.end_time.split(':')[1] : '0'}`;
+
                 if (!arr[val.day_of_program][startTimeHour][startTimeMinute]) {
                     arr[val.day_of_program][startTimeHour][startTimeMinute] = [];
                 }
@@ -461,6 +479,7 @@ const Schedular = (props: any) => {
             sessions
                 .filter((itm) => itm.Is_restday === false)
                 .forEach((val) => {
+                   
                     const startTimeHour: any = `${
                         val.start_time
                             ? Number(val.start_time.split(':')[0]) < 10
@@ -490,6 +509,7 @@ const Schedular = (props: any) => {
                         type: val.type,
                         endHour: endTimeHour,
                         endMin: endTimeMin,
+                        sessions_bookings: val.sessions_bookings.length,
                         id: val.activity === null ? val.workout?.id : val.activity.id,
                         mode: val.mode,
                         tag: val.tag,
@@ -604,7 +624,7 @@ const Schedular = (props: any) => {
                 }
             }
         }
-        return 'white';
+        return '#343A40';
     }
 
     //this return the data for adding and removing the rest days
@@ -612,6 +632,7 @@ const Schedular = (props: any) => {
         // this if block is to check if we are in the program template page
         if (props?.type === 'day') {
             if (props.restDays) {
+                
                 for (let j = 0; j < props.restDays.length; j++) {
                     if (val === props.restDays[j].day_of_program) {
                         return {
@@ -641,6 +662,7 @@ const Schedular = (props: any) => {
                 }
             }
         } else if (props.restDays && props?.type !== 'day') {
+           
             for (let i = 0; i < props.restDays.length; i++) {
                 if (val === calculateDay(props.startDate, props.restDays[i].session_date)) {
                     return {
@@ -692,8 +714,8 @@ const Schedular = (props: any) => {
             dateUpperLimit: moment(dates[0]).format('YYYY-MM-DD'),
             dateLowerLimit: moment(dates[dates.length - 1]).format('YYYY-MM-DD')
         },
-        onCompleted: (r: any) => {
-            const flattenData = flattenObj({ ...r });
+        onCompleted: (response: any) => {
+            const flattenData = flattenObj({ ...response });
             setChangeMakerAvailability(flattenData);
         }
     });
@@ -1591,6 +1613,7 @@ const Schedular = (props: any) => {
             props.callback();
         }
     });
+
     const [createRestDay] = useMutation(CREATE_REST_DAY, {
         onCompleted: (r: any) => {
             const values = [...props.sessionIds];
@@ -1855,6 +1878,19 @@ const Schedular = (props: any) => {
         return finalTime;
     };
 
+    const handleSessionPastDates = (sessionDate: string, sessionEndHour: number, sessionEndMinute: number) => {
+        const currentTime = moment.utc();
+        const expirySessionTime = moment(sessionDate)
+            .add(sessionEndHour, 'hours')
+            .add(sessionEndMinute, 'minutes');
+        const diff = expirySessionTime.diff(currentTime);
+        
+        if (diff < 0) {
+            return true;
+        }
+        return false;
+    };
+
     if (!show) {
         return (
             <div className="text-center">
@@ -1867,7 +1903,7 @@ const Schedular = (props: any) => {
         );
     } else
         return (
-            <>
+            <div ref={ref}>
                 {/* Floating Action Buttons */}
                 {/* {props?.clientSchedular !== 'client' && (
                     <FloatingButton
@@ -1914,7 +1950,8 @@ const Schedular = (props: any) => {
                                 <div
                                     className="cell"
                                     style={{
-                                        backgroundColor: 'white',
+                                        backgroundColor: '#343A40', color:'#fff',
+                                        // backgroundColor: 'white',
                                         position: 'relative',
                                         minHeight: `${props.type === 'date' ? '70px' : '70px'}`
                                     }}
@@ -1926,7 +1963,8 @@ const Schedular = (props: any) => {
                             <div
                                 className="cell"
                                 style={{
-                                    backgroundColor: 'white',
+                                    backgroundColor: '#343A40', color:'#fff',
+                                    // backgroundColor: 'white',
                                     position: 'relative',
                                     minHeight: `${props.type === 'date' ? '70px' : '70px'}`
                                 }}
@@ -1937,7 +1975,7 @@ const Schedular = (props: any) => {
                             return (
                                 <div
                                     className="time-row"
-                                    style={{ backgroundColor: 'white' }}
+                                    style={{ backgroundColor: '#343A40', color:'#fff' }}
                                     key={index}
                                 >
                                     <div className="cell" style={{ position: 'relative' }}>
@@ -1948,14 +1986,18 @@ const Schedular = (props: any) => {
                                                 top: '-8px',
                                                 fontSize: '14px',
                                                 width: '90%',
-                                                backgroundColor: 'white',
+                                                backgroundColor: '#343A40',
+                                                color: '#fff',
+                                                // backgroundColor: 'white',
                                                 left: '0px',
                                                 textAlign: 'right',
                                                 paddingRight: '10px',
                                                 zIndex: 999
                                             }}
                                         >
-                                            {props.show24HourFormat ? `${h<10 ? `0${h}` : h}: 00`: handle12HourFormat(h)}
+                                            {props.show24HourFormat
+                                                ? `${h < 10 ? `0${h}` : h}: 00`
+                                                : handle12HourFormat(h)}
                                         </span>
                                     </div>
                                     {days.map((d, index) => {
@@ -2007,6 +2049,7 @@ const Schedular = (props: any) => {
                                                                 arr[d][h][m]?.map(
                                                                     (val, index: number) => {
                                                                         val.index = index;
+                                                                       
                                                                         return (
                                                                             <div
                                                                                 key={index}
@@ -2046,8 +2089,9 @@ const Schedular = (props: any) => {
                                                                                         ) /
                                                                                             60
                                                                                     }px`,
-                                                                                    backgroundColor:
-                                                                                        'rgb(135,206,235)',
+                                                                                    backgroundColor:'#FFFDD1',
+                                                                                    color:'#000',
+                                                                                    // background: 'rgb(135,206,235)',
                                                                                     width: `${
                                                                                         val.type ===
                                                                                         'restday'
@@ -2097,17 +2141,71 @@ const Schedular = (props: any) => {
                                                                                             'hidden'
                                                                                     }}
                                                                                 >
-                                                                                    <div className="event-desc">
-                                                                                        {val.type ===
-                                                                                        'restday'
-                                                                                            ? null
-                                                                                            : val.title}
+                                                                                    <div className="event-desc d-flex justify-content-between">
+                                                                                        <div>
+                                                                                            {val.type ===
+                                                                                            'restday'
+                                                                                                ? null
+                                                                                                : val.title}
+                                                                                        </div>
+                                                                                        <div>
+                                                                                            {props.showRestDay ? null : handleSessionPastDates(
+                                                                                                val.sessionDate,
+                                                                                                val.endHour,
+                                                                                                val.endMin
+                                                                                            ) ? (
+                                                                                                <img
+                                                                                                    style={{
+                                                                                                        height: '20px',
+                                                                                                        position:
+                                                                                                            'absolute',
+                                                                                                        right: '0'
+                                                                                                    }}
+                                                                                                    title="session attended"
+                                                                                                    src="/assets/attended.svg"
+                                                                                                    alt="attended"
+                                                                                                />
+                                                                                            ) : null}
+                                                                                        </div>
                                                                                     </div>
                                                                                     <div className="event-time">
                                                                                         {val.type ===
                                                                                         'restday'
                                                                                             ? null
-                                                                                            : (props.show24HourFormat ? `${val.hour === '0' ? '00': val.hour}:${val.min === '0' ? '00': val.min} - ${val.endHour}:${val.endMin.toString() === '0' ? '00' : val.endMin}` : `${handleConvertTimeFormat(Number(val.hour), Number(val.min))}-${handleConvertTimeFormat(Number(val.endHour), Number(val.endMin))}`)}
+                                                                                            : props.show24HourFormat
+                                                                                            ? `${
+                                                                                                  val.hour ===
+                                                                                                  '0'
+                                                                                                      ? '00'
+                                                                                                      : val.hour
+                                                                                              }:${
+                                                                                                  val.min ===
+                                                                                                  '0'
+                                                                                                      ? '00'
+                                                                                                      : val.min
+                                                                                              } - ${
+                                                                                                  val.endHour
+                                                                                              }:${
+                                                                                                  val.endMin.toString() ===
+                                                                                                  '0'
+                                                                                                      ? '00'
+                                                                                                      : val.endMin
+                                                                                              }`
+                                                                                            : `${handleConvertTimeFormat(
+                                                                                                  Number(
+                                                                                                      val.hour
+                                                                                                  ),
+                                                                                                  Number(
+                                                                                                      val.min
+                                                                                                  )
+                                                                                              )}-${handleConvertTimeFormat(
+                                                                                                  Number(
+                                                                                                      val.endHour
+                                                                                                  ),
+                                                                                                  Number(
+                                                                                                      val.endMin
+                                                                                                  )
+                                                                                              )}`}
                                                                                         {/* : ({
                                                                                             //   true ?
                                                                                             
@@ -2130,6 +2228,7 @@ const Schedular = (props: any) => {
                                                                                             // `${handleCovertTimeFormat(Number(val.hour), Number(val.min))}-${handleCovertTimeFormat(Number(val.endHour), Number(val.endMin))}`
                                                                                             // })} */}
                                                                                     </div>
+                                                                                    <div className="event-time d-flex justify-content-end" style={{position: 'absolute', right: '0', bottom: '0'}} title="bookings"><small>{val.sessions_bookings}</small></div>
                                                                                 </div>
                                                                             </div>
                                                                         );
@@ -2995,8 +3094,8 @@ const Schedular = (props: any) => {
                         msg="Schedule has been updated successfully"
                     />
                 )}
-            </>
+            </div>
         );
 };
 
-export default Schedular;
+export default forwardRef(Schedular);

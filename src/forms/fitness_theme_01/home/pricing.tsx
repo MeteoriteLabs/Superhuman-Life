@@ -11,11 +11,9 @@ import { ArrowDownShort } from 'react-bootstrap-icons';
 import { Data, FormData, InputProps } from './@types/pricingType';
 import { InputComponent } from './components/PricingComponents';
 import { FormatStateToServerData, SetReceivingDataAndReset } from './libs/pricing';
-import Toaster from 'components/Toaster';
 
 function Hero(): JSX.Element {
     const auth = useContext(authContext);
-    const [errorMsg, setErrorMsg] = useState<string>('');
     const [activeKey, setActiveKey] = useState('');
     const planData: InputProps[] = [
         'actual',
@@ -106,7 +104,6 @@ function Hero(): JSX.Element {
         loading
             ? setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: true })
             : setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: false });
-        error ? setErrorMsg(`${error.name}: ${error.message}`) : setErrorMsg('');
     }, [loading, error]);
 
     return (
@@ -160,9 +157,9 @@ function Hero(): JSX.Element {
                                   >
                                       <p
                                           style={{
-                                              fontWeight: 600,
                                               marginBottom: 8,
-                                              color: 'white'
+                                              color: 'white',
+                                              fontSize: 14
                                           }}
                                       >
                                           Pricing {index + 1}
@@ -195,11 +192,8 @@ function Hero(): JSX.Element {
                           </Accordion>
                       ))
                     : null}
-                {/* add */}
-                {errorMsg ? (
-                    <Toaster type="error" msg={errorMsg} handleCallback={() => setErrorMsg('')} />
-                ) : null}
-                <Button variant="primary" type="submit" className={style.submit_button}>
+
+                <Button variant="light" type="submit" className={style.submit_button}>
                     Submit
                 </Button>
             </Form>

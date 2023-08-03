@@ -682,6 +682,25 @@ export const GET_TAG_BY_ID = gql`
                                 Is_program_template
                                 mode
                                 session_date
+                                sessions_bookings{
+                                    data{
+                                        id
+                                        attributes{
+                                            session_date
+                                            client{
+                                                data{
+                                                    id
+                                                    attributes{
+                                                        username
+                                                        email
+                                                        First_Name
+                                                        Last_Name
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                                 activity {
                                     data {
                                         id

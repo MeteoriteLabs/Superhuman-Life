@@ -1,41 +1,39 @@
 import { useForm, Controller } from 'react-hook-form';
-import style from '../style.module.css';
 import { Button, Form } from 'react-bootstrap';
+import { useMutation, useQuery } from '@apollo/client';
+import { UPDATE_WEBSITE_SECTION } from './queries/hero';
+import { GET_WEBSITE_SECTION } from './queries';
 import authContext from 'context/auth-context';
 import { useContext, useEffect, useState } from 'react';
 import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
-import { GET_WEBSITE_SECTION } from './queries';
-import { useMutation, useQuery } from '@apollo/client';
-import { UPDATE_WEBSITE_SECTION } from './queries/cta';
-import Toaster from 'components/Toaster';
+import UploadImageToS3WithNativeSdk from 'components/upload/upload';
+import style from '../style.module.css';
 
 type FormData = {
-    sectionId: number;
     title: string;
-    buttonText: string;
-    link: string;
+    description: string;
+    image: string;
 };
 
-function CallToAction(): JSX.Element {
+function Hero(): JSX.Element {
     const auth = useContext(authContext);
-    const [errorMsg, setErrorMsg] = useState<string>('');
-    const [initialValues, setInitialValues] = useState<FormData>({
-        sectionId: 0,
+    const [initialValues, setInitialValues] = useState({
         title: '',
-        buttonText: '',
-        link: '/'
+        description: '',
+        image: '',
+        sectionId: ''
     });
 
     const {
         handleSubmit,
         control,
-        reset,
-        formState: { errors }
+        formState: { errors },
+        reset
     } = useForm<FormData>({
         defaultValues: {
             title: initialValues.title,
-            buttonText: initialValues.buttonText,
-            link: initialValues.link
+            description: initialValues.description,
+            image: initialValues.image
         }
     });
 
@@ -46,21 +44,19 @@ function CallToAction(): JSX.Element {
         variables: {
             id: auth.userid,
             sectionPage: 'Home',
-            sectionType: 'CTA'
+            sectionType: 'Hero'
         },
         onCompleted: (data) => {
             setInitialValues({
                 ...initialValues,
                 sectionId: data.websiteSections.data[0].id,
                 title: data.websiteSections.data[0].attributes.sectionData.title,
-                buttonText: data.websiteSections.data[0].attributes.sectionData.button.text,
-                link: data.websiteSections.data[0].attributes.sectionData.button.link
+                description: data.websiteSections.data[0].attributes.sectionData.description,
+                image: data.websiteSections.data[0].attributes.sectionData.image
             });
-
             reset({
                 title: data.websiteSections.data[0].attributes.sectionData.title,
-                buttonText: data.websiteSections.data[0].attributes.sectionData.button.text,
-                link: data.websiteSections.data[0].attributes.sectionData.button.link
+                description: data.websiteSections.data[0].attributes.sectionData.description
             });
         }
     });
@@ -68,15 +64,14 @@ function CallToAction(): JSX.Element {
     const [mutateFunction, { loading, error }] = useMutation(UPDATE_WEBSITE_SECTION);
 
     const onSubmit = handleSubmit(async (formData) => {
-        // ! Need to add image upload
-        const { title, buttonText, link } = formData;
+        const { title, description, image } = formData;
 
         await mutateFunction({
             variables: {
                 id: initialValues.sectionId,
                 title: title ? title : initialValues.title,
-                buttonText: buttonText ? buttonText : initialValues.buttonText,
-                link: link ? link : initialValues.link
+                desc: description ? description : initialValues.description,
+                image: image ? image : initialValues.image
             }
         });
     });
@@ -85,13 +80,12 @@ function CallToAction(): JSX.Element {
         loading
             ? setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: true })
             : setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: false });
-        error ? setErrorMsg(`${error.name}: ${error.message}`) : setErrorMsg('');
     }, [loading, error]);
 
     return (
         <div className={style.form_container}>
             <Form onSubmit={onSubmit} className={style.form}>
-                <Form.Group controlId="home_cta">
+                <Form.Group controlId="title">
                     <Form.Label className={style.label_text}>Title</Form.Label>
                     <Controller
                         name="title"
@@ -108,10 +102,10 @@ function CallToAction(): JSX.Element {
 
                     {errors.title && <p>{errors.title.message}</p>}
                 </Form.Group>
-                <Form.Group controlId="home_cta">
-                    <Form.Label>Button </Form.Label>
+                <Form.Group controlId="description">
+                    <Form.Label className={style.label_text}>Description</Form.Label>
                     <Controller
-                        name="buttonText"
+                        name="description"
                         control={control}
                         render={({ field }) => (
                             <Form.Control
@@ -123,35 +117,36 @@ function CallToAction(): JSX.Element {
                         )}
                     />
 
-                    {errors.buttonText && (
+                    {errors.description && (
                         <Form.Control.Feedback tooltip>
-                            {errors.buttonText.message}
+                            {errors.description.message}
                         </Form.Control.Feedback>
                     )}
                 </Form.Group>
-                <Form.Group controlId="home_cta">
-                    <Form.Label>Button Link </Form.Label>
+                <Form.Group controlId="description">
+                    <Form.Label className={style.label_text}>Image</Form.Label>
                     <Controller
-                        name="link"
+                        name="image"
                         control={control}
                         render={({ field }) => (
-                            <Form.Control
-                                type="textarea"
-                                className={style.input_text}
-                                as="input"
-                                {...field}
-                            ></Form.Control>
+                            <UploadImageToS3WithNativeSdk
+                                allowImage={true}
+                                allowVideo={false}
+                                uploadInterface="modal"
+                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                    field.onChange(event);
+                                }}
+                                value={field.value}
+                                aspectRatio={'1:1'}
+                            />
                         )}
                     />
-
-                    {errors.link && (
-                        <Form.Control.Feedback tooltip>{errors.link.message}</Form.Control.Feedback>
-                    )}
                 </Form.Group>
-                {errorMsg ? (
-                    <Toaster type="error" msg={errorMsg} handleCallback={() => setErrorMsg('')} />
-                ) : null}
-                <Button variant="primary" type="submit" className={style.submit_button}>
+                {errors.image && (
+                    <Form.Control.Feedback tooltip>{errors.image.message}</Form.Control.Feedback>
+                )}
+
+                <Button variant="light" type="submit" className={style.submit_button}>
                     Submit
                 </Button>
             </Form>
@@ -159,4 +154,4 @@ function CallToAction(): JSX.Element {
     );
 }
 
-export default CallToAction;
+export default Hero;

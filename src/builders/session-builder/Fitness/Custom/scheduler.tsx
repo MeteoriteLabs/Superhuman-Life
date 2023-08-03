@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { GET_TAG_BY_ID } from '../../graphQL/queries';
 import { UPDATE_USERPACKAGE_EFFECTIVEDATE } from '../../graphQL/mutation';
 import { useQuery, useMutation } from '@apollo/client';
@@ -44,6 +44,13 @@ const Scheduler = () => {
     const [sessionFilter, setSessionFilter] = useState('none');
     const [sessionIds, setSessionIds] = useState<any>([]);
     const [show24HourFormat, setShow24HourFormat] = useState(false);
+    const ref = useRef<any>(null);
+
+    const handleScrollScheduler = () => {
+        ref.current?.scrollIntoView({ behaviour: "smooth",
+        inline: "nearest"});
+        window.scrollBy(0, -200);
+    }
 
     const handleAccordionToggle = () => {
         setAccordionExpanded(!accordionExpanded);
@@ -126,11 +133,13 @@ const Scheduler = () => {
     function handleFloatingActionProgramCallback(event: any) {
         setProgram(`${event}`);
         handleCallback();
+        handleScrollScheduler();
     }
 
     function handleFloatingActionProgramCallback2(event: any) {
         setSessionFilter(`${event}`);
         handleCallback();
+        handleScrollScheduler();
     }
 
     function handleRefetch() {
@@ -139,6 +148,7 @@ const Scheduler = () => {
 
     function handleShowRestDay() {
         setShowRestDay(!showRestDay);
+        handleScrollScheduler();
     }
 
     function calculateDuration(sd: any, ed: any) {
@@ -735,6 +745,7 @@ const Scheduler = () => {
                             <Col lg={11} className="pl-0 pr-0">
                                 <div className="mt-5">
                                     <SchedulerPage
+                                        ref={ref}
                                         callback={() => mainQuery}
                                         type="date"
                                         days={tag?.fitnesspackage?.duration}
@@ -813,6 +824,8 @@ const Scheduler = () => {
                 {/* Right sidebar */}
                 <Col lg={collapse ? '1' : '2'} className="d-lg-block">
                     <SideNav
+                        type="date"
+                        handleScrollScheduler={handleScrollScheduler}
                         show24HourFormat={show24HourFormat}
                         setShow24HourFormat={setShow24HourFormat}
                         collapse={collapse}

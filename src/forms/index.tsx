@@ -1,16 +1,18 @@
-import { useContext } from 'react';
-import FitnessTemplate_01 from './templates/fitnessTemplate_01';
 import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
+import { useContext } from 'react';
 
-function Index(): JSX.Element {
+import FitnessTheme01 from './fitness_theme_01';
+
+const Index = (): JSX.Element => {
     const { changemakerWebsiteState } = useContext(ChangeMakerWebsiteContext);
 
-    const selectedTemplate = changemakerWebsiteState.selectedTemplate;
-    const templates = {
-        'Fitness Theme 01': <FitnessTemplate_01 />
+    const { selectedTemplate } = changemakerWebsiteState;
+
+    const Page = {
+        'Fitness Theme 01': <FitnessTheme01 />
     };
 
-    return templates[selectedTemplate || ''];
-}
+    return Page[selectedTemplate || ''];
+};
 
 export default Index;

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useRef, useContext, forwardRef } from 'react';
 import {
     Modal,
     Button,
@@ -14,7 +14,7 @@ import {
     Form,
     Spinner
 } from 'react-bootstrap';
-// import './CollapsibleStyle.css';
+import './styles.css';
 import {
     FETCH_WORKOUT,
     FETCH_ACTIVITY,
@@ -44,8 +44,9 @@ import AuthContext from 'context/auth-context';
 import { AvailabilityCheck } from './availabilityCheck';
 import SapienVideoPlayer from 'components/customWidgets/SpaienVideoPlayer';
 import Toaster from 'components/Toaster';
+// import SideNav from '../program-template/SchedulerSideBar';
 
-const CollapsibleScheduler = (props: any) => {
+const CollapsibleScheduler = (props: any, ref) => {
     const auth = useContext(AuthContext);
     const [show, setShow] = useState<boolean>(false);
     const [showModal, setShowModal] = useState<boolean>(false);
@@ -57,20 +58,20 @@ const CollapsibleScheduler = (props: any) => {
     const [event, setEvent] = useState<any>({});
     const [arr, setArr] = useState<any[]>([]);
     const [arr2, setarr2] = useState<any>({});
-    const [program, setProgram] = useState('none');
-    const [sessionFilter, setSessionFilter] = useState('none');
+    // const [program, setProgram] = useState('none');
+    // const [sessionFilter, setSessionFilter] = useState('none');
     const [mode, setMode] = useState('');
     const [tag, setTag] = useState('');
     const program_id = window.location.pathname.split('/').pop();
-    const schedulerDay: Record<string,unknown> = require('./json/scheduler-day.json');
+    const schedulerDay: Record<string, unknown> = require('./json/scheduler-day.json');
     const [changeMakerAvailability, setChangeMakerAvailability] = useState<any>([]);
-    const [sessionIds, setSessionsIds] = useState<any>(props.sessionIds);
+    // const [sessionIds, setSessionsIds] = useState<string[]>(props.sessionIds);
     const [templateSessionsIds, setTemplateSessionsIds] = useState<any>([]);
     const [dropConflict, setDropConflict] = useState<boolean>(false);
     const [groupDropConflict, setGroupDropConflict] = useState<boolean>(false);
     const [sessionBookings, setSessionBooking] = useState<any>([]);
     const [clickedSessionId, setClickedSessionId] = useState('');
-    const [showRestDay, setShowRestDay] = useState<boolean>(false);
+    // const [showRestDay, setShowRestDay] = useState<boolean>(false);
     const [isUpdated, setIsUpdated] = useState<boolean>(false);
 
     const DELETE_REST_DAY = gql`
@@ -308,7 +309,7 @@ const CollapsibleScheduler = (props: any) => {
         for (let q = 0; q < flattenData?.sessionsBookings?.length; q++) {
             sessionsExistingValues.push(flattenData.sessionsBookings[q]?.session.id);
         }
-        setSessionsIds(sessionsExistingValues);
+        // setSessionsIds(sessionsExistingValues);
         for (let d = 1; d <= props.days; d++) {
             arr[d] = JSON.parse(JSON.stringify(schedulerDay));
         }
@@ -419,7 +420,7 @@ const CollapsibleScheduler = (props: any) => {
 
     // this incase of the scheduler in the session manager page
     function handleRenderTable(data: any) {
-        setSessionsIds(props.sessionIds);
+        // setSessionsIds(props.sessionIds);
         const flattenData = flattenObj({ ...data });
 
         if (window.location.pathname.split('/')[1] === 'programs') {
@@ -460,6 +461,7 @@ const CollapsibleScheduler = (props: any) => {
             sessions
                 .filter((itm) => itm.Is_restday === false)
                 .forEach((val) => {
+                   
                     const startTimeHour: any = `${
                         val.start_time
                             ? Number(val.start_time.split(':')[0]) < 10
@@ -489,6 +491,7 @@ const CollapsibleScheduler = (props: any) => {
                         type: val.type,
                         endHour: endTimeHour,
                         endMin: endTimeMin,
+                        sessions_bookings: val.sessions_bookings.length,
                         id: val.activity === null ? val.workout?.id : val.activity.id,
                         mode: val.mode,
                         tag: val.tag,
@@ -561,15 +564,15 @@ const CollapsibleScheduler = (props: any) => {
         event.import === 'importedEvent' ? setOnDragAndDrop(false) : setOnDragAndDrop(true);
     }
 
-    function handleFloatingActionProgramCallback(event: any) {
-        setProgram(`${event}`);
-        props.callback();
-    }
+    // function handleFloatingActionProgramCallback(event: any) {
+    //     setProgram(`${event}`);
+    //     props.callback();
+    // }
 
-    function handleFloatingActionProgramCallback2(event: any) {
-        setSessionFilter(`${event}`);
-        props.callback();
-    }
+    // function handleFloatingActionProgramCallback2(event: any) {
+    //     setSessionFilter(`${event}`);
+    //     props.callback();
+    // }
 
     // this handles the displaying of rest days on the scheduler
     function handleRestDays(val: any) {
@@ -603,7 +606,7 @@ const CollapsibleScheduler = (props: any) => {
                 }
             }
         }
-        return 'white';
+        return '#343A40';
     }
 
     //this return the data for adding and removing the rest days
@@ -611,6 +614,7 @@ const CollapsibleScheduler = (props: any) => {
         // this if block is to check if we are in the program template page
         if (props?.type === 'day') {
             if (props.restDays) {
+                
                 for (let j = 0; j < props.restDays.length; j++) {
                     if (val === props.restDays[j].day_of_program) {
                         return {
@@ -640,6 +644,7 @@ const CollapsibleScheduler = (props: any) => {
                 }
             }
         } else if (props.restDays && props?.type !== 'day') {
+           
             for (let i = 0; i < props.restDays.length; i++) {
                 if (val === calculateDay(props.startDate, props.restDays[i].session_date)) {
                     return {
@@ -691,8 +696,8 @@ const CollapsibleScheduler = (props: any) => {
             dateUpperLimit: moment(dates[0]).format('YYYY-MM-DD'),
             dateLowerLimit: moment(dates[dates.length - 1]).format('YYYY-MM-DD')
         },
-        onCompleted: (r: any) => {
-            const flattenData = flattenObj({ ...r });
+        onCompleted: (response: any) => {
+            const flattenData = flattenObj({ ...response });
             setChangeMakerAvailability(flattenData);
         }
     });
@@ -1590,6 +1595,7 @@ const CollapsibleScheduler = (props: any) => {
             props.callback();
         }
     });
+
     const [createRestDay] = useMutation(CREATE_REST_DAY, {
         onCompleted: (r: any) => {
             const values = [...props.sessionIds];
@@ -1664,9 +1670,7 @@ const CollapsibleScheduler = (props: any) => {
                         <div
                             className="cell"
                             style={{
-                                color: 'white',
-                                        backgroundColor: '#343A40',
-                                // backgroundColor: `${handleRestDays(index + 1)}`,
+                                backgroundColor: `${handleRestDays(index + 1)}`,
                                 minHeight: '70px',
                                 paddingTop: '10px'
                             }}
@@ -1679,11 +1683,7 @@ const CollapsibleScheduler = (props: any) => {
                             </div>
                             <div
                                 className="event-date text-center mt-1"
-                                style={{ 
-                                color: 'white',
-                                        backgroundColor: '#343A40',
-                                    // `${handleRestDays(index + 1)}` 
-                                }}
+                                style={{ backgroundColor: `${handleRestDays(index + 1)}` }}
                             >
                                 <span style={{ fontSize: '14px' }}>
                                     {moment(val).format('Do, MMM YY')}
@@ -1691,10 +1691,7 @@ const CollapsibleScheduler = (props: any) => {
                             </div>
                             <div
                                 className="event-date text-center"
-                                style={{ color: 'white',
-                                backgroundColor: '#343A40'
-                                    // `${handleRestDays(index + 1)}` 
-                                }}
+                                style={{ backgroundColor: `${handleRestDays(index + 1)}` }}
                             >
                                 <Badge
                                     variant="success"
@@ -1722,9 +1719,7 @@ const CollapsibleScheduler = (props: any) => {
                         key={index}
                         className="cell"
                         style={{
-                            color: 'white',
-                                        backgroundColor: '#343A40',
-                            // backgroundColor: `${handleRestDays(val)}`,
+                            backgroundColor: `${handleRestDays(val)}`,
                             minHeight: '70px'
                         }}
                     >{`Day ${val}`}</div>
@@ -1743,9 +1738,7 @@ const CollapsibleScheduler = (props: any) => {
                             key={index}
                             className="cell"
                             style={{
-                                color: 'white',
-                                        backgroundColor: '#343A40',
-                                // backgroundColor: `${handleRestDays(index + 1)}`,
+                                backgroundColor: `${handleRestDays(index + 1)}`,
                                 minHeight: '70px',
                                 paddingTop: '10px'
                             }}
@@ -1788,9 +1781,7 @@ const CollapsibleScheduler = (props: any) => {
                         key={index}
                         className="cell"
                         style={{
-                            color: 'white',
-                                        backgroundColor: '#343A40',
-                            // backgroundColor: `${handleRestDays(val)}`,
+                            backgroundColor: `${handleRestDays(val)}`,
                             minHeight: '70px'
                         }}
                     >
@@ -1846,62 +1837,79 @@ const CollapsibleScheduler = (props: any) => {
         });
     }
 
-    function handleRefetch() {
-        props.callback();
-    }
+    // function handleRefetch() {
+    //     props.callback();
+    // }
 
-    function handleShowRestDay() {
-        setShowRestDay(!showRestDay);
-    }
+    // function handleShowRestDay() {
+    //     setShowRestDay(!showRestDay);
+    // }
+
+    const handle12HourFormat = (hours: number) => {
+        const unit = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12;
+
+        const finalTime = `${hours} ${unit}`;
+        return finalTime;
+    };
+
+    const handleConvertTimeFormat = (hours: number, minutes: number) => {
+        const unit = hours >= 12 ? 'pm' : 'am';
+        hours = hours % 12 || 12;
+        const finalTime = `${hours}:${minutes < 10 ? `0${minutes}` : minutes} ${unit}`;
+        return finalTime;
+    };
+
+    const handleSessionPastDates = (sessionDate: string, sessionEndHour: number, sessionEndMinute: number) => {
+        const currentTime = moment.utc();
+        const expirySessionTime = moment(sessionDate)
+            .add(sessionEndHour, 'hours')
+            .add(sessionEndMinute, 'minutes');
+        const diff = expirySessionTime.diff(currentTime);
+        
+        if (diff < 0) {
+            return true;
+        }
+        return false;
+    };
 
     if (!show) {
         return (
-               <div className="text-center">
+            <div className="text-center">
                 <Spinner animation="border" variant="secondary" />
                 <br />
                 <div className="mt-3" style={{ fontSize: 'small' }}>
-                    Loading schedule...
+                    Loading Schedule...
                 </div>
             </div>
         );
     } else
         return (
-            <>
-             
-                {/* this program list is only for fitnesstemplate */}
-                <div
-                    className="mb-5 shadow-lg p-3"
-                    style={{ display: `${program}`, borderRadius: '20px' }}
-                >
-                    <ProgramList
-                        sessionIds={props.sessionIds}
-                        dayType={'programs'}
-                        callback={handleFloatingActionProgramCallback}
-                    />
-                </div>
-
-                <div
-                    className="mb-5 shadow-lg p-3"
-                    style={{ display: `${sessionFilter}`, borderRadius: '20px' }}
-                >
-                    <SessionList
-                        duration={props?.duration}
+            <div ref={ref}>
+                {/* Floating Action Buttons */}
+                {/* {props?.clientSchedular !== 'client' && (
+                    <FloatingButton
+                        clientIds={props.clientIds}
                         sessionIds={props.sessionIds}
                         startDate={props.startDate}
-                        days={dates}
+                        duration={props.days}
+                        callback={handleFloatingActionProgramCallback}
                         callback2={handleFloatingActionProgramCallback2}
+                        callback3={handleRefetch}
+                        restDayCallback={handleShowRestDay}
+                        showRestDayAction={showRestDay}
                     />
-                </div>
-
+                )} */}
+               
                 <div className="wrapper shadow-lg">
                     <div className="schedular">
-                        {showRestDay && (
+                        {props.showRestDay && (
                             <div className="day-row">
                                 <div
                                     className="cell"
                                     style={{
-                                        color: 'white',
-                                        backgroundColor: '#343A40',
+                                        backgroundColor: '#343A40', color:'#fff',
+                                        // backgroundColor: 'white',
                                         position: 'relative',
                                         minHeight: `${props.type === 'date' ? '70px' : '70px'}`
                                     }}
@@ -1913,8 +1921,8 @@ const CollapsibleScheduler = (props: any) => {
                             <div
                                 className="cell"
                                 style={{
-                                    color: 'white',
-                                    backgroundColor: '#343A40',
+                                    backgroundColor: '#343A40', color:'#fff',
+                                    // backgroundColor: 'white',
                                     position: 'relative',
                                     minHeight: `${props.type === 'date' ? '70px' : '70px'}`
                                 }}
@@ -1925,7 +1933,7 @@ const CollapsibleScheduler = (props: any) => {
                             return (
                                 <div
                                     className="time-row"
-                                    style={{ backgroundColor: '#343A40', color: 'white' }}
+                                    style={{ backgroundColor: '#343A40', color:'#fff' }}
                                     key={index}
                                 >
                                     <div className="cell" style={{ position: 'relative' }}>
@@ -1936,16 +1944,19 @@ const CollapsibleScheduler = (props: any) => {
                                                 top: '-8px',
                                                 fontSize: '14px',
                                                 width: '90%',
-                                                color: "white",
                                                 backgroundColor: '#343A40',
+                                                color: '#fff',
+                                                // backgroundColor: 'white',
                                                 left: '0px',
                                                 textAlign: 'right',
                                                 paddingRight: '10px',
-                                                zIndex: 999,   
+                                                zIndex: 999
                                             }}
                                         >
-                                            {/* {h<10 ? `0${h}:00`: `${h}:00`} */}
-                                            </span>
+                                            {/* {props.show24HourFormat
+                                                ? `${h < 10 ? `0${h}` : h}: 00`
+                                                : handle12HourFormat(h)} */}
+                                        </span>
                                     </div>
                                     {days.map((d, index) => {
                                         return (
@@ -1959,11 +1970,9 @@ const CollapsibleScheduler = (props: any) => {
                                                             data-hour={h}
                                                             data-min={m}
                                                             style={{
-                                                                backgroundColor: "#343A40",
-                                                                color: "#fff"
-                                                                // `${handleRestDays(
-                                                                //     d
-                                                                // )}`
+                                                                backgroundColor: `${handleRestDays(
+                                                                    d
+                                                                )}`
                                                             }}
                                                             onDrop={(e) => {
                                                                 changedEvent = JSON.parse(
@@ -1998,6 +2007,7 @@ const CollapsibleScheduler = (props: any) => {
                                                                 arr[d][h][m]?.map(
                                                                     (val, index: number) => {
                                                                         val.index = index;
+                                                                       
                                                                         return (
                                                                             <div
                                                                                 key={index}
@@ -2037,10 +2047,9 @@ const CollapsibleScheduler = (props: any) => {
                                                                                         ) /
                                                                                             60
                                                                                     }px`,
-                                                                                    backgroundColor: '#d98bf7',
-                                                                                    color: "#000",
-                                                                                
-                                                                                        // background:'rgb(135,206,235)',
+                                                                                    backgroundColor:'#FFFDD1',
+                                                                                    color:'#000',
+                                                                                    // background: 'rgb(135,206,235)',
                                                                                     width: `${
                                                                                         val.type ===
                                                                                         'restday'
@@ -2090,33 +2099,94 @@ const CollapsibleScheduler = (props: any) => {
                                                                                             'hidden'
                                                                                     }}
                                                                                 >
-                                                                                    <div className="event-desc">
-                                                                                        {val.type ===
-                                                                                        'restday'
-                                                                                            ? null
-                                                                                            : val.title}
+                                                                                    <div className="event-desc d-flex justify-content-between">
+                                                                                        <div>
+                                                                                            {val.type ===
+                                                                                            'restday'
+                                                                                                ? null
+                                                                                                : val.title}
+                                                                                        </div>
+                                                                                        <div>
+                                                                                            {props.showRestDay ? null : handleSessionPastDates(
+                                                                                                val.sessionDate,
+                                                                                                val.endHour,
+                                                                                                val.endMin
+                                                                                            ) ? (
+                                                                                                <img
+                                                                                                    style={{
+                                                                                                        height: '20px',
+                                                                                                        position:
+                                                                                                            'absolute',
+                                                                                                        right: '0'
+                                                                                                    }}
+                                                                                                    title="session attended"
+                                                                                                    src="/assets/attended.svg"
+                                                                                                    alt="attended"
+                                                                                                />
+                                                                                            ) : null}
+                                                                                        </div>
                                                                                     </div>
                                                                                     <div className="event-time">
                                                                                         {val.type ===
                                                                                         'restday'
                                                                                             ? null
-                                                                                            : (val.hour ===
-                                                                                              '0'
-                                                                                                  ? '00'
-                                                                                                  : val.hour) +
-                                                                                              ':' +
-                                                                                              (val.min ===
-                                                                                              '0'
-                                                                                                  ? '00'
-                                                                                                  : val.min) +
-                                                                                              ' - ' +
-                                                                                              val.endHour +
-                                                                                              ':' +
-                                                                                              (val.endMin.toString() ===
-                                                                                              '0'
-                                                                                                  ? '00'
-                                                                                                  : val.endMin)}
+                                                                                            : props.show24HourFormat
+                                                                                            ? `${
+                                                                                                  val.hour ===
+                                                                                                  '0'
+                                                                                                      ? '00'
+                                                                                                      : val.hour
+                                                                                              }:${
+                                                                                                  val.min ===
+                                                                                                  '0'
+                                                                                                      ? '00'
+                                                                                                      : val.min
+                                                                                              } - ${
+                                                                                                  val.endHour
+                                                                                              }:${
+                                                                                                  val.endMin.toString() ===
+                                                                                                  '0'
+                                                                                                      ? '00'
+                                                                                                      : val.endMin
+                                                                                              }`
+                                                                                            : `${handleConvertTimeFormat(
+                                                                                                  Number(
+                                                                                                      val.hour
+                                                                                                  ),
+                                                                                                  Number(
+                                                                                                      val.min
+                                                                                                  )
+                                                                                              )}-${handleConvertTimeFormat(
+                                                                                                  Number(
+                                                                                                      val.endHour
+                                                                                                  ),
+                                                                                                  Number(
+                                                                                                      val.endMin
+                                                                                                  )
+                                                                                              )}`}
+                                                                                        {/* : ({
+                                                                                            //   true ?
+                                                                                            
+                                                                                            // ((val.hour ===
+                                                                                            //   '0'
+                                                                                            //       ? '00'
+                                                                                            //       : val.hour) +
+                                                                                            //   ':' +
+                                                                                            //   (val.min ===
+                                                                                            //   '0'
+                                                                                            //       ? '00'
+                                                                                            //       : val.min) +
+                                                                                            //   ' - ' +
+                                                                                            //   val.endHour +
+                                                                                            //   ':' +
+                                                                                            //   (val.endMin.toString() ===
+                                                                                            //   '0'
+                                                                                            //       ? '00'
+                                                                                            //       : val.endMin)) :
+                                                                                            // `${handleCovertTimeFormat(Number(val.hour), Number(val.min))}-${handleCovertTimeFormat(Number(val.endHour), Number(val.endMin))}`
+                                                                                            // })} */}
                                                                                     </div>
+                                                                                    <div className="event-time d-flex justify-content-end" style={{position: 'absolute', right: '0', bottom: '0'}} title="bookings"><small>{val.sessions_bookings}</small></div>
                                                                                 </div>
                                                                             </div>
                                                                         );
@@ -2133,6 +2203,7 @@ const CollapsibleScheduler = (props: any) => {
                         })}
                     </div>
                 </div>
+
                 {/* Floating Action Buttons */}
                 {/* {props?.clientSchedular !== 'client' && (
                     <FloatingButton
@@ -2147,6 +2218,7 @@ const CollapsibleScheduler = (props: any) => {
                         showRestDayAction={showRestDay}
                     />
                 )} */}
+
                 {
                     <Modal
                         show={showModal}
@@ -2199,7 +2271,7 @@ const CollapsibleScheduler = (props: any) => {
                                         >
                                             <i
                                                 className="fas fa-copy fa-lg"
-                                                onClick={(e) => {
+                                                onClick={() => {
                                                     handleClose();
                                                     setDuplicate(true);
                                                 }}
@@ -2346,7 +2418,11 @@ const CollapsibleScheduler = (props: any) => {
                                     </Col>
                                 </Row>
                             )}
-                           
+                            {/* <Row className="pt-3 align-items-center">
+                            <Col>
+                                <TimeField eventType="edit" onChange={handleStart} endTime={event.endHour + ':' + event.endMin} startTime={event.hour + ':' + event.min} disabled={edit}/>
+                            </Col>
+                        </Row> */}
                             {event.type === 'workout' && (
                                 <Tabs
                                     defaultActiveKey="agenda"
@@ -2976,8 +3052,8 @@ const CollapsibleScheduler = (props: any) => {
                         msg="Schedule has been updated successfully"
                     />
                 )}
-            </>
+            </div>
         );
 };
 
-export default CollapsibleScheduler;
+export default forwardRef(CollapsibleScheduler);
