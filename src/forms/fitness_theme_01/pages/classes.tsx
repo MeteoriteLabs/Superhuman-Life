@@ -6,7 +6,6 @@ import Hero from '../sections/hero';
 
 function Index(): JSX.Element {
     const { changemakerWebsiteState } = useContext(ChangeMakerWebsiteContext);
-
     const { section } = changemakerWebsiteState;
 
     const Section = {
