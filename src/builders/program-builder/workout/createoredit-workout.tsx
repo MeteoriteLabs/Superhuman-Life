@@ -1,6 +1,6 @@
 import React, { useContext, useImperativeHandle, useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-import ModalView from '../../../components/modal';
+import ModalView from 'components/modal';
 import {
     FETCH_DATA,
     CREATE_WORKOUT,
@@ -8,13 +8,13 @@ import {
     DELETE_WORKOUT,
     FETCH_FITNESS_PROGRAMS
 } from './queries';
-import AuthContext from '../../../context/auth-context';
-import StatusModal from '../../../components/StatusModal/workoutStatusModal';
+import AuthContext from 'context/auth-context';
+import StatusModal from 'components/StatusModal/workoutStatusModal';
 import { schema, widgets } from './workoutSchema';
 import { schemaView } from './workoutSchemaView';
 import { Subject } from 'rxjs';
-import { flattenObj } from '../../../components/utils/responseFlatten';
-import Toaster from '../../../components/Toaster';
+import { flattenObj } from 'components/utils/responseFlatten';
+import Toaster from 'components/Toaster';
 
 interface Operation {
     id: string;
@@ -36,52 +36,39 @@ function CreateEditWorkout(props: any, ref: any) {
     useQuery(FETCH_FITNESS_PROGRAMS, {
         variables: { id: operation.id?.toString() },
         skip: operation.type !== 'delete',
-        onCompleted: (r: any) => {
-            const flattenData = flattenObj({ ...r });
+        onCompleted: (response: any) => {
+            const flattenData = flattenObj({ ...response });
             setProgramDetails(flattenData);
         }
     });
 
     const [createWorkout] = useMutation(CREATE_WORKOUT, {
-        onCompleted: (r: any) => {
+        onCompleted: () => {
             modalTrigger.next(false);
             props.callback();
             setIsFormSubmitted(!isFormSubmitted);
             setToastType('success');
             setToastMessage('Workout details created successfully');
-        },
-        onError: (e: any) => {
-            setToastType('error');
-            setIsFormSubmitted(!isFormSubmitted);
-            setToastMessage('Workout details has not been created');
         }
     });
+
     const [editWorkout] = useMutation(UPDATE_WORKOUT, {
-        onCompleted: (r: any) => {
+        onCompleted: () => {
             modalTrigger.next(false);
             props.callback();
             setIsFormSubmitted(!isFormSubmitted);
             setToastType('success');
             setToastMessage('Workout details has been updated successfully');
-        },
-        onError: (e: any) => {
-            setToastType('error');
-            setIsFormSubmitted(!isFormSubmitted);
-            setToastMessage('Workout details has not been updated');
-        }
+        }    
     });
+
     const [deleteWorkout] = useMutation(DELETE_WORKOUT, {
-        onCompleted: (r: any) => {
+        onCompleted: () => {
             modalTrigger.next(false);
             props.callback();
             setIsFormSubmitted(!isFormSubmitted);
             setToastType('success');
             setToastMessage('Workout details has been deleted successfully');
-        },
-        onError: (e: any) => {
-            setToastType('error');
-            setIsFormSubmitted(!isFormSubmitted);
-            setToastMessage('Workout details has not been deleted');
         }
     });
 

@@ -23,13 +23,16 @@ export default function SideNav({
     onAccordionToggle,
     show24HourFormat,
     setShow24HourFormat,
-    handleScrollScheduler
+    handleScrollScheduler,
+    type,
+    sessionDate,
+    days
 }: {
     collapse: boolean;
     setCollapse: (arg: boolean) => void;
-    clientIds: any;
+    clientIds?: any;
     sessionIds: any;
-    startDate: any;
+    startDate?: any;
     duration: any;
     callback: any;
     callback2: any;
@@ -41,6 +44,9 @@ export default function SideNav({
     show24HourFormat: boolean;
     handleScrollScheduler: () => void;
     setShow24HourFormat: (parmas: boolean) => void;
+    type?: string;
+    sessionDate?: string;
+    days?: number;
 }): JSX.Element {
     const createEditWorkoutTemplateComponent = useRef<any>(null);
     const createEditNewWorkoutComponent = useRef<any>(null);
@@ -451,6 +457,7 @@ export default function SideNav({
                 renewalDate={renewalDate}
             ></CreateEditProgramManager>
             <CreateEditNewWorkout
+                type={type}
                 clientIds={clientIds}
                 sessionIds={sessionIds}
                 callback={callback3}
@@ -458,6 +465,8 @@ export default function SideNav({
                 duration={duration}
                 ref={createEditNewWorkoutComponent}
                 events={existingEvents}
+                sessionDate={sessionDate}
+                days={days}
             ></CreateEditNewWorkout>
             <CreateEditNewActivity
                 clientIds={clientIds}

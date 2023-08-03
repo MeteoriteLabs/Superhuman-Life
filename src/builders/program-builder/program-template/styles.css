@@ -152,7 +152,7 @@
 }
 
 .schedular-content:hover {
-    background-color: #EBEBF2 !important;
+    background-color:#f9f6b6 !important;
     width: 150px !important;
     z-index: 998;
     box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.75);

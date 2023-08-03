@@ -1,20 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Form, Table } from 'react-bootstrap';
 import DaysInput from './daysInput';
 // import SingleTimeField from '../../../components/customWidgets/singleTimeField';
 // import React, { useState } from 'react';
 // import { Row, Col } from 'react-bootstrap';
 import moment from 'moment';
-import TimePicker from 'rc-time-picker';
-import 'rc-time-picker/assets/index.css';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { StyledEngineProvider } from '@mui/material/styles';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
 
 const TransferProgramTable = (props: any) => {
     const [show, setShow] = useState<boolean>(false);
     const [data, setData] = useState<any[]>([]);
 
     function handleStartTimeInput(val: any, index: any) {
-        const m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60;
-        handleHourChange(val.slice(0, 2) + ':' + (m === 0 ? '00' : m), index);
+        handleHourChange(val.$H + ':' + (val.$m === 0 ? '00' : val.$m), index);
     }
 
     function convertToMoment(time: string) {
@@ -36,7 +38,8 @@ const TransferProgramTable = (props: any) => {
         setData(values);
     }
 
-    function handleHourChange(e: any, index: any) {
+    function handleHourChange(val: any, index: any) {
+        const e = val.$H + ':' + (val.$m === 0 ? '00' : val.$m);
         const values = [...data];
         const a = values.find((e) => e.transferId === index);
         a.startTime = handleFormatting(e);
@@ -122,21 +125,29 @@ const TransferProgramTable = (props: any) => {
                                 </td>
                                 {/* <Row> */}
                                 {/* <Col lg={4}> */}
+
                                 <td style={{ minWidth: '150px' }}>
-                                    <TimePicker
-                                        value={convertToMoment(data[index].startTime)}
-                                        disabled={props.disabled ? props.disabled : false}
-                                        showSecond={false}
-                                        minuteStep={15}
-                                        onChange={(e) => {
-                                            if (e !== null) {
-                                                handleHourChange(e.format('HH:mm'), index);
-                                            } else {
-                                                handleStartTimeInput('00:00', index);
-                                            }
-                                        }}
-                                    />
+                                    <StyledEngineProvider injectFirst>
+                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                            <TimePicker
+                                                viewRenderers={{
+                                                    hours: renderTimeViewClock,
+                                                    minutes: renderTimeViewClock
+                                                }}
+                                                minutesStep={15}
+                                                disabled={props.disabled ? props.disabled : false}
+                                                onChange={(e) => {
+                                                    if (e !== null) {
+                                                        handleHourChange(e, index);
+                                                    } else {
+                                                        handleStartTimeInput(e, index);
+                                                    }
+                                                }}
+                                            />
+                                        </LocalizationProvider>
+                                    </StyledEngineProvider>
                                 </td>
+
                                 {/* </Col> */}
                                 {/* </Row> */}
                                 {/* <td><SingleTimeField onChange={(e) => handleHourChange(e, index)} /></td> */}

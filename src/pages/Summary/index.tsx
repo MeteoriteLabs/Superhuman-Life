@@ -7,16 +7,16 @@ import {
     UPDATE_TAG
 } from './queries';
 import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
-import { flattenObj } from '../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 import { Col, Row } from 'react-bootstrap';
 import Card from 'react-bootstrap/Card';
 import CardDeck from 'react-bootstrap/CardDeck';
-import DisplayImage from '../../components/DisplayImage';
+import DisplayImage from 'components/DisplayImage';
 import { Button } from 'react-bootstrap';
 import ClientDetailsCard from './ClientDetails';
 import OfferingDetails from './OfferingDetails';
-import { UPDATE_OFFERING_INVENTORY } from '../../builders/package-builder/fitness/graphQL/mutations';
-import AuthContext from '../../context/auth-context';
+import { UPDATE_OFFERING_INVENTORY } from 'builders/package-builder/fitness/graphQL/mutations';
+import AuthContext from 'context/auth-context';
 import { UPDATE_BOOKING_STATUS } from '../booking/GraphQL/mutation';
 import moment from 'moment';
 import { CREATE_USER_PACKAGE } from '../booking/GraphQL/mutation';
@@ -24,7 +24,7 @@ import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import './summary.css';
 // import QRCode from 'react-qr-code';
-import API_END_POINTS from '../../components/utils/integration';
+import API_END_POINTS from 'components/utils/integration';
 import { PackageDetails } from './Interface';
 import { CREATE_TAG } from './queries';
 
@@ -392,7 +392,7 @@ const Summary: React.FC = () => {
                                     SenderID: packageDetails.ClientUser[0].id,
                                     TransactionAmount: response.data.cfLink.linkAmountPaid,
                                     link_id: response.data.cfLink.linkId,
-                                    TransactionRemarks: `Purchased package from changemaker with booking id ${bookingId} and fitness package id ${packageDetails.fitnesspackages[0].id} `
+                                    TransactionRemarks: `Purchased package from changemaker with booking id ${bookingId} and fitness package id ${packageDetails.fitnesspackages[0].packagename} `
                                 }
                             },
                             onCompleted: (transactionResponse) => {
@@ -429,7 +429,7 @@ const Summary: React.FC = () => {
                                     SenderID: packageDetails.ClientUser[0].id,
                                     TransactionAmount: response.data.cfLink.linkAmountPaid,
                                     link_id: response.data.cfLink.linkId,
-                                    TransactionRemarks: `Purchased package from changemaker with booking id ${bookingId} and fitness package id ${packageDetails.fitnesspackages[0].id} `
+                                    TransactionRemarks: `Purchased package from changemaker with booking id ${bookingId} and fitness package id ${packageDetails.fitnesspackages[0].packagename} `
                                 }
                             },
                             onCompleted: () => {
@@ -466,7 +466,7 @@ const Summary: React.FC = () => {
                                     SenderID: packageDetails.ClientUser[0].id,
                                     TransactionAmount: response.data.cfLink.linkAmountPaid,
                                     link_id: response.data.cfLink.linkId,
-                                    TransactionRemarks: `Purchased package from changemaker with booking id ${bookingId} and fitness package id ${packageDetails.fitnesspackages[0].id} `
+                                    TransactionRemarks: `Purchased package from changemaker with booking id ${bookingId} and fitness package id ${packageDetails.fitnesspackages[0].packagename} `
                                 }
                             },
                             onCompleted: () => {

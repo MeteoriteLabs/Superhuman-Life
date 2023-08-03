@@ -15,14 +15,14 @@ import {
     Table,
     Accordion
 } from 'react-bootstrap';
-import SchedulerPage from '../../../program-builder/program-template/scheduler';
+import SchedulerPage from 'builders/program-builder/program-template/scheduler';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 import '../fitness.css';
 import '../Group/actionButton.css';
-import Loader from '../../../../components/Loader/Loader';
-import DisplayImage from '../../../../components/DisplayImage';
+import Loader from 'components/Loader/Loader';
+import DisplayImage from 'components/DisplayImage';
 import '../../profilepicture.css';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
@@ -252,14 +252,14 @@ const Scheduler: React.FC = () => {
                                                                     <Dropdown.Menu>
                                                                         <Dropdown.Item
                                                                             key={1}
-                                                                            // onClick={() => deleteUserAddress(currValue)}
+                                                                           
                                                                         >
                                                                             Renew subscription
                                                                         </Dropdown.Item>
 
                                                                         <Dropdown.Item
                                                                             key={2}
-                                                                            // onClick={() => updateAddress(currValue)}
+                                                                            
                                                                         >
                                                                             Edit Program Name
                                                                         </Dropdown.Item>
@@ -342,7 +342,7 @@ const Scheduler: React.FC = () => {
                                                             <Col>
                                                                 <DisplayImage
                                                                     imageName={
-                                                                        'Photo_ID' in
+                                                                        
                                                                             tag.client_packages &&
                                                                         tag.client_packages
                                                                             .length &&
@@ -853,7 +853,8 @@ const Scheduler: React.FC = () => {
                                 <div className="mt-5">
                                     <SchedulerPage
                                         show24HourFormat={show24HourFormat} //boolean
-                                        type="date"
+                                        type={tag?.fitnesspackage?.fitness_package_type.type ===
+                                            'On-Demand PT' ? 'day': "date"}
                                         days={
                                             tag?.fitnesspackage?.fitness_package_type.type ===
                                             'On-Demand PT'
@@ -866,6 +867,15 @@ const Scheduler: React.FC = () => {
                                                 ? 'On-Demand PT'
                                                 : 'One-On-One'
                                         }
+                                        sessionDate={tag &&
+                                            tag.client_packages &&
+                                            tag.client_packages.length
+                                                ? 
+                                                      tag
+                                                          .client_packages[0]
+                                                          .effective_date
+                                                 
+                                                : null}
                                         restDays={tag?.sessions.filter(
                                             (ses) => ses.type === 'restday'
                                         )}
@@ -944,6 +954,29 @@ const Scheduler: React.FC = () => {
                 {/* Right sidebar */}
                 <Col lg={collapse ? '1' : '2'} className="d-lg-block">
                     <SideNav
+                       sessionDate={tag &&
+                        tag.client_packages &&
+                        tag.client_packages.length
+                            ? 
+                                  tag
+                                      .client_packages[0]
+                                      .effective_date
+                             
+                            : null}
+                        days={tag?.fitnesspackage?.fitness_package_type.type ===
+                            'On-Demand PT'
+                                ? 1 : (tag &&
+                            tag.client_packages &&
+                            tag.client_packages.length
+                                ? 
+                                      tag
+                                          .client_packages[0]
+                                          .duration
+                                 
+                                : null)}
+                        type={tag?.fitnesspackage?.fitness_package_type.type ===
+                        'On-Demand PT'
+                            ? 'day' : 'date'}
                         handleScrollScheduler={handleScrollScheduler}
                         show24HourFormat={show24HourFormat}
                         setShow24HourFormat={setShow24HourFormat}
@@ -951,15 +984,29 @@ const Scheduler: React.FC = () => {
                         setCollapse={setCollapse}
                         accordionExpanded={accordionExpanded}
                         onAccordionToggle={handleAccordionToggle}
-                        clientIds={
+                        clientIds={[
                             tag &&
                             tag.client_packages &&
                             tag.client_packages.length &&
                             tag?.client_packages[0].users_permissions_user.id
-                        }
+                        ]}
                         sessionIds={sessionIds}
-                        startDate={tag?.fitnesspackage?.Start_date}
-                        duration={calculateDuration(
+                        startDate={tag?.fitnesspackage?.fitness_package_type.type ===
+                            'On-Demand PT'
+                                ? tag &&
+                                tag.client_packages &&
+                                tag.client_packages.length
+                                    ? moment(
+                                          tag
+                                              .client_packages[0]
+                                              .effective_date
+                                      ).format(
+                                          'DD MMMM, YY'
+                                      )
+                                    : null : tag?.fitnesspackage?.Start_date}
+                        duration={tag?.fitnesspackage?.fitness_package_type.type ===
+                            'On-Demand PT'
+                                ? 1 : calculateDuration(
                             tag?.fitnesspackage?.Start_date,
                             tag?.fitnesspackage?.End_date
                         )}

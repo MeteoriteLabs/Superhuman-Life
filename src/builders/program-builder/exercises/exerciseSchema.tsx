@@ -19,18 +19,23 @@ export const schema: any = {
             inline: true
         }
     },
+    exercise: {
+        'ui:placeholder': 'Enter exercise name'
+    },
     description: {
         'ui:widget': 'textarea',
         'ui:options': {
             rows: 3
         }
     },
+
     miniDescription: {
         'ui:widget': 'textarea',
         'ui:options': {
             rows: 3
         },
-        'ui:help': 'Give a short and simple explanation for the user to understand the exercise.'
+        'ui:help': 'Give a short and simple explanation for the user to understand the exercise.',
+        'ui:placeholder': 'Write description'
     },
     equipment: {
         'ui:widget': 'equipmentSearch',
@@ -46,6 +51,9 @@ export const schema: any = {
         'ui:help': 'Choose the relevant  discipline for the workout. It is required field'
     },
     addExercise: {
+        AddURL: {
+            'ui:placeholder': 'https://'
+        },
         AddText: {
             'ui:widget': 'textEditor'
         },
