@@ -1,4 +1,4 @@
-import { Card, Tab, Tabs, TabContent, Row, Col } from 'react-bootstrap';
+import { Card, Tab, Tabs, TabContent } from 'react-bootstrap';
 import Programs from './clienthome/ProgramScreens/clientprograms';
 import Goals from './clienthome/Goalscreen/clientGoals';
 // import Orders from './clienthome/OrderScreen/clientOrders';
@@ -10,7 +10,6 @@ import ClientSchedular from './clienthome/SchedularScreen';
 import { useState, useContext } from 'react';
 import AuthContext from 'context/auth-context';
 // import { flattenObj } from 'components/utils/responseFlatten';
-import SideNav from "../../program-builder/program-template/SchedulerSideBar";
 
 function Client() {
     const last = window.location.pathname.split('/').pop();
