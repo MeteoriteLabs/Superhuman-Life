@@ -30,6 +30,7 @@ import {
 } from '../../graphql/mutations';
 import { useQuery, useMutation } from '@apollo/client';
 import AuthContext from '../../../../context/auth-context';
+import 'rc-time-picker/assets/index.css';
 import './styles.css';
 import Toaster from '../../../../components/Toaster';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
