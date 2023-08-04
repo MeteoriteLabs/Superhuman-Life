@@ -36,12 +36,20 @@ export default function Movement() {
 
         const newData = [
             ...flattenData.clientBookings.map((packageItem) => {
+                console.log('data is', packageItem);
                 const renewDay: Date = new Date(packageItem.effective_date);
                 renewDay.setDate(renewDay.getDate() + packageItem.package_duration);
-                const pricingArray = packageItem.fitnesspackages[0].fitnesspackagepricing; 
-                const filteredArray = pricingArray.find((data) => data.duration === packageItem.fitnesspackages[0].duration);
+                const pricingArray = packageItem.fitnesspackages[0].fitnesspackagepricing;
+                const filteredArray = pricingArray.find(
+                    (data) => data.duration === packageItem.fitnesspackages[0].duration
+                );
                 const filteredPrice = filteredArray?.sapienPricing;
-                const paymentStatus = packageItem.Booking_status === ("accepted" || "booked") ? "Paid" : "Unpaid";
+                const paymentStatus =
+                    packageItem.Booking_status === ('accepted' || 'booked')
+                        ? 'Paid'
+                        : packageItem.fitnesspackages[0].fitnesspackagepricing[0].mrp === 'free'
+                        ? 'Free'
+                        : 'Unpaid';
                 return {
                     id: packageItem.id,
                     booking_date: packageItem.booking_date,
