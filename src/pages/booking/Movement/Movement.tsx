@@ -38,6 +38,10 @@ export default function Movement() {
             ...flattenData.clientBookings.map((packageItem) => {
                 const renewDay: Date = new Date(packageItem.effective_date);
                 renewDay.setDate(renewDay.getDate() + packageItem.package_duration);
+                const pricingArray = packageItem.fitnesspackages[0].fitnesspackagepricing; 
+                const filteredArray = pricingArray.find((data) => data.duration === packageItem.fitnesspackages[0].duration);
+                const filteredPrice = filteredArray?.sapienPricing;
+                const paymentStatus = packageItem.Booking_status === ("accepted" || "booked") ? "Paid" : "Unpaid";
                 return {
                     id: packageItem.id,
                     booking_date: packageItem.booking_date,
@@ -47,9 +51,9 @@ export default function Movement() {
                     effectiveDate: packageItem.effective_date,
                     packageRenewal: renewDay,
                     duration: packageItem.package_duration,
-                    price: 'Rs 4000',
-                    payment_status: 'Paid',
-                    Status: packageItem.booking_status
+                    price: filteredPrice,
+                    payment_status: paymentStatus,
+                    Status: packageItem.Booking_status
                 };
             })
         ];
