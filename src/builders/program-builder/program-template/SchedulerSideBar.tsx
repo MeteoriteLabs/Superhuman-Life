@@ -31,9 +31,9 @@ export default function SideNav({
     collapse: boolean;
     setCollapse: (arg: boolean) => void;
     clientIds?: any;
-    sessionIds?: any;
+    sessionIds: any;
     startDate?: any;
-    duration?: any;
+    duration: any;
     callback: any;
     callback2: any;
     callback3: any;
