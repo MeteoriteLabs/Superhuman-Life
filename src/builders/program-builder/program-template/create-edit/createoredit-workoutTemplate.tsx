@@ -104,12 +104,12 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
     });
 
     const [createSession] = useMutation(CREATE_SESSION, {
-        onCompleted: (r: any) => {
+        onCompleted: (response: any) => {
             setIsCreated(!isCreated);
             if (window.location.pathname.split('/')[1] === 'programs') {
                 const templateValues = [...templateSessionsIds];
-                setUserId(r.createSession.data.id);
-                templateValues.push(r.createSession.data.id);
+                setUserId(response.createSession.data.id);
+                templateValues.push(response.createSession.data.id);
                 updateFitenssProgram({
                     variables: {
                         id: program_id,
@@ -120,7 +120,7 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
             if (window.location.pathname.split('/')[1] === 'client') {
                 createSessionBooking({
                     variables: {
-                        session: r.createSession.data.id,
+                        session: response.createSession.data.id,
                         client: program_id
                     }
                 });
@@ -130,8 +130,8 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
             ) {
                 const values = [...props.sessionIds];
                 // here userId refers to the sessionID
-                setUserId(r.createSession.data.id);
-                values.push(r.createSession.data.id);
+                setUserId(response.createSession.data.id);
+                values.push(response.createSession.data.id);
                 upateSessions({
                     variables: {
                         id: program_id,

@@ -17,7 +17,7 @@ function CreateSuggestion(props: any, ref: any) {
     // eslint-disable-next-line
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [createSuggestion] = useMutation(ADD_SUGGESTION_NEW, {
-        onCompleted: (r: any) => {
+        onCompleted: () => {
             modalTrigger.next(false);
         }
     });
