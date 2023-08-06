@@ -62,7 +62,7 @@ function Notifications(): JSX.Element {
         }
     );
 
-    const [getAllNotifications, { data: get_all_notifications }] = useLazyQuery(
+    const [getAllNotifications] = useLazyQuery(
         GET_CHANGEMAKER_NOTIFICATION_All_RECORDS
     );
 
