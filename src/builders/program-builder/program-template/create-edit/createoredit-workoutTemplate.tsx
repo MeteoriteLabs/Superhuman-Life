@@ -210,7 +210,7 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
                 sessions: result.data.sessions,
                 event: frm
             });
-            console.log(result, filterResult);
+           
             if (filterResult) {
                 setDropConflict(true);
                 return;
