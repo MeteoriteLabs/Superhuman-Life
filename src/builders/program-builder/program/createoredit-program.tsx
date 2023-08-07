@@ -17,9 +17,16 @@ interface Operation {
     current_status: boolean;
 }
 
+enum ENUM_FITNESSPROGRAM_LEVEL {
+    Beginner,
+    Intermediate,
+    Advanced,
+    None
+}
+
 function CreateEditProgram(props: any, ref: any): JSX.Element {
     const auth = useContext(AuthContext);
-    const programSchema: { [name: string]: any } = require('./program.json');
+    const programSchema: Record<string, unknown> = require('./program.json');
     const [programDetails, setProgramDetails] = useState<any>({});
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
@@ -34,12 +41,9 @@ function CreateEditProgram(props: any, ref: any): JSX.Element {
             setIsFormSubmitted(!isFormSubmitted);
             setToastType('success');
             setToastMessage('Program details created successfully');
-        },
-        onError: () => {
-            setToastType('error');
-            setToastMessage('Program details has not been created');
         }
     });
+
     const [editProgram] = useMutation(UPDATE_PROGRAM, {
         onCompleted: () => {
             modalTrigger.next(false);
@@ -47,22 +51,15 @@ function CreateEditProgram(props: any, ref: any): JSX.Element {
             setIsFormSubmitted(!isFormSubmitted);
             setToastType('success');
             setToastMessage('Program details has been updated successfully');
-        },
-        onError: () => {
-            setToastType('error');
-            setToastMessage('Program details has not been updated');
-        }
+        }   
     });
+
     const [deleteProgram] = useMutation(DELETE_PROGRAM, {
         onCompleted: () => {
             props.callback();
             setIsFormSubmitted(!isFormSubmitted);
             setToastType('success');
             setToastMessage('Program details has been deleted successfully');
-        },
-        onError: () => {
-            setToastType('error');
-            setToastMessage('Program details has not been deleted');
         }
     });
 
@@ -83,13 +80,6 @@ function CreateEditProgram(props: any, ref: any): JSX.Element {
             }
         }
     }));
-
-    enum ENUM_FITNESSPROGRAM_LEVEL {
-        Beginner,
-        Intermediate,
-        Advanced,
-        None
-    }
 
     useEffect(() => {
         if (operation.type === 'create') {
@@ -175,7 +165,7 @@ function CreateEditProgram(props: any, ref: any): JSX.Element {
         });
     }
 
-    function DeleteExercise(id: any) {
+    function DeleteExercise(id: string) {
         deleteProgram({ variables: { id: id } });
     }
 
