@@ -8,7 +8,7 @@ const Email: React.FC<{value: string; onChange: (params: string) => void;}> = (p
     const [user, setUser] = useState<any>([]);
 
     const FETCH_USER = gql`
-        query fetchUsers($email: String!) {
+        query fetchUsers($email: String) {
             usersPermissionsUsers(filters: { email: { eq: $email } }) {
                 data {
                     id
@@ -25,6 +25,7 @@ const Email: React.FC<{value: string; onChange: (params: string) => void;}> = (p
         skip: userEmail === '',
         onCompleted: loadData
     });
+      
 
     function loadData(data: any) {
         const flattenedData = flattenObj({ ...data });
