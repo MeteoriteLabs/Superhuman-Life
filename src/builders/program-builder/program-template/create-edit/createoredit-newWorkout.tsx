@@ -245,7 +245,7 @@ function CreateEditNewWorkout(props: any, ref: any): JSX.Element {
                 sessions: result.data.sessions,
                 event: frm
             });
-            console.log(result, filterResult);
+          
             if (filterResult) {
                 setDropConflict(true);
                 return;
