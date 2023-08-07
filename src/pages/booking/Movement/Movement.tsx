@@ -36,12 +36,11 @@ export default function Movement() {
 
         const newData = [
             ...flattenData.clientBookings.map((packageItem) => {
-                console.log('data is', packageItem);
                 const renewDay: Date = new Date(packageItem.effective_date);
                 renewDay.setDate(renewDay.getDate() + packageItem.package_duration);
                 const pricingArray = packageItem.fitnesspackages[0].fitnesspackagepricing;
                 const filteredArray = pricingArray.find(
-                    (data) => data.duration === packageItem.fitnesspackages[0].duration
+                    (data) => data.duration === packageItem.package_duration
                 );
                 const filteredPrice = filteredArray?.sapienPricing;
                 const paymentStatus =
@@ -165,11 +164,33 @@ export default function Movement() {
                             ) : (
                                 ''
                             )}
+                            {row.value === 'canceled' ? (
+                                <Badge
+                                    className="px-3 py-1"
+                                    style={{ fontSize: '1rem', borderRadius: '10px' }}
+                                    variant="danger"
+                                >
+                                    {row.value}
+                                </Badge>
+                            ) : (
+                                ''
+                            )}
                             {row.value === 'pending' ? (
                                 <Badge
                                     className="px-3 py-1"
                                     style={{ fontSize: '1rem', borderRadius: '10px' }}
                                     variant="warning"
+                                >
+                                    {row.value}
+                                </Badge>
+                            ) : (
+                                ''
+                            )}
+                            {row.value === 'booked' ? (
+                                <Badge
+                                    className="px-3 py-1"
+                                    style={{ fontSize: '1rem', borderRadius: '10px' }}
+                                    variant="success"
                                 >
                                     {row.value}
                                 </Badge>
