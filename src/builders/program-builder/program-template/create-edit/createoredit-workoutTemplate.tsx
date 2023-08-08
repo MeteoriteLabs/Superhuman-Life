@@ -42,8 +42,8 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
     const [isCreated, setIsCreated] = useState<boolean>(false);
 
     const GET_SESSIONS_BY_DATE = gql`
-        query getprogramdata($date: Date) {
-            sessions(filters: { session_date: { eq: $date }, type: { ne: "restday" } }) {
+        query getprogramdata($date: Date, $changemaker: ID) {
+            sessions(filters: { session_date: { eq: $date }, changemaker: {id: {eq: $changemaker}} ,type: { ne: "restday" } }) {
                 data {
                     id
                     attributes {
@@ -201,7 +201,8 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
 
         if (window.location.pathname.split('/')[1] !== 'programs') {
             const variables = {
-                date: moment(frm.day[0].day, 'Do, MMM YY').format('YYYY-MM-DD')
+                date: moment(frm.day[0].day, 'Do, MMM YY').format('YYYY-MM-DD'),
+                changemaker: auth.userid
             };
 
             const result = await query.refetch(variables);
@@ -209,6 +210,7 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
                 sessions: result.data.sessions,
                 event: frm
             });
+           
             if (filterResult) {
                 setDropConflict(true);
                 return;

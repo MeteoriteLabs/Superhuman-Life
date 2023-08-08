@@ -1,10 +1,10 @@
-import Upload from '../../../components/upload/upload';
+import Upload from 'components/upload/upload';
 
 export const widgets = {
     upload: Upload
 };
 
-export const schemaView: any = {
+export const schemaView: Record<string, unknown> = {
     title: {
         'ui:disabled': true
     },
