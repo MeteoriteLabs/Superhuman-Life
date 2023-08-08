@@ -45,7 +45,7 @@ const DisplayImage: React.FC<{
                 }
             );
         }
-        // eslint-disable-next-line
+        
     }, [props.imageName, props.defaultImageUrl]);
 
     return (

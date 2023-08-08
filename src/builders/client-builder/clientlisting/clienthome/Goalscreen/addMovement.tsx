@@ -19,7 +19,7 @@ function CreateMovement(props: any, ref: any) {
     const [operation, setOperation] = useState<Operation>({} as Operation);
 
     //  const [createClient] = useMutation(ADD_CLIENT, {
-    //       onCompleted: (r: any) => {
+    //       onCompleted: () => {
     //            modalTrigger.next(false);
     //       },
     //  });

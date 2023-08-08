@@ -36,22 +36,22 @@ function CreatePosts(props: any, ref: any) {
     const [showDeleteCommentModal, setShowDeleteCommentModal] = useState(false);
 
     const [createRating] = useMutation(ADD_RATING_NEW, {
-        onCompleted: (r: any) => {
+        onCompleted: () => {
             modalTrigger.next(false);
         }
     });
     const [createNote] = useMutation(ADD_NOTE_NEW, {
-        onCompleted: (r: any) => {
+        onCompleted: () => {
             modalTrigger.next(false);
         }
     });
     const [updaterating] = useMutation(UPDATE_RATING_NEW, {
-        onCompleted: (r: any) => {
+        onCompleted: () => {
             modalTrigger.next(false);
         }
     });
     const [updatenote] = useMutation(UPDATE_NOTES_NEW, {
-        onCompleted: (r: any) => {
+        onCompleted: () => {
             modalTrigger.next(false);
         }
     });

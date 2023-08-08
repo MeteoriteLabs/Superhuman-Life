@@ -104,7 +104,7 @@ export default OneDayScheduler;
 // import Toaster from 'components/Toaster';
 
 // const OneDayScheduler = (props: any) => {
-//     console.log(props);
+
 //     const auth = useContext(AuthContext);
 //     const [show, setShow] = useState<boolean>(false);
 //     const [showModal, setShowModal] = useState<boolean>(false);

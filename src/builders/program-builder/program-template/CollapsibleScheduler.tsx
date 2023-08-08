@@ -227,8 +227,8 @@ const CollapsibleScheduler = (props: any, ref) => {
     useQuery(FETCH_ACTIVITY, {
         variables: { id: event.id },
         skip: event.type !== 'activity',
-        onCompleted: (r: any) => {
-            const flattenData = flattenObj({ ...r });
+        onCompleted: (response: any) => {
+            const flattenData = flattenObj({ ...response });
             setData(flattenData.activities);
             handleShow();
         }
@@ -1597,9 +1597,9 @@ const CollapsibleScheduler = (props: any, ref) => {
     });
 
     const [createRestDay] = useMutation(CREATE_REST_DAY, {
-        onCompleted: (r: any) => {
+        onCompleted: (response: any) => {
             const values = [...props.sessionIds];
-            values.push(r.createSession.data.id);
+            values.push(response.createSession.data.id);
             updateTagSessions({
                 variables: {
                     id: program_id,
@@ -1610,9 +1610,9 @@ const CollapsibleScheduler = (props: any, ref) => {
     });
 
     const [createTemplateRestDay] = useMutation(CREATE_TEMPLATE_SESSION, {
-        onCompleted: (r: any) => {
+        onCompleted: (response: any) => {
             const values = [...props.sessionIds];
-            values.push(r.createSession.data.id);
+            values.push(response.createSession.data.id);
             if (window.location.pathname.split('/')[1] === 'programs') {
                 updateFitnessProgramSessions({
                     variables: {

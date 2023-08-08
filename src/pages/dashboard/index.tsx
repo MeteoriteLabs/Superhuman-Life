@@ -15,7 +15,7 @@ export default function Dashboard(): JSX.Element {
 
     useQuery(GET_USER_ORGANIZATIONS, {
         variables: { id: auth.userid },
-        onCompleted: (data: any) => {
+        onCompleted: (data) => {
             const flattendData = flattenObj({ ...data });
             setOrganizations(flattendData.usersPermissionsUsers[0].organizations);
         }
