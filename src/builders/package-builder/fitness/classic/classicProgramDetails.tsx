@@ -90,7 +90,7 @@ const ClassicProgramDetails: React.FC<{
                             aria-describedby="inputGroup-sizing-default"
                             type="number"
                             min={0}
-                            max={365}
+                            max={duration}
                             disabled={inputDisabled}
                             value={onlineClasses}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setOnlineClasses(+e.target.value)}
@@ -99,6 +99,7 @@ const ClassicProgramDetails: React.FC<{
                             <InputGroup.Text id="basic-addon1">Sessions</InputGroup.Text>
                         </InputGroup.Append>
                     </InputGroup>
+                    {onlineClasses>duration ? <p className='text-danger small'>Please enter online classes less than duration</p>: null}
                 </Col>
             </Row>
 
