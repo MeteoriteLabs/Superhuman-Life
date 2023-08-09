@@ -1,6 +1,6 @@
 import React, { useContext, useImperativeHandle, useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-import ModalView from '../../../../components/modal';
+import ModalView from 'components/modal';
 import {
     GET_SINGLE_PACKAGE_BY_ID,
     GET_FITNESS_PACKAGE_TYPES,
@@ -18,18 +18,18 @@ import {
     DELETE_OFFERING_INVENTORY
 } from '../graphQL/mutations';
 import { Modal, Button } from 'react-bootstrap';
-import AuthContext from '../../../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { schema, widgets } from './groupSchema';
 import { schemaView } from './schemaView';
 import { EditSchema } from './groupEditSchema';
 import { Subject } from 'rxjs';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 import moment from 'moment';
-import Toaster from '../../../../components/Toaster';
+import Toaster from 'components/Toaster';
 import {
     youtubeUrlCustomFormats,
     youtubeUrlTransformErrors
-} from '../../../../components/utils/ValidationPatterns';
+} from 'components/utils/ValidationPatterns';
 import { OfferingInventory } from '../../interface/offeringInventory';
 
 interface Operation {
@@ -40,9 +40,7 @@ interface Operation {
 
 function CreateEditPackage(props: any, ref: any) {
     const auth = useContext(AuthContext);
-    const personalTrainingSchema: {
-        [name: string]: any;
-    } = require('./group.json');
+    const personalTrainingSchema: Record<string, unknown> = require('./group.json');
     const [groupDetails, setGroupDetails] = useState<any>({});
     const [fitnessTypes, setFitnessType] = useState<any[]>([]);
     const [operation, setOperation] = useState<Operation>({} as Operation);
@@ -66,8 +64,7 @@ function CreateEditPackage(props: any, ref: any) {
         }
     });
 
-    // eslint-disable-next-line
-    const { data: inventories, refetch: refetch_inventories } = useQuery(
+    useQuery(
         GET_INVENTORY,
 
         {
@@ -146,8 +143,8 @@ function CreateEditPackage(props: any, ref: any) {
 
             createTag({
                 variables: {
-                    id: response.createFitnesspackage.data.id,
-                    tagName: frmDetails.packagename
+                    id: flattenData.createFitnesspackage.id,
+                    tagName: flattenData.createFitnesspackage.packagename
                 }
             });
         }
