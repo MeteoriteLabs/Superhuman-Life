@@ -296,7 +296,7 @@ const Scheduler: React.FC = () => {
         }
     }
 
-    if (userPackage.length > 0) {
+    if (userPackage.length) {
         programIndex = userPackage.findIndex(
             (item) => item.proManagerId === last[1] && item.proManagerFitnessId === last[0]
         );
