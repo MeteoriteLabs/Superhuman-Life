@@ -7,6 +7,7 @@ import DaysInput from './daysInput';
 import moment from 'moment';
 import TimePicker from 'rc-time-picker';
 import 'rc-time-picker/assets/index.css';
+import Loader from 'components/Loader/Loader';
 
 const TransferProgramTable = (props: any) => {
     const [show, setShow] = useState<boolean>(false);
@@ -84,7 +85,7 @@ const TransferProgramTable = (props: any) => {
         props.onChange(data);
     }, [data]);
 
-    if (!show) return <span style={{ color: 'red' }}>Loading...</span>;
+    if (!show) return <Loader msg="loading"/>;
     else
         return (
             <Table responsive style={{ overflow: 'auto' }}>
@@ -120,8 +121,7 @@ const TransferProgramTable = (props: any) => {
                                         type="transfer"
                                     />
                                 </td>
-                                {/* <Row> */}
-                                {/* <Col lg={4}> */}
+                               
                                 <td style={{ minWidth: '150px' }}>
                                     <TimePicker
                                         value={convertToMoment(data[index].startTime)}
