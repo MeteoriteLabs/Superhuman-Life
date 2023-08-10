@@ -176,8 +176,8 @@ function CreateEditEvent(props: any, ref: any) {
 
             createTag({
                 variables: {
-                    id: response.createFitnesspackage.data.id,
-                    tagName: frmDetails.packageName
+                    id: flattenData.createFitnesspackage.id,
+                    tagName: flattenData.createFitnesspackage.packagename
                 }
             });
         }

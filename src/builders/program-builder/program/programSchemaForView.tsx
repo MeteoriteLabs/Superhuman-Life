@@ -6,10 +6,12 @@ export const widgetsView = {
 
 export const schemaView: Record<string, unknown> = {
     programName: {
-        'ui:readonly': true
+        'ui:readonly': true,
+        'ui:placeholder': 'Enter program name'
     },
     duration: {
-        'ui:readonly': true
+        'ui:readonly': true,
+        'ui:placeholder': 'Define the number of days'
     },
     level: {
         'ui:widget': 'radio',
@@ -23,7 +25,8 @@ export const schemaView: Record<string, unknown> = {
         'ui:options': {
             rows: 3
         },
-        'ui:readonly': true
+        'ui:readonly': true,
+        'ui:placeholder': 'Write summary of the program template'
     },
     discipline: {
         'ui:widget': 'fitnessSelect',

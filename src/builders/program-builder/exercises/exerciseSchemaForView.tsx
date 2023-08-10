@@ -14,7 +14,8 @@ export const widgetsView = {
 
 export const schemaView: any = {
     exercise: {
-        'ui:readonly': true
+        'ui:readonly': true,
+        'ui:placeholder': 'Enter exercise name '
     },
     level: {
         'ui:widget': 'radio',
@@ -36,7 +37,8 @@ export const schemaView: any = {
             rows: 3
         },
         'ui:readonly': true,
-        'ui:help': 'Give a short and simple explanation for the user to understand the exercise.'
+        'ui:help': 'Give a short and simple explanation for the user to understand the exercise.',
+        'ui:placeholder': 'Write description'
     },
     equipment: {
         'ui:widget': 'equipmentSearch',
@@ -56,7 +58,8 @@ export const schemaView: any = {
     },
     addExercise: {
         AddURL: {
-            'ui:readonly': true
+            'ui:readonly': true,
+            'ui:placeholder': 'https://'
         },
         AddText: {
             'ui:widget': 'textEditor',

@@ -21,13 +21,15 @@
                 "type": "number",
                 "title": "Level",
                 "enum": [0, 1, 2],
-                "enumNames": ["Beginner", "Intermediate", "Advanced"]
+                "enumNames": ["Beginner", "Intermediate", "Advanced"],
+                "default": 0
             },
             "intensity": {
                 "type": "number",
                 "title": "Intensity",
                 "enum": [0, 1, 2],
-                "enumNames": ["Low", "Medium", "High"]
+                "enumNames": ["Low", "Medium", "High"],
+                "default": 0
             },
             "discipline": {
                 "type": "string"

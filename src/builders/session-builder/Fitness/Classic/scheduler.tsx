@@ -6,8 +6,8 @@ import {
     GET_TAG_BY_ID
 } from '../../graphQL/queries';
 import { useQuery } from '@apollo/client';
-import { Row, Col, Table, Card, Dropdown, Badge, Accordion, Button } from 'react-bootstrap';
-import SchedulerPage from '../../../program-builder/program-template/scheduler';
+import { Row, Col, Table, Card, Dropdown, Badge, Accordion } from 'react-bootstrap';
+import SchedulerPage from 'builders/program-builder/program-template/scheduler';
 import moment from 'moment';
 import FitnessAction from '../FitnessAction';
 import AuthContext from 'context/auth-context';

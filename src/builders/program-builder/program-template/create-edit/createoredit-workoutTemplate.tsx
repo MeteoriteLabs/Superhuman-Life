@@ -42,8 +42,8 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
     const [isCreated, setIsCreated] = useState<boolean>(false);
 
     const GET_SESSIONS_BY_DATE = gql`
-        query getprogramdata($date: Date) {
-            sessions(filters: { session_date: { eq: $date }, type: { ne: "restday" } }) {
+        query getprogramdata($date: Date, $changemaker: ID) {
+            sessions(filters: { session_date: { eq: $date }, changemaker: {id: {eq: $changemaker}} ,type: { ne: "restday" } }) {
                 data {
                     id
                     attributes {
@@ -104,12 +104,12 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
     });
 
     const [createSession] = useMutation(CREATE_SESSION, {
-        onCompleted: (r: any) => {
+        onCompleted: (response: any) => {
             setIsCreated(!isCreated);
             if (window.location.pathname.split('/')[1] === 'programs') {
                 const templateValues = [...templateSessionsIds];
-                setUserId(r.createSession.data.id);
-                templateValues.push(r.createSession.data.id);
+                setUserId(response.createSession.data.id);
+                templateValues.push(response.createSession.data.id);
                 updateFitenssProgram({
                     variables: {
                         id: program_id,
@@ -120,7 +120,7 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
             if (window.location.pathname.split('/')[1] === 'client') {
                 createSessionBooking({
                     variables: {
-                        session: r.createSession.data.id,
+                        session: response.createSession.data.id,
                         client: program_id
                     }
                 });
@@ -130,8 +130,8 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
             ) {
                 const values = [...props.sessionIds];
                 // here userId refers to the sessionID
-                setUserId(r.createSession.data.id);
-                values.push(r.createSession.data.id);
+                setUserId(response.createSession.data.id);
+                values.push(response.createSession.data.id);
                 upateSessions({
                     variables: {
                         id: program_id,
@@ -201,7 +201,8 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
 
         if (window.location.pathname.split('/')[1] !== 'programs') {
             const variables = {
-                date: moment(frm.day[0].day, 'Do, MMM YY').format('YYYY-MM-DD')
+                date: moment(frm.day[0].day, 'Do, MMM YY').format('YYYY-MM-DD'),
+                changemaker: auth.userid
             };
 
             const result = await query.refetch(variables);
@@ -209,6 +210,7 @@ function CreateEditWorkoutTemplate(props: any, ref: any) {
                 sessions: result.data.sessions,
                 event: frm
             });
+           
             if (filterResult) {
                 setDropConflict(true);
                 return;

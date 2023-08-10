@@ -25,6 +25,19 @@ interface Operation {
     current_status: boolean;
 }
 
+enum ENUM_EXERCISES_EXERCISELEVEL {
+    Beginner,
+    Intermediate,
+    Advanced,
+    None
+}
+
+enum ENUM_WORKOUTS_INTENSITY {
+    Low,
+    Medium,
+    High
+}
+
 function CreateEditNewWorkout(props: any, ref: any): JSX.Element {
     const auth = useContext(AuthContext);
     const programSchema: Record<string, unknown> = require(window.location.pathname.includes(
@@ -43,8 +56,8 @@ function CreateEditNewWorkout(props: any, ref: any): JSX.Element {
     const [isCreated, setIsCreated] = useState<boolean>(false);
 
     const GET_SESSIONS_BY_DATE = gql`
-        query getprogramdata($date: Date) {
-            sessions(filters: { session_date: { eq: $date }, type: { ne: "restday" } }) {
+        query getprogramdata($date: Date, $changemaker: ID) {
+            sessions(filters: { session_date: { eq: $date },changemaker: {id: {eq: $changemaker}} ,type: { ne: "restday" } }) {
                 data {
                     id
                     attributes {
@@ -176,19 +189,6 @@ function CreateEditNewWorkout(props: any, ref: any): JSX.Element {
         }
     }));
 
-    enum ENUM_EXERCISES_EXERCISELEVEL {
-        Beginner,
-        Intermediate,
-        Advanced,
-        None
-    }
-
-    enum ENUM_WORKOUTS_INTENSITY {
-        Low,
-        Medium,
-        High
-    }
-
     function FillDetails() {
         const details: any = {};
         setProgramDetails(details);
@@ -236,7 +236,8 @@ function CreateEditNewWorkout(props: any, ref: any): JSX.Element {
 
         if (window.location.pathname.split('/')[1] !== 'programs') {
             const variables = {
-                date: frm ? moment(frm.day[0].day, 'Do, MMM YY').format('YYYY-MM-DD') : null
+                date: frm ? moment(frm.day[0].day, 'Do, MMM YY').format('YYYY-MM-DD') : null,
+                changemaker: auth.userid
             };
 
             const result = await query.refetch(variables);
@@ -244,6 +245,7 @@ function CreateEditNewWorkout(props: any, ref: any): JSX.Element {
                 sessions: result.data.sessions,
                 event: frm
             });
+          
             if (filterResult) {
                 setDropConflict(true);
                 return;

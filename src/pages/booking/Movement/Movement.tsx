@@ -38,6 +38,16 @@ export default function Movement() {
             ...flattenData.clientBookings.map((packageItem) => {
                 const renewDay: Date = new Date(packageItem.effective_date);
                 renewDay.setDate(renewDay.getDate() + packageItem.package_duration);
+                const filteredArray = packageItem.fitnesspackages[0].fitnesspackagepricing.find(
+                    (data) => data.duration === packageItem.package_duration
+                );
+                const filteredPrice = filteredArray?.sapienPricing;
+                const paymentStatus =
+                    packageItem.fitnesspackages[0].fitnesspackagepricing[0].mrp === 'free'
+                        ? 'Free'
+                        : packageItem.Booking_status === ('accepted' || 'booked')
+                        ? 'Paid'
+                        : 'Unpaid';
                 return {
                     id: packageItem.id,
                     booking_date: packageItem.booking_date,
@@ -47,9 +57,9 @@ export default function Movement() {
                     effectiveDate: packageItem.effective_date,
                     packageRenewal: renewDay,
                     duration: packageItem.package_duration,
-                    price: 'Rs 4000',
-                    payment_status: 'Paid',
-                    Status: packageItem.booking_status
+                    price: filteredPrice,
+                    payment_status: paymentStatus,
+                    Status: packageItem.Booking_status
                 };
             })
         ];
@@ -153,11 +163,33 @@ export default function Movement() {
                             ) : (
                                 ''
                             )}
+                            {row.value === 'canceled' ? (
+                                <Badge
+                                    className="px-3 py-1"
+                                    style={{ fontSize: '1rem', borderRadius: '10px' }}
+                                    variant="danger"
+                                >
+                                    {row.value}
+                                </Badge>
+                            ) : (
+                                ''
+                            )}
                             {row.value === 'pending' ? (
                                 <Badge
                                     className="px-3 py-1"
                                     style={{ fontSize: '1rem', borderRadius: '10px' }}
                                     variant="warning"
+                                >
+                                    {row.value}
+                                </Badge>
+                            ) : (
+                                ''
+                            )}
+                            {row.value === 'booked' ? (
+                                <Badge
+                                    className="px-3 py-1"
+                                    style={{ fontSize: '1rem', borderRadius: '10px' }}
+                                    variant="success"
                                 >
                                     {row.value}
                                 </Badge>

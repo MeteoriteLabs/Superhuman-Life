@@ -15,6 +15,9 @@ export const widgets = {
 };
 
 export const schema: any = {
+    workout: {
+        'ui:placeholder': 'Enter workout name'
+    },
     level: {
         'ui:widget': 'radio',
         'ui:options': {
@@ -31,13 +34,18 @@ export const schema: any = {
         'ui:widget': 'textarea',
         'ui:options': {
             rows: 3
-        }
+        },
+        'ui:placeholder': 'Explain in detail about the workout'
     },
     benefits: {
         'ui:widget': 'textarea',
         'ui:options': {
             rows: 3
-        }
+        },
+        'ui:placeholder': 'Explain the benefits of this workout'
+    },
+    calories: {
+        'ui:placeholder': 'Enter total calories'
     },
     equipment: {
         'ui:widget': 'equipmentSearch',

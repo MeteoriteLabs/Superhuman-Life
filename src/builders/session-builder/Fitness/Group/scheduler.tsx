@@ -21,11 +21,11 @@ import {
     Accordion,
     Form
 } from 'react-bootstrap';
-import SchedulerPage from '../../../program-builder/program-template/scheduler';
+import SchedulerPage from 'builders/program-builder/program-template/scheduler';
 import moment from 'moment';
 import '../fitness.css';
 import FitnessAction from '../FitnessAction';
-import AuthContext from '../../../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { Link } from 'react-router-dom';
 import TimePicker from 'rc-time-picker';
 import { flattenObj } from 'components/utils/responseFlatten';
@@ -39,7 +39,7 @@ import '../../profilepicture.css';
 import SideNav from 'builders/program-builder/program-template/SchedulerSideBar';
 import CollapsibleScheduler from 'builders/program-builder/program-template/CollapsibleScheduler';
 
-const Scheduler = () => {
+const Scheduler: React.FC = () => {
     const auth = useContext(AuthContext);
     const last = window.location.pathname.split('/').reverse();
     const tagId = window.location.pathname.split('/').pop();
@@ -210,7 +210,6 @@ const Scheduler = () => {
                     level: detail.level,
                     sdate: detail.start_dt,
                     events: handleEventsSeperation(detail.events, detail.rest_days),
-                    // eslint-disable-next-line
                     edate: detail.end_dt,
                     duration: detail.duration_days,
                     details: detail.description,
@@ -297,7 +296,7 @@ const Scheduler = () => {
         }
     }
 
-    if (userPackage.length > 0) {
+    if (userPackage.length) {
         programIndex = userPackage.findIndex(
             (item) => item.proManagerId === last[1] && item.proManagerFitnessId === last[0]
         );
