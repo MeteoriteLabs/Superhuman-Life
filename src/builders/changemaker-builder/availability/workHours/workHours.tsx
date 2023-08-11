@@ -30,11 +30,10 @@ import {
 } from '../../graphql/mutations';
 import { useQuery, useMutation } from '@apollo/client';
 import AuthContext from '../../../../context/auth-context';
-import TimePicker from 'rc-time-picker';
-import 'rc-time-picker/assets/index.css';
 import './styles.css';
 import Toaster from '../../../../components/Toaster';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
+import TimePickers from 'components/ClockTimePicker';
 
 const configTemplate: any = {
     Sunday: {
@@ -305,16 +304,6 @@ const WorkHours: React.FC = () => {
         }, 3000);
     }
 
-    function convertToMoment(time: string) {
-        var timeSplit = time.split(':').map(Number);
-        return moment().set({ hour: timeSplit[0], minute: timeSplit[1] });
-    }
-
-    function handleTimeConversion(time: number) {
-        var val = 60 / (1 / (time / 60));
-        return val;
-    }
-
     useEffect(() => {
         setTimeout(() => {
             setShow(true);
@@ -322,13 +311,11 @@ const WorkHours: React.FC = () => {
     }, []);
 
     function handleFromTimeInput(val: any) {
-        var m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60;
-        setFromTime(val.slice(0, 2) + ':' + (m === 0 ? '00' : m));
+        setFromTime(val.$H + ':' + (val.$m === 0 ? '00' : val.$m));
     }
 
     function handleToTimeInput(val: any) {
-        var m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60;
-        setToTime(val.slice(0, 2) + ':' + (m === 0 ? '00' : m));
+        setToTime(val.$H + ':' + (val.$m === 0 ? '00' : val.$m));
     }
 
     function handleTimeValidation() {
@@ -969,26 +956,22 @@ const WorkHours: React.FC = () => {
                         <Col lg={{ span: 5 }}>
                             <Row>
                                 <Col lg={5}>
-                                    <TimePicker
-                                        className="time_picker"
-                                        value={convertToMoment(fromTime)}
-                                        showSecond={false}
-                                        minuteStep={15}
-                                        onChange={(e) => {
-                                            handleFromTimeInput(moment(e).format('HH:mm'));
-                                        }}
-                                    />
+                                    <div>
+                                        <TimePickers
+                                            label="Choose start time"
+                                            disabled={false}
+                                            onChange={handleFromTimeInput}
+                                        />
+                                    </div>
                                 </Col>
-                                <Col lg={2}>To</Col>
+                                <Col lg={2} style={{ fontSize: '20px', marginTop: '9px' }}>
+                                    To
+                                </Col>
                                 <Col lg={5}>
-                                    <TimePicker
-                                        className="time_picker"
-                                        value={convertToMoment(toTime)}
-                                        showSecond={false}
-                                        minuteStep={15}
-                                        onChange={(e) => {
-                                            handleToTimeInput(moment(e).format('HH:mm'));
-                                        }}
+                                    <TimePickers
+                                        label="Choose end time"
+                                        disabled={false}
+                                        onChange={handleToTimeInput}
                                     />
                                 </Col>
                             </Row>
@@ -1001,6 +984,7 @@ const WorkHours: React.FC = () => {
                                 onChange={(e) => {
                                     setClassMode(e.target.value);
                                 }}
+                                style={{ height: '55px' }}
                             >
                                 <option value="none">Select Mode</option>
                                 <option value="Online">Online</option>
@@ -1010,7 +994,7 @@ const WorkHours: React.FC = () => {
                         </Col>
                         <Col lg={1}>
                             <Button
-                                className="pl-3 pr-3 pt-1 pb-1 shadow-lg btn_add"
+                                className="pl-4 pr-4 pt-2 pb-2 shadow-lg btn_add mt-1"
                                 title={
                                     disableAdd || classMode === ''
                                         ? 'please enter valid details'
@@ -1324,29 +1308,24 @@ const WorkHours: React.FC = () => {
                                     )}
                                     {!userConfig[daysOfWeek[dayIndex]]?.isHoliday && (
                                         <Row className="mt-4">
-                                            <Col lg={3}>
-                                                <TimePicker
-                                                    value={convertToMoment(fromTime)}
-                                                    showSecond={false}
-                                                    minuteStep={15}
-                                                    onChange={(e) => {
-                                                        handleFromTimeInput(
-                                                            moment(e).format('HH:mm')
-                                                        );
-                                                    }}
+                                            <Col lg={3} style={{ width: '30vw' }}>
+                                                <TimePickers
+                                                    label="start time"
+                                                    disabled={false}
+                                                    onChange={handleFromTimeInput}
                                                 />
                                             </Col>
-                                            <Col lg={1}>To</Col>
+                                            <Col
+                                                lg={1}
+                                                style={{ fontSize: '20px', marginTop: '9px' }}
+                                            >
+                                                To
+                                            </Col>
                                             <Col lg={3}>
-                                                <TimePicker
-                                                    value={convertToMoment(toTime)}
-                                                    showSecond={false}
-                                                    minuteStep={15}
-                                                    onChange={(e) => {
-                                                        handleToTimeInput(
-                                                            moment(e).format('HH:mm')
-                                                        );
-                                                    }}
+                                                <TimePickers
+                                                    label="End time"
+                                                    disabled={false}
+                                                    onChange={handleToTimeInput}
                                                 />
                                             </Col>
                                             <Col lg={3}>
@@ -1355,6 +1334,7 @@ const WorkHours: React.FC = () => {
                                                     onChange={(e) => {
                                                         setClassMode(e.target.value);
                                                     }}
+                                                    style={{ height: '55px' }}
                                                 >
                                                     <option value="">Select Mode</option>
                                                     <option value="Offline">Online</option>
@@ -1364,7 +1344,7 @@ const WorkHours: React.FC = () => {
                                             </Col>
                                             <Col lg={2}>
                                                 <Button
-                                                    className="pl-3 pr-3 pt-1 pb-1 shadow-lg"
+                                                    className="pl-4 pr-4 pt-2 pb-2 shadow-lg btn_add mt-1"
                                                     title={
                                                         disableAdd || classMode === ''
                                                             ? 'please enter valid details'
