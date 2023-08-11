@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
+import 'rc-time-picker/assets/index.css';
 import TimePickers from 'components/ClockTimePicker';
 
 const TimeFieldInput = (props: any) => {
