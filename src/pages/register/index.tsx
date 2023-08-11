@@ -302,6 +302,7 @@ const Register: React.FC = () => {
     const [registerUser] = useMutation(REGISTER_USER, {
         onCompleted: (data) => {
             setNewUserId(data.register.user.id);
+
             updateUser({
                 variables: {
                     userid: data.register.user.id,
@@ -553,7 +554,7 @@ const Register: React.FC = () => {
                 <Row noGutters>
                     <Col>
                         <Container>
-                            <Row className='mt-4'>
+                            <Row>
                                 <Col xs={3} md={3} lg={3}>
                                     <ProgressBar
                                         max={1}
@@ -591,12 +592,12 @@ const Register: React.FC = () => {
                                     <small className="text-muted">Step 4</small>
                                 </Col>
                             </Row>
-                            <Modal.Dialog scrollable style={{height:"500px"}}>
+                            <Modal.Dialog scrollable>
                                 <Modal.Body className="bg-light">
                                     <Form
                                         uiSchema={uiSchema}
                                         schema={registerSchema[step]}
-                                        ref={formRef} 
+                                        ref={formRef}
                                         showErrorList={false}
                                         validate={Validate}
                                         // eslint-disable-next-line
@@ -608,21 +609,17 @@ const Register: React.FC = () => {
                                     </Form>
                                 </Modal.Body>
                                 <Modal.Footer className="bg-light">
-                                    {step !== 1 ? (
-                                        <Button
-                                            variant="light"
-                                            size="sm"
-                                            onClick={() => {
-                                                setStep(step - 1);
-                                                carouselRef.current.prev();
-                                            }}
-                                        >
-                                            <i className="mr-2 fas fa-arrow-left"></i>
-                                        </Button>
-                                    ) : (
-                                        ''
-                                    )}
-
+                                    <Button
+                                        variant="light"
+                                        size="sm"
+                                        onClick={() => {
+                                            setStep(step - 1);
+                                            carouselRef.current.prev();
+                                        }}
+                                        disabled={step === 1 ? true : false}
+                                    >
+                                        <i className="mr-2 fas fa-arrow-left"></i>
+                                    </Button>
                                     <Button
                                         variant="danger"
                                         size="sm"
@@ -642,7 +639,7 @@ const Register: React.FC = () => {
                             </Modal.Dialog>
                         </Container>
                     </Col>
-                    <Col className="d-none d-lg-block mt-3" >
+                    <Col className="d-none d-lg-block">
                         <Carousel
                             ref={carouselRef}
                             interval={8000}
@@ -653,7 +650,7 @@ const Register: React.FC = () => {
                             <Carousel.Item>
                                 <img
                                     src="/assets/step-1.svg"
-                                    height="620px"
+                                    height="700px"
                                     className="d-block w-100"
                                     alt="sapien-exercise"
                                 />
@@ -661,7 +658,7 @@ const Register: React.FC = () => {
                             <Carousel.Item>
                                 <img
                                     src="/assets/step-2.svg"
-                                    height="620px"
+                                    height="700px"
                                     className="d-block w-100"
                                     alt="sapien-exercise"
                                 />
@@ -669,7 +666,7 @@ const Register: React.FC = () => {
                             <Carousel.Item>
                                 <img
                                     src="/assets/step-3.svg"
-                                    height="620px"
+                                    height="700px"
                                     className="d-block w-100"
                                     alt="sapien-exercise"
                                 />
@@ -677,7 +674,7 @@ const Register: React.FC = () => {
                             <Carousel.Item>
                                 <img
                                     src="/assets/step-4.svg"
-                                    height="620px"
+                                    height="700px"
                                     className="d-block w-100"
                                     alt="sapien-exercise"
                                 />
