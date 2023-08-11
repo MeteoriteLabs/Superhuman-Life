@@ -8,7 +8,8 @@ import {
     UPDATE_SESSION_DATE
 } from '../graphql/mutations';
 import moment from 'moment';
-import TimePickers from 'components/ClockTimePicker';
+import TimePicker from 'rc-time-picker';
+import 'rc-time-picker/assets/index.css';
 
 const RosterSettings: React.FC<{ data: any[] }> = (props) => {
     const data = props.data[0];
@@ -63,11 +64,13 @@ const RosterSettings: React.FC<{ data: any[] }> = (props) => {
     }
 
     function handleFromTimeInput(val: any) {
-        setStartTime(val.$H + ':' + (val.$m === 0 ? '00' : val.$m));
+        const m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60;
+        setStartTime(val.slice(0, 2) + ':' + (m === 0 ? '00' : m));
     }
 
     function handleToTimeInput(val: any) {
-        setEndTime(val.$H + ':' + (val.$m === 0 ? '00' : val.$m));
+        const m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60;
+        setEndTime(val.slice(0, 2) + ':' + (m === 0 ? '00' : m));
     }
 
     function handleTimeValidation() {
@@ -219,16 +222,22 @@ const RosterSettings: React.FC<{ data: any[] }> = (props) => {
                             <h4>Reschedule Time</h4>
                         </div>
                         <div className="text-center">
-                            <TimePickers
-                                label="start time"
-                                disabled={false}
-                                onChange={handleFromTimeInput}
+                            <TimePicker
+                                value={convertToMoment(startTime)}
+                                showSecond={false}
+                                minuteStep={15}
+                                onChange={(e) => {
+                                    handleFromTimeInput(moment(e).format('HH:mm'));
+                                }}
                             />
                             <span>&nbsp;&nbsp;to&nbsp;&nbsp;</span>
-                            <TimePickers
-                                label="end time"
-                                disabled={false}
-                                onChange={handleToTimeInput}
+                            <TimePicker
+                                value={convertToMoment(endTime)}
+                                showSecond={false}
+                                minuteStep={15}
+                                onChange={(e) => {
+                                    handleToTimeInput(moment(e).format('HH:mm'));
+                                }}
                             />
                         </div>
                         <div className="text-center mt-2">{handleTimeValidation()}</div>

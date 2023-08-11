@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import moment from 'moment';
-import TimePickers from 'components/ClockTimePicker';
+import TimePicker from 'rc-time-picker';
+import 'rc-time-picker/assets/index.css';
 
 const TimeFieldInput = (props: any) => {
     const [startTime, setStartTime] = useState(
@@ -23,11 +24,13 @@ const TimeFieldInput = (props: any) => {
     }
 
     function handleStartTimeInput(val: any) {
-        setStartTime(val.$H + ':' + (val.$m === 0 ? '00' : val.$m));
+        const m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60;
+        setStartTime(val.slice(0, 2) + ':' + (m === 0 ? '00' : m));
     }
 
     function handleEndTimeInput(val: any) {
-        setEndTime(val.$H + ':' + (val.$m === 0 ? '00' : val.$m));
+        const m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60;
+        setEndTime(val.slice(0, 2) + ':' + (m === 0 ? '00' : m));
     }
 
     function handleTimeValidation() {
@@ -113,10 +116,22 @@ const TimeFieldInput = (props: any) => {
                     </label>
                 </Col>
                 <Col lg={4}>
-                    <TimePickers
-                        label=""
+                    <TimePicker
+                        value={
+                            props.startTime && startTime === ''
+                                ? convertToMomnet(handleTimeFormat(props.startTime))
+                                : startTimeValue
+                        }
                         disabled={props.disabled ? props.disabled : false}
-                        onChange={handleStartTimeInput}
+                        showSecond={false}
+                        minuteStep={15}
+                        onChange={(e) => {
+                            if (!e) {
+                                setStartTime('00:00');
+                            } else {
+                                handleStartTimeInput(moment(e).format('HH:mm'));
+                            }
+                        }}
                     />
                 </Col>
             </Row>
@@ -127,10 +142,22 @@ const TimeFieldInput = (props: any) => {
                     </label>
                 </Col>
                 <Col lg={4}>
-                    <TimePickers
-                        label=""
+                    <TimePicker
+                        value={
+                            props.endTime && endTime === ''
+                                ? convertToMomnet(handleTimeFormat(props.endTime))
+                                : endTimeValue
+                        }
                         disabled={props.disabled ? props.disabled : false}
-                        onChange={handleEndTimeInput}
+                        showSecond={false}
+                        minuteStep={15}
+                        onChange={(e) => {
+                            if (!e) {
+                                setEndTime('00:00');
+                            } else {
+                                handleEndTimeInput(moment(e).format('HH:mm'));
+                            }
+                        }}
                     />
                 </Col>
             </Row>
