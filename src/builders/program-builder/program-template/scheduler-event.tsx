@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import './styles.css';
 import { Row } from 'react-bootstrap';
 import TransferPrograms from './transferPrograms';
@@ -129,6 +129,7 @@ const SchedulerEvent = (props: any) => {
         const diffDays = sessionDateFormatted.diff(startDateFormatted, 'days') + 1;
         return diffDays;
     }
+    console.log(props);
 
     useEffect(() => {
         handleRenderTable([]);
@@ -160,10 +161,12 @@ const SchedulerEvent = (props: any) => {
                         </div>
                         <div className="events-row">
                             {props.programDays.map((val, index) => {
+                               
                                 return (
                                     <div className="event-cell" key={index}>
                                         {arr[val] &&
                                             arr[val].map((val, index) => {
+                                                
                                                 return (
                                                     <div
                                                         key={index}

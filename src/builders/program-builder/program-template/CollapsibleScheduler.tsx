@@ -73,6 +73,7 @@ const CollapsibleScheduler = (props: any, ref) => {
     const [clickedSessionId, setClickedSessionId] = useState('');
     // const [showRestDay, setShowRestDay] = useState<boolean>(false);
     const [isUpdated, setIsUpdated] = useState<boolean>(false);
+    const [sessionsObject, setSessionsObject] = useState({});
 
     const DELETE_REST_DAY = gql`
         mutation deleteRestDay($id: ID!) {
@@ -524,6 +525,7 @@ const CollapsibleScheduler = (props: any, ref) => {
     const days: number[] = [];
     const dates: string[] = [];
     const min: number[] = [0, 15, 30, 45];
+    const dateArr: string[] = [];
 
     function handleDays() {
         if (props.type === 'day') {
@@ -537,6 +539,7 @@ const CollapsibleScheduler = (props: any, ref) => {
             for (let j = 0; j < props.days; j++) {
                 const t = moment(props.startDate).add(j, 'days').format('DD MMM YY');
                 dates.push(t);
+                dateArr.push(moment(props.startDate).add(j, 'days').format('YYYY-MM-DD'));
             }
         } else {
             for (let k = 1; k <= props.days; k++) {
@@ -563,7 +566,7 @@ const CollapsibleScheduler = (props: any, ref) => {
         setarr2(confirmVal);
         event.import === 'importedEvent' ? setOnDragAndDrop(false) : setOnDragAndDrop(true);
     }
-
+console.log(dateArr);
     // function handleFloatingActionProgramCallback(event: any) {
     //     setProgram(`${event}`);
     //     props.callback();
@@ -633,12 +636,12 @@ const CollapsibleScheduler = (props: any, ref) => {
                 for (let k = 0; k < props.restDays.length; k++) {
                     if (
                         val ===
-                        calculateDay(props.startDate, props.restDays[k].session.session_date)
+                        calculateDay(props.startDate, props.restDays[k].session?.session_date)
                     ) {
                         return {
                             isRestDay: true,
-                            id: props.restDays[k].session.id,
-                            date: props.restDays[k].session.session_date
+                            id: props.restDays[k]?.session.id,
+                            date: props.restDays[k]?.session.session_date
                         };
                     }
                 }
@@ -646,11 +649,11 @@ const CollapsibleScheduler = (props: any, ref) => {
         } else if (props.restDays && props?.type !== 'day') {
            
             for (let i = 0; i < props.restDays.length; i++) {
-                if (val === calculateDay(props.startDate, props.restDays[i].session_date)) {
+                if (val === calculateDay(props.startDate, props.restDays[i]?.session_date)) {
                     return {
                         isRestDay: true,
-                        id: props.restDays[i].id,
-                        date: props.restDays[i].session_date
+                        id: props.restDays[i]?.id,
+                        date: props.restDays[i]?.session_date
                     };
                 }
             }
@@ -1873,6 +1876,38 @@ const CollapsibleScheduler = (props: any, ref) => {
         return false;
     };
 
+    useEffect(() => {
+        const sessionsObj = {};
+        const tag = flattenObj({ ...props.schedulerSessions.tags });
+        console.log(tag);
+        const sessions =
+            tag && tag.length && tag[0].sessions && tag[0].sessions.length ? tag[0].sessions : [];
+        console.log(sessions);
+        for (let i = 0; i < sessions.length; i++) {
+            sessionsObj[sessions[i].session_date] = sessionsObj[sessions[i].session_date] ?
+            [...sessionsObj[sessions[i].session_date], 
+            {
+                "startTime": sessions[i].start_time,
+                "endTime": sessions[i].end_time,
+                "name":
+                    sessions[i].type === 'workout'
+                        ? sessions[i].workout.workouttitle
+                        : sessions[i].activity.title
+            }
+        ]
+             : [{
+                "startTime": sessions[i].start_time,
+                "endTime": sessions[i].end_time,
+                "name":
+                    sessions[i].type === 'workout'
+                        ? sessions[i].workout.workouttitle
+                        : sessions[i].activity.title
+            }];
+        }
+       setSessionsObject(sessionsObj);
+        console.log(sessionsObj);
+    }, [props]);
+
     if (!show) {
         return (
             <div className="text-center">
@@ -1886,20 +1921,6 @@ const CollapsibleScheduler = (props: any, ref) => {
     } else
         return (
             <div ref={ref}>
-                {/* Floating Action Buttons */}
-                {/* {props?.clientSchedular !== 'client' && (
-                    <FloatingButton
-                        clientIds={props.clientIds}
-                        sessionIds={props.sessionIds}
-                        startDate={props.startDate}
-                        duration={props.days}
-                        callback={handleFloatingActionProgramCallback}
-                        callback2={handleFloatingActionProgramCallback2}
-                        callback3={handleRefetch}
-                        restDayCallback={handleShowRestDay}
-                        showRestDayAction={showRestDay}
-                    />
-                )} */}
                
                 <div className="wrapper shadow-lg">
                     <div className="schedular">
@@ -1909,7 +1930,7 @@ const CollapsibleScheduler = (props: any, ref) => {
                                     className="cell"
                                     style={{
                                         backgroundColor: '#343A40', color:'#fff',
-                                        // backgroundColor: 'white',
+                                       
                                         position: 'relative',
                                         minHeight: `${props.type === 'date' ? '70px' : '70px'}`
                                     }}
@@ -1917,6 +1938,116 @@ const CollapsibleScheduler = (props: any, ref) => {
                                 {handleActionRender()}
                             </div>
                         )}
+                        <div>
+
+                    <div
+                        style={{
+                            overflow: 'auto',
+                            border: '1px solid black',
+                            maxHeight: '300px'
+                        }}
+                        className="schedular mt-5 mb-3"
+                    >
+                        <div className="day-row">
+                        {handleDaysRowRender()}
+                         
+                        </div>
+                        <div className="events-row">
+                            {dateArr.map((val, index) => {
+                                console.log(val);
+                                return (
+                                    <div className="event-cell" key={index}>
+                                        {sessionsObject[val] &&
+                                            sessionsObject[val].map((val, index) => {
+                                                return (
+                                                    <div
+                                                        key={index}
+                                                        style={{
+                                                            backgroundColor: '#FFFDD1',
+                                                            height: '50px',
+                                                            borderRadius: '10px',
+                                                            zIndex: 997,
+                                                            minWidth: '120px',
+                                                            color: '#000'
+                                                        }}
+                                                       
+                                                                                // onClick={() => {
+                                                                                //     setEvent(val);
+                                                                                //     setClickedSessionId(
+                                                                                //         val.sessionId
+                                                                                //     );
+                                                                                // }}
+                                                                                // id="dragMe"
+                                                                                // className="schedular-content draggable"
+                                                                                // draggable={
+                                                                                //     val.type ===
+                                                                                //     'restday'
+                                                                                //         ? false
+                                                                                //         : true
+                                                                                // }
+                                                                                // onDragStart={(
+                                                                                //     e
+                                                                                // ) => {
+                                                                                //     e.dataTransfer.setData(
+                                                                                //         'scheduler-event',
+                                                                                //         JSON.stringify(
+                                                                                //             val
+                                                                                //         )
+                                                                                //     );
+                                                                                // }}
+                                                                                // style={{
+                                                                                //     borderRadius:
+                                                                                //         '5px',
+                                                                                //     height: `${
+                                                                                //         handleHeight(
+                                                                                //             val
+                                                                                //         ) +
+                                                                                //         handleHeight(
+                                                                                //             val
+                                                                                //         ) /
+                                                                                //             60
+                                                                                //     }px`,
+                                                                                //     backgroundColor:
+                                                                                //         '#FFFDD1',
+                                                                                //     color: '#000',
+                                                                                //     // background: 'rgb(135,206,235)',
+                                                                                //     width: `10%`
+                                                                                //     ,
+                                                                                //     border: '2px solid rgba(255,255,255,0.5)',
+                                                                                //     paddingTop: `2px`,
+                                                                                //     minWidth:
+                                                                                //         '50% !important',
+                                                                                //     maxWidth:
+                                                                                //         '50% !important',
+                                                                                //     cursor: 'pointer',
+                                                                                //     // left: `10%`
+                                                                                // }}
+                                                        // draggable="true"
+                                                        className="cell container "
+                                                        
+                                                    >
+                                                        <span
+                                                            style={{
+                                                                fontWeight: 'bold',
+                                                                // overflow: 'hidden',
+                                                                fontSize: '10px',
+                                                                // display: "flex",
+                                                                // flexDirection: "column"
+                                                            }}
+                                                        >
+                                                            <p>{val.name}<br/>{val.startTime} - {val.endTime}</p>
+                                                            {/* <p>{val.startTime} - {val.endTime}</p> */}
+
+                                                        </span>
+                                                    </div>
+                                                );
+                                            })}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>
                         <div className="day-row">
                             <div
                                 className="cell"
@@ -2164,28 +2295,7 @@ const CollapsibleScheduler = (props: any, ref) => {
                                                                                                       val.endMin
                                                                                                   )
                                                                                               )}`}
-                                                                                        {/* : ({
-                                                                                            //   true ?
-                                                                                            
-                                                                                            // ((val.hour ===
-                                                                                            //   '0'
-                                                                                            //       ? '00'
-                                                                                            //       : val.hour) +
-                                                                                            //   ':' +
-                                                                                            //   (val.min ===
-                                                                                            //   '0'
-                                                                                            //       ? '00'
-                                                                                            //       : val.min) +
-                                                                                            //   ' - ' +
-                                                                                            //   val.endHour +
-                                                                                            //   ':' +
-                                                                                            //   (val.endMin.toString() ===
-                                                                                            //   '0'
-                                                                                            //       ? '00'
-                                                                                            //       : val.endMin)) :
-                                                                                            // `${handleCovertTimeFormat(Number(val.hour), Number(val.min))}-${handleCovertTimeFormat(Number(val.endHour), Number(val.endMin))}`
-                                                                                            // })} */}
-                                                                                    </div>
+                                                                                       </div>
                                                                                     <div className="event-time d-flex justify-content-end" style={{position: 'absolute', right: '0', bottom: '0'}} title="bookings"><small>{val.sessions_bookings}</small></div>
                                                                                 </div>
                                                                             </div>

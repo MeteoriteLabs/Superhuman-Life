@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useContext } from 'react';
+import { useState, useEffect, useRef, useContext, forwardRef } from 'react';
 import {
     GET_TABLEDATA,
     GET_ALL_FITNESS_PACKAGE_BY_TYPE,
@@ -38,8 +38,9 @@ import 'react-calendar/dist/Calendar.css';
 import '../../profilepicture.css';
 import SideNav from 'builders/program-builder/program-template/SchedulerSideBar';
 import CollapsibleScheduler from 'builders/program-builder/program-template/CollapsibleScheduler';
+import EditProgramName from './EditProgramName';
 
-const Scheduler: React.FC = () => {
+const Scheduler = () => {
     const auth = useContext(AuthContext);
     const last = window.location.pathname.split('/').reverse();
     const tagId = window.location.pathname.split('/').pop();
@@ -72,6 +73,19 @@ const Scheduler: React.FC = () => {
     const [sessionFilter, setSessionFilter] = useState('none');
     const [show24HourFormat, setShow24HourFormat] = useState(false);
     const ref = useRef<any>(null);
+    const editProgramNameComponent = useRef<any>(null);
+    const [showProgramNameModal, setShowProgramNameModal] = useState<boolean>(false);
+
+    // calling modal for update option
+    // function updateProgramName() {
+    //     console.log(tagId);
+    //     editProgramNameComponent.current.TriggerForm({
+    //         id: tagId,
+    //         type: 'edit',
+    //         modal_status: true
+    //     });
+    // }
+
 
     const handleScrollScheduler = () => {
         ref.current?.scrollIntoView({ behaviour: 'smooth', inline: 'nearest' });
@@ -400,13 +414,6 @@ const Scheduler: React.FC = () => {
         return end.diff(start, 'days') + 1;
     }
 
-    // function calculateDailySessions(sessions) {
-    //     const dailySessions = sessions.filter(
-    //         (ses: any) => ses.session_date === moment().format('YYYY-MM-DD')
-    //     );
-    //     return dailySessions.length ? dailySessions.length : 'N/A';
-    // }
-
     function handleFloatingActionProgramCallback(event: any) {
         setProgram(`${event}`);
         handleCallback();
@@ -456,6 +463,19 @@ const Scheduler: React.FC = () => {
                                 <b> back</b>
                             </span>
                         </div>
+
+                        {/* <EditProgramName
+                        ref={editProgramNameComponent}
+                        callback={handleCallback()}
+                    ></EditProgramName> */}
+
+{showProgramNameModal && (
+                    <EditProgramName
+                        show={showProgramNameModal}
+                        onHide={() => setShowProgramNameModal(false)}
+                        id={tagId}
+                    />
+                )}
 
                         {/* Cards for service details and movement sessions */}
                         <Row>
@@ -516,24 +536,18 @@ const Scheduler: React.FC = () => {
                                                                     </Dropdown.Toggle>
 
                                                                     <Dropdown.Menu>
-                                                                        <Dropdown.Item key={2}>
+                                                                        <Dropdown.Item key={2} onClick={() => setShowProgramNameModal(true)}>
                                                                             Edit Program Name
                                                                         </Dropdown.Item>
                                                                         <Dropdown.Item key={1}>
                                                                             Extend program and
                                                                             offering
                                                                         </Dropdown.Item>
-                                                                        <Dropdown.Item key={1}>
-                                                                            Send notification to
-                                                                            subscribers
-                                                                        </Dropdown.Item>
-                                                                        <Dropdown.Item key={1}>
-                                                                            Request Renewal
-                                                                        </Dropdown.Item>
                                                                     </Dropdown.Menu>
                                                                 </Dropdown>
                                                             </Row>
                                                         </Col>
+                                                       
                                                     </Row>
 
                                                     <Card.Text>
@@ -1063,4 +1077,5 @@ const Scheduler: React.FC = () => {
         );
 };
 
-export default Scheduler;
+// export default Scheduler;
+export default forwardRef(Scheduler);
