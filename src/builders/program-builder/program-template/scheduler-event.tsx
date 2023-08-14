@@ -129,7 +129,6 @@ const SchedulerEvent = (props: any) => {
         const diffDays = sessionDateFormatted.diff(startDateFormatted, 'days') + 1;
         return diffDays;
     }
-    console.log(props);
 
     useEffect(() => {
         handleRenderTable([]);

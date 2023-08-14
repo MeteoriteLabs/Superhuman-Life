@@ -1,7 +1,8 @@
-import {useRef, useState, useQuery, GET_TAG_BY_ID, Row, Calendar, Col, DisplayImage, Dropdown, Table, Card, Badge, Accordion, SchedulerPage, moment,FitnessAction, Link, flattenObj, SideNav,Loader} from "./import";
+import {useRef, useState, useQuery, GET_TAG_BY_ID, Row, Col, DisplayImage, Dropdown, Table, Card, Badge, Accordion, SchedulerPage, moment,FitnessAction, Link, flattenObj, SideNav,Loader} from "./import";
 import 'react-calendar/dist/Calendar.css';
 import '../../profilepicture.css';
 import '../Group/actionButton.css';
+import EditProgramName from '../../EditProgramName/index';
 
 const Scheduler = (): JSX.Element => {
     const last = window.location.pathname.split('/').reverse();
@@ -20,6 +21,7 @@ const Scheduler = (): JSX.Element => {
     const [accordionExpanded, setAccordionExpanded] = useState(true);
     const [show24HourFormat, setShow24HourFormat] = useState(false);
     const ref = useRef<any>(null);
+    const [showProgramNameModal, setShowProgramNameModal] = useState<boolean>(false);
 
     const handleScrollScheduler = () => {
         ref.current?.scrollIntoView({ behaviour: "smooth",
@@ -129,6 +131,14 @@ const Scheduler = (): JSX.Element => {
                             </span>
                         </div>
 
+                        {showProgramNameModal && (
+                            <EditProgramName
+                                show={showProgramNameModal}
+                                onHide={() => setShowProgramNameModal(false)}
+                                id={tagId}
+                            />
+                        )}
+
                         {/* Cards for service details and movement sessions */}
                         <Row>
                             <Col lg={11}>
@@ -185,15 +195,17 @@ const Scheduler = (): JSX.Element => {
                                                                     </Dropdown.Toggle>
 
                                                                     <Dropdown.Menu>
-                                                                        <Dropdown.Item key={2}>
+                                                                        <Dropdown.Item key={2}
+                                                                        onClick={() =>
+                                                                            setShowProgramNameModal(
+                                                                                true
+                                                                            )
+                                                                        }
+                                                                        >
                                                                             Edit Program Name
                                                                         </Dropdown.Item>
                                                                         <Dropdown.Item key={2}>
                                                                             Reschedule
-                                                                        </Dropdown.Item>
-                                                                        <Dropdown.Item key={1}>
-                                                                            Send notification to
-                                                                            subscribers
                                                                         </Dropdown.Item>
                                                                     </Dropdown.Menu>
                                                                 </Dropdown>
@@ -341,7 +353,7 @@ const Scheduler = (): JSX.Element => {
                                                                 </tbody>
                                                             </Table>
                                                         </Col>
-                                                        <Col>
+                                                        {/* <Col>
                                                             <Calendar
                                                                 className="disabled"
                                                                 // tileClassName={tileContent}
@@ -363,7 +375,7 @@ const Scheduler = (): JSX.Element => {
                                                                 next2Label={null}
                                                                 prev2Label={null}
                                                             />
-                                                        </Col>
+                                                        </Col> */}
                                                     </Row>
                                                     <p>
                                                         Note: Create all the sessions to start

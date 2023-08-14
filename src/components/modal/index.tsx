@@ -18,7 +18,6 @@ export default function ModalView({
     customFormats,
     transformErrors,
     actionType,
-    showing
 }: any) {
     const registry = utils.getDefaultRegistry();
     const defaultFileWidget = registry.widgets['FileWidget'];
@@ -30,9 +29,8 @@ export default function ModalView({
     const [show, setShow] = useState<boolean>(false);
     const [formValues, setFormValues] = useState<any>(formData);
     const stepper: string[] = stepperValues;
-console.log(showing);
+
     modalTrigger.subscribe((res: boolean) => {
-        console.log(res);
         setShow(res);
     });
 

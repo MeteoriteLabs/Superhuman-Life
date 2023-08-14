@@ -38,7 +38,7 @@ import 'react-calendar/dist/Calendar.css';
 import '../../profilepicture.css';
 import SideNav from 'builders/program-builder/program-template/SchedulerSideBar';
 import CollapsibleScheduler from 'builders/program-builder/program-template/CollapsibleScheduler';
-import EditProgramName from './EditProgramName';
+import EditProgramName from '../../EditProgramName';
 
 const Scheduler = () => {
     const auth = useContext(AuthContext);
@@ -73,19 +73,7 @@ const Scheduler = () => {
     const [sessionFilter, setSessionFilter] = useState('none');
     const [show24HourFormat, setShow24HourFormat] = useState(false);
     const ref = useRef<any>(null);
-    const editProgramNameComponent = useRef<any>(null);
     const [showProgramNameModal, setShowProgramNameModal] = useState<boolean>(false);
-
-    // calling modal for update option
-    // function updateProgramName() {
-    //     console.log(tagId);
-    //     editProgramNameComponent.current.TriggerForm({
-    //         id: tagId,
-    //         type: 'edit',
-    //         modal_status: true
-    //     });
-    // }
-
 
     const handleScrollScheduler = () => {
         ref.current?.scrollIntoView({ behaviour: 'smooth', inline: 'nearest' });
@@ -464,18 +452,13 @@ const Scheduler = () => {
                             </span>
                         </div>
 
-                        {/* <EditProgramName
-                        ref={editProgramNameComponent}
-                        callback={handleCallback()}
-                    ></EditProgramName> */}
-
-{showProgramNameModal && (
-                    <EditProgramName
-                        show={showProgramNameModal}
-                        onHide={() => setShowProgramNameModal(false)}
-                        id={tagId}
-                    />
-                )}
+                        {showProgramNameModal && (
+                            <EditProgramName
+                                show={showProgramNameModal}
+                                onHide={() => setShowProgramNameModal(false)}
+                                id={tagId}
+                            />
+                        )}
 
                         {/* Cards for service details and movement sessions */}
                         <Row>
@@ -536,7 +519,14 @@ const Scheduler = () => {
                                                                     </Dropdown.Toggle>
 
                                                                     <Dropdown.Menu>
-                                                                        <Dropdown.Item key={2} onClick={() => setShowProgramNameModal(true)}>
+                                                                        <Dropdown.Item
+                                                                            key={2}
+                                                                            onClick={() =>
+                                                                                setShowProgramNameModal(
+                                                                                    true
+                                                                                )
+                                                                            }
+                                                                        >
                                                                             Edit Program Name
                                                                         </Dropdown.Item>
                                                                         <Dropdown.Item key={1}>
@@ -547,7 +537,6 @@ const Scheduler = () => {
                                                                 </Dropdown>
                                                             </Row>
                                                         </Col>
-                                                       
                                                     </Row>
 
                                                     <Card.Text>

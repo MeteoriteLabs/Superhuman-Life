@@ -6,7 +6,7 @@ import { schema } from './tagSchema';
 import { UPDATE_TAG } from 'pages/Summary/queries';
 import { flattenObj } from 'components/utils/responseFlatten';
 import Toaster from 'components/Toaster/index';
-import { GET_TAG } from '../../graphQL/queries';
+import { GET_TAG } from '../graphQL/queries';
 
 interface Props {
     show: boolean;
@@ -20,13 +20,14 @@ interface Tag {
 
 export default function EditProgramName(props: Props): JSX.Element {
     const [tagDetails, setTagDetails] = useState({} as Tag);
-    const [isProgramUpdated, setIsProgramUpdated] = useState<boolean>(false);
+    const [isProgramUpdated, setIsProgramUpdated] = useState(false);
 
     useQuery(GET_TAG, {
         variables: { id: props.id },
         skip: !props.id,
         onCompleted: (response) => {
             const flattenData = flattenObj({ ...response.tag });
+            console.log(flattenData);
             setTagDetails({ tag_name: flattenData.tag_name });
         }
     });
@@ -35,7 +36,7 @@ export default function EditProgramName(props: Props): JSX.Element {
 
     const [updateTag] = useMutation(UPDATE_TAG, {
         onCompleted: () => {
-            setIsProgramUpdated(!isProgramUpdated);
+            setIsProgramUpdated((prevStatus) => !prevStatus);
             props.onHide();
         },
         refetchQueries: [GET_TAG]

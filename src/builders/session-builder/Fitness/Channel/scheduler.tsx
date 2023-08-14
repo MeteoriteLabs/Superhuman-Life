@@ -6,7 +6,7 @@ import {
     GET_TAG_BY_ID
 } from '../../graphQL/queries';
 import { useQuery } from '@apollo/client';
-import { Row, Col, Dropdown, Card, Badge, Table, Accordion, Button } from 'react-bootstrap';
+import { Row, Col, Dropdown, Card, Badge, Table, Accordion, Button, Form } from 'react-bootstrap';
 import SchedulerPage from 'builders/program-builder/program-template/scheduler';
 import moment from 'moment';
 import FitnessAction from '../FitnessAction';
@@ -19,6 +19,8 @@ import DisplayImage from 'components/DisplayImage';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { SideNav } from '../Event/import';
+import EditProgramName from '../../EditProgramName/index';
+import { CollapsibleScheduler } from '../Cohort/import';
 
 const Scheduler: React.FC = () => {
     const last = window.location.pathname.split('/').reverse();
@@ -40,6 +42,8 @@ const Scheduler: React.FC = () => {
     const [accordionExpanded, setAccordionExpanded] = useState(true);
     const [show24HourFormat, setShow24HourFormat] = useState(false);
     const ref = useRef<any>(null);
+    const [showProgramNameModal, setShowProgramNameModal] = useState<boolean>(false);
+    const [showCollapseView, setShowCollapseView] = useState<boolean>(false);
 
     const handleScrollScheduler = () => {
         ref.current?.scrollIntoView({ behaviour: 'smooth', inline: 'nearest' });
@@ -236,6 +240,14 @@ const Scheduler: React.FC = () => {
                             </span>
                         </div>
 
+                        {showProgramNameModal && (
+                            <EditProgramName
+                                show={showProgramNameModal}
+                                onHide={() => setShowProgramNameModal(false)}
+                                id={tagId}
+                            />
+                        )}
+
                         {/* Cards for service details and movement sessions */}
                         <Row>
                             <Col lg={11}>
@@ -296,20 +308,20 @@ const Scheduler: React.FC = () => {
                                                                     </Dropdown.Toggle>
 
                                                                     <Dropdown.Menu>
-                                                                        <Dropdown.Item key={2}>
+                                                                        <Dropdown.Item key={2}
+                                                                        onClick={() =>
+                                                                            setShowProgramNameModal(
+                                                                                true
+                                                                            )
+                                                                        }
+                                                                        >
                                                                             Edit Program Name
                                                                         </Dropdown.Item>
                                                                         <Dropdown.Item key={1}>
                                                                             Extend program and
                                                                             offering
                                                                         </Dropdown.Item>
-                                                                        <Dropdown.Item key={1}>
-                                                                            Send notification to
-                                                                            subscribers
-                                                                        </Dropdown.Item>
-                                                                        <Dropdown.Item key={1}>
-                                                                            Request Renewal
-                                                                        </Dropdown.Item>
+                                                                        
                                                                     </Dropdown.Menu>
                                                                 </Dropdown>
                                                             </Row>
@@ -714,11 +726,45 @@ const Scheduler: React.FC = () => {
                                     </span>
                                 </div>
                             </Col>
-                            {/* Collapse View */}
+                            
+                            {/* Collapse view Button */}
                             <Col lg={2}>
-                                <Button variant="dark">Collapse</Button>
+                                <Form>
+                                    <Form.Check
+                                        type="switch"
+                                        id="scheduler"
+                                        label="Show Collapse view"
+                                        onChange={() => {
+                                            setShowCollapseView(!showCollapseView);
+                                        }}
+                                    />
+                                </Form>
                             </Col>
                         </Row>
+
+                        {/* Collapse view */}
+                        {showCollapseView ? (
+                            <Row>
+                                <Col lg={11} className="pl-0 pr-0">
+                                    <CollapsibleScheduler
+                                        type="date"
+                                        days={calculateDays(prevDate, nextDate)}
+                                        callback={handleCallback}
+                                        restDays={tag?.sessions.filter(
+                                            (ses) => ses.type === 'restday'
+                                        )}
+                                        programId={tagId}
+                                        schedulerSessions={schedulerSessions}
+                                        sessionIds={sessionIds}
+                                        clientIds={clientIds}
+                                        classType={'Group Class'}
+                                        startDate={prevDate}
+                                        duration={moment(nextDate).diff(moment(prevDate), 'days')}
+                                        showRestDay={showRestDay}
+                                    />
+                                </Col>
+                            </Row>
+                        ) : null}
 
                         {/* Scheduler */}
                         <Row>

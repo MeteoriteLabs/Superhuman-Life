@@ -19,6 +19,7 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import '../../profilepicture.css';
 import { SideNav } from '../Event/import';
+import EditProgramName from '../../EditProgramName/index';
 
 const Scheduler: React.FC = () => {
     const auth = useContext(AuthContext);
@@ -45,6 +46,7 @@ const Scheduler: React.FC = () => {
     const [accordionExpanded, setAccordionExpanded] = useState(true);
     const [show24HourFormat, setShow24HourFormat] = useState(false);
     const ref = useRef<any>(null);
+    const [showProgramNameModal, setShowProgramNameModal] = useState<boolean>(false);
 
     const handleScrollScheduler = () => {
         ref.current?.scrollIntoView({ behaviour: 'smooth', inline: 'nearest' });
@@ -395,6 +397,14 @@ const Scheduler: React.FC = () => {
                             </span>
                         </div>
 
+                        {showProgramNameModal && (
+                            <EditProgramName
+                                show={showProgramNameModal}
+                                onHide={() => setShowProgramNameModal(false)}
+                                id={tagId}
+                            />
+                        )}
+
                         <Row>
                             <Col lg={11}>
                                 <Accordion>
@@ -450,12 +460,15 @@ const Scheduler: React.FC = () => {
                                                                     </Dropdown.Toggle>
 
                                                                     <Dropdown.Menu>
-                                                                        <Dropdown.Item key={2}>
+                                                                        <Dropdown.Item 
+                                                                          key={2}
+                                                                          onClick={() =>
+                                                                            setShowProgramNameModal(
+                                                                                true
+                                                                            )
+                                                                        }
+                                                                        >
                                                                             Edit Program Name
-                                                                        </Dropdown.Item>
-                                                                        <Dropdown.Item key={1}>
-                                                                            Send notification to
-                                                                            subscribers
                                                                         </Dropdown.Item>
                                                                     </Dropdown.Menu>
                                                                 </Dropdown>
@@ -614,7 +627,7 @@ const Scheduler: React.FC = () => {
                                                                 </tbody>
                                                             </Table>
                                                         </Col>
-                                                        <Col>
+                                                        {/* <Col>
                                                             <Calendar
                                                                 className="disabled"
                                                                 // tileClassName={tileContent}
@@ -636,7 +649,7 @@ const Scheduler: React.FC = () => {
                                                                 next2Label={null}
                                                                 prev2Label={null}
                                                             />
-                                                        </Col>
+                                                        </Col> */}
                                                     </Row>
                                                     <p>Note: Plan all the sessions in advance</p>
                                                 </Card.Body>

@@ -462,7 +462,6 @@ const CollapsibleScheduler = (props: any, ref) => {
             sessions
                 .filter((itm) => itm.Is_restday === false)
                 .forEach((val) => {
-                   
                     const startTimeHour: any = `${
                         val.start_time
                             ? Number(val.start_time.split(':')[0]) < 10
@@ -566,7 +565,7 @@ const CollapsibleScheduler = (props: any, ref) => {
         setarr2(confirmVal);
         event.import === 'importedEvent' ? setOnDragAndDrop(false) : setOnDragAndDrop(true);
     }
-console.log(dateArr);
+    console.log(dateArr);
     // function handleFloatingActionProgramCallback(event: any) {
     //     setProgram(`${event}`);
     //     props.callback();
@@ -617,7 +616,6 @@ console.log(dateArr);
         // this if block is to check if we are in the program template page
         if (props?.type === 'day') {
             if (props.restDays) {
-                
                 for (let j = 0; j < props.restDays.length; j++) {
                     if (val === props.restDays[j].day_of_program) {
                         return {
@@ -647,7 +645,6 @@ console.log(dateArr);
                 }
             }
         } else if (props.restDays && props?.type !== 'day') {
-           
             for (let i = 0; i < props.restDays.length; i++) {
                 if (val === calculateDay(props.startDate, props.restDays[i]?.session_date)) {
                     return {
@@ -1863,13 +1860,17 @@ console.log(dateArr);
         return finalTime;
     };
 
-    const handleSessionPastDates = (sessionDate: string, sessionEndHour: number, sessionEndMinute: number) => {
+    const handleSessionPastDates = (
+        sessionDate: string,
+        sessionEndHour: number,
+        sessionEndMinute: number
+    ) => {
         const currentTime = moment.utc();
         const expirySessionTime = moment(sessionDate)
             .add(sessionEndHour, 'hours')
             .add(sessionEndMinute, 'minutes');
         const diff = expirySessionTime.diff(currentTime);
-        
+
         if (diff < 0) {
             return true;
         }
@@ -1884,27 +1885,30 @@ console.log(dateArr);
             tag && tag.length && tag[0].sessions && tag[0].sessions.length ? tag[0].sessions : [];
         console.log(sessions);
         for (let i = 0; i < sessions.length; i++) {
-            sessionsObj[sessions[i].session_date] = sessionsObj[sessions[i].session_date] ?
-            [...sessionsObj[sessions[i].session_date], 
-            {
-                "startTime": sessions[i].start_time,
-                "endTime": sessions[i].end_time,
-                "name":
-                    sessions[i].type === 'workout'
-                        ? sessions[i].workout.workouttitle
-                        : sessions[i].activity.title
-            }
-        ]
-             : [{
-                "startTime": sessions[i].start_time,
-                "endTime": sessions[i].end_time,
-                "name":
-                    sessions[i].type === 'workout'
-                        ? sessions[i].workout.workouttitle
-                        : sessions[i].activity.title
-            }];
+            sessionsObj[sessions[i].session_date] = sessionsObj[sessions[i].session_date]
+                ? [
+                      ...sessionsObj[sessions[i].session_date],
+                      {
+                          startTime: sessions[i].start_time,
+                          endTime: sessions[i].end_time,
+                          name:
+                              sessions[i].type === 'workout'
+                                  ? sessions[i].workout.workouttitle
+                                  : sessions[i].activity.title
+                      }
+                  ]
+                : [
+                      {
+                          startTime: sessions[i].start_time,
+                          endTime: sessions[i].end_time,
+                          name:
+                              sessions[i].type === 'workout'
+                                  ? sessions[i].workout.workouttitle
+                                  : sessions[i].activity.title
+                      }
+                  ];
         }
-       setSessionsObject(sessionsObj);
+        setSessionsObject(sessionsObj);
         console.log(sessionsObj);
     }, [props]);
 
@@ -1921,397 +1925,132 @@ console.log(dateArr);
     } else
         return (
             <div ref={ref}>
-               
-                <div className="wrapper shadow-lg">
-                    <div className="schedular">
-                        {props.showRestDay && (
-                            <div className="day-row">
-                                <div
-                                    className="cell"
-                                    style={{
-                                        backgroundColor: '#343A40', color:'#fff',
-                                       
-                                        position: 'relative',
-                                        minHeight: `${props.type === 'date' ? '70px' : '70px'}`
-                                    }}
-                                ></div>
-                                {handleActionRender()}
-                            </div>
-                        )}
-                        <div>
-
-                    <div
-                        style={{
-                            overflow: 'auto',
-                            border: '1px solid black',
-                            maxHeight: '300px'
-                        }}
-                        className="schedular mt-5 mb-3"
-                    >
-                        <div className="day-row">
-                        {handleDaysRowRender()}
-                         
-                        </div>
-                        <div className="events-row">
-                            {dateArr.map((val, index) => {
-                                console.log(val);
-                                return (
-                                    <div className="event-cell" key={index}>
-                                        {sessionsObject[val] &&
-                                            sessionsObject[val].map((val, index) => {
-                                                return (
-                                                    <div
-                                                        key={index}
-                                                        style={{
-                                                            backgroundColor: '#FFFDD1',
-                                                            height: '50px',
-                                                            borderRadius: '10px',
-                                                            zIndex: 997,
-                                                            minWidth: '120px',
-                                                            color: '#000'
-                                                        }}
-                                                       
-                                                                                // onClick={() => {
-                                                                                //     setEvent(val);
-                                                                                //     setClickedSessionId(
-                                                                                //         val.sessionId
-                                                                                //     );
-                                                                                // }}
-                                                                                // id="dragMe"
-                                                                                // className="schedular-content draggable"
-                                                                                // draggable={
-                                                                                //     val.type ===
-                                                                                //     'restday'
-                                                                                //         ? false
-                                                                                //         : true
-                                                                                // }
-                                                                                // onDragStart={(
-                                                                                //     e
-                                                                                // ) => {
-                                                                                //     e.dataTransfer.setData(
-                                                                                //         'scheduler-event',
-                                                                                //         JSON.stringify(
-                                                                                //             val
-                                                                                //         )
-                                                                                //     );
-                                                                                // }}
-                                                                                // style={{
-                                                                                //     borderRadius:
-                                                                                //         '5px',
-                                                                                //     height: `${
-                                                                                //         handleHeight(
-                                                                                //             val
-                                                                                //         ) +
-                                                                                //         handleHeight(
-                                                                                //             val
-                                                                                //         ) /
-                                                                                //             60
-                                                                                //     }px`,
-                                                                                //     backgroundColor:
-                                                                                //         '#FFFDD1',
-                                                                                //     color: '#000',
-                                                                                //     // background: 'rgb(135,206,235)',
-                                                                                //     width: `10%`
-                                                                                //     ,
-                                                                                //     border: '2px solid rgba(255,255,255,0.5)',
-                                                                                //     paddingTop: `2px`,
-                                                                                //     minWidth:
-                                                                                //         '50% !important',
-                                                                                //     maxWidth:
-                                                                                //         '50% !important',
-                                                                                //     cursor: 'pointer',
-                                                                                //     // left: `10%`
-                                                                                // }}
-                                                        // draggable="true"
-                                                        className="cell container "
-                                                        
-                                                    >
-                                                        <span
-                                                            style={{
-                                                                fontWeight: 'bold',
-                                                                // overflow: 'hidden',
-                                                                fontSize: '10px',
-                                                                // display: "flex",
-                                                                // flexDirection: "column"
-                                                            }}
-                                                        >
-                                                            <p>{val.name}<br/>{val.startTime} - {val.endTime}</p>
-                                                            {/* <p>{val.startTime} - {val.endTime}</p> */}
-
-                                                        </span>
-                                                    </div>
-                                                );
-                                            })}
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </div>
-                </div>
+                {/* <div className="wrapper shadow-lg"> */}
+                <div className="schedular" style={{ marginLeft: '10px', width: '98%' }}>
+                    {props.showRestDay && (
                         <div className="day-row">
                             <div
                                 className="cell"
                                 style={{
-                                    backgroundColor: '#343A40', color:'#fff',
-                                    // backgroundColor: 'white',
+                                    backgroundColor: '#343A40',
+                                    color: '#fff',
+
                                     position: 'relative',
                                     minHeight: `${props.type === 'date' ? '70px' : '70px'}`
                                 }}
                             ></div>
-                            {handleDaysRowRender()}
+                            {handleActionRender()}
                         </div>
-                        {hours.map((h, index) => {
-                            return (
-                                <div
-                                    className="time-row"
-                                    style={{ backgroundColor: '#343A40', color:'#fff' }}
-                                    key={index}
-                                >
-                                    <div className="cell" style={{ position: 'relative' }}>
-                                        <span
-                                            style={{
-                                                position: 'absolute',
-                                                lineHeight: '14px',
-                                                top: '-8px',
-                                                fontSize: '14px',
-                                                width: '90%',
-                                                backgroundColor: '#343A40',
-                                                color: '#fff',
-                                                // backgroundColor: 'white',
-                                                left: '0px',
-                                                textAlign: 'right',
-                                                paddingRight: '10px',
-                                                zIndex: 999
-                                            }}
-                                        >
-                                            {/* {props.show24HourFormat
-                                                ? `${h < 10 ? `0${h}` : h}: 00`
-                                                : handle12HourFormat(h)} */}
-                                        </span>
-                                    </div>
-                                    {days.map((d, index) => {
-                                        return (
-                                            <div className="cell container" key={index}>
-                                                {min.map((m, index) => {
+                    )}
+                    <div>
+                        <div
+                            style={{
+                                overflow: 'auto',
+                                border: '1px solid black',
+                                maxHeight: '300px'
+                            }}
+                            className="schedular mt-5 mb-3"
+                        >
+                            <div className="day-row">{handleDaysRowRender()}</div>
+                            <div className="events-row">
+                                {dateArr.map((val, index) => {
+                                    console.log(val);
+                                    return (
+                                        <div className="event-cell" key={index}>
+                                            {sessionsObject[val] &&
+                                                sessionsObject[val].map((val, index) => {
                                                     return (
                                                         <div
                                                             key={index}
-                                                            className="time"
-                                                            data-day={d}
-                                                            data-hour={h}
-                                                            data-min={m}
                                                             style={{
-                                                                backgroundColor: `${handleRestDays(
-                                                                    d
-                                                                )}`
+                                                                backgroundColor: '#FFFDD1',
+                                                                height: '50px',
+                                                                borderRadius: '10px',
+                                                                zIndex: 997,
+                                                                minWidth: '120px',
+                                                                color: '#000'
                                                             }}
-                                                            onDrop={(e) => {
-                                                                changedEvent = JSON.parse(
-                                                                    e.dataTransfer.getData(
-                                                                        'scheduler-event'
-                                                                    )
-                                                                );
-                                                                handleChange(
-                                                                    changedDay,
-                                                                    changedHour,
-                                                                    changedMin,
-                                                                    changedEvent
-                                                                );
-                                                                e.preventDefault();
-                                                            }}
-                                                            onDragLeave={(e) => {
-                                                                changedDay =
-                                                                    e.currentTarget.getAttribute(
-                                                                        'data-day'
-                                                                    );
-                                                                changedHour =
-                                                                    e.currentTarget.getAttribute(
-                                                                        'data-hour'
-                                                                    );
-                                                                changedMin =
-                                                                    e.currentTarget.getAttribute(
-                                                                        'data-min'
-                                                                    );
-                                                            }}
+                                                            // onClick={() => {
+                                                            //     setEvent(val);
+                                                            //     setClickedSessionId(
+                                                            //         val.sessionId
+                                                            //     );
+                                                            // }}
+                                                            // id="dragMe"
+                                                            // className="schedular-content draggable"
+                                                            // draggable={
+                                                            //     val.type ===
+                                                            //     'restday'
+                                                            //         ? false
+                                                            //         : true
+                                                            // }
+                                                            // onDragStart={(
+                                                            //     e
+                                                            // ) => {
+                                                            //     e.dataTransfer.setData(
+                                                            //         'scheduler-event',
+                                                            //         JSON.stringify(
+                                                            //             val
+                                                            //         )
+                                                            //     );
+                                                            // }}
+                                                            // style={{
+                                                            //     borderRadius:
+                                                            //         '5px',
+                                                            //     height: `${
+                                                            //         handleHeight(
+                                                            //             val
+                                                            //         ) +
+                                                            //         handleHeight(
+                                                            //             val
+                                                            //         ) /
+                                                            //             60
+                                                            //     }px`,
+                                                            //     backgroundColor:
+                                                            //         '#FFFDD1',
+                                                            //     color: '#000',
+                                                            //     // background: 'rgb(135,206,235)',
+                                                            //     width: `10%`
+                                                            //     ,
+                                                            //     border: '2px solid rgba(255,255,255,0.5)',
+                                                            //     paddingTop: `2px`,
+                                                            //     minWidth:
+                                                            //         '50% !important',
+                                                            //     maxWidth:
+                                                            //         '50% !important',
+                                                            //     cursor: 'pointer',
+                                                            //     // left: `10%`
+                                                            // }}
+                                                            // draggable="true"
+                                                            className="cell container "
                                                         >
-                                                            {arr[d][h][m] &&
-                                                                arr[d][h][m]?.map(
-                                                                    (val, index: number) => {
-                                                                        val.index = index;
-                                                                       
-                                                                        return (
-                                                                            <div
-                                                                                key={index}
-                                                                                onClick={() => {
-                                                                                    setEvent(val);
-                                                                                    setClickedSessionId(
-                                                                                        val.sessionId
-                                                                                    );
-                                                                                }}
-                                                                                id="dragMe"
-                                                                                className="schedular-content draggable"
-                                                                                draggable={
-                                                                                    val.type ===
-                                                                                    'restday'
-                                                                                        ? false
-                                                                                        : true
-                                                                                }
-                                                                                onDragStart={(
-                                                                                    e
-                                                                                ) => {
-                                                                                    e.dataTransfer.setData(
-                                                                                        'scheduler-event',
-                                                                                        JSON.stringify(
-                                                                                            val
-                                                                                        )
-                                                                                    );
-                                                                                }}
-                                                                                style={{
-                                                                                    borderRadius:
-                                                                                        '5px',
-                                                                                    height: `${
-                                                                                        handleHeight(
-                                                                                            val
-                                                                                        ) +
-                                                                                        handleHeight(
-                                                                                            val
-                                                                                        ) /
-                                                                                            60
-                                                                                    }px`,
-                                                                                    backgroundColor:'#FFFDD1',
-                                                                                    color:'#000',
-                                                                                    // background: 'rgb(135,206,235)',
-                                                                                    width: `${
-                                                                                        val.type ===
-                                                                                        'restday'
-                                                                                            ? '100%'
-                                                                                            : `${
-                                                                                                  100 /
-                                                                                                  arr[
-                                                                                                      d
-                                                                                                  ][
-                                                                                                      h
-                                                                                                  ][
-                                                                                                      m
-                                                                                                  ]
-                                                                                                      .length
-                                                                                              }%`
-                                                                                    }`,
-                                                                                    border: '2px solid rgba(255,255,255,0.5)',
-                                                                                    paddingTop: `${
-                                                                                        handleHeight(
-                                                                                            val
-                                                                                        ) > 15
-                                                                                            ? '3'
-                                                                                            : '2'
-                                                                                    }px`,
-                                                                                    minWidth:
-                                                                                        '50% !important',
-                                                                                    maxWidth:
-                                                                                        '50% !important',
-                                                                                    cursor: 'pointer',
-                                                                                    left: `${
-                                                                                        index *
-                                                                                        (100 /
-                                                                                            arr[d][
-                                                                                                h
-                                                                                            ][m]
-                                                                                                .length)
-                                                                                    }%`
-                                                                                }}
-                                                                            >
-                                                                                <div
-                                                                                    style={{
-                                                                                        display:
-                                                                                            'flex',
-                                                                                        flexDirection:
-                                                                                            'column',
-                                                                                        overflow:
-                                                                                            'hidden'
-                                                                                    }}
-                                                                                >
-                                                                                    <div className="event-desc d-flex justify-content-between">
-                                                                                        <div>
-                                                                                            {val.type ===
-                                                                                            'restday'
-                                                                                                ? null
-                                                                                                : val.title}
-                                                                                        </div>
-                                                                                        <div>
-                                                                                            {props.showRestDay ? null : handleSessionPastDates(
-                                                                                                val.sessionDate,
-                                                                                                val.endHour,
-                                                                                                val.endMin
-                                                                                            ) ? (
-                                                                                                <img
-                                                                                                    style={{
-                                                                                                        height: '20px',
-                                                                                                        position:
-                                                                                                            'absolute',
-                                                                                                        right: '0'
-                                                                                                    }}
-                                                                                                    title="session attended"
-                                                                                                    src="/assets/attended.svg"
-                                                                                                    alt="attended"
-                                                                                                />
-                                                                                            ) : null}
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div className="event-time">
-                                                                                        {val.type ===
-                                                                                        'restday'
-                                                                                            ? null
-                                                                                            : props.show24HourFormat
-                                                                                            ? `${
-                                                                                                  val.hour ===
-                                                                                                  '0'
-                                                                                                      ? '00'
-                                                                                                      : val.hour
-                                                                                              }:${
-                                                                                                  val.min ===
-                                                                                                  '0'
-                                                                                                      ? '00'
-                                                                                                      : val.min
-                                                                                              } - ${
-                                                                                                  val.endHour
-                                                                                              }:${
-                                                                                                  val.endMin.toString() ===
-                                                                                                  '0'
-                                                                                                      ? '00'
-                                                                                                      : val.endMin
-                                                                                              }`
-                                                                                            : `${handleConvertTimeFormat(
-                                                                                                  Number(
-                                                                                                      val.hour
-                                                                                                  ),
-                                                                                                  Number(
-                                                                                                      val.min
-                                                                                                  )
-                                                                                              )}-${handleConvertTimeFormat(
-                                                                                                  Number(
-                                                                                                      val.endHour
-                                                                                                  ),
-                                                                                                  Number(
-                                                                                                      val.endMin
-                                                                                                  )
-                                                                                              )}`}
-                                                                                       </div>
-                                                                                    <div className="event-time d-flex justify-content-end" style={{position: 'absolute', right: '0', bottom: '0'}} title="bookings"><small>{val.sessions_bookings}</small></div>
-                                                                                </div>
-                                                                            </div>
-                                                                        );
-                                                                    }
-                                                                )}
+                                                            <span
+                                                                style={{
+                                                                    fontWeight: 'bold',
+                                                                    // overflow: 'hidden',
+                                                                    fontSize: '10px'
+                                                                    // display: "flex",
+                                                                    // flexDirection: "column"
+                                                                }}
+                                                            >
+                                                                <p>
+                                                                    {val.name}
+                                                                    <br />
+                                                                    {val.startTime} - {val.endTime}
+                                                                </p>
+                                                                {/* <p>{val.startTime} - {val.endTime}</p> */}
+                                                            </span>
                                                         </div>
                                                     );
                                                 })}
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            );
-                        })}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
                     </div>
+
+                    {/* </div> */}
                 </div>
 
                 {/* Floating Action Buttons */}

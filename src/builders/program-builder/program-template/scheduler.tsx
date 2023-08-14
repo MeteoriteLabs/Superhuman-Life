@@ -1681,10 +1681,10 @@ const Schedular = (props: any, ref) => {
     useEffect(() => {
         const sessionsObj = {};
         const tag = flattenObj({ ...props.schedulerSessions.tags });
-        console.log(tag);
+        
         const sessions =
             tag && tag.length && tag[0].sessions && tag[0].sessions.length ? tag[0].sessions : [];
-        console.log(sessions);
+    
         for (let i = 0; i < sessions.length; i++) {
             sessionsObj[sessions[i].session_date] = sessionsObj[sessions[i].session_date] ?
             [...sessionsObj[sessions[i].session_date], 
@@ -1707,7 +1707,6 @@ const Schedular = (props: any, ref) => {
             }];
         }
 
-        console.log(sessionsObj);
     }, [props]);
 
     // it helps render the first row in the calendar(which displays the date and other data)
@@ -1925,7 +1924,7 @@ const Schedular = (props: any, ref) => {
         }
         return false;
     };
-console.log(dates);
+
     if (!show) {
         return (
             <div className="text-center">
