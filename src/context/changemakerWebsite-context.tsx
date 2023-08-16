@@ -38,16 +38,30 @@ function ChangemakerWebsiteContextProvider({ children }: { children: ReactNode }
             currentSelectedRoute: ''
         });
 
-    const [getUserWebsite, { data }] = useLazyQuery(FETCH_USER_WEBSITE, {
+    const [getUserWebsite] = useLazyQuery(FETCH_USER_WEBSITE, {
         variables: {
             id: auth.userid
         },
-        onCompleted: () => {
+        onCompleted: (data) => {
             setChangemakerWebsiteState({
                 ...changemakerWebsiteState,
                 subdomain: data.changemakerWebsites.data[0].attributes.subdomain as string,
                 selectedTemplate: data.changemakerWebsites.data[0].attributes
                     .selectedTemplate as string
+            });
+            getUserSelectedTemplate();
+        }
+    });
+
+    const [getUserSelectedTemplate] = useLazyQuery(FETECH_SELECTED_TEMPLATE, {
+        variables: {
+            templateName: changemakerWebsiteState.selectedTemplate
+        },
+        onCompleted: (templateData) => {
+            setChangemakerWebsiteState({
+                ...changemakerWebsiteState,
+                thumbnail: templateData?.templates?.data[0]?.attributes?.thumbnail as string,
+                templateUrl: templateData?.templates?.data[0]?.attributes?.templateUrl as string
             });
         }
     });
@@ -57,28 +71,6 @@ function ChangemakerWebsiteContextProvider({ children }: { children: ReactNode }
             getUserWebsite();
         }
     }, [changemakerWebsiteState.subdomain, changemakerWebsiteState.selectedTemplate, auth.userid]);
-
-    const [getUserSelectedTemplate, { data: templateData }] = useLazyQuery(
-        FETECH_SELECTED_TEMPLATE,
-        {
-            variables: {
-                templateName: changemakerWebsiteState.selectedTemplate
-            },
-            onCompleted: () => {
-                setChangemakerWebsiteState({
-                    ...changemakerWebsiteState,
-                    thumbnail: templateData?.templates?.data[0]?.attributes?.thumbnail as string,
-                    templateUrl: templateData?.templates?.data[0]?.attributes?.templateUrl as string
-                });
-            }
-        }
-    );
-
-    useEffect(() => {
-        if (auth.userid) {
-            getUserSelectedTemplate();
-        }
-    }, [changemakerWebsiteState.selectedTemplate, auth.userid]);
 
     //  * user selected template to get the thumbnail and templateUrl ends here
 

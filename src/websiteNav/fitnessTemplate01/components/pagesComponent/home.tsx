@@ -7,7 +7,7 @@ function Home(): JSX.Element {
     const { setChangemakerWebsiteState, changemakerWebsiteState } =
         useContext(ChangeMakerWebsiteContext);
     return (
-        <div className="mt-2">
+        <div>
             <div
                 className={styles.section_title_cont}
                 onClick={() => {
