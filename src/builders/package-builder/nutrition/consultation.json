@@ -20,7 +20,7 @@
             "mode": {
                 "type": "string",
                 "title": "Mode",
-                "description": "Meal Plans can be given only through mobile application",
+                "description": "Meal Plans can be given only through ",
                 "enum": ["Online", "Offline", "Hybrid"]
             },
             "status": {

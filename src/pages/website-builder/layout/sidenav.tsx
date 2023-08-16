@@ -6,6 +6,7 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import Icons from 'components/Icons';
 import MobileIcon from 'components/Icons/mobile';
 import Icon from 'components/Icons';
+import ArrowDown from 'components/Icons/componentIcons/arrowDown';
 
 export default function SideNav({
     collapse,
@@ -57,7 +58,33 @@ export default function SideNav({
                             ) : (
                                 <Col>
                                     <div style={{ width: 160 }}>
-                                        Website <span style={{ marginLeft: '83px' }}>⮟</span>
+                                        Website{' '}
+                                        {showSubOptionsWebsite ? (
+                                            <span
+                                                style={{
+                                                    marginLeft: '10px',
+                                                    position: 'relative',
+                                                    top: '-8px',
+                                                    display: 'inline-block',
+                                                    transform: 'rotate(180deg)',
+                                                    transition: 'ease-in-out 0.3s transform'
+                                                }}
+                                            >
+                                                <ArrowDown width={14} height={14} />
+                                            </span>
+                                        ) : (
+                                            <span
+                                                style={{
+                                                    marginLeft: '10px',
+                                                    position: 'relative',
+                                                    top: '4px',
+                                                    display: 'inline-block',
+                                                    transition: 'ease-in-out 0.3s transform'
+                                                }}
+                                            >
+                                                <ArrowDown width={14} height={14} />
+                                            </span>
+                                        )}
                                     </div>
                                 </Col>
                             )}
@@ -114,7 +141,32 @@ export default function SideNav({
                                     <div style={{ display: 'flex', alignItems: 'center' }}>
                                         <div style={{ width: 160 }}>
                                             Mobile Application
-                                            <span style={{ marginLeft: '10px' }}>⮟</span>
+                                            {showSubOptionsMobile ? (
+                                                <span
+                                                    style={{
+                                                        marginLeft: '10px',
+                                                        position: 'relative',
+                                                        top: '-8px',
+                                                        display: 'inline-block',
+                                                        transform: 'rotate(180deg)',
+                                                        transition: 'ease-in-out 0.3s transform'
+                                                    }}
+                                                >
+                                                    <ArrowDown width={10} height={10} />
+                                                </span>
+                                            ) : (
+                                                <span
+                                                    style={{
+                                                        marginLeft: '10px',
+                                                        position: 'relative',
+                                                        top: '4px',
+                                                        display: 'inline-block',
+                                                        transition: 'ease-in-out 0.3s transform'
+                                                    }}
+                                                >
+                                                    <ArrowDown width={10} height={10} />
+                                                </span>
+                                            )}
                                         </div>
                                     </div>
                                 </Col>
@@ -205,8 +257,7 @@ export default function SideNav({
             <Button
                 variant="dark"
                 onClick={() => {
-                    setCollapse(!collapse)
-            ;
+                    setCollapse(!collapse);
                     setShowSubOptionsMobile(false);
                     setShowSubOptionsWebsite(false);
                 }}
