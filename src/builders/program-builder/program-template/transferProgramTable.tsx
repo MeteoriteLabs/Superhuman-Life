@@ -5,17 +5,22 @@ import DaysInput from './daysInput';
 // import React, { useState } from 'react';
 // import { Row, Col } from 'react-bootstrap';
 import moment from 'moment';
-import TimePicker from 'rc-time-picker';
-import 'rc-time-picker/assets/index.css';
 import Loader from 'components/Loader/Loader';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
+import { StyledEngineProvider } from '@mui/material/styles';
 
 const TransferProgramTable = (props: any) => {
     const [show, setShow] = useState<boolean>(false);
     const [data, setData] = useState<any[]>([]);
 
     function handleStartTimeInput(val: any, index: any) {
-        const m = (Math.round(parseInt(val.slice(3, 5)) / 15) * 15) % 60;
-        handleHourChange(val.slice(0, 2) + ':' + (m === 0 ? '00' : m), index);
+        handleHourChange(
+            (val.$H < 10 ? `0${val.$H}` : val.$H) + ':' + (val.$m === 0 ? '00' : val.$m),
+            index
+        );
     }
 
     function convertToMoment(time: string) {
@@ -85,7 +90,7 @@ const TransferProgramTable = (props: any) => {
         props.onChange(data);
     }, [data]);
 
-    if (!show) return <Loader msg="loading"/>;
+    if (!show) return <Loader msg="loading" />;
     else
         return (
             <Table responsive style={{ overflow: 'auto' }}>
@@ -121,21 +126,28 @@ const TransferProgramTable = (props: any) => {
                                         type="transfer"
                                     />
                                 </td>
-                               
+
                                 <td style={{ minWidth: '150px' }}>
-                                    <TimePicker
-                                        value={convertToMoment(data[index].startTime)}
-                                        disabled={props.disabled ? props.disabled : false}
-                                        showSecond={false}
-                                        minuteStep={15}
-                                        onChange={(e) => {
-                                            if (e !== null) {
-                                                handleHourChange(e.format('HH:mm'), index);
-                                            } else {
-                                                handleStartTimeInput('00:00', index);
-                                            }
-                                        }}
-                                    />
+                                    <StyledEngineProvider injectFirst>
+                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                            <TimePicker
+                                                disabled={props.disabled ? props.disabled : false}
+                                                viewRenderers={{
+                                                    hours: renderTimeViewClock,
+                                                    minutes: renderTimeViewClock,
+                                                    seconds: renderTimeViewClock
+                                                }}
+                                                minutesStep={15}
+                                                onChange={(e) => {
+                                                    if (e !== null) {
+                                                        handleHourChange(e, index);
+                                                    } else {
+                                                        handleStartTimeInput('00:00', index);
+                                                    }
+                                                }}
+                                            />
+                                        </LocalizationProvider>
+                                    </StyledEngineProvider>
                                 </td>
                                 {/* </Col> */}
                                 {/* </Row> */}
