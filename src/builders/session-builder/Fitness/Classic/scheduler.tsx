@@ -15,7 +15,7 @@ import { Link } from 'react-router-dom';
 import { flattenObj } from 'components/utils/responseFlatten';
 import Loader from 'components/Loader/Loader';
 import DisplayImage from 'components/DisplayImage';
-import Calendar from 'react-calendar';
+// import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import '../../profilepicture.css';
 import { SideNav } from '../Event/import';
@@ -378,7 +378,10 @@ const Scheduler: React.FC = () => {
     function handleNextDisplay(date: string) {
         return moment(date).isSame(moment(classicEndDate)) ? 'none' : '';
     }
-
+console.log(tag);
+const restDays = tag && tag.sessions && tag.sessions.length ? tag.sessions.filter((curr) => curr.type
+ === 'restday') : null;
+ console.log(restDays);
     if (!show) return <Loader msg="loading scheduler..." />;
     else
         return (
@@ -616,12 +619,13 @@ const Scheduler: React.FC = () => {
                                                                             }
                                                                         </td>
                                                                         <td>
-                                                                            {tag &&
+                                                                            {restDays && restDays.length ? restDays.length : 0}
+                                                                            {/* {tag &&
                                                                             tag.fitnesspackage &&
                                                                             tag.fitnesspackage
                                                                                 ? tag.fitnesspackage
                                                                                       .restdays
-                                                                                : null}
+                                                                                : null} */}
                                                                         </td>
                                                                     </tr>
                                                                 </tbody>

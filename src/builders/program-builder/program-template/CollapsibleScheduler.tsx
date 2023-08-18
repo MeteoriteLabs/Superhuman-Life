@@ -565,7 +565,7 @@ const CollapsibleScheduler = (props: any, ref) => {
         setarr2(confirmVal);
         event.import === 'importedEvent' ? setOnDragAndDrop(false) : setOnDragAndDrop(true);
     }
-    console.log(dateArr);
+    
     // function handleFloatingActionProgramCallback(event: any) {
     //     setProgram(`${event}`);
     //     props.callback();
@@ -1880,10 +1880,10 @@ const CollapsibleScheduler = (props: any, ref) => {
     useEffect(() => {
         const sessionsObj = {};
         const tag = flattenObj({ ...props.schedulerSessions.tags });
-        console.log(tag);
+    
         const sessions =
             tag && tag.length && tag[0].sessions && tag[0].sessions.length ? tag[0].sessions : [];
-        console.log(sessions);
+        
         for (let i = 0; i < sessions.length; i++) {
             sessionsObj[sessions[i].session_date] = sessionsObj[sessions[i].session_date]
                 ? [
@@ -1904,12 +1904,11 @@ const CollapsibleScheduler = (props: any, ref) => {
                           name:
                               sessions[i].type === 'workout'
                                   ? sessions[i].workout.workouttitle
-                                  : sessions[i].activity.title
+                                  : sessions[i].activity?.title
                       }
                   ];
         }
         setSessionsObject(sessionsObj);
-        console.log(sessionsObj);
     }, [props]);
 
     if (!show) {
@@ -1927,7 +1926,7 @@ const CollapsibleScheduler = (props: any, ref) => {
             <div ref={ref}>
                 {/* <div className="wrapper shadow-lg"> */}
                 <div className="schedular" style={{ marginLeft: '10px', width: '98%' }}>
-                    {props.showRestDay && (
+                    {/* {props.showRestDay && (
                         <div className="day-row">
                             <div
                                 className="cell"
@@ -1941,7 +1940,7 @@ const CollapsibleScheduler = (props: any, ref) => {
                             ></div>
                             {handleActionRender()}
                         </div>
-                    )}
+                    )} */}
                     <div>
                         <div
                             style={{
@@ -1954,7 +1953,6 @@ const CollapsibleScheduler = (props: any, ref) => {
                             <div className="day-row">{handleDaysRowRender()}</div>
                             <div className="events-row">
                                 {dateArr.map((val, index) => {
-                                    console.log(val);
                                     return (
                                         <div className="event-cell" key={index}>
                                             {sessionsObject[val] &&
@@ -2034,9 +2032,9 @@ const CollapsibleScheduler = (props: any, ref) => {
                                                                 }}
                                                             >
                                                                 <p>
-                                                                    {val.name}
-                                                                    <br />
-                                                                    {val.startTime} - {val.endTime}
+                                                                    {val.name}{" "}
+                                                                    {/* <br /> */}
+                                                                    ({val.startTime} - {val.endTime})
                                                                 </p>
                                                                 {/* <p>{val.startTime} - {val.endTime}</p> */}
                                                             </span>

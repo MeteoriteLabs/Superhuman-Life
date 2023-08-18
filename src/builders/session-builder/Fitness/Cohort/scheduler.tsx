@@ -182,9 +182,9 @@ const Scheduler: React.FC = () => {
     //     );
     //     return dailySessions.length ? dailySessions.length : 'N/A';
     // }
-    
-      // this is to calculate the number of days for the scheduler
-      function calculateDays(sd: string, ed: string) {
+
+    // this is to calculate the number of days for the scheduler
+    function calculateDays(sd: string, ed: string) {
         const days = moment(ed).diff(moment(sd), 'days');
         return days + 1;
     }
@@ -213,6 +213,19 @@ const Scheduler: React.FC = () => {
         setShowRestDay(!showRestDay);
         handleScrollScheduler();
     }
+
+    const completedSessions =
+        tag && tag.sessions && tag.sessions.length
+            ? tag.sessions.map((curr) => {
+                  if (
+                      moment(curr.session_date)
+                          .add(curr.end_time.split(':')[0], 'hours')
+                          .add(curr.end_time.split(':')[1])
+                          .diff(moment.utc()) < 0
+                  )
+                      return curr.session_date;
+              })
+            : null;
 
     if (!show) return <Loader msg="loading scheduler..." />;
     else
@@ -457,7 +470,7 @@ const Scheduler: React.FC = () => {
                                                                 <thead className="text-center">
                                                                     <tr>
                                                                         <th>Type</th>
-                                                                        <th>Total</th>
+                                                                        <th>No. of days</th>
                                                                         <th>Completed</th>
                                                                     </tr>
                                                                 </thead>
@@ -477,7 +490,12 @@ const Scheduler: React.FC = () => {
                                                                                 'days'
                                                                             ) + 1}
                                                                         </td>
-                                                                        <td></td>
+                                                                        <td>
+                                                                            {completedSessions &&
+                                                                            completedSessions.length
+                                                                                ? completedSessions.length
+                                                                                : 0}
+                                                                        </td>
                                                                     </tr>
                                                                 </tbody>
                                                             </Table>
@@ -734,7 +752,7 @@ const Scheduler: React.FC = () => {
                                     <Form.Check
                                         type="switch"
                                         id="scheduler"
-                                        label="Show Collapse view"
+                                        label="Collapse"
                                         onChange={() => {
                                             setShowCollapseView(!showCollapseView);
                                         }}
@@ -803,42 +821,44 @@ const Scheduler: React.FC = () => {
                     </Col>
                 </Row> */}
                         {/* Scheduler */}
-                        <Row>
-                            <Col lg={11} className="pl-0 pr-0">
-                                <div className="mt-5">
-                                    <SchedulerPage
-                                        ref={ref}
-                                        type="date"
-                                        callback={handleCallback}
-                                        sessionIds={sessionIds}
-                                        days={calculateDuration(
-                                            tag?.fitnesspackage?.Start_date,
-                                            tag?.fitnesspackage?.End_date
-                                        )}
-                                        restDays={tag?.sessions.filter(
-                                            (ses) => ses.type === 'restday'
-                                        )}
-                                        schedulerSessions={schedulerSessions}
-                                        clientIds={clientIds}
-                                        classType={'Cohort'}
-                                        programId={tagId ? tagId : null}
-                                        startDate={tag?.fitnesspackage?.Start_date}
-                                        showRestDay={showRestDay}
-                                        handleFloatingActionProgramCallback={
-                                            handleFloatingActionProgramCallback
-                                        }
-                                        handleFloatingActionProgramCallback2={
-                                            handleFloatingActionProgramCallback2
-                                        }
-                                        handleRefetch={handleRefetch}
-                                        sessionFilter={sessionFilter}
-                                        program={program}
-                                        show24HourFormat={show24HourFormat}
-                                    />
-                                </div>
-                            </Col>
-                            <FitnessAction ref={fitnessActionRef} callback={() => mainQuery} />
-                        </Row>
+                        {!showCollapseView ? (
+                            <Row>
+                                <Col lg={11} className="pl-0 pr-0">
+                                    <div className="mt-5">
+                                        <SchedulerPage
+                                            ref={ref}
+                                            type="date"
+                                            callback={handleCallback}
+                                            sessionIds={sessionIds}
+                                            days={calculateDuration(
+                                                tag?.fitnesspackage?.Start_date,
+                                                tag?.fitnesspackage?.End_date
+                                            )}
+                                            restDays={tag?.sessions.filter(
+                                                (ses) => ses.type === 'restday'
+                                            )}
+                                            schedulerSessions={schedulerSessions}
+                                            clientIds={clientIds}
+                                            classType={'Cohort'}
+                                            programId={tagId ? tagId : null}
+                                            startDate={tag?.fitnesspackage?.Start_date}
+                                            showRestDay={showRestDay}
+                                            handleFloatingActionProgramCallback={
+                                                handleFloatingActionProgramCallback
+                                            }
+                                            handleFloatingActionProgramCallback2={
+                                                handleFloatingActionProgramCallback2
+                                            }
+                                            handleRefetch={handleRefetch}
+                                            sessionFilter={sessionFilter}
+                                            program={program}
+                                            show24HourFormat={show24HourFormat}
+                                        />
+                                    </div>
+                                </Col>
+                                <FitnessAction ref={fitnessActionRef} callback={() => mainQuery} />
+                            </Row>
+                        ) : null}
                     </div>
                 </Col>
                 {/* Right sidebar */}

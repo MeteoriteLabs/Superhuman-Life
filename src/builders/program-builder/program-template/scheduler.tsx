@@ -1703,7 +1703,7 @@ const Schedular = (props: any, ref) => {
                 "name":
                     sessions[i].type === 'workout'
                         ? sessions[i].workout.workouttitle
-                        : sessions[i].activity.title
+                        : sessions[i].activity?.title
             }];
         }
 
@@ -2040,6 +2040,7 @@ const Schedular = (props: any, ref) => {
                                         return (
                                             <div className="cell container" key={index}>
                                                 {min.map((m, index) => {
+                                                    
                                                     return (
                                                         <div
                                                             key={index}
@@ -2103,9 +2104,21 @@ const Schedular = (props: any, ref) => {
                                                                                         ? false
                                                                                         : true
                                                                                 }
+                                                                                // onDrag={(e) => {
+                                                                                //      console.log(e.currentTarget.getAttribute(
+                                                                                //         'data-hour'
+                                                                                //     ), e.currentTarget.getAttribute(
+                                                                                //         'data-min'
+                                                                                //     ),  e.currentTarget.getAttribute(
+                                                                                //         'data-day'
+                                                                                //     ))
+                                                                                // }}
                                                                                 onDragStart={(
                                                                                     e
                                                                                 ) => {
+                                                                                    // console.log(e, 'drag start', val, e.currentTarget.getAttribute(
+                                                                                    //     'data-hour'
+                                                                                    // ));
                                                                                     e.dataTransfer.setData(
                                                                                         'scheduler-event',
                                                                                         JSON.stringify(
@@ -2198,9 +2211,9 @@ const Schedular = (props: any, ref) => {
                                                                                                             'absolute',
                                                                                                         right: '0'
                                                                                                     }}
-                                                                                                    title="session attended"
+                                                                                                    title="session completed"
                                                                                                     src="/assets/attended.svg"
-                                                                                                    alt="attended"
+                                                                                                    alt="completed"
                                                                                                 />
                                                                                             ) : null}
                                                                                         </div>

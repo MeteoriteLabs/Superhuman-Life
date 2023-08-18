@@ -340,15 +340,15 @@ const Scheduler = (): JSX.Element => {
                                                                 <thead className="text-center">
                                                                     <tr>
                                                                         <th>Type</th>
-                                                                        <th>Total Sessions</th>
-                                                                        <th>Plan</th>
+                                                                        <th>Total sessions </th>
+                                                                        <th>Total no. of days</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody className="text-center">
                                                                     <tr>
                                                                         <td>Event</td>
-                                                                        <td></td>
-                                                                        <td></td>
+                                                                        <td>{tag && tag.sessions ? tag.sessions.length : 0}</td>
+                                                                        <td>1</td>
                                                                     </tr>
                                                                 </tbody>
                                                             </Table>
