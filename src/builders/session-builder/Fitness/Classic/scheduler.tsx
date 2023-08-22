@@ -378,10 +378,10 @@ const Scheduler: React.FC = () => {
     function handleNextDisplay(date: string) {
         return moment(date).isSame(moment(classicEndDate)) ? 'none' : '';
     }
-console.log(tag);
-const restDays = tag && tag.sessions && tag.sessions.length ? tag.sessions.filter((curr) => curr.type
- === 'restday') : null;
- console.log(restDays);
+
+    const restDays = tag && tag.sessions && tag.sessions.length ? tag.sessions.filter((curr) => curr.type
+    === 'restday') : null;
+
     if (!show) return <Loader msg="loading scheduler..." />;
     else
         return (
