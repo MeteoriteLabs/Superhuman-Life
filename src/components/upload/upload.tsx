@@ -38,6 +38,7 @@ export interface UploadImageToS3WithNativeSdkProps {
     title?: string;
     readonly?: boolean;
     uploadInterface?: string;
+    form?: boolean;
 }
 
 const UploadImageToS3WithNativeSdk = (props: UploadImageToS3WithNativeSdkProps): JSX.Element => {
@@ -425,7 +426,14 @@ const UploadImageToS3WithNativeSdk = (props: UploadImageToS3WithNativeSdkProps):
     const UploadImageUiBody = (type?: string): JSX.Element => {
         return (
             <>
-                <div className="crop-container">
+                <div
+                    className="crop-container"
+                    style={{
+                        backgroundColor: `${
+                            props.form ? 'rgba(255,255,255,0)' : 'rgb(255,255,255)'
+                        }`
+                    }}
+                >
                     <Cropper
                         image={imageSrc}
                         crop={crop}
@@ -580,11 +588,9 @@ const UploadImageToS3WithNativeSdk = (props: UploadImageToS3WithNativeSdkProps):
                     {url || videoUpload ? (
                         ' '
                     ) : (
-                        <div
-                        // className="bg-white"
-                        >
+                        <div className={`${props.form ? '' : 'bg-white'}`}>
                             <div
-                                className="mb-3 dropzone"
+                                className={`mb-3 ${props.form ? '' : 'dropzone'}`}
                                 onDragOver={(e) => {
                                     e.preventDefault();
                                 }}
@@ -621,7 +627,7 @@ const UploadImageToS3WithNativeSdk = (props: UploadImageToS3WithNativeSdkProps):
                                 )}
 
                                 <p className="mt-3">OR</p>
-                                <div className="upload-btn-wrapper">
+                                <div className={`${props.form ? 'upload-btn-wrapper' : ''}`}>
                                     <button className="btn">Upload a file</button>
                                     <input
                                         id="video-upload"
