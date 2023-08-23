@@ -10,7 +10,8 @@ function Home(): JSX.Element {
         <div className="mt-2">
             <div
                 className={styles.section_title_cont}
-                onClick={() => {
+                onClick={(e) => {
+                    e.stopPropagation();
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
                         section: 'Hero'
@@ -21,7 +22,8 @@ function Home(): JSX.Element {
             </div>
             <div
                 className={styles.section_title_cont}
-                onClick={() => {
+                onClick={(e) => {
+                    e.stopPropagation();
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
                         section: 'Group Offerings'
@@ -32,7 +34,8 @@ function Home(): JSX.Element {
             </div>
             <div
                 className={styles.section_title_cont}
-                onClick={() => {
+                onClick={(e) => {
+                    e.stopPropagation();
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
                         section: 'Cohort'
@@ -45,7 +48,8 @@ function Home(): JSX.Element {
 
             <div
                 className={styles.section_title_cont}
-                onClick={() => {
+                onClick={(e) => {
+                    e.stopPropagation();
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
                         section: 'One to One'
@@ -57,7 +61,8 @@ function Home(): JSX.Element {
             </div>
             <div
                 className={styles.section_title_cont}
-                onClick={() => {
+                onClick={(e) => {
+                    e.stopPropagation();
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
                         section: 'Live Stream'
@@ -68,7 +73,8 @@ function Home(): JSX.Element {
             </div>
             <div
                 className={styles.section_title_cont}
-                onClick={() => {
+                onClick={(e) => {
+                    e.stopPropagation();
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
                         section: 'Custom'

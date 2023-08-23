@@ -112,10 +112,9 @@ const UploadImageToS3WithNativeSdk = (props: UploadImageToS3WithNativeSdkProps):
         } as AWS.S3.HeadObjectRequest;
         try {
             myBucket.headObject(deleteparams).promise();
-            console.log('File Found in S3');
+
             try {
                 myBucket.deleteObject(deleteparams).promise();
-                console.log('file deleted Successfully');
             } catch (err) {
                 console.log('ERROR in file Deleting : ' + JSON.stringify(err));
             }
@@ -370,7 +369,6 @@ const UploadImageToS3WithNativeSdk = (props: UploadImageToS3WithNativeSdkProps):
                     setProgress(Number(((bytesUploaded / bytesTotal) * 100).toFixed(2)));
                 },
                 onSuccess: function () {
-                    console.log('Upload finished');
                     setVideoUpload(true);
                     setRender(1);
                 },
@@ -399,22 +397,11 @@ const UploadImageToS3WithNativeSdk = (props: UploadImageToS3WithNativeSdkProps):
                 }
             }
         }
-        // If the data is invalid or empty, you can handle it accordingly
-        // For example, you can set a default aspect ratio or return null/undefined.
+
         return 5 / 3;
     }
 
     function videoDelete() {
-        // try {
-        //      fetch(process.env.REACT_APP_CLOUDFLARE_URL, {
-        //           method: "DELETE",
-        //           body: JSON.stringify({
-        //                Key: videoId,
-        //           }),
-        //      });
-        // } catch (err) {
-        //      console.log(err);
-        // }
         setVideoID(null);
         setProgress(0);
         setRender(null);
@@ -593,9 +580,11 @@ const UploadImageToS3WithNativeSdk = (props: UploadImageToS3WithNativeSdkProps):
                     {url || videoUpload ? (
                         ' '
                     ) : (
-                        <div className="bg-white">
+                        <div
+                        // className="bg-white"
+                        >
                             <div
-                                className="mb-3 p-4 dropzone"
+                                className="mb-3 dropzone"
                                 onDragOver={(e) => {
                                     e.preventDefault();
                                 }}
@@ -606,8 +595,7 @@ const UploadImageToS3WithNativeSdk = (props: UploadImageToS3WithNativeSdkProps):
                             >
                                 {props.allowImage && !props.allowVideo ? (
                                     <>
-                                        <p className="d-inline">Drag & Drop Image</p>
-                                        <p className="font-weight-bold d-inline"> (png/jpeg/jpg)</p>
+                                        <p className="d-inline">Drag & Drop Image (png/jpeg/jpg)</p>
                                     </>
                                 ) : (
                                     ' '
@@ -633,13 +621,17 @@ const UploadImageToS3WithNativeSdk = (props: UploadImageToS3WithNativeSdkProps):
                                 )}
 
                                 <p className="mt-3">OR</p>
-                                <input
-                                    id="video-upload"
-                                    type="file"
-                                    className="pt-2"
-                                    disabled={props.readonly}
-                                    onChange={handleFileInput}
-                                />
+                                <div className="upload-btn-wrapper">
+                                    <button className="btn">Upload a file</button>
+                                    <input
+                                        id="video-upload"
+                                        type="file"
+                                        className="pt-2"
+                                        disabled={props.readonly}
+                                        onChange={handleFileInput}
+                                    />
+                                </div>
+
                                 {videoSizeError && (
                                     <p className="mt-3 text-danger">
                                         The video duration must be lesser than 60 seconds.

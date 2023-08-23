@@ -83,36 +83,6 @@ const Summary: React.FC = () => {
 
             setPackageDetails(flattenBookingResponse);
             setPackagePricing(flattenBookingResponse.fitnesspackages[0].fitnesspackagepricing);
-
-            // const mrp = flattenBookingResponse.fitnesspackages[0].fitnesspackagepricing.find(
-            //   (currentValue) => currentValue.duration === flattenBookingResponse.package_duration
-            // );
-
-            //create order on cashfree , paymentsessionid recieved in response pass as parameter in generate UPI QR Code API will recieve QR code in reponse can we pass in QRCode component to display QR code
-            // axios
-            //   .post(
-            //     API_END_POINTS.createOrderUrl,
-            //     {
-            //       orderId: bookingId,
-            //       currency: 'INR',
-            //       amount: Number(mrp?.mrp),
-            //       customerEmail: `${flattenBookingResponse.ClientUser[0].email}`,
-            //       customerPhone: `${flattenBookingResponse.ClientUser[0].Phone_Number}`,
-            //       customerName: `${flattenBookingResponse.ClientUser[0].First_Name} ${flattenBookingResponse.ClientUser[0].Last_Name}`,
-            //       customerId: `${flattenBookingResponse.ClientUser[0].id}`
-            //     },
-            //     config
-            //   )
-            //   .then((response) => {
-            //     axios
-            //       .get(
-            //         `${API_END_POINTS.generateUPIQRCodeUrl}${response.data.cfOrder.paymentSessionId}`,
-            //         config
-            //       )
-            //       .then((response) => {
-            //         console.log(response);
-            //       });
-            //   });
         }
     });
 
@@ -303,56 +273,6 @@ const Summary: React.FC = () => {
                 setIsLinkSent(true);
             });
     };
-
-    // const proceedToPayment = () => {
-    //   console.log(paymentOption)
-    //   if(paymentOption === 'paymentlink'){
-    //     console.log('inside payment link')
-    //     sendLink(bookingId);
-    //   } else if (paymentOption === 'qrcode'){
-    //     console.log('inside qr code')
-    //     createQrCode();
-    //   }
-    // }
-
-    // const createQrCode = () => {
-    //   createOrder();
-    // }
-
-    // const createOrder = () => {
-    //   console.log(packageDetails)
-    //   axios
-    //     .post(
-    //       API_END_POINTS.createOrderUrl,
-    //       {
-    //         orderId: bookingId,
-    //         currency: 'INR',
-    //         amount: Number(mrp?.mrp),
-    //         customerEmail: `${packageDetails.ClientUser[0].email}`,
-    //         customerPhone: `${packageDetails.ClientUser[0].Phone_Number}`,
-    //         customerName: `${packageDetails.ClientUser[0].First_Name} ${packageDetails.ClientUser[0].Last_Name}`,
-    //         customerId: `${packageDetails.ClientUser[0].id}`
-    //       },
-    //       config
-    //     )
-    //     .then((response: any) => {
-
-    //       axios
-    //     .get(
-    //       `API_END_POINTS.generateUPIQRCodeUrl${response.data.cfOrder.paymentSessionId}`,
-
-    //       config
-    //     )
-    //     .then((response: any) => {
-    //       console.log(response.data.cfOrderPayResponse.data.payload.qrcode);
-    //       setQrCode(response.cfOrderPayResponse.data.payload.qrcode);
-    //     });
-    //     });
-    // };
-
-    // useEffect(() => {
-    //   createOrder();
-    // },[])
 
     const startTimer = () => {
         const countdown = setInterval(() => {

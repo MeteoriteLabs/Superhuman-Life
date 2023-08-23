@@ -178,16 +178,6 @@ const CreateWebpageDetails = (props: any, ref: any) => {
         });
     }
 
-    function ViewWebpage(frm: any) {
-        console.log('view message');
-    }
-
-    // eslint-disable-next-line
-    function DeleteWebpage(id: any) {
-        console.log('delete message');
-        // deleteExercise({ variables: { id: id }});
-    }
-
     // eslint-disable-next-line
     function OnSubmit(frm: any) {
         //bind user id

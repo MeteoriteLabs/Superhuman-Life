@@ -188,7 +188,8 @@ function Features({ page }: { page: string }): JSX.Element {
                                                       <Form.Control
                                                           type="text"
                                                           style={{ fontSize: 14 }}
-                                                          as="input"
+                                                          as="textarea"
+                                                          rows={6}
                                                           {...field}
                                                       ></Form.Control>
                                                   )}

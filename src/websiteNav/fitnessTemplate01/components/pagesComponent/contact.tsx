@@ -10,7 +10,8 @@ function Home(): JSX.Element {
         <div className="mt-2">
             <div
                 className={styles.section_title_cont}
-                onClick={() => {
+                onClick={(e) => {
+                    e.stopPropagation();
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
                         section: 'Contact Form'

@@ -163,18 +163,19 @@ function Testimonials({ page }: { page: string }): JSX.Element {
                                                               name={`testimonials.${index}.${input}`}
                                                               control={control}
                                                               render={({ field }) => (
-                                                                  <UploadImageToS3WithNativeSdk
-                                                                      {...field}
-                                                                      allowImage={true}
-                                                                      allowVideo={false}
-                                                                      title={'Website Images'}
-                                                                      aspectRatio={'1:1'}
-                                                                      onChange={(
-                                                                          event: React.ChangeEvent<HTMLInputElement>
-                                                                      ) => {
-                                                                          field.onChange(event);
-                                                                      }}
-                                                                  />
+                                                                  //   <UploadImageToS3WithNativeSdk
+                                                                  //       {...field}
+                                                                  //       allowImage={true}
+                                                                  //       allowVideo={false}
+                                                                  //       title={'Website Images'}
+                                                                  //       aspectRatio={'1:1'}
+                                                                  //       onChange={(
+                                                                  //           event: React.ChangeEvent<HTMLInputElement>
+                                                                  //       ) => {
+                                                                  //           field.onChange(event);
+                                                                  //       }}
+                                                                  //   />
+                                                                  <div></div>
                                                               )}
                                                           />
                                                       )}

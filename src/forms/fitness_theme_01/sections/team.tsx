@@ -145,7 +145,8 @@ function Team({ page }: { page: string }): JSX.Element {
                             <Form.Control
                                 type="text"
                                 className={style.input_text}
-                                as="input"
+                                as="textarea"
+                                rows={6}
                                 {...field}
                             ></Form.Control>
                         )}
@@ -211,25 +212,12 @@ function Team({ page }: { page: string }): JSX.Element {
                                                       <Form.Control
                                                           type="text"
                                                           style={{ fontSize: 14 }}
-                                                          as="input"
+                                                          as="textarea"
+                                                          rows={6}
                                                           {...field}
                                                       ></Form.Control>
                                                   )}
                                               />
-                                          </Form.Group>
-                                          <Form.Group>
-                                              {/* <Form.Label>Image</Form.Label>
-                        <Controller
-                          name={`team.${index}.icons`}
-                          control={control}
-                          render={({ field }) => (
-                            <Form.Control
-                              type="file"
-                              style={{ fontSize: 14 }}
-                              as="input"
-                              {...field}></Form.Control>
-                          )}
-                        /> */}
                                           </Form.Group>
                                       </Card.Body>
                                   </Accordion.Collapse>

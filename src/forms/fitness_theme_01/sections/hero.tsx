@@ -109,10 +109,11 @@ function Hero({ page }: { page: string }): JSX.Element {
                         control={control}
                         render={({ field }) => (
                             <Form.Control
-                                type="textarea"
+                                as="textarea"
                                 className={style.input_text}
-                                as="input"
                                 {...field}
+                                rows={8}
+                                type="text"
                             ></Form.Control>
                         )}
                     />
