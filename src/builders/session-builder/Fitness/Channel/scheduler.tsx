@@ -20,6 +20,7 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { SideNav } from '../Event/import';
 import EditProgramName from '../../EditProgramName/index';
+import ExtendProgram from './ExtendProgram';
 import { CollapsibleScheduler } from '../Cohort/import';
 
 const Scheduler: React.FC = () => {
@@ -43,6 +44,7 @@ const Scheduler: React.FC = () => {
     const [show24HourFormat, setShow24HourFormat] = useState(false);
     const ref = useRef<any>(null);
     const [showProgramNameModal, setShowProgramNameModal] = useState<boolean>(false);
+    const [showExtendProgramModal, setShowExtendProgramModal] = useState<boolean>(false);
     const [showCollapseView, setShowCollapseView] = useState<boolean>(false);
 
     const handleScrollScheduler = () => {
@@ -261,6 +263,14 @@ const Scheduler: React.FC = () => {
                             />
                         )}
 
+{showExtendProgramModal && (
+                            <ExtendProgram
+                                show={showExtendProgramModal}
+                                onHide={() => setShowExtendProgramModal(false)}
+                                id={tagId}
+                            />
+                        )}
+
                         {/* Cards for service details and movement sessions */}
                         <Row>
                             <Col lg={11}>
@@ -331,7 +341,13 @@ const Scheduler: React.FC = () => {
                                                                         >
                                                                             Edit Program Name
                                                                         </Dropdown.Item>
-                                                                        <Dropdown.Item key={1}>
+                                                                        <Dropdown.Item key={1}
+                                                                        onClick={() =>
+                                                                            setShowExtendProgramModal(
+                                                                                true
+                                                                            )
+                                                                        }
+                                                                        >
                                                                             Extend program and
                                                                             offering
                                                                         </Dropdown.Item>

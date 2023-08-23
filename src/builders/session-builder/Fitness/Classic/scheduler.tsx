@@ -379,8 +379,10 @@ const Scheduler: React.FC = () => {
         return moment(date).isSame(moment(classicEndDate)) ? 'none' : '';
     }
 
-    const restDays = tag && tag.sessions && tag.sessions.length ? tag.sessions.filter((curr) => curr.type
-    === 'restday') : null;
+    const restDays =
+        tag && tag.sessions && tag.sessions.length
+            ? tag.sessions.filter((curr) => curr.type === 'restday')
+            : null;
 
     if (!show) return <Loader msg="loading scheduler..." />;
     else
@@ -463,13 +465,13 @@ const Scheduler: React.FC = () => {
                                                                     </Dropdown.Toggle>
 
                                                                     <Dropdown.Menu>
-                                                                        <Dropdown.Item 
-                                                                          key={2}
-                                                                          onClick={() =>
-                                                                            setShowProgramNameModal(
-                                                                                true
-                                                                            )
-                                                                        }
+                                                                        <Dropdown.Item
+                                                                            key={2}
+                                                                            onClick={() =>
+                                                                                setShowProgramNameModal(
+                                                                                    true
+                                                                                )
+                                                                            }
                                                                         >
                                                                             Edit Program Name
                                                                         </Dropdown.Item>
@@ -619,7 +621,10 @@ const Scheduler: React.FC = () => {
                                                                             }
                                                                         </td>
                                                                         <td>
-                                                                            {restDays && restDays.length ? restDays.length : 0}
+                                                                            {restDays &&
+                                                                            restDays.length
+                                                                                ? restDays.length
+                                                                                : 0}
                                                                             {/* {tag &&
                                                                             tag.fitnesspackage &&
                                                                             tag.fitnesspackage
