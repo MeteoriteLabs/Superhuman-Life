@@ -39,6 +39,7 @@ import '../../profilepicture.css';
 import SideNav from 'builders/program-builder/program-template/SchedulerSideBar';
 import CollapsibleScheduler from 'builders/program-builder/program-template/CollapsibleScheduler';
 import EditProgramName from '../../EditProgramName';
+import ExtendProgram from '../../ExtendProgram';
 
 const Scheduler = () => {
     const auth = useContext(AuthContext);
@@ -74,6 +75,7 @@ const Scheduler = () => {
     const [show24HourFormat, setShow24HourFormat] = useState(false);
     const ref = useRef<any>(null);
     const [showProgramNameModal, setShowProgramNameModal] = useState<boolean>(false);
+    const [showExtendProgramModal, setShowExtendProgramModal] = useState<boolean>(false);
 
     const handleScrollScheduler = () => {
         ref.current?.scrollIntoView({ behaviour: 'smooth', inline: 'nearest' });
@@ -485,6 +487,14 @@ const Scheduler = () => {
                             />
                         )}
 
+                        {showExtendProgramModal && (
+                            <ExtendProgram
+                                show={showExtendProgramModal}
+                                onHide={() => setShowExtendProgramModal(false)}
+                                id={tagId}
+                            />
+                        )}
+
                         {/* Cards for service details and movement sessions */}
                         <Row>
                             <Col lg={11}>
@@ -545,7 +555,7 @@ const Scheduler = () => {
 
                                                                     <Dropdown.Menu>
                                                                         <Dropdown.Item
-                                                                            key={2}
+                                                                            key={1}
                                                                             onClick={() =>
                                                                                 setShowProgramNameModal(
                                                                                     true
@@ -554,7 +564,14 @@ const Scheduler = () => {
                                                                         >
                                                                             Edit Program Name
                                                                         </Dropdown.Item>
-                                                                        <Dropdown.Item key={1}>
+                                                                        <Dropdown.Item key={2}
+                                                                        onClick={() =>
+                                                                            setShowExtendProgramModal(
+                                                                                true
+                                                                            )
+                                                                        }
+
+                                                                        >
                                                                             Extend program and
                                                                             offering
                                                                         </Dropdown.Item>

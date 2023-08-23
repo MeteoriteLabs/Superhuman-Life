@@ -27,6 +27,7 @@ import '../../profilepicture.css';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { SideNav } from '../Event/import';
+import EditProgramName from '../../EditProgramName';
 
 const Scheduler: React.FC = () => {
     const last = window.location.pathname.split('/').reverse();
@@ -50,6 +51,7 @@ const Scheduler: React.FC = () => {
     const [sessionFilter, setSessionFilter] = useState('none');
     const [showRestDay, setShowRestDay] = useState<boolean>(false);
     const ref = useRef<any>(null);
+    const [showProgramNameModal, setShowProgramNameModal] = useState<boolean>(false);
 
     const mainQuery = useQuery(GET_TAG_BY_ID, {
         variables: { id: tagId },
@@ -196,6 +198,14 @@ const Scheduler: React.FC = () => {
                             </span>
                         </div>
 
+                        {showProgramNameModal && (
+                            <EditProgramName
+                                show={showProgramNameModal}
+                                onHide={() => setShowProgramNameModal(false)}
+                                id={tagId}
+                            />
+                        )}
+
                         {/* Cards for service details and movement sessions */}
                         <Row>
                             <Col lg={11}>
@@ -250,11 +260,13 @@ const Scheduler: React.FC = () => {
                                                                     </Dropdown.Toggle>
 
                                                                     <Dropdown.Menu>
-                                                                        <Dropdown.Item key={1}>
-                                                                            Renew subscription
-                                                                        </Dropdown.Item>
-
-                                                                        <Dropdown.Item key={2}>
+                                                                        <Dropdown.Item key={1}
+                                                                        onClick={() =>
+                                                                            setShowProgramNameModal(
+                                                                                true
+                                                                            )
+                                                                        }
+                                                                        >
                                                                             Edit Program Name
                                                                         </Dropdown.Item>
                                                                     </Dropdown.Menu>

@@ -269,6 +269,15 @@ export const GET_TAG = gql`
                 id
                 attributes {
                     tag_name
+                    fitnesspackage{
+                        data{
+                            id
+                            attributes{
+                                Start_date
+                                End_date
+                            }
+                        }
+                    }
                 }
             }
         }
