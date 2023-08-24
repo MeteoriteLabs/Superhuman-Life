@@ -55,7 +55,7 @@ const Email: React.FC<{ value: string; onChange: (args: string) => void }> = (pr
                     onChange={(e) => {
                         setUserEmail(e.target.value);
                     }}
-                    placeholder=""
+                    placeholder="Enter your email"
                 />
                 {userEmail && user.length ? (
                     <span style={{ fontSize: '13px', color: 'red' }}>

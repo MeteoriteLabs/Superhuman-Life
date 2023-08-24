@@ -1,47 +1,70 @@
 import { gql } from '@apollo/client';
 
+// export const REGISTER_USER = gql`
+//     mutation registerUser($email: String!, $password: String!, $name: String!) {
+//         register(input: { email: $email, username: $name, password: $password }) {
+//             user {
+//                 id
+//             }
+//         }
+//     }
+// `;
+
 export const REGISTER_USER = gql`
-    mutation registerUser($email: String!, $password: String!, $name: String!) {
-        register(input: { email: $email, username: $name, password: $password }) {
-            user {
+    mutation registerUser($data: UsersPermissionsUserInput!) {
+        createUsersPermissionsUser(data: $data) {
+            data {
                 id
             }
         }
     }
 `;
 
+// export const UPDATE_USER = gql`
+//     mutation updateUser(
+//         $userid: ID!
+//         $fname: String
+//         $lname: String
+//         $email: String!
+//         $password: String
+//         $phone: String
+//         $uname: String!
+//         $dob: Date
+//         $gender: ENUM_USERSPERMISSIONSUSER_GENDER
+//         $about: String
+//         $module_permissions: JSON
+//         $languages: [ID]
+//         $timezone: ID
+//     ) {
+//         updateUsersPermissionsUser(
+//             id: $userid
+//             data: {
+//                 First_Name: $fname
+//                 email: $email
+//                 password: $password
+//                 Last_Name: $lname
+//                 username: $uname
+//                 DOB: $dob
+//                 Gender: $gender
+//                 Phone_Number: $phone
+//                 About_User: $about
+//                 Modules_permission: $module_permissions
+//                 languages: $languages
+//                 timezone: $timezone
+//             }
+//         ) {
+//             data {
+//                 id
+//             }
+//         }
+//     }
+// `;
 export const UPDATE_USER = gql`
-    mutation updateUser(
-        $userid: ID!
-        $fname: String
-        $lname: String
-        $email: String!
-        $password: String
-        $phone: String
-        $uname: String!
-        $dob: Date
-        $gender: ENUM_USERSPERMISSIONSUSER_GENDER
-        $about: String
-        $module_permissions: JSON
-        $languages: [ID]
-        $timezone: ID
-    ) {
+    mutation updateUser( $userid: ID!, $data: UsersPermissionsUserInput!) {
         updateUsersPermissionsUser(
             id: $userid
-            data: {
-                First_Name: $fname
-                email: $email
-                password: $password
-                Last_Name: $lname
-                username: $uname
-                DOB: $dob
-                Gender: $gender
-                Phone_Number: $phone
-                About_User: $about
-                Modules_permission: $module_permissions
-                languages: $languages
-                timezone: $timezone
-            }
+            data: $data
+            
         ) {
             data {
                 id

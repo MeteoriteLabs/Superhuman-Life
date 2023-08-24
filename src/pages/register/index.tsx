@@ -138,11 +138,20 @@ const Register: React.FC = () => {
         },
         password: {
             'ui:widget': 'password',
-            'ui:help': 'Hint: Make it strong! minimum password length should be 8.'
+            'ui:help': 'Hint: Make it strong! minimum password length should be 8.',
+            'ui:placeholder': 'Enter your password'
         },
         confirm: {
-            'ui:widget': 'password'
+            'ui:widget': 'password',
+            'ui:placeholder': 'Re-enter your password'
         },
+        fname: {
+            'ui:placeholder': 'Enter your first name'
+        },
+        lname: {
+            'ui:placeholder': 'Enter your last name'
+        },
+
         gender: {
             'ui:widget': 'radio',
             'ui:options': {
@@ -168,10 +177,19 @@ const Register: React.FC = () => {
             items: {
                 'ui:emptyValue': '',
                 'ui:placeholder': 'e.g. Masters in Yoga Therapy',
+                instituteName: {
+                    'ui:placeholder': 'Enter your institute name '
+                },
+                specialization: {
+                    'ui:placeholder': 'Enter your specialization'
+                },
                 yearOfPassing: {
                     'ui:widget': (props) => {
                         return <YearOfPassingForm {...props} />;
                     }
+                },
+                typeOfDegree: {
+                    'ui:placeholder': 'Select a degree type...'
                 }
             }
         },
@@ -192,7 +210,8 @@ const Register: React.FC = () => {
             'ui:widget': 'textarea',
             'ui:options': {
                 rows: 3
-            }
+            },
+            'ui:placeholder': 'Tell us about yourself'
         },
         multipleChoicesList: {
             'ui:widget': 'checkboxes'
@@ -297,40 +316,10 @@ const Register: React.FC = () => {
         }
     };
 
-    const [newUserId, setNewUserId] = useState<string>('');
-
     const [registerUser] = useMutation(REGISTER_USER, {
-        onCompleted: (data) => {
-            setNewUserId(data.register.user.id);
-            updateUser({
-                variables: {
-                    userid: data.register.user.id,
-                    fname: userFormData.fname,
-                    lname: userFormData.lname,
-                    email: userFormData.email,
-                    password: userFormData.password,
-                    phone: userFormData.contact,
-                    uname: userFormData.userName,
-                    dob: userFormData.dob,
-                    gender: userFormData.gender,
-                    about: userFormData.aboutMe,
-                    module_permissions: userFormData.multipleChoicesList,
-                    // let id = e.map(d => {return d.id}).join(',');
-                    languages: JSON.parse(userFormData.language)
-                        .map((d) => {
-                            return d.id;
-                        })
-                        .join(', ')
-                        .split(', '),
-                    timezone: JSON.parse(userFormData.timezone)[0].id
-                }
-            });
-        }
-    });
-
-    const [updateUser] = useMutation(UPDATE_USER, {
-        onCompleted: () => {
-            createAddress({
+        onCompleted: async (val) => {
+            let addressId = '';
+            await createAddress({
                 variables: {
                     address1: JSON.parse(userFormData.address).address1,
                     address2: JSON.parse(userFormData.address).address2,
@@ -339,36 +328,17 @@ const Register: React.FC = () => {
                     zipcode: JSON.parse(userFormData.address).zip,
                     country: JSON.parse(userFormData.address).country,
                     Title: JSON.parse(userFormData.address).addressTitle,
-                    user: newUserId,
+                    user: val.createUsersPermissionsUser.data.id,
                     longitude: longitude,
                     latitude: latitude
+                },
+                onCompleted: (val) => {
+                    addressId = val.createAddress.data.id.toString();
                 }
             });
-        }
-    });
 
-    // eslint-disable-next-line
-    const [createOrganization] = useMutation(CREATE_ORGANIZATION, {
-        onCompleted: () => {
-            createAddress({
-                variables: {
-                    address1: userFormData.address1,
-                    address2: userFormData.address2,
-                    city: userFormData.city,
-                    state: userFormData.state,
-                    zipcode: userFormData.zip,
-                    country: userFormData.country,
-                    Title: userFormData.title,
-                    user: newUserId,
-                    longitude: longitude,
-                    latitude: latitude
-                }
-            });
-        }
-    });
+            const educationalDetailsId: string[] = [];
 
-    const [createAddress] = useMutation(CREATE_ADDRESS, {
-        onCompleted: () => {
             for (
                 let educationDetails = 0;
                 educationDetails < userFormData.education.length;
@@ -380,46 +350,78 @@ const Register: React.FC = () => {
                         Type_of_degree: userFormData.education[educationDetails].typeOfDegree,
                         Specialization: userFormData.education[educationDetails].specialization,
                         year_of_passing: userFormData.education[educationDetails].yearOfPassing,
-                        user: newUserId
+                        user: val.createUsersPermissionsUser.data.id
+                    },
+                    onCompleted: (data) => {
+                        educationalDetailsId.push(data.createEducationalDetail.data.id);
                     }
                 });
             }
+
+            await updateUser({
+                variables: {
+                    userid: val.createUsersPermissionsUser.data.id,
+                    data: {
+                        designations: JSON.parse(userFormData.changemaker.specialist).id,
+                        educational_details: educationalDetailsId,
+                        addresses: addressId
+                    }
+                },
+                onCompleted: () => {
+                    setSuccessScreen(true);
+                    localStorage.clear();
+                }
+            });
         }
     });
 
-    const [createEducationDetail] = useMutation(CREATE_EDUCATION_DETAIL, {
-        onCompleted: () => {
-            setSuccessScreen(true);
-            localStorage.clear();
-        }
-    });
+    const [createAddress] = useMutation(CREATE_ADDRESS);
+    const [createEducationDetail] = useMutation(CREATE_EDUCATION_DETAIL);
+    const [updateUser] = useMutation(UPDATE_USER);
 
-    // eslint-disable-next-line
     async function submitHandler(formData: any) {
         if (step < 4) {
             setStep(step + 1);
             carouselRef.current.next();
             setFormValues({ ...formValues, ...formData });
         } else {
-            // setFormValues({ ...formValues, ...formData });
             const values = { ...formValues, ...formData };
-            // JSON.parse(values.address)
-            // JSON.parse(values.changemaker.specialist)
-            // JSON.parse(values.language)
-            // JSON.parse(values.organization[0]?.Organization_Type)
-            // JSON.parse(values.timezone)
 
             await setUserFormData(values);
 
             registerUser({
                 variables: {
-                    email: values.email,
-                    name: values.userName,
-                    password: values.password
+                    data: {
+                        email: values.email,
+                        username: values.userName,
+                        password: values.password,
+                        role: 3,
+                        DOB: values.dob,
+                        Gender: values.gender,
+                        First_Name: values.fname,
+                        Last_Name: values.lname,
+                        Phone_Number: values.contact,
+                        About_User: values.aboutMe,
+                        languages: JSON.parse(values.language)
+                            .map((d) => {
+                                return d.id;
+                            })
+                            .join(', ')
+                            .split(', '),
+                        timezone: JSON.parse(values.timezone)[0].id,
+                        designations: JSON.parse(values.changemaker.specialist)
+                            .map((d) => {
+                                return d.id;
+                            })
+                            .join(', ')
+                            .split(', ')
+                    }
                 }
             });
         }
     }
+
+    // eslint-disable-next-line
 
     function Validate(formData, errors) {
         const ele = document.getElementsByClassName('invalidEmail');
@@ -553,7 +555,7 @@ const Register: React.FC = () => {
                 <Row noGutters>
                     <Col>
                         <Container>
-                            <Row className='mt-4'>
+                            <Row className="mt-4">
                                 <Col xs={3} md={3} lg={3}>
                                     <ProgressBar
                                         max={1}
@@ -591,12 +593,12 @@ const Register: React.FC = () => {
                                     <small className="text-muted">Step 4</small>
                                 </Col>
                             </Row>
-                            <Modal.Dialog scrollable style={{height:"500px"}}>
+                            <Modal.Dialog scrollable style={{ height: '500px' }}>
                                 <Modal.Body className="bg-light">
                                     <Form
                                         uiSchema={uiSchema}
                                         schema={registerSchema[step]}
-                                        ref={formRef} 
+                                        ref={formRef}
                                         showErrorList={false}
                                         validate={Validate}
                                         // eslint-disable-next-line
@@ -642,7 +644,7 @@ const Register: React.FC = () => {
                             </Modal.Dialog>
                         </Container>
                     </Col>
-                    <Col className="d-none d-lg-block mt-3" >
+                    <Col className="d-none d-lg-block mt-3">
                         <Carousel
                             ref={carouselRef}
                             interval={8000}
