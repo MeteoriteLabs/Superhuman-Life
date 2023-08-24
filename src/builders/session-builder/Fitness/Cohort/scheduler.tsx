@@ -28,6 +28,7 @@ import '../../profilepicture.css';
 import '../Group/actionButton.css';
 import 'react-calendar/dist/Calendar.css';
 import EditProgramName from '../../EditProgramName/index';
+import Reschedule from './Reschedule';
 
 const Scheduler: React.FC = () => {
     const last = window.location.pathname.split('/').reverse();
@@ -49,7 +50,9 @@ const Scheduler: React.FC = () => {
     const [show24HourFormat, setShow24HourFormat] = useState(false);
     const ref = useRef<any>(null);
     const [showProgramNameModal, setShowProgramNameModal] = useState<boolean>(false);
+    const [showRescheduleModal, setShowRescheduleModal] = useState<boolean>(false);
     const [showCollapseView, setShowCollapseView] = useState<boolean>(false);
+    const [isReschedule, setIsReschedule] = useState<any>(false);
 
     const handleScrollScheduler = () => {
         ref.current?.scrollIntoView({ behaviour: 'smooth', inline: 'nearest' });
@@ -102,6 +105,26 @@ const Scheduler: React.FC = () => {
         setClientIds(clientValues);
         setSessionIds(ids);
         setTag(flattenData.tags[0]);
+
+        tag && tag.sessions && tag.sessions.length
+            ? tag.sessions.map((curr) => {
+                  if (
+                      moment(curr.session_date)
+                          .add(curr.end_time.split(':')[0], 'hours')
+                          .add(curr.end_time.split(':')[1])
+                          .diff(moment.utc()) < 0
+                  )
+                      return curr.session_date;
+              })
+            : null;
+
+        setIsReschedule(
+            flattenData && flattenData.tags && flattenData.tags.length
+                ? moment(flattenData.tags[0].fitnesspackage.Start_date)
+                      .subtract(1, 'day')
+                      .diff(moment.utc()) > 0
+                : false
+        );
     }
 
     function handleDatePicked(date: string) {
@@ -253,6 +276,14 @@ const Scheduler: React.FC = () => {
                             />
                         )}
 
+                        {showRescheduleModal && (
+                            <Reschedule
+                                show={showRescheduleModal}
+                                onHide={() => setShowRescheduleModal(false)}
+                                id={tagId}
+                            />
+                        )}
+
                         {/* Cards for service details and movement sessions */}
                         <Row>
                             <Col lg={11}>
@@ -320,9 +351,28 @@ const Scheduler: React.FC = () => {
                                                                         >
                                                                             Edit Program Name
                                                                         </Dropdown.Item>
-                                                                        <Dropdown.Item key={2}>
+                                                                        {!isReschedule ? null : (
+                                                                            <Dropdown.Item
+                                                                                key={2}
+                                                                                onClick={() =>
+                                                                                    setShowRescheduleModal(
+                                                                                        true
+                                                                                    )
+                                                                                }
+                                                                            >
+                                                                                Reschedule
+                                                                            </Dropdown.Item>
+                                                                        )}
+                                                                        {/* <Dropdown.Item
+                                                                            key={2}
+                                                                            onClick={() =>
+                                                                                setShowRescheduleModal(
+                                                                                    true
+                                                                                )
+                                                                            }
+                                                                        >
                                                                             Reschedule
-                                                                        </Dropdown.Item>
+                                                                        </Dropdown.Item> */}
                                                                     </Dropdown.Menu>
                                                                 </Dropdown>
                                                             </Row>

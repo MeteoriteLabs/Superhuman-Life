@@ -40,7 +40,7 @@ const PackageDateConfig = (props: any) => {
             </InputGroup>
             {props?.title1 && (
                 <span className="small">
-                    SOffering will be visible on the website and app only from the above date
+                    Offering will be visible on the website and app only from the above date
                 </span>
             )}
             <label>{props?.title2 ? props.title2 : 'Expiry Date'}</label>
