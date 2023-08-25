@@ -51,6 +51,7 @@ const Number: React.FC<{ value: string; onChange: (args: string) => void }> = (p
                     onlyCountries={['in']}
                     value={userNumber}
                     onChange={(phone) => setUserNumber(phone)}
+                    placeholder='Enter your phone no'
                 />
 
                 {userNumber && user.length ? (
