@@ -113,16 +113,16 @@ function CreateEditActivity(props: any, ref: any): JSX.Element {
         }
     });
 
-    function handleTimeFormat(time: string) {
-        const timeArray = time.split(':');
-        const hours = timeArray[0];
-        const minutes = timeArray[1];
-        const timeString =
-            (parseInt(hours) < 10 ? `0${hours}` : hours) +
-            ':' +
-            (parseInt(minutes) === 0 ? `0${minutes}` : minutes);
-        return timeString.toString();
-    }
+    // function handleTimeFormat(time: string) {
+    //     const timeArray = time.split(':');
+    //     const hours = timeArray[0];
+    //     const minutes = timeArray[1];
+    //     const timeString =
+    //         (parseInt(hours) < 10 ? `0${hours}` : hours) +
+    //         ':' +
+    //         (parseInt(minutes) === 0 ? `0${minutes}` : minutes);
+    //     return timeString.toString();
+    // }
 
     function handleTimeInMinutes(time: string) {
         const timeArray = time.split(':');
@@ -163,18 +163,18 @@ function CreateEditActivity(props: any, ref: any): JSX.Element {
                     existingEvents.push(daysArray[j]);
                 } else {
                     const timeStart: any = new Date(
-                        '01/01/2007 ' + handleTimeFormat(frm.time.startTime)
+                        '01/01/2007 ' + frm.time.startTime
                     );
                     const timeEnd: any = new Date(
-                        '01/01/2007 ' + handleTimeFormat(frm.time.endTime)
+                        '01/01/2007 ' + frm.time.endTime
                     );
                     const diff1 = timeEnd - timeStart;
                     for (let k = 0; k <= existingEvents.length - 1; k++) {
                         const startTimeHour: any = new Date(
-                            '01/01/2007 ' + handleTimeFormat(existingEvents[k].startTime)
+                            '01/01/2007 ' + existingEvents[k].startTime
                         );
                         const endTimeHour: any = new Date(
-                            '01/01/2007 ' + handleTimeFormat(existingEvents[k].endTime)
+                            '01/01/2007 ' + existingEvents[k].endTime
                         );
                         const diff2 = endTimeHour - startTimeHour;
 
@@ -231,8 +231,8 @@ function CreateEditActivity(props: any, ref: any): JSX.Element {
         for (let z = 0; z < frm.day.length; z++) {
             createSession({
                 variables: {
-                    start_time: handleTimeFormat(frm.time.startTime),
-                    end_time: handleTimeFormat(frm.time.endTime),
+                    start_time: frm.time.startTime,
+                    end_time: frm.time.endTime,
                     activity: id,
                     activity_target: frm.newActivity[0],
                     day_of_program: frm.day[z].key,

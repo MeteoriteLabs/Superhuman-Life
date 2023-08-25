@@ -4,7 +4,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { UPDATE_PACKAGE } from '../../../ExtendProgram/graphQL/queries';
 import { flattenObj } from 'components/utils/responseFlatten';
 import Toaster from 'components/Toaster/index';
-import { GET_TAG } from '../../../graphQL/queries';
+import { GET_TAG, UPDATE_SESSION } from '../../../graphQL/queries';
 import moment from 'moment';
 
 interface Props {
@@ -28,6 +28,7 @@ export default function ExtendProgram(props: Props): JSX.Element {
             const flattenData = flattenObj({ ...response.tag });
             setStartDate(flattenData.fitnesspackage.Start_date);
             setFitnessPackageId(flattenData.fitnesspackage.id);
+            console.log(response);
         }
     });
 
@@ -38,6 +39,8 @@ export default function ExtendProgram(props: Props): JSX.Element {
         },
         refetchQueries: [GET_TAG]
     });
+
+    const [updateSession] = useMutation(UPDATE_SESSION);
 
     function onSubmit() {
         updatePackage({
