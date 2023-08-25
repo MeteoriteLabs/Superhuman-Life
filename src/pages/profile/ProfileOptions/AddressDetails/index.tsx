@@ -24,8 +24,6 @@ const AddressDetails = () => {
     }, [addressData]);
 
     const {
-        // eslint-disable-next-line
-        data: get_address,
         loading: loading_address_details,
         refetch: refetch_address
     } = useQuery(ADDRESSES, {

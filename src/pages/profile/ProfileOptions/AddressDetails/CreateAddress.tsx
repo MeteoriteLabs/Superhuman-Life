@@ -56,14 +56,7 @@ function CreateAddress(props: any, ref: any): JSX.Element {
         []
     );
 
-    const {
-        // eslint-disable-next-line
-        data: get_address,
-        // eslint-disable-next-line
-        loading: loading_address_details,
-        // eslint-disable-next-line
-        refetch: refetch_address
-    } = useQuery(ADDRESS, {
+    useQuery(ADDRESS, {
         variables: { id: operation.id },
         skip: !operation.id || operation.type === 'delete',
         onCompleted: (response) => {

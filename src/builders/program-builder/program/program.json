@@ -19,7 +19,8 @@
                 "type": "number",
                 "title": "Level",
                 "enum": [0, 1, 2, 3],
-                "enumNames": ["Beginner", "Intermediate", "Advance", "None"]
+                "enumNames": ["Beginner", "Intermediate", "Advance", "None"],
+                "default": 0
             },
             "discipline": {
                 "type": "string",

@@ -37,6 +37,7 @@ const DaysInput = (props: any) => {
             for (let j = 0; j < props?.duration; j++) {
                 days.push({
                     key: j + 1,
+                    value: `${moment(props?.startDate).add(j, 'days').format('YYYY-MM-DD')}`,
                     day: `${moment(props?.startDate).add(j, 'days').format('Do, MMM YY')}`
                 });
             }
@@ -53,7 +54,7 @@ const DaysInput = (props: any) => {
 
     return (
         <>
-            <div>
+            <div style={{zIndex: 999, height: "150px"}}>
                 {props.type === 'transfer' ? null : <label>Select Day</label>}
                 <Typeahead
                     id="basic-typeahead-multiple"

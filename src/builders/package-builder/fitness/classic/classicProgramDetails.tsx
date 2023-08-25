@@ -9,6 +9,7 @@ const ClassicProgramDetails: React.FC<{
 }> = (props) => {
     const inputDisabled = props.readonly;
     const existingData = props.value ? JSON.parse(props.value) : null;
+
     if (existingData && existingData.length > 0) {
         existingData.address = {
             id: JSON.parse(existingData?.address)[0].id,
@@ -44,7 +45,7 @@ const ClassicProgramDetails: React.FC<{
     }
 
     useEffect(() => {
-        if (duration - onlineClasses > 0) {
+        if (duration - onlineClasses >= 0) {
             setRestDays(duration - onlineClasses);
         }
         if (duration === 1) {
@@ -65,8 +66,8 @@ const ClassicProgramDetails: React.FC<{
                         min={30}
                         max={365}
                         value={duration}
-                        onChange={(e: any) => {
-                            setDuration(parseInt(e.target.value));
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                            setDuration(+e.target.value);
                         }}
                     />
                 </Form.Group>
@@ -89,15 +90,16 @@ const ClassicProgramDetails: React.FC<{
                             aria-describedby="inputGroup-sizing-default"
                             type="number"
                             min={0}
-                            max={365}
+                            max={duration}
                             disabled={inputDisabled}
                             value={onlineClasses}
-                            onChange={(e: any) => setOnlineClasses(parseInt(e.target.value))}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setOnlineClasses(+e.target.value)}
                         />
                         <InputGroup.Append>
                             <InputGroup.Text id="basic-addon1">Sessions</InputGroup.Text>
                         </InputGroup.Append>
                     </InputGroup>
+                    {onlineClasses>duration ? <p className='text-danger small'>Please enter online classes less than duration</p>: null}
                 </Col>
             </Row>
 

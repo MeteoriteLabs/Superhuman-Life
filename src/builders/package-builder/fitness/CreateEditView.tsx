@@ -507,7 +507,7 @@ function CreateEditView(props: any, ref: any) {
     });
 
     const [updateStatus] = useMutation(UPDATE_PACKAGE_PRIVATE, {
-        onCompleted: (r: any) => {
+        onCompleted: () => {
             props.callback();
         }
     });

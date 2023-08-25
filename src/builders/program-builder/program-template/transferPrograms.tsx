@@ -30,27 +30,28 @@ const TransferPrograms = (props: any) => {
         const hours = timeArray[0];
         const minutes = timeArray[1];
         const timeString =
-            (parseInt(hours) < 10 ? '0' + hours : hours) +
+            (parseInt(hours) < 10 ? `0${hours}` : hours) +
             ':' +
-            (parseInt(minutes) === 0 ? '0' + minutes : minutes);
+            (parseInt(minutes) < 10 ? `0${minutes}` : minutes);
         return timeString.toString();
     }
 
     function handleEndTime(newStartTime: any, index: any) {
         const oldData = existingEvents[0].events.find((e: any) => e.id === index);
-        const timeStart: any = new Date('01/01/2007 ' + handleTimeFormat(oldData.start_time));
-        const timeEnd: any = new Date('01/01/2007 ' + handleTimeFormat(oldData.end_time));
+        const timeStart: any = new Date('01/01/2007 ' + oldData.start_time);
+        const timeEnd: any = new Date('01/01/2007 ' + oldData.end_time);
         const diff1 = timeEnd - timeStart;
         const d = new Date('01/01/2007 ' + handleTimeFormat(newStartTime));
         d.setMinutes(d.getMinutes() + diff1 / 1000 / 60);
-        return (d.getHours() + ':' + d.getMinutes()).toString();
+
+        return ((d.getHours() < 10? `0${d.getHours()}` : d.getHours()) + ':' + (Number(d.getMinutes()) < 10 ? `0${d.getMinutes()}` : d.getMinutes())).toString();
     }
 
     const [createSession] = useMutation(CREATE_SESSION, {
-        onCompleted: (r: any) => {
+        onCompleted: (response: any) => {
             setIsCreated(!isCreated);
             const values = [...props.sessionIds];
-            values.push(r.createSession.data.id);
+            values.push(response.createSession.data.id);
             updateProgram({
                 variables: {
                     id: program_id,
@@ -67,11 +68,13 @@ const TransferPrograms = (props: any) => {
             // const oldData = existingEvents[0].events.find((val: any) => val.id === e.id);
             if (e.day && e.startTime) {
                 e.day = JSON.parse(e.day);
-                const startTime: any = e.startTime;
+                const startTime: any = handleTimeFormat(e.startTime);
                 const endTime: any = handleEndTime(e.startTime, e.id);
+                
                 for (let i = 0; i < e.day.length; i++) {
                     eventsJson.push({
                         day: parseInt(e.day[i].key),
+                        session_date: e.day[i].value,
                         name: e.name,
                         id: e.id,
                         startTime: startTime,
@@ -91,9 +94,11 @@ const TransferPrograms = (props: any) => {
         });
 
         for (let i = 0; i < eventsJson.length; i++) {
+            
             if (eventsJson[i].type === 'workout') {
                 createSession({
                     variables: {
+                        session_date: eventsJson[i].session_date,
                         start_time: eventsJson[i].startTime,
                         end_time: eventsJson[i].endTime,
                         workout: eventsJson[i].workout.id,
@@ -107,6 +112,7 @@ const TransferPrograms = (props: any) => {
             } else {
                 createSession({
                     variables: {
+                        session_date: eventsJson[i].session_date,
                         day_of_program: parseInt(eventsJson[i].day),
                         start_time: eventsJson[i].startTime,
                         end_time: eventsJson[i].endTime,
@@ -161,7 +167,7 @@ const TransferPrograms = (props: any) => {
                 <Modal.Header closeButton>
                     <Modal.Title>Transfer programs</Modal.Title>
                 </Modal.Header>
-                <Modal.Body style={{ maxHeight: '500px', overflow: 'auto' }}>
+                <Modal.Body style={{ height: "50vh" ,maxHeight: '500vh', overflow: 'auto' }}>
                     <TransferProgramsTable
                         duration={props.duration}
                         dayType={window.location.pathname.split('/')[1] === 'programs' ? 'day' : ''}

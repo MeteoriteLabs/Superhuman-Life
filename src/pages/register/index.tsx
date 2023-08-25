@@ -616,21 +616,17 @@ const Register: React.FC = () => {
                                     </Form>
                                 </Modal.Body>
                                 <Modal.Footer className="bg-light">
-                                    {step !== 1 ? (
-                                        <Button
-                                            variant="light"
-                                            size="sm"
-                                            onClick={() => {
-                                                setStep(step - 1);
-                                                carouselRef.current.prev();
-                                            }}
-                                        >
-                                            <i className="mr-2 fas fa-arrow-left"></i>
-                                        </Button>
-                                    ) : (
-                                        ''
-                                    )}
-
+                                    <Button
+                                        variant="light"
+                                        size="sm"
+                                        onClick={() => {
+                                            setStep(step - 1);
+                                            carouselRef.current.prev();
+                                        }}
+                                        disabled={step === 1 ? true : false}
+                                    >
+                                        <i className="mr-2 fas fa-arrow-left"></i>
+                                    </Button>
                                     <Button
                                         variant="danger"
                                         size="sm"
@@ -661,7 +657,7 @@ const Register: React.FC = () => {
                             <Carousel.Item>
                                 <img
                                     src="/assets/step-1.svg"
-                                    height="620px"
+                                    height="700px"
                                     className="d-block w-100"
                                     alt="sapien-exercise"
                                 />
@@ -669,7 +665,7 @@ const Register: React.FC = () => {
                             <Carousel.Item>
                                 <img
                                     src="/assets/step-2.svg"
-                                    height="620px"
+                                    height="700px"
                                     className="d-block w-100"
                                     alt="sapien-exercise"
                                 />
@@ -677,7 +673,7 @@ const Register: React.FC = () => {
                             <Carousel.Item>
                                 <img
                                     src="/assets/step-3.svg"
-                                    height="620px"
+                                    height="700px"
                                     className="d-block w-100"
                                     alt="sapien-exercise"
                                 />
@@ -685,7 +681,7 @@ const Register: React.FC = () => {
                             <Carousel.Item>
                                 <img
                                     src="/assets/step-4.svg"
-                                    height="620px"
+                                    height="700px"
                                     className="d-block w-100"
                                     alt="sapien-exercise"
                                 />

@@ -6,7 +6,7 @@ const regularExpForUrl =
 // eslint-disable-next-line
     /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/;
 
-const UrlList = (props: any) => {
+const UrlList = (props: any): JSX.Element => {
     const [selected, setSelected] = useState<any[]>(
         props?.field[0]?.type === 'url' ? props?.field : []
     );

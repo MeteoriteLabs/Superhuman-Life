@@ -227,8 +227,8 @@ const Schedular = (props: any, ref) => {
     useQuery(FETCH_ACTIVITY, {
         variables: { id: event.id },
         skip: event.type !== 'activity',
-        onCompleted: (r: any) => {
-            const flattenData = flattenObj({ ...r });
+        onCompleted: (response: any) => {
+            const flattenData = flattenObj({ ...response });
             setData(flattenData.activities);
             handleShow();
         }
@@ -479,7 +479,6 @@ const Schedular = (props: any, ref) => {
             sessions
                 .filter((itm) => itm.Is_restday === false)
                 .forEach((val) => {
-                   
                     const startTimeHour: any = `${
                         val.start_time
                             ? Number(val.start_time.split(':')[0]) < 10
@@ -542,6 +541,7 @@ const Schedular = (props: any, ref) => {
     const days: number[] = [];
     const dates: string[] = [];
     const min: number[] = [0, 15, 30, 45];
+    const dateArr: string[] = [];
 
     function handleDays() {
         if (props.type === 'day') {
@@ -555,6 +555,7 @@ const Schedular = (props: any, ref) => {
             for (let j = 0; j < props.days; j++) {
                 const t = moment(props.startDate).add(j, 'days').format('DD MMM YY');
                 dates.push(t);
+                dateArr.push(moment(props.startDate).add(j, 'days').format('YYYY-MM-DD'));
             }
         } else {
             for (let k = 1; k <= props.days; k++) {
@@ -632,7 +633,6 @@ const Schedular = (props: any, ref) => {
         // this if block is to check if we are in the program template page
         if (props?.type === 'day') {
             if (props.restDays) {
-                
                 for (let j = 0; j < props.restDays.length; j++) {
                     if (val === props.restDays[j].day_of_program) {
                         return {
@@ -662,7 +662,6 @@ const Schedular = (props: any, ref) => {
                 }
             }
         } else if (props.restDays && props?.type !== 'day') {
-           
             for (let i = 0; i < props.restDays.length; i++) {
                 if (val === calculateDay(props.startDate, props.restDays[i].session_date)) {
                     return {
@@ -1615,9 +1614,9 @@ const Schedular = (props: any, ref) => {
     });
 
     const [createRestDay] = useMutation(CREATE_REST_DAY, {
-        onCompleted: (r: any) => {
+        onCompleted: (response: any) => {
             const values = [...props.sessionIds];
-            values.push(r.createSession.data.id);
+            values.push(response.createSession.data.id);
             updateTagSessions({
                 variables: {
                     id: program_id,
@@ -1628,9 +1627,9 @@ const Schedular = (props: any, ref) => {
     });
 
     const [createTemplateRestDay] = useMutation(CREATE_TEMPLATE_SESSION, {
-        onCompleted: (r: any) => {
+        onCompleted: (response: any) => {
             const values = [...props.sessionIds];
-            values.push(r.createSession.data.id);
+            values.push(response.createSession.data.id);
             if (window.location.pathname.split('/')[1] === 'programs') {
                 updateFitnessProgramSessions({
                     variables: {
@@ -1678,6 +1677,37 @@ const Schedular = (props: any, ref) => {
             });
         }
     }
+
+    useEffect(() => {
+        const sessionsObj = {};
+        const tag = flattenObj({ ...props.schedulerSessions.tags });
+        
+        const sessions =
+            tag && tag.length && tag[0].sessions && tag[0].sessions.length ? tag[0].sessions : [];
+    
+        for (let i = 0; i < sessions.length; i++) {
+            sessionsObj[sessions[i].session_date] = sessionsObj[sessions[i].session_date] ?
+            [...sessionsObj[sessions[i].session_date], 
+            {
+                "startTime": sessions[i].start_time,
+                "endTime": sessions[i].end_time,
+                "name":
+                    sessions[i].type === 'workout'
+                        ? sessions[i].workout.workouttitle
+                        : sessions[i].activity.title
+            }
+        ]
+             : [{
+                "startTime": sessions[i].start_time,
+                "endTime": sessions[i].end_time,
+                "name":
+                    sessions[i].type === 'workout'
+                        ? sessions[i].workout.workouttitle
+                        : sessions[i].activity?.title
+            }];
+        }
+
+    }, [props]);
 
     // it helps render the first row in the calendar(which displays the date and other data)
     function handleDaysRowRender() {
@@ -1878,13 +1908,17 @@ const Schedular = (props: any, ref) => {
         return finalTime;
     };
 
-    const handleSessionPastDates = (sessionDate: string, sessionEndHour: number, sessionEndMinute: number) => {
+    const handleSessionPastDates = (
+        sessionDate: string,
+        sessionEndHour: number,
+        sessionEndMinute: number
+    ) => {
         const currentTime = moment.utc();
         const expirySessionTime = moment(sessionDate)
             .add(sessionEndHour, 'hours')
             .add(sessionEndMinute, 'minutes');
         const diff = expirySessionTime.diff(currentTime);
-        
+
         if (diff < 0) {
             return true;
         }
@@ -1950,7 +1984,8 @@ const Schedular = (props: any, ref) => {
                                 <div
                                     className="cell"
                                     style={{
-                                        backgroundColor: '#343A40', color:'#fff',
+                                        backgroundColor: '#343A40',
+                                        color: '#fff',
                                         // backgroundColor: 'white',
                                         position: 'relative',
                                         minHeight: `${props.type === 'date' ? '70px' : '70px'}`
@@ -1963,7 +1998,8 @@ const Schedular = (props: any, ref) => {
                             <div
                                 className="cell"
                                 style={{
-                                    backgroundColor: '#343A40', color:'#fff',
+                                    backgroundColor: '#343A40',
+                                    color: '#fff',
                                     // backgroundColor: 'white',
                                     position: 'relative',
                                     minHeight: `${props.type === 'date' ? '70px' : '70px'}`
@@ -1975,7 +2011,7 @@ const Schedular = (props: any, ref) => {
                             return (
                                 <div
                                     className="time-row"
-                                    style={{ backgroundColor: '#343A40', color:'#fff' }}
+                                    style={{ backgroundColor: '#343A40', color: '#fff' }}
                                     key={index}
                                 >
                                     <div className="cell" style={{ position: 'relative' }}>
@@ -2004,6 +2040,7 @@ const Schedular = (props: any, ref) => {
                                         return (
                                             <div className="cell container" key={index}>
                                                 {min.map((m, index) => {
+                                                    
                                                     return (
                                                         <div
                                                             key={index}
@@ -2049,7 +2086,7 @@ const Schedular = (props: any, ref) => {
                                                                 arr[d][h][m]?.map(
                                                                     (val, index: number) => {
                                                                         val.index = index;
-                                                                       
+
                                                                         return (
                                                                             <div
                                                                                 key={index}
@@ -2067,9 +2104,21 @@ const Schedular = (props: any, ref) => {
                                                                                         ? false
                                                                                         : true
                                                                                 }
+                                                                                // onDrag={(e) => {
+                                                                                //      console.log(e.currentTarget.getAttribute(
+                                                                                //         'data-hour'
+                                                                                //     ), e.currentTarget.getAttribute(
+                                                                                //         'data-min'
+                                                                                //     ),  e.currentTarget.getAttribute(
+                                                                                //         'data-day'
+                                                                                //     ))
+                                                                                // }}
                                                                                 onDragStart={(
                                                                                     e
                                                                                 ) => {
+                                                                                    // console.log(e, 'drag start', val, e.currentTarget.getAttribute(
+                                                                                    //     'data-hour'
+                                                                                    // ));
                                                                                     e.dataTransfer.setData(
                                                                                         'scheduler-event',
                                                                                         JSON.stringify(
@@ -2089,8 +2138,9 @@ const Schedular = (props: any, ref) => {
                                                                                         ) /
                                                                                             60
                                                                                     }px`,
-                                                                                    backgroundColor:'#FFFDD1',
-                                                                                    color:'#000',
+                                                                                    backgroundColor:
+                                                                                        '#FFFDD1',
+                                                                                    color: '#000',
                                                                                     // background: 'rgb(135,206,235)',
                                                                                     width: `${
                                                                                         val.type ===
@@ -2150,10 +2200,10 @@ const Schedular = (props: any, ref) => {
                                                                                         </div>
                                                                                         <div>
                                                                                             {props.showRestDay ? null : handleSessionPastDates(
-                                                                                                val.sessionDate,
-                                                                                                val.endHour,
-                                                                                                val.endMin
-                                                                                            ) ? (
+                                                                                                  val.sessionDate,
+                                                                                                  val.endHour,
+                                                                                                  val.endMin
+                                                                                              ) ? (
                                                                                                 <img
                                                                                                     style={{
                                                                                                         height: '20px',
@@ -2161,9 +2211,9 @@ const Schedular = (props: any, ref) => {
                                                                                                             'absolute',
                                                                                                         right: '0'
                                                                                                     }}
-                                                                                                    title="session attended"
+                                                                                                    title="session completed"
                                                                                                     src="/assets/attended.svg"
-                                                                                                    alt="attended"
+                                                                                                    alt="completed"
                                                                                                 />
                                                                                             ) : null}
                                                                                         </div>
@@ -2206,29 +2256,24 @@ const Schedular = (props: any, ref) => {
                                                                                                       val.endMin
                                                                                                   )
                                                                                               )}`}
-                                                                                        {/* : ({
-                                                                                            //   true ?
-                                                                                            
-                                                                                            // ((val.hour ===
-                                                                                            //   '0'
-                                                                                            //       ? '00'
-                                                                                            //       : val.hour) +
-                                                                                            //   ':' +
-                                                                                            //   (val.min ===
-                                                                                            //   '0'
-                                                                                            //       ? '00'
-                                                                                            //       : val.min) +
-                                                                                            //   ' - ' +
-                                                                                            //   val.endHour +
-                                                                                            //   ':' +
-                                                                                            //   (val.endMin.toString() ===
-                                                                                            //   '0'
-                                                                                            //       ? '00'
-                                                                                            //       : val.endMin)) :
-                                                                                            // `${handleCovertTimeFormat(Number(val.hour), Number(val.min))}-${handleCovertTimeFormat(Number(val.endHour), Number(val.endMin))}`
-                                                                                            // })} */}
+            
                                                                                     </div>
-                                                                                    <div className="event-time d-flex justify-content-end" style={{position: 'absolute', right: '0', bottom: '0'}} title="bookings"><small>{val.sessions_bookings}</small></div>
+                                                                                    <div
+                                                                                        className="event-time d-flex justify-content-end"
+                                                                                        style={{
+                                                                                            position:
+                                                                                                'absolute',
+                                                                                            right: '0',
+                                                                                            bottom: '0'
+                                                                                        }}
+                                                                                        title="bookings"
+                                                                                    >
+                                                                                        <small>
+                                                                                            {
+                                                                                                val.sessions_bookings
+                                                                                            }
+                                                                                        </small>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         );

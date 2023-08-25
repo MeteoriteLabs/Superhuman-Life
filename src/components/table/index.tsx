@@ -2,7 +2,7 @@ import { Fragment } from 'react';
 import { useTable, useExpanded } from 'react-table';
 import NoDataInCard from '../NoDataInCard';
 
-function Table({ data, columns }: any) {
+function Table({ data, columns }: any): JSX.Element {
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
         { columns, data },
         useExpanded

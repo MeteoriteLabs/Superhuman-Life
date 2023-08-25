@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from 'react';
-import { Card, Row, Col, Button } from 'react-bootstrap';
+import { Card, Row, Col } from 'react-bootstrap';
 import { useQuery, useMutation } from '@apollo/client';
 import { UPDATE_SEEN_NEW } from 'builders/client-builder/leads/queries';
 import { GET_LEADS } from './queries';
@@ -9,8 +9,28 @@ import AuthContext from 'context/auth-context';
 import moment from 'moment';
 import './lead.css';
 
+interface Leads {
+    Details: {
+        leadsdetails: {
+            email: string;
+            name: string;
+            phonenumber: string;
+            leadsmesssage?: string;
+        };
+        source: string;
+        status: string;
+        user_permissions_user: string;
+    };
+    createdAt: string;
+    id: string;
+    isSeen: boolean;
+    updatedAt: string;
+    users_permissions_user: { id: string; __typename: string };
+    __typename: string;
+}
+
 function LeadComponent(): JSX.Element {
-    const [leadData, setLeadData] = useState<any>([]);
+    const [leadData, setLeadData] = useState<Leads[]>([]);
     const auth = useContext(AuthContext);
     const [page, setPage] = useState<number>(0);
     const [loadingMore, setLoadingMore] = useState<boolean>(false); // Added loading state
@@ -20,7 +40,7 @@ function LeadComponent(): JSX.Element {
     const [scrollHeight, setScrollHeight] = useState<number>(0);
     const [totalRecords, setTotalRecords] = useState<number>(0);
 
-    const { data, fetchMore } = useQuery(GET_LEADS, {
+    const { data } = useQuery(GET_LEADS, {
         variables: { id: Number(auth.userid), start: page * 2 - 2, limit: 2 },
         onCompleted: (data) => {
             setTotalRecords(data.websiteContactForms.meta.pagination.total);
@@ -32,17 +52,16 @@ function LeadComponent(): JSX.Element {
     });
 
     useEffect(() => {
-        const handleScroll = () => {
-            const el: HTMLDivElement | null = myElementRef.current;
+        const element: HTMLDivElement | null = myElementRef.current;
 
-            if (el) {
-                setPositionTop(el.scrollTop);
-                setInnerHeight(el.clientHeight);
-                setScrollHeight(el.scrollHeight);
+        const handleScroll = () => {
+            if (element) {
+                setPositionTop(element.scrollTop);
+                setInnerHeight(element.clientHeight);
+                setScrollHeight(element.scrollHeight);
             }
         };
 
-        const element: HTMLDivElement | null = myElementRef.current;
         if (element) {
             element.addEventListener('scroll', handleScroll);
         }
@@ -107,7 +126,8 @@ function LeadComponent(): JSX.Element {
                                             <Col md={{ span: 3, offset: 9 }}>
                                                 <a
                                                     href={`mailto:${
-                                                        currentValue.Details && currentValue.Details.leadsdetails
+                                                        currentValue.Details &&
+                                                        currentValue.Details.leadsdetails
                                                             ? currentValue.Details.leadsdetails
                                                                   .email
                                                             : null
@@ -121,7 +141,8 @@ function LeadComponent(): JSX.Element {
                                                 </a>{' '}
                                                 <a
                                                     href={`tel:${
-                                                        currentValue.Details && currentValue.Details.leadsdetails
+                                                        currentValue.Details &&
+                                                        currentValue.Details.leadsdetails
                                                             ? currentValue.Details.leadsdetails
                                                                   .phonenumber
                                                             : null
@@ -138,7 +159,8 @@ function LeadComponent(): JSX.Element {
                                         <Row>
                                             <Col>
                                                 <Card.Title>
-                                                    {currentValue.Details && currentValue.Details.leadsdetails
+                                                    {currentValue.Details &&
+                                                    currentValue.Details.leadsdetails
                                                         ? currentValue.Details.leadsdetails.name
                                                         : null}
                                                 </Card.Title>
@@ -147,7 +169,8 @@ function LeadComponent(): JSX.Element {
 
                                         {/* Message */}
                                         <Card.Subtitle className="mb-2 text-secondary">
-                                            {currentValue.Details && currentValue.Details.leadsdetails
+                                            {currentValue.Details &&
+                                            currentValue.Details.leadsdetails
                                                 ? currentValue.Details.leadsdetails.leadsmesssage
                                                 : null}
                                         </Card.Subtitle>

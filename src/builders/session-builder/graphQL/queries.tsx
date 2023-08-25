@@ -262,6 +262,28 @@ export const GET_TABLEDATA = gql`
     }
 `;
 
+export const GET_TAG = gql`
+    query getTag($id: ID!) {
+        tag(id: $id) {
+            data {
+                id
+                attributes {
+                    tag_name
+                    fitnesspackage{
+                        data{
+                            id
+                            attributes{
+                                Start_date
+                                End_date
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
 export const GET_TAGS_FOR_GROUP = gql`
     query getTagsforGroup($id: ID!, $start: Int, $limit: Int) {
         tags(
@@ -488,7 +510,7 @@ export const GET_TAGS_FOR_CHANNEL = gql`
 `;
 
 export const GET_TAGS_FOR_EVENT = gql`
-    query getTagsforEvent($id: ID!,$start: Int, $limit: Int ) {
+    query getTagsforEvent($id: ID!, $start: Int, $limit: Int) {
         tags(
             pagination: { start: $start, limit: $limit }
             sort: ["updatedAt:desc"]
@@ -641,10 +663,10 @@ export const GET_TAG_BY_ID = gql`
                         data {
                             id
                             attributes {
-                                fitness_package_type{
-                                    data{
+                                fitness_package_type {
+                                    data {
                                         id
-                                        attributes{
+                                        attributes {
                                             type
                                         }
                                     }
@@ -682,15 +704,15 @@ export const GET_TAG_BY_ID = gql`
                                 Is_program_template
                                 mode
                                 session_date
-                                sessions_bookings{
-                                    data{
+                                sessions_bookings {
+                                    data {
                                         id
-                                        attributes{
+                                        attributes {
                                             session_date
-                                            client{
-                                                data{
+                                            client {
+                                                data {
                                                     id
-                                                    attributes{
+                                                    attributes {
                                                         username
                                                         email
                                                         First_Name
@@ -802,7 +824,7 @@ export const GET_SESSIONS_FROM_TAGS = gql`
                             }
                         }
                     }
-                    
+
                     client_packages {
                         data {
                             id

@@ -16,7 +16,8 @@ export const widgets = {
 
 export const schemaView: any = {
     workout: {
-        'ui:readonly': true
+        'ui:readonly': true,
+        'ui:placeholder': 'Enter workout name'
     },
     level: {
         'ui:widget': 'radio',
@@ -37,17 +38,20 @@ export const schemaView: any = {
         'ui:options': {
             rows: 3
         },
-        'ui:readonly': true
+        'ui:readonly': true,
+        'ui:placeholder': 'Explain in detail about the workout'
     },
     benefits: {
         'ui:widget': 'textarea',
         'ui:options': {
             rows: 1
         },
-        'ui:readonly': true
+        'ui:readonly': true,
+        'ui:placeholder': 'Explain the benefits of this workout'
     },
     calories: {
-        'ui:readonly': true
+        'ui:readonly': true,
+        'ui:placeholder': 'Enter total calories'
     },
     equipment: {
         readonly: true,

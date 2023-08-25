@@ -19,13 +19,13 @@ function CreateGoal(props: any, ref: any) {
     const [messageDetails, setMessageDetails] = useState<any>({});
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [createGoal]: any = useMutation(ADD_GOAL_NEW, {
-        onCompleted: (r: any) => {
+        onCompleted: () => {
             modalTrigger.next(false);
             props.callback();
         }
     });
     const [editMessage]: any = useMutation(UPDATE_GOALS_NEW, {
-        onCompleted: (r: any) => {
+        onCompleted: () => {
             modalTrigger.next(false);
             props.callback();
         }
