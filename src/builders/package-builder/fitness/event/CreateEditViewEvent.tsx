@@ -137,7 +137,7 @@ function CreateEditEvent(props: any, ref: any) {
             props.refetchTags();
             props.refetchOfferings();
             setIsFormSubmitted(!isFormSubmitted);
-            // window.open(`event/session/scheduler/${response.createTag.data.id}`, '_self');
+            window.open(`event/session/scheduler/${response.createTag.data.id}`, '_self');
         }
     });
 
