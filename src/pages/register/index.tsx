@@ -138,12 +138,10 @@ const Register: React.FC = () => {
         },
         password: {
             'ui:widget': 'password',
-            'ui:help': 'Hint: Make it strong! minimum password length should be 8.',
-            'ui:placeholder': 'Enter your password'
+            'ui:help': 'Hint: Make it strong! minimum password length should be 8.'
         },
         confirm: {
-            'ui:widget': 'password',
-            'ui:placeholder': 'Re-enter your password'
+            'ui:widget': 'password'
         },
         fname: {
             'ui:placeholder': 'Enter your first name'
@@ -317,9 +315,11 @@ const Register: React.FC = () => {
     };
 
     const [registerUser] = useMutation(REGISTER_USER, {
-        onCompleted: async (val) => {
+        onCompleted: (val) => {
             let addressId = '';
-            await createAddress({
+            const educationalDetailsId: string[] = [];
+
+            createAddress({
                 variables: {
                     address1: JSON.parse(userFormData.address).address1,
                     address2: JSON.parse(userFormData.address).address2,
@@ -332,44 +332,50 @@ const Register: React.FC = () => {
                     longitude: longitude,
                     latitude: latitude
                 },
-                onCompleted: (val) => {
-                    addressId = val.createAddress.data.id.toString();
-                }
-            });
+                onCompleted: (responseOfCreateAddress) => {
+                    addressId = responseOfCreateAddress.createAddress.data.id.toString();
 
-            const educationalDetailsId: string[] = [];
+                    for (
+                        let educationDetails = 0;
+                        educationDetails < userFormData.education.length;
+                        educationDetails++
+                    ) {
+                        createEducationDetail({
+                            variables: {
+                                Institute_Name:
+                                    userFormData.education[educationDetails].instituteName,
+                                Type_of_degree:
+                                    userFormData.education[educationDetails].typeOfDegree,
+                                Specialization:
+                                    userFormData.education[educationDetails].specialization,
+                                year_of_passing:
+                                    userFormData.education[educationDetails].yearOfPassing,
+                                user: val.createUsersPermissionsUser.data.id
+                            },
+                            onCompleted: (responceOfCreateEducation) => {
+                                educationalDetailsId.push(
+                                    responceOfCreateEducation.createEducationalDetail.data.id
+                                );
 
-            for (
-                let educationDetails = 0;
-                educationDetails < userFormData.education.length;
-                educationDetails++
-            ) {
-                createEducationDetail({
-                    variables: {
-                        Institute_Name: userFormData.education[educationDetails].instituteName,
-                        Type_of_degree: userFormData.education[educationDetails].typeOfDegree,
-                        Specialization: userFormData.education[educationDetails].specialization,
-                        year_of_passing: userFormData.education[educationDetails].yearOfPassing,
-                        user: val.createUsersPermissionsUser.data.id
-                    },
-                    onCompleted: (data) => {
-                        educationalDetailsId.push(data.createEducationalDetail.data.id);
+                                updateUser({
+                                    variables: {
+                                        userid: val.createUsersPermissionsUser.data.id,
+                                        data: {
+                                            designations: JSON.parse(
+                                                userFormData.changemaker.specialist
+                                            ).id,
+                                            educational_details: educationalDetailsId,
+                                            addresses: addressId
+                                        }
+                                    },
+                                    onCompleted: () => {
+                                        setSuccessScreen(true);
+                                        localStorage.clear();
+                                    }
+                                });
+                            }
+                        });
                     }
-                });
-            }
-
-            await updateUser({
-                variables: {
-                    userid: val.createUsersPermissionsUser.data.id,
-                    data: {
-                        designations: JSON.parse(userFormData.changemaker.specialist).id,
-                        educational_details: educationalDetailsId,
-                        addresses: addressId
-                    }
-                },
-                onCompleted: () => {
-                    setSuccessScreen(true);
-                    localStorage.clear();
                 }
             });
         }
