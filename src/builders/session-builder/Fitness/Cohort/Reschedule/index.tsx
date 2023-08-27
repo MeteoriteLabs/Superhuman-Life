@@ -4,7 +4,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { UPDATE_PACKAGE } from '../../../ExtendProgram/graphQL/queries';
 import { flattenObj } from 'components/utils/responseFlatten';
 import Toaster from 'components/Toaster/index';
-import { GET_TAG } from '../../../graphQL/queries';
+import { GET_TAG, UPDATE_SESSION } from '../../../graphQL/queries';
 import moment from 'moment';
 
 interface Props {
@@ -24,6 +24,11 @@ export default function ExtendProgram(props: Props): JSX.Element {
     const [programEndDate, setProgramEndDate] = useState<string>(
         moment(startDate).add(1, 'days').format('YYYY-MM-DD')
     );
+    const [sessions, setSessions] = useState<{ id: string; session_date: string }[]>([]);
+    const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
+    let diff: any;
+
+    const [updateSession] = useMutation(UPDATE_SESSION);
 
     useQuery(GET_TAG, {
         variables: { id: props.id },
@@ -33,6 +38,17 @@ export default function ExtendProgram(props: Props): JSX.Element {
             setStartDate(flattenData.fitnesspackage.Start_date);
             setEndDate(flattenData.fitnesspackage.End_date);
             setFitnessPackageId(flattenData.fitnesspackage.id);
+
+            const sessionsArr: { id: string; session_date: string }[] = [];
+            if (flattenData.sessions && flattenData.sessions.length) {
+                for (let i = 0; i < flattenData.sessions.length; i++) {
+                    sessionsArr.push({
+                        id: flattenData.sessions[i].id,
+                        session_date: flattenData.sessions[i].session_date
+                    });
+                }
+            }
+            setSessions(sessionsArr);
         }
     });
 
@@ -45,6 +61,7 @@ export default function ExtendProgram(props: Props): JSX.Element {
     });
 
     function onSubmit() {
+        diff = moment(programStartDate).diff(moment(startDate), 'days');
         updatePackage({
             variables: {
                 id: fitnessPackageId,
@@ -52,7 +69,25 @@ export default function ExtendProgram(props: Props): JSX.Element {
                     Start_date: moment(programStartDate).format(),
                     End_date: moment(programEndDate).format()
                 }
-            }
+            },onCompleted: () => {
+                if (sessions.length > 0) {
+                    for (let i = 0; i < sessions.length; i++) {
+                        updateSession({
+                            variables: {
+                                id: sessions[i].id,
+                                data: {
+                                    session_date: moment(sessions[i].session_date)
+                                        .add(diff, 'days')
+                                        .format('YYYY-MM-DD')
+                                }
+                            }
+                        });
+                    }
+                }
+
+                setIsProgramUpdated((prevStatus) => !prevStatus);
+                props.onHide();
+            },
         });
     }
 
@@ -92,6 +127,7 @@ export default function ExtendProgram(props: Props): JSX.Element {
                                 aria-describedby="inputGroup-sizing-default"
                                 type="date"
                                 min={moment(programStartDate).add(1, 'days').format('YYYY-MM-DD')}
+                                max={moment(programStartDate).add(moment(endDate).diff(moment(startDate), 'days'), 'days').format('YYYY-MM-DD')}
                                 value={programEndDate}
                                 onChange={(e: ChangeEvent<HTMLInputElement>) => {
                                     setProgramEndDate(e.target.value);
@@ -118,12 +154,43 @@ export default function ExtendProgram(props: Props): JSX.Element {
                                 type="submit"
                                 size="sm"
                                 variant="success"
-                                onClick={() => onSubmit()}
+                                onClick={() => setShowConfirmModal(true)}
                             >
                                 Reschedule Program
                             </Button>
                         </Row>
                     </>
+                </Modal.Body>
+            </Modal>
+
+            <Modal
+                show={showConfirmModal}
+                onHide={() => setShowConfirmModal(false)}
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>Confirm</Modal.Header>
+                <Modal.Body>
+                    <Row>Are you sure you want to reschedule?</Row>
+                <Row className="mb-2" style={{ justifyContent: 'center' }}>
+                            <Button
+                                type="submit"
+                                size="sm"
+                                variant="success"
+                                onClick={() => onSubmit()}
+                            >
+                                Yes
+                            </Button>
+                            <Button
+                                type="submit"
+                                size="sm"
+                                variant="danger"
+                                onClick={() => setShowConfirmModal(false)}
+                            >
+                                No
+                            </Button>
+                        </Row>
+                    
                 </Modal.Body>
             </Modal>
 

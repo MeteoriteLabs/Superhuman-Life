@@ -506,7 +506,7 @@ const Scheduler: React.FC = () => {
                                                     </Card.Title>
                                                     <Card.Text>
                                                         Last planned session{' '}
-                                                        {calculateLastSession(tag.sessions)}
+                                                        {tag && tag.sessions ? calculateLastSession(tag.sessions) : null}
                                                     </Card.Text>
                                                     <Row>
                                                         <Col lg={8}>

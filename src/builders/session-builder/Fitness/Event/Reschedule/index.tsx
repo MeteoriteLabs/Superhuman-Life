@@ -20,6 +20,9 @@ export default function ExtendProgram(props: Props): JSX.Element {
     const [programStartDate, setProgramStartDate] = useState<string>(
         moment().add(1, 'days').format('YYYY-MM-DD')
     );
+    const [sessions, setSessions] = useState<{ id: string; session_date: string }[]>([]);
+    const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
+    let diff: any;
 
     useQuery(GET_TAG, {
         variables: { id: props.id },
@@ -28,21 +31,27 @@ export default function ExtendProgram(props: Props): JSX.Element {
             const flattenData = flattenObj({ ...response.tag });
             setStartDate(flattenData.fitnesspackage.Start_date);
             setFitnessPackageId(flattenData.fitnesspackage.id);
-            console.log(response);
+
+            const sessionsArr: { id: string; session_date: string }[] = [];
+            if (flattenData.sessions && flattenData.sessions.length) {
+                for (let i = 0; i < flattenData.sessions.length; i++) {
+                    sessionsArr.push({
+                        id: flattenData.sessions[i].id,
+                        session_date: flattenData.sessions[i].session_date
+                    });
+                }
+            }
+            setSessions(sessionsArr);
         }
     });
 
-    const [updatePackage] = useMutation(UPDATE_PACKAGE, {
-        onCompleted: () => {
-            setIsProgramUpdated((prevStatus) => !prevStatus);
-            props.onHide();
-        },
-        refetchQueries: [GET_TAG]
-    });
+    const [updatePackage] = useMutation(UPDATE_PACKAGE);
 
     const [updateSession] = useMutation(UPDATE_SESSION);
 
     function onSubmit() {
+        diff = moment(programStartDate).diff(moment(startDate), 'days');
+
         updatePackage({
             variables: {
                 id: fitnessPackageId,
@@ -50,7 +59,28 @@ export default function ExtendProgram(props: Props): JSX.Element {
                     Start_date: moment(programStartDate).format(),
                     End_date: moment(programStartDate).format()
                 }
-            }
+            },
+
+            onCompleted: () => {
+                if (sessions.length > 0) {
+                    for (let i = 0; i < sessions.length; i++) {
+                        updateSession({
+                            variables: {
+                                id: sessions[i].id,
+                                data: {
+                                    session_date: moment(sessions[i].session_date)
+                                        .add(diff, 'days')
+                                        .format('YYYY-MM-DD')
+                                }
+                            }
+                        });
+                    }
+                }
+
+                setIsProgramUpdated((prevStatus) => !prevStatus);
+                props.onHide();
+            },
+            refetchQueries: [GET_TAG]
         });
     }
 
@@ -92,12 +122,43 @@ export default function ExtendProgram(props: Props): JSX.Element {
                                 type="submit"
                                 size="sm"
                                 variant="success"
-                                onClick={() => onSubmit()}
+                                onClick={() => setShowConfirmModal(true)}
                             >
                                 Reschedule Program
                             </Button>
                         </Row>
                     </>
+                </Modal.Body>
+            </Modal>
+
+            <Modal
+                show={showConfirmModal}
+                onHide={() => setShowConfirmModal(false)}
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>Confirm</Modal.Header>
+                <Modal.Body>
+                    <Row>Are you sure you want to reschedule?</Row>
+                <Row className="mb-2" style={{ justifyContent: 'center' }}>
+                            <Button
+                                type="submit"
+                                size="sm"
+                                variant="success"
+                                onClick={() => onSubmit()}
+                            >
+                                Yes
+                            </Button>
+                            <Button
+                                type="submit"
+                                size="sm"
+                                variant="danger"
+                                onClick={() => setShowConfirmModal(false)}
+                            >
+                                No
+                            </Button>
+                        </Row>
+                    
                 </Modal.Body>
             </Modal>
 
