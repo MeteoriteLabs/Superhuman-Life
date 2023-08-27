@@ -262,6 +262,16 @@ export const GET_TABLEDATA = gql`
     }
 `;
 
+export const UPDATE_SESSION = gql`
+    mutation updateSession($id: ID!, $data: SessionInput!) {
+        updateSession(id: $id, data: $data) {
+            data {
+                id
+            }
+        }
+    }
+`;
+
 export const GET_TAG = gql`
     query getTag($id: ID!) {
         tag(id: $id) {
@@ -269,6 +279,32 @@ export const GET_TAG = gql`
                 id
                 attributes {
                     tag_name
+                    sessions{
+                        data{
+                            id
+                            attributes{
+                                session_date
+                                sessions_bookings{
+                                    data{
+                                        id
+                                        attributes{
+                                            session_date
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    client_packages{
+                        data{
+                            id
+                            attributes{
+                                effective_date
+                            }
+                        }
+                    }
+
                     fitnesspackage{
                         data{
                             id

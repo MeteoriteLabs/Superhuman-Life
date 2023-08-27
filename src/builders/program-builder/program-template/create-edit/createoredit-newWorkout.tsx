@@ -208,16 +208,16 @@ function CreateEditNewWorkout(props: any, ref: any): JSX.Element {
         });
     }
 
-    function handleTimeFormat(time: string) {
-        const timeArray = time.split(':');
-        const hours = timeArray[0];
-        const minutes = timeArray[1];
-        const timeString =
-            (parseInt(hours) < 10 ? `0${hours}` : hours) +
-            ':' +
-            (parseInt(minutes) === 0 ? `0${minutes}` : minutes);
-        return timeString.toString();
-    }
+    // function handleTimeFormat(time: string) {
+    //     const timeArray = time.split(':');
+    //     const hours = timeArray[0];
+    //     const minutes = timeArray[1];
+    //     const timeString =
+    //         (parseInt(hours) < 10 ? `0${hours}` : hours) +
+    //         ':' +
+    //         (parseInt(minutes) === 0 ? `0${minutes}` : minutes);
+    //     return timeString.toString();
+    // }
 
     function handleTimeInMinutes(time: string) {
         const timeArray = time.split(':');
@@ -260,23 +260,23 @@ function CreateEditNewWorkout(props: any, ref: any): JSX.Element {
             eventJson.mode = frm.assignMode;
             eventJson.tag = frm.tag;
             eventJson.id = workout_id;
-            eventJson.startTime = handleTimeFormat(frm.time.startTime);
-            eventJson.endTime = handleTimeFormat(frm.time.endTime);
+            eventJson.startTime = frm.time.startTime;
+            eventJson.endTime = frm.time.endTime;
             eventJson.day = parseInt(frm.day[0].key);
             if (existingEvents.length === 0) {
                 existingEvents.push(eventJson);
             } else {
                 const timeStart: any = new Date(
-                    '01/01/2007 ' + handleTimeFormat(frm.time.startTime)
+                    '01/01/2007 ' + frm.time.startTime
                 );
-                const timeEnd: any = new Date('01/01/2007 ' + handleTimeFormat(frm.time.endTime));
+                const timeEnd: any = new Date('01/01/2007 ' + frm.time.endTime);
                 const diff1 = timeEnd - timeStart;
                 for (let i = 0; i <= existingEvents.length - 1; i++) {
                     const startTimeHour: any = new Date(
-                        '01/01/2007 ' + handleTimeFormat(existingEvents[i].startTime)
+                        '01/01/2007 ' + existingEvents[i].startTime
                     );
                     const endTimeHour: any = new Date(
-                        '01/01/2007 ' + handleTimeFormat(existingEvents[i].endTime)
+                        '01/01/2007 ' + existingEvents[i].endTime
                     );
                     const diff2 = endTimeHour - startTimeHour;
 
@@ -318,6 +318,7 @@ function CreateEditNewWorkout(props: any, ref: any): JSX.Element {
                     ).toString()
                 };
             } else {
+                console.log(eventJson.startTime);
                 data = {
                     start_time: eventJson.startTime,
                     end_time: eventJson.endTime,
