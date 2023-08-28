@@ -1,7 +1,7 @@
 import { Card, Tab, Tabs } from 'react-bootstrap';
 import FitnessTab from './fitness/Fitness';
 
-export default function PackagePage() {
+export default function PackagePage(): JSX.Element {
     return (
         <>
             <h2>Services</h2>

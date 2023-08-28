@@ -1,8 +1,7 @@
-import reportWebVitals from './reportWebVitals';
-import ReactDOM from 'react-dom/client';
+import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-
+import reportWebVitals from './reportWebVitals';
 import * as Sentry from '@sentry/react';
 
 Sentry.init({
@@ -21,7 +20,6 @@ Sentry.init({
     replaysOnErrorSampleRate: 1.0
 });
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App />);
+ReactDOM.render(<App />, document.getElementById('root'));
 
 reportWebVitals();
