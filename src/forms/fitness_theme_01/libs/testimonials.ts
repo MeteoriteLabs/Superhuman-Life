@@ -1,5 +1,5 @@
 import { UseFormReset } from 'react-hook-form';
-import { Data, FormData, SectionData } from '../@types/testimonialsType';
+import { Data, FormData, SectionData } from '../types/testimonialsType';
 
 export function SetReceivingDataAndReset({
     sectionData,

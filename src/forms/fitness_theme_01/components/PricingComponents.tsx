@@ -1,7 +1,7 @@
 import { Control, Controller } from 'react-hook-form';
 import { SetFirstLetterToUpperCase, SplitAtUpperCase } from 'lib/StringManipulation';
 import { Form } from 'react-bootstrap';
-import { FormData, InputProps } from '../@types/pricingType';
+import { FormData, InputProps } from '../types/pricingType';
 
 export const InputComponent = ({
     input,
