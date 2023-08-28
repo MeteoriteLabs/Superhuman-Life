@@ -5,7 +5,6 @@ import CreateEditMessage from 'builders/client-builder/leads/createoredit-leads'
 import CreateEditContact from 'builders/client-builder/contacts/createEditContact';
 import CreateClient from 'builders/client-builder/clientlisting/addclientcomponent';
 import Grid from './grid';
-import { error } from 'console';
 
 const HomePage: React.FC = () => {
     const createEditMessageComponent = useRef<any>(null);
@@ -16,9 +15,6 @@ const HomePage: React.FC = () => {
     const redirectToFinance = () => {
         const path = '/finance';
         history.push(path);
-    };
-    const createError = () => {
-       throw new Error("This is sample error for checking sentry")
     };
 
     return (
@@ -82,11 +78,6 @@ const HomePage: React.FC = () => {
             {/* Payment Link */}
             <Button variant="dark" className="mr-2" size="sm" onClick={redirectToFinance}>
                 <img src="assets/home_page_images/rupee.svg" alt="paymentLink" /> Payment Link
-            </Button>
-
-            {/* for demo purpose checking sentry intregration */}
-            <Button variant="dark" className="mr-2" size="sm" onClick={createError}>
-                throw Error
             </Button>
 
             {/* grid */}
