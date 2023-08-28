@@ -272,6 +272,16 @@ export const UPDATE_SESSION = gql`
     }
 `;
 
+export const UPDATE_CLIENT_PACKAGE = gql`
+    mutation updateClientPackage($id: ID!, $data: ClientPackageInput!) {
+        updateClientPackage(id: $id, data: $data) {
+            data {
+                id
+            }
+        }
+    }
+`;
+
 export const GET_TAG = gql`
     query getTag($id: ID!) {
         tag(id: $id) {

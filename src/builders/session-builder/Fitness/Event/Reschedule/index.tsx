@@ -4,7 +4,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { UPDATE_PACKAGE } from '../../../ExtendProgram/graphQL/queries';
 import { flattenObj } from 'components/utils/responseFlatten';
 import Toaster from 'components/Toaster/index';
-import { GET_TAG, UPDATE_SESSION } from '../../../graphQL/queries';
+import { GET_TAG, UPDATE_SESSION, UPDATE_CLIENT_PACKAGE } from '../../../graphQL/queries';
 import moment from 'moment';
 
 interface Props {
@@ -16,6 +16,7 @@ interface Props {
 export default function ExtendProgram(props: Props): JSX.Element {
     const [startDate, setStartDate] = useState<string>();
     const [fitnessPackageId, setFitnessPackageId] = useState<string>();
+    const [clientPackageId, setClientPackageId] = useState<string>();
     const [isProgramUpdated, setIsProgramUpdated] = useState(false);
     const [programStartDate, setProgramStartDate] = useState<string>(
         moment().add(1, 'days').format('YYYY-MM-DD')
@@ -31,7 +32,11 @@ export default function ExtendProgram(props: Props): JSX.Element {
             const flattenData = flattenObj({ ...response.tag });
             setStartDate(flattenData.fitnesspackage.Start_date);
             setFitnessPackageId(flattenData.fitnesspackage.id);
-
+           
+            if(flattenData.client_packages.length){
+              setClientPackageId(flattenData.client_packages[0].id);
+            }
+           
             const sessionsArr: { id: string; session_date: string }[] = [];
             if (flattenData.sessions && flattenData.sessions.length) {
                 for (let i = 0; i < flattenData.sessions.length; i++) {
@@ -48,6 +53,7 @@ export default function ExtendProgram(props: Props): JSX.Element {
     const [updatePackage] = useMutation(UPDATE_PACKAGE);
 
     const [updateSession] = useMutation(UPDATE_SESSION);
+    const [updateClientPackage] = useMutation(UPDATE_CLIENT_PACKAGE);
 
     function onSubmit() {
         diff = moment(programStartDate).diff(moment(startDate), 'days');
@@ -75,6 +81,18 @@ export default function ExtendProgram(props: Props): JSX.Element {
                             }
                         });
                     }
+                }
+
+                if(clientPackageId){
+                    updateClientPackage({
+                        variables: {
+                            id: clientPackageId,
+                            data: {
+                                effective_date: moment(programStartDate).format()
+                            }
+                        }
+                    });
+
                 }
 
                 setIsProgramUpdated((prevStatus) => !prevStatus);
