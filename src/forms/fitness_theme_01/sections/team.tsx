@@ -93,7 +93,7 @@ function Team({ page }: { page: string }): JSX.Element {
 
     // * --------------------- Form Submission ---------------------
 
-    const [mutateFunction, { loading, error }] = useMutation(UPDATE_WEBSITE_SECTION);
+    const [mutateFunction, { loading }] = useMutation(UPDATE_WEBSITE_SECTION);
 
     const onSubmit = handleSubmit(async (formData) => {
         // ! Need to add image upload
@@ -104,7 +104,7 @@ function Team({ page }: { page: string }): JSX.Element {
                 id: initialValues.sectionId,
                 data: JSON.stringify({
                     title: title ? title : initialValues.title,
-                    team: team.length > 0 ? team : initialValues.team
+                    team: team.length ? team : initialValues.team
                 })
             }
         });
@@ -114,7 +114,7 @@ function Team({ page }: { page: string }): JSX.Element {
         loading
             ? setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: true })
             : setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: false });
-    }, [loading, error]);
+    }, [loading]);
 
     return (
         <div className={style.form_container}>
@@ -154,7 +154,7 @@ function Team({ page }: { page: string }): JSX.Element {
                     {errors.description && <p>{errors.description.message}</p>}
                 </Form.Group>
 
-                {fields.length > 0
+                {fields.length
                     ? fields.map((item, index) => (
                           <Accordion style={{ padding: 0 }} key={index}>
                               <Card style={{ backgroundColor: 'transparent', border: 'none' }}>
