@@ -1,7 +1,7 @@
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import { Accordion, Button, Card, Form } from 'react-bootstrap';
-import { UPDATE_WEBSITE_SECTION } from '../@queries/features';
-import { GET_WEBSITE_SECTION } from '../@queries';
+import { UPDATE_WEBSITE_SECTION } from '../queries/features';
+import { GET_WEBSITE_SECTION } from '../queries';
 import { useContext, useEffect, useState } from 'react';
 import authContext from 'context/auth-context';
 import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';

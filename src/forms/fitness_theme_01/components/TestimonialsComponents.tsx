@@ -1,7 +1,7 @@
 import { Control, Controller } from 'react-hook-form';
 import { SetFirstLetterToUpperCase, SplitAtUpperCase } from 'lib/StringManipulation';
 import { Form } from 'react-bootstrap';
-import { FormData, InputProps } from '../@types/testimonialsType';
+import { FormData, InputProps } from '../types/testimonialsType';
 
 export const InputComponent = ({
     input,
@@ -22,7 +22,7 @@ export const InputComponent = ({
                     <Form.Control
                         type="text"
                         style={{ fontSize: 14 }}
-                        as="input"
+                        as={input === 'text' ? 'textarea' : 'input'}
                         {...field}
                     ></Form.Control>
                 )}

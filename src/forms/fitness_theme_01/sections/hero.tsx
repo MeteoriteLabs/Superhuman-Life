@@ -1,8 +1,8 @@
 import { useForm, Controller } from 'react-hook-form';
 import { Button, Form } from 'react-bootstrap';
 import { useMutation, useQuery } from '@apollo/client';
-import { UPDATE_WEBSITE_SECTION } from '../@queries/hero';
-import { GET_WEBSITE_SECTION } from '../@queries';
+import { UPDATE_WEBSITE_SECTION } from '../queries/hero';
+import { GET_WEBSITE_SECTION } from '../queries';
 import authContext from 'context/auth-context';
 import { useContext, useEffect, useState } from 'react';
 import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';

@@ -4,9 +4,9 @@ import { Button, Form } from 'react-bootstrap';
 import authContext from 'context/auth-context';
 import { useContext, useEffect, useState } from 'react';
 import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
-import { GET_WEBSITE_SECTION } from '../@queries';
+import { GET_WEBSITE_SECTION } from '../queries';
 import { useMutation, useQuery } from '@apollo/client';
-import { UPDATE_WEBSITE_SECTION } from '../@queries/cta';
+import { UPDATE_WEBSITE_SECTION } from '../queries/cta';
 
 type FormData = {
     sectionId: number;
