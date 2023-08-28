@@ -17,7 +17,7 @@ export default function ModalView({
     stepperValues,
     customFormats,
     transformErrors,
-    actionType
+    actionType,
 }: any) {
     const registry = utils.getDefaultRegistry();
     const defaultFileWidget = registry.widgets['FileWidget'];

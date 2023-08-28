@@ -65,15 +65,15 @@ const CreateWebpageDetails = (props: any, ref: any) => {
     useQuery(FETCH_WEBSITE_DATA, {
         variables: { id: auth.userid },
         fetchPolicy: 'network-only',
-        onCompleted: (r: any) => {
-            FillDetails(r);
+        onCompleted: (response: any) => {
+            FillDetails(response);
 
-            if (r.websiteData[0]) {
-                setSchemaData(replaceSchema({ ...r.websiteData[0].website_template.schema_json }));
-                setStepperValues(r.websiteData[0].website_template.Stepper_Title);
-                setFormJsonData(r.websiteData[0].website_template.form_json);
-                setWebsiteDataRecordId(r.websiteData[0].id);
-                setWebsiteTemplateId(r.websiteData[0].website_template.id);
+            if (response.websiteData[0]) {
+                setSchemaData(replaceSchema({ ...response.websiteData[0].website_template.schema_json }));
+                setStepperValues(response.websiteData[0].website_template.Stepper_Title);
+                setFormJsonData(response.websiteData[0].website_template.form_json);
+                setWebsiteDataRecordId(response.websiteData[0].id);
+                setWebsiteTemplateId(response.websiteData[0].website_template.id);
             }
         }
     });
@@ -81,14 +81,14 @@ const CreateWebpageDetails = (props: any, ref: any) => {
     const [fetchData] = useLazyQuery(FETCH_WEBSITE_DATA, {
         variables: { id: auth.userid },
         fetchPolicy: 'network-only',
-        onCompleted: (r: any) => {
-            FillDetails(r);
-            if (r.websiteData[0]) {
-                setSchemaData(replaceSchema({ ...r.websiteData[0].website_template.schema_json }));
-                setWebsiteTemplateId(r.websiteData[0].website_template.id);
-                setStepperValues(r.websiteData[0].website_template.Stepper_Title);
-                setFormJsonData(r.websiteData[0].website_template.form_json);
-                setWebsiteDataRecordId(r.websiteData[0].id);
+        onCompleted: (response: any) => {
+            FillDetails(response);
+            if (response.websiteData[0]) {
+                setSchemaData(replaceSchema({ ...response.websiteData[0].website_template.schema_json }));
+                setWebsiteTemplateId(response.websiteData[0].website_template.id);
+                setStepperValues(response.websiteData[0].website_template.Stepper_Title);
+                setFormJsonData(response.websiteData[0].website_template.form_json);
+                setWebsiteDataRecordId(response.websiteData[0].id);
             } else {
                 return;
             }
@@ -98,10 +98,10 @@ const CreateWebpageDetails = (props: any, ref: any) => {
     const [fetchTemplate] = useLazyQuery(FETCH_TEMPLATE_SCHEMA_FORM, {
         variables: { id: templateId ? templateId : websiteTemplateId },
         fetchPolicy: 'network-only',
-        onCompleted: (r: any) => {
-            setSchemaData(replaceSchema({ ...r.websiteTemplate.schema_json }));
-            setFormJsonData(r.websiteTemplate.form_json);
-            setStepperValues(r.websiteTemplate.Stepper_Title);
+        onCompleted: (response: any) => {
+            setSchemaData(replaceSchema({ ...response.websiteTemplate.schema_json }));
+            setFormJsonData(response.websiteTemplate.form_json);
+            setStepperValues(response.websiteTemplate.Stepper_Title);
         }
     });
 
@@ -132,7 +132,7 @@ const CreateWebpageDetails = (props: any, ref: any) => {
     } //end function replaceSchema
 
     const [createDetails] = useMutation(CREATE_WEBPAGE_DETAILS, {
-        onCompleted: (r: any) => {
+        onCompleted: () => {
             modalTrigger.next(false);
         }
     });

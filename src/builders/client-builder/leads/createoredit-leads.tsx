@@ -1,6 +1,6 @@
 import React, { useContext, useImperativeHandle, useState, useEffect } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
-import ModalView from '../../../components/modal';
+import ModalView from 'components/modal';
 import {
     ADD_LEADS_NEW,
     DELETE_LEAD_NEW,
@@ -8,13 +8,28 @@ import {
     UPDATE_LEADS_NEW,
     CREATE_NOTIFICATION
 } from './queries';
-import AuthContext from '../../../context/auth-context';
-import StatusModal from '../../../components/StatusModal/StatusModal';
+import AuthContext from 'context/auth-context';
+import StatusModal from 'components/StatusModal/StatusModal';
 import { Subject } from 'rxjs';
 import { schema } from './schema';
-import { flattenObj } from '../../../components/utils/responseFlatten';
-import Toaster from '../../../components/Toaster';
+import { flattenObj } from 'components/utils/responseFlatten';
+import Toaster from 'components/Toaster';
 import moment from 'moment';
+
+interface Form {
+    name?: string;
+    notes: string;
+    source: string;
+    status: string;
+    user_permissions_user: string;
+    messageid?: string;
+    leadsdetails: {
+        email: string;
+        leadsmesssage?: string;
+        name: string;
+        phonenumber: string;
+    };
+}
 
 interface Operation {
     id: string;
@@ -25,8 +40,8 @@ interface Operation {
 
 function CreateEditMessage(props: any, ref: any) {
     const auth = useContext(AuthContext);
-    const messageSchema: { [name: string]: any } = require('./leads.json');
-    const [messageDetails, setMessageDetails] = useState<any>({});
+    const messageSchema: Record<string, unknown> = require('./leads.json');
+    const [messageDetails, setMessageDetails] = useState<Form>({} as Form);
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [isLeadUpdated, setIsLeadUpdated] = useState<boolean>(false);
@@ -58,8 +73,8 @@ function CreateEditMessage(props: any, ref: any) {
         }
     });
 
-    const [editMessage]: any = useMutation(UPDATE_LEADS_NEW, {
-        onCompleted: (r: any) => {
+    const [editMessage] = useMutation(UPDATE_LEADS_NEW, {
+        onCompleted: () => {
             modalTrigger.next(false);
             props.callback();
             setIsLeadUpdated(!isLeadUpdated);
@@ -67,7 +82,7 @@ function CreateEditMessage(props: any, ref: any) {
     });
 
     const [deleteLeads] = useMutation(DELETE_LEAD_NEW, {
-        onCompleted: (e: any) => {
+        onCompleted: () => {
             modalTrigger.next(false);
             props.callback();
             setIsLeadDeleted(!isLeadDeleted);
@@ -122,33 +137,33 @@ function CreateEditMessage(props: any, ref: any) {
         setOperation({} as Operation);
 
         if (['edit', 'view'].indexOf(operation.type) > -1) modalTrigger.next(true);
-        else OnSubmit(null);
+        else OnSubmit({} as Form);
     }
 
-    function CreateMessage(frm: any) {
+    function CreateMessage(form: Form) {
         createLeads({
-            variables: { id: auth.userid, details: frm }
+            variables: { id: auth.userid, details: form }
         });
     }
 
-    function EditMessage(frm: any) {
+    function EditMessage(form: Form) {
         editMessage({
-            variables: { id: auth.userid, details: frm, messageid: frm.messageid }
+            variables: { id: auth.userid, details: form, messageid: form.messageid }
         });
     }
 
-    function DeleteMessage(id: any) {
+    function DeleteMessage(id: string) {
         deleteLeads({ variables: { id: id } });
     }
 
-    function OnSubmit(frm: any) {
-        if (frm) frm.user_permissions_user = auth.userid;
-        if (frm.name === 'edit' || frm.name === 'view') {
-            if (frm.name === 'edit') {
-                EditMessage(frm);
+    function OnSubmit(form: Form) {
+        if (form) form.user_permissions_user = auth.userid;
+        if (form.name === 'edit' || form.name === 'view') {
+            if (form.name === 'edit') {
+                EditMessage(form);
             }
         } else {
-            CreateMessage(frm);
+            CreateMessage(form);
         }
     }
 
@@ -171,8 +186,8 @@ function CreateEditMessage(props: any, ref: any) {
                 formUISchema={schema}
                 formSchema={messageSchema}
                 showing={operation.modal_status}
-                formSubmit={(frm: any) => {
-                    OnSubmit(frm);
+                formSubmit={(form: Form) => {
+                    OnSubmit(form);
                 }}
                 formData={operation.type === 'create' ? {} : messageDetails}
                 modalTrigger={modalTrigger}

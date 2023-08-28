@@ -33,13 +33,13 @@ function CreateEditMessage(props: any, ref: any) {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     const [createMessage] = useMutation(ADD_MESSAGE, {
-        onCompleted: (r: any) => {
+        onCompleted: () => {
             modalTrigger.next(false);
         }
     });
 
     const [editMessage] = useMutation(UPDATE_MESSAGE, {
-        onCompleted: (r: any) => {
+        onCompleted: () => {
             modalTrigger.next(false);
         }
     });

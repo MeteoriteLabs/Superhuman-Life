@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useContext } from 'react';
+import { useState, useEffect, useRef, useContext, forwardRef } from 'react';
 import {
     GET_TABLEDATA,
     GET_ALL_FITNESS_PACKAGE_BY_TYPE,
@@ -21,11 +21,11 @@ import {
     Accordion,
     Form
 } from 'react-bootstrap';
-import SchedulerPage from '../../../program-builder/program-template/scheduler';
+import SchedulerPage from 'builders/program-builder/program-template/scheduler';
 import moment from 'moment';
 import '../fitness.css';
 import FitnessAction from '../FitnessAction';
-import AuthContext from '../../../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { Link } from 'react-router-dom';
 import TimePicker from 'rc-time-picker';
 import { flattenObj } from 'components/utils/responseFlatten';
@@ -38,6 +38,8 @@ import 'react-calendar/dist/Calendar.css';
 import '../../profilepicture.css';
 import SideNav from 'builders/program-builder/program-template/SchedulerSideBar';
 import CollapsibleScheduler from 'builders/program-builder/program-template/CollapsibleScheduler';
+import EditProgramName from '../../EditProgramName';
+import ExtendProgram from '../../ExtendProgram';
 
 const Scheduler = () => {
     const auth = useContext(AuthContext);
@@ -72,6 +74,8 @@ const Scheduler = () => {
     const [sessionFilter, setSessionFilter] = useState('none');
     const [show24HourFormat, setShow24HourFormat] = useState(false);
     const ref = useRef<any>(null);
+    const [showProgramNameModal, setShowProgramNameModal] = useState<boolean>(false);
+    const [showExtendProgramModal, setShowExtendProgramModal] = useState<boolean>(false);
 
     const handleScrollScheduler = () => {
         ref.current?.scrollIntoView({ behaviour: 'smooth', inline: 'nearest' });
@@ -210,7 +214,6 @@ const Scheduler = () => {
                     level: detail.level,
                     sdate: detail.start_dt,
                     events: handleEventsSeperation(detail.events, detail.rest_days),
-                    // eslint-disable-next-line
                     edate: detail.end_dt,
                     duration: detail.duration_days,
                     details: detail.description,
@@ -297,7 +300,7 @@ const Scheduler = () => {
         }
     }
 
-    if (userPackage.length > 0) {
+    if (userPackage.length) {
         programIndex = userPackage.findIndex(
             (item) => item.proManagerId === last[1] && item.proManagerFitnessId === last[0]
         );
@@ -401,13 +404,6 @@ const Scheduler = () => {
         return end.diff(start, 'days') + 1;
     }
 
-    // function calculateDailySessions(sessions) {
-    //     const dailySessions = sessions.filter(
-    //         (ses: any) => ses.session_date === moment().format('YYYY-MM-DD')
-    //     );
-    //     return dailySessions.length ? dailySessions.length : 'N/A';
-    // }
-
     function handleFloatingActionProgramCallback(event: any) {
         setProgram(`${event}`);
         handleCallback();
@@ -440,6 +436,31 @@ const Scheduler = () => {
         return maxDate.format('MMM Do,YYYY');
     }
 
+    const completedSessions =
+        tag && tag.sessions && tag.sessions.length
+            ? tag.sessions.filter((curr) => {
+                  if (
+                      moment(curr.session_date)
+                          .add(curr.end_time?.split(':')[0], 'hours')
+                          .add(curr.end_time?.split(':')[1])
+                          .diff(moment.utc()) < 0 &&
+                      curr.type !== 'restday'
+                  )
+                      return curr.session_date;
+              })
+            : null;
+    const plannedSessions =
+        tag && tag.sessions && tag.sessions.length
+            ? tag.sessions.filter((curr) => {
+                  if (curr.type !== 'restday') return curr.session_date;
+              })
+            : null;
+    
+    const restDays =
+        tag && tag.sessions && tag.sessions.length
+            ? tag.sessions.filter((curr) => curr.type === 'restday')
+            : null;
+  
     if (!show) return <Loader msg="loading scheduler..." />;
     else
         return (
@@ -457,6 +478,22 @@ const Scheduler = () => {
                                 <b> back</b>
                             </span>
                         </div>
+
+                        {showProgramNameModal && (
+                            <EditProgramName
+                                show={showProgramNameModal}
+                                onHide={() => setShowProgramNameModal(false)}
+                                id={tagId}
+                            />
+                        )}
+
+                        {showExtendProgramModal && (
+                            <ExtendProgram
+                                show={showExtendProgramModal}
+                                onHide={() => setShowExtendProgramModal(false)}
+                                id={tagId}
+                            />
+                        )}
 
                         {/* Cards for service details and movement sessions */}
                         <Row>
@@ -517,19 +554,26 @@ const Scheduler = () => {
                                                                     </Dropdown.Toggle>
 
                                                                     <Dropdown.Menu>
-                                                                        <Dropdown.Item key={2}>
+                                                                        <Dropdown.Item
+                                                                            key={1}
+                                                                            onClick={() =>
+                                                                                setShowProgramNameModal(
+                                                                                    true
+                                                                                )
+                                                                            }
+                                                                        >
                                                                             Edit Program Name
                                                                         </Dropdown.Item>
-                                                                        <Dropdown.Item key={1}>
+                                                                        <Dropdown.Item key={2}
+                                                                        onClick={() =>
+                                                                            setShowExtendProgramModal(
+                                                                                true
+                                                                            )
+                                                                        }
+
+                                                                        >
                                                                             Extend program and
                                                                             offering
-                                                                        </Dropdown.Item>
-                                                                        <Dropdown.Item key={1}>
-                                                                            Send notification to
-                                                                            subscribers
-                                                                        </Dropdown.Item>
-                                                                        <Dropdown.Item key={1}>
-                                                                            Request Renewal
                                                                         </Dropdown.Item>
                                                                     </Dropdown.Menu>
                                                                 </Dropdown>
@@ -658,7 +702,7 @@ const Scheduler = () => {
                                                     </Card.Title>
                                                     <Card.Text>
                                                         Last planned session{' '}
-                                                        {calculateLastSession(tag.sessions)}
+                                                        {tag && tag.sessions && tag.sessions.length ? calculateLastSession(tag.sessions) : null}
                                                     </Card.Text>
                                                     <Row>
                                                         <Col lg={8}>
@@ -784,10 +828,10 @@ const Scheduler = () => {
                                                                             </td>
                                                                         ) : null}
                                                                         <td>
-                                                                            {
-                                                                                tag.fitnesspackage
-                                                                                    .restdays
-                                                                            }
+                                                                            {restDays &&
+                                                                            restDays.length
+                                                                                ? restDays.length
+                                                                                : 0}
                                                                         </td>
                                                                         {tag &&
                                                                         tag.fitnesspackage &&
@@ -796,7 +840,12 @@ const Scheduler = () => {
                                                                             tag.fitnesspackage
                                                                                 .mode ===
                                                                                 'Hybrid') ? (
-                                                                            <td></td>
+                                                                            <td>
+                                                                                {completedSessions &&
+                                                                                completedSessions.length
+                                                                                    ? completedSessions.length
+                                                                                    : 0}
+                                                                            </td>
                                                                         ) : null}
 
                                                                         {tag &&
@@ -806,7 +855,12 @@ const Scheduler = () => {
                                                                             tag.fitnesspackage
                                                                                 .mode ===
                                                                                 'Hybrid') ? (
-                                                                            <td></td>
+                                                                            <td>
+                                                                                {completedSessions &&
+                                                                                completedSessions.length
+                                                                                    ? completedSessions.length
+                                                                                    : 0}
+                                                                            </td>
                                                                         ) : null}
                                                                     </tr>
                                                                 </tbody>
@@ -898,7 +952,7 @@ const Scheduler = () => {
                                     <Form.Check
                                         type="switch"
                                         id="scheduler"
-                                        label="Show Collapse view"
+                                        label="Collapse"
                                         onChange={() => {
                                             setShowCollapseView(!showCollapseView);
                                         }}
@@ -931,40 +985,45 @@ const Scheduler = () => {
                         ) : null}
 
                         {/* Scheduler */}
-                        <Row>
-                            <Col lg={11} className="pl-0 pr-0">
-                                <div className="mt-5">
-                                    <SchedulerPage
-                                        ref={ref}
-                                        show24HourFormat={show24HourFormat}
-                                        type="date"
-                                        days={calculateDays(prevDate, nextDate)}
-                                        callback={handleCallback}
-                                        restDays={tag?.sessions.filter(
-                                            (ses) => ses.type === 'restday'
-                                        )}
-                                        programId={tagId ? tagId : null}
-                                        schedulerSessions={schedulerSessions}
-                                        sessionIds={sessionIds}
-                                        clientIds={clientIds}
-                                        classType={'Group Class'}
-                                        startDate={prevDate}
-                                        duration={moment(nextDate).diff(moment(prevDate), 'days')}
-                                        showRestDay={showRestDay}
-                                        handleFloatingActionProgramCallback={
-                                            handleFloatingActionProgramCallback
-                                        }
-                                        handleFloatingActionProgramCallback2={
-                                            handleFloatingActionProgramCallback2
-                                        }
-                                        handleRefetch={handleRefetch}
-                                        sessionFilter={sessionFilter}
-                                        program={program}
-                                    />
-                                </div>
-                            </Col>
-                            <FitnessAction ref={fitnessActionRef} callback={() => mainQuery} />
-                        </Row>
+                        {!showCollapseView ? (
+                            <Row>
+                                <Col lg={11} className="pl-0 pr-0">
+                                    <div className="mt-5">
+                                        <SchedulerPage
+                                            ref={ref}
+                                            show24HourFormat={show24HourFormat}
+                                            type="date"
+                                            days={calculateDays(prevDate, nextDate)}
+                                            callback={handleCallback}
+                                            restDays={tag?.sessions.filter(
+                                                (ses) => ses.type === 'restday'
+                                            )}
+                                            programId={tagId ? tagId : null}
+                                            schedulerSessions={schedulerSessions}
+                                            sessionIds={sessionIds}
+                                            clientIds={clientIds}
+                                            classType={'Group Class'}
+                                            startDate={prevDate}
+                                            duration={moment(nextDate).diff(
+                                                moment(prevDate),
+                                                'days'
+                                            )}
+                                            showRestDay={showRestDay}
+                                            handleFloatingActionProgramCallback={
+                                                handleFloatingActionProgramCallback
+                                            }
+                                            handleFloatingActionProgramCallback2={
+                                                handleFloatingActionProgramCallback2
+                                            }
+                                            handleRefetch={handleRefetch}
+                                            sessionFilter={sessionFilter}
+                                            program={program}
+                                        />
+                                    </div>
+                                </Col>
+                                <FitnessAction ref={fitnessActionRef} callback={() => mainQuery} />
+                            </Row>
+                        ) : null}
                         {
                             <Modal show={editDatesModal} onHide={handleCloseDatesModal}>
                                 <Modal.Body>
@@ -1064,4 +1123,5 @@ const Scheduler = () => {
         );
 };
 
-export default Scheduler;
+// export default Scheduler;
+export default forwardRef(Scheduler);

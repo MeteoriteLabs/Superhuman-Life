@@ -6,8 +6,8 @@ import {
     GET_TAG_BY_ID
 } from '../../graphQL/queries';
 import { useQuery } from '@apollo/client';
-import { Row, Col, Table, Card, Dropdown, Badge, Accordion, Button } from 'react-bootstrap';
-import SchedulerPage from '../../../program-builder/program-template/scheduler';
+import { Row, Col, Table, Card, Dropdown, Badge, Accordion } from 'react-bootstrap';
+import SchedulerPage from 'builders/program-builder/program-template/scheduler';
 import moment from 'moment';
 import FitnessAction from '../FitnessAction';
 import AuthContext from 'context/auth-context';
@@ -15,10 +15,11 @@ import { Link } from 'react-router-dom';
 import { flattenObj } from 'components/utils/responseFlatten';
 import Loader from 'components/Loader/Loader';
 import DisplayImage from 'components/DisplayImage';
-import Calendar from 'react-calendar';
+// import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import '../../profilepicture.css';
 import { SideNav } from '../Event/import';
+import EditProgramName from '../../EditProgramName/index';
 
 const Scheduler: React.FC = () => {
     const auth = useContext(AuthContext);
@@ -45,6 +46,7 @@ const Scheduler: React.FC = () => {
     const [accordionExpanded, setAccordionExpanded] = useState(true);
     const [show24HourFormat, setShow24HourFormat] = useState(false);
     const ref = useRef<any>(null);
+    const [showProgramNameModal, setShowProgramNameModal] = useState<boolean>(false);
 
     const handleScrollScheduler = () => {
         ref.current?.scrollIntoView({ behaviour: 'smooth', inline: 'nearest' });
@@ -377,6 +379,11 @@ const Scheduler: React.FC = () => {
         return moment(date).isSame(moment(classicEndDate)) ? 'none' : '';
     }
 
+    const restDays =
+        tag && tag.sessions && tag.sessions.length
+            ? tag.sessions.filter((curr) => curr.type === 'restday')
+            : null;
+
     if (!show) return <Loader msg="loading scheduler..." />;
     else
         return (
@@ -394,6 +401,14 @@ const Scheduler: React.FC = () => {
                                 <b> back</b>
                             </span>
                         </div>
+
+                        {showProgramNameModal && (
+                            <EditProgramName
+                                show={showProgramNameModal}
+                                onHide={() => setShowProgramNameModal(false)}
+                                id={tagId}
+                            />
+                        )}
 
                         <Row>
                             <Col lg={11}>
@@ -450,12 +465,15 @@ const Scheduler: React.FC = () => {
                                                                     </Dropdown.Toggle>
 
                                                                     <Dropdown.Menu>
-                                                                        <Dropdown.Item key={2}>
+                                                                        <Dropdown.Item
+                                                                            key={2}
+                                                                            onClick={() =>
+                                                                                setShowProgramNameModal(
+                                                                                    true
+                                                                                )
+                                                                            }
+                                                                        >
                                                                             Edit Program Name
-                                                                        </Dropdown.Item>
-                                                                        <Dropdown.Item key={1}>
-                                                                            Send notification to
-                                                                            subscribers
                                                                         </Dropdown.Item>
                                                                     </Dropdown.Menu>
                                                                 </Dropdown>
@@ -603,18 +621,22 @@ const Scheduler: React.FC = () => {
                                                                             }
                                                                         </td>
                                                                         <td>
-                                                                            {tag &&
+                                                                            {restDays &&
+                                                                            restDays.length
+                                                                                ? restDays.length
+                                                                                : 0}
+                                                                            {/* {tag &&
                                                                             tag.fitnesspackage &&
                                                                             tag.fitnesspackage
                                                                                 ? tag.fitnesspackage
                                                                                       .restdays
-                                                                                : null}
+                                                                                : null} */}
                                                                         </td>
                                                                     </tr>
                                                                 </tbody>
                                                             </Table>
                                                         </Col>
-                                                        <Col>
+                                                        {/* <Col>
                                                             <Calendar
                                                                 className="disabled"
                                                                 // tileClassName={tileContent}
@@ -636,7 +658,7 @@ const Scheduler: React.FC = () => {
                                                                 next2Label={null}
                                                                 prev2Label={null}
                                                             />
-                                                        </Col>
+                                                        </Col> */}
                                                     </Row>
                                                     <p>Note: Plan all the sessions in advance</p>
                                                 </Card.Body>

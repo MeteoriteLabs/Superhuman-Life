@@ -1,14 +1,13 @@
 import { useTable } from 'react-table';
 import NoDataInCard from 'components/NoDataInCard';
-import './groupTable.css';
 
-function GroupTable({ data, columns }: any) {
+function GroupTable({ data, columns }: any): JSX.Element {
     function useInstance(instance) {
         const { allColumns } = instance;
 
         let rowSpanHeaders: any[] = [];
 
-        allColumns.forEach((column: any, i: any) => {
+        allColumns.forEach((column: any ) => {
             const { id, enableRowSpan } = column;
 
             if (enableRowSpan) {

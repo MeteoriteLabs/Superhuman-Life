@@ -1,0 +1,12 @@
+{
+    "title": "",
+    "description": "",
+    "type": "object",
+    "required": ["tag_name"],
+    "properties": {
+        "tag_name": {
+            "type": "string",
+            "title": "Program Name"
+        }
+    }
+}

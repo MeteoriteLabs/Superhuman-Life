@@ -9,13 +9,13 @@ import { flattenObj } from 'components/utils/responseFlatten';
 import { useQuery } from '@apollo/client';
 import './mainLobby.css';
 
-export default function Dashboard() {
+export default function Dashboard(): JSX.Element {
     const auth = useContext(AuthContext);
     const [organizations, setOrganizations] = useState([]);
 
     useQuery(GET_USER_ORGANIZATIONS, {
         variables: { id: auth.userid },
-        onCompleted: (data: any) => {
+        onCompleted: (data) => {
             const flattendData = flattenObj({ ...data });
             setOrganizations(flattendData.usersPermissionsUsers[0].organizations);
         }

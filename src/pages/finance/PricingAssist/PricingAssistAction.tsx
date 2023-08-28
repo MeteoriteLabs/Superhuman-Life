@@ -53,7 +53,7 @@ function PricingAssistAction(props, ref) {
 
     // create price
     const [createFitnessPricingAssist] = useMutation(CREATE_FITNESS_PRICING_ASSIT, {
-        onCompleted: (r: any) => {
+        onCompleted: () => {
             modalTrigger.next(false);
             setIsBasePriceCreated(!isBasepriceCreated);
         },
@@ -78,7 +78,7 @@ function PricingAssistAction(props, ref) {
 
     // update price
     const [updateFitnessPricingAssist] = useMutation(UPDATE_FITNESS_PRICING_ASSITS, {
-        onCompleted: (r: any) => {
+        onCompleted: () => {
             modalTrigger.next(false);
             setIsBasePriceUpdated(!isBasepriceUpdated);
         },

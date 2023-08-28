@@ -3,6 +3,7 @@ import moment from 'moment';
 import { flattenObj } from 'components/utils/responseFlatten';
 
 export const AvailabilityCheck = (props: any) => {
+    
     const sessions = flattenObj({ ...props.sessions });
     const newTime = props.event && props.event.time ? JSON.parse(props.event.time) : null;
 

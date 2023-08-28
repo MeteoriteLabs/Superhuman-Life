@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
-import 'rc-time-picker/assets/index.css';
 import TimePickers from 'components/ClockTimePicker';
 
 const TimeFieldInput = (props: any) => {
@@ -10,11 +9,11 @@ const TimeFieldInput = (props: any) => {
     const [endTime, setEndTime] = useState(props.value ? JSON.parse(props.value).endTime : '23:00');
 
     function handleStartTimeInput(val: any) {
-        setStartTime(val.$H + ':' + (val.$m === 0 ? '00' : val.$m));
+        setStartTime((val.$H < 10 ? `0${val.$H}` : val.$H) + ':' + (val.$m === 0 ? '00' : val.$m));
     }
 
     function handleEndTimeInput(val: any) {
-        setEndTime(val.$H + ':' + (val.$m === 0 ? '00' : val.$m));
+        setEndTime((val.$H < 10 ? `0${val.$H}` : val.$H) + ':' + (val.$m === 0 ? '00' : val.$m));
     }
 
     function handleTimeValidation() {
@@ -46,13 +45,6 @@ const TimeFieldInput = (props: any) => {
         }
     }
 
-    function handleFormatting(time) {
-        const inputTime: any = time.split(':');
-        return `${parseInt(inputTime[0]) < 10 ? inputTime[0].charAt(1) : inputTime[0]}:${
-            inputTime[1] === '00' ? '0' : inputTime[1]
-        }`;
-    }
-
     function checkIfCorrectTime() {
         const ele: any = document.getElementById('timeErr');
 
@@ -66,8 +58,8 @@ const TimeFieldInput = (props: any) => {
     useEffect(() => {
         if (checkIfCorrectTime()) {
             const object = {
-                startTime: handleFormatting(startTime),
-                endTime: handleFormatting(endTime)
+                startTime: startTime,
+                endTime: endTime
             };
             props.onChange(JSON.stringify(object));
         } else {
@@ -82,7 +74,7 @@ const TimeFieldInput = (props: any) => {
             <Row>
                 <Col lg={4}>
                     <TimePickers
-                        label="Choose start time"
+                        label=""
                         disabled={props.disabled}
                         onChange={handleStartTimeInput}
                     />
@@ -91,11 +83,7 @@ const TimeFieldInput = (props: any) => {
             <label style={{ marginTop: '10px' }}>End Time: </label>
             <Row>
                 <Col lg={4}>
-                    <TimePickers
-                        label="Choose end time"
-                        disabled={props.disabled}
-                        onChange={handleEndTimeInput}
-                    />
+                    <TimePickers label="" disabled={props.disabled} onChange={handleEndTimeInput} />
                 </Col>
             </Row>
             {handleTimeValidation()}

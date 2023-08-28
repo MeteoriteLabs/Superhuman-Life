@@ -64,7 +64,8 @@
             "gender": {
                 "type": "string",
                 "title": "Gender",
-                "enum": ["Female", "Male", "Other"]
+                "enum": ["Male", "Female", "Other"],
+                "default": "Male"
             },
             "contact": {
                 "type": "string",
@@ -116,7 +117,8 @@
                         "typeOfDegree": {
                             "type": "string",
                             "title": "Type of Degree",
-                            "enum": ["Bachelors", "Master", "Diploma", "Certification"]
+                            "enum": ["Bachelors", "Master", "Diploma", "Certification"],
+                            "default": "Bachelors"
                         }
                     },
                     "required": ["instituteName", "specialization", "yearOfPassing", "typeOfDegree"]

@@ -1,4 +1,4 @@
-export const schemaView: any = {
+export const schemaView: Record<string, unknown> = {
     description: {
         'ui:widget': 'textarea',
         'ui:options': {
