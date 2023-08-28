@@ -147,7 +147,7 @@ function PaymentMethodsAction(props: any, ref: any) {
 
     // UPI
     const [createUPI] = useMutation(CREATE_UPI, {
-        onCompleted: (r: any) => {
+        onCompleted: () => {
             modalTrigger.next(false);
         },
         refetchQueries: [GET_UPI_DETAILS]
@@ -285,7 +285,7 @@ function PaymentMethodsAction(props: any, ref: any) {
     });
 
     const [createBankDetail] = useMutation(CREATE_BANK_DETAIL, {
-        onCompleted: (r: any) => {
+        onCompleted: () => {
             modalTrigger.next(false);
         },
         refetchQueries: [GET_BANK_DETAILS]

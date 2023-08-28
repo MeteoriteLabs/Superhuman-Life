@@ -176,8 +176,8 @@ function CreateEditEvent(props: any, ref: any) {
 
             createTag({
                 variables: {
-                    id: response.createFitnesspackage.data.id,
-                    tagName: frmDetails.packageName
+                    id: flattenData.createFitnesspackage.id,
+                    tagName: flattenData.createFitnesspackage.packagename
                 }
             });
         }
@@ -213,12 +213,6 @@ function CreateEditEvent(props: any, ref: any) {
         }
     }));
 
-    enum ENUM_FITNESSPACKAGE_LEVEL {
-        Beginner,
-        Intermediate,
-        Advanced
-    }
-
     enum ENUM_FITNESSPACKAGE_MODE {
         Online,
         Offline,
@@ -229,12 +223,6 @@ function CreateEditEvent(props: any, ref: any) {
     enum ENUM_FITNESSPACKAGE_RESIDENTIAL_TYPE {
         Accommodation,
         Accommodation_Food
-    }
-
-    enum ENUM_FITNESSPACKAGE_INTENSITY {
-        Low,
-        Moderate,
-        High
     }
 
     function FillDetails(data) {
@@ -395,7 +383,7 @@ function CreateEditEvent(props: any, ref: any) {
                     .join(', ')
                     .split(', '),
                 Start_date: moment(frm.dates.startDate).toISOString(),
-                End_date: moment(frm.dates.endDate).toISOString(),
+                End_date: moment(frm.dates.startDate).toISOString(),
                 Course_details: frm.courseDetails.details,
                 thumbnail: frm.thumbnail,
                 videoUrl: frm.VideoUrl,

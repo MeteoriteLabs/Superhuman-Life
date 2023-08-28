@@ -31,7 +31,7 @@ function CreatePaymentSchedule(props: any, ref: any) {
     const [isCreated, setIsCreated] = useState<boolean>(false);
 
     const [createPaymentSchedule] = useMutation(ADD_PAYMENT_SCHEDULE, {
-        onCompleted: (r: any) => {
+        onCompleted: () => {
             modalTrigger.next(false);
             props.callback();
             setIsCreated(!isCreated);
@@ -39,7 +39,7 @@ function CreatePaymentSchedule(props: any, ref: any) {
     });
 
     const [updatePaymentSchedule] = useMutation(UPDATE_PAYMENT_SCHEDULE, {
-        onCompleted: (r: any) => {
+        onCompleted: () => {
             modalTrigger.next(false);
             props.callback();
             setIsDeactivated(!isDeactivated);

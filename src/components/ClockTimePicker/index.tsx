@@ -1,8 +1,8 @@
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { StyledEngineProvider } from '@mui/material/styles';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
+import { StyledEngineProvider } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 
 export default function TimePickers({ label, disabled, onChange }) {
@@ -14,7 +14,8 @@ export default function TimePickers({ label, disabled, onChange }) {
                     disabled={disabled}
                     viewRenderers={{
                         hours: renderTimeViewClock,
-                        minutes: renderTimeViewClock
+                        minutes: renderTimeViewClock,
+                        seconds: renderTimeViewClock
                     }}
                     minutesStep={15}
                     onChange={onChange}

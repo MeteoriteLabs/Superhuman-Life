@@ -1,8 +1,7 @@
 import { useTable } from 'react-table';
 import NoDataInCard from 'components/NoDataInCard';
-import './ptTable.css';
 
-function PTTable({ data, columns }: any) {
+function PTTable({ data, columns }: any): JSX.Element {
     function useInstance(instance) {
         const { allColumns } = instance;
 
@@ -72,18 +71,6 @@ function PTTable({ data, columns }: any) {
                                 cell.isRowSpanned = true;
                                 rows[currentRowsIndex].allCells[j].rowSpan++;
                             }
-
-                            // if (rowSpanHeader !== undefined) {
-                            //     if (rowSpanHeader.topCellValue === null || rowSpanHeader.topCellValue !== cell.value   ) {
-                            //         cell.isRowSpanned = false;
-                            //         rowSpanHeader.topCellValue = cell.value;
-                            //         rowSpanHeader.topCellIndex = i;
-                            //         cell.rowSpan = 1;
-                            //     } else {
-                            //         cell.isRowSpanned = true;
-                            //         rows[rowSpanHeader.topCellIndex].allCells[j].rowSpan++;
-                            //     }
-                            // }
                         }
                     })}
                     {rows.map((row, index) => {

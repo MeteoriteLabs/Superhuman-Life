@@ -1,6 +1,6 @@
 import React, { useEffect, useImperativeHandle, useState, useContext } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
-import ModalView from '../../../components/modal';
+import ModalView from 'components/modal';
 import {
     ADD_CONTACT,
     DELETE_CONTACT,
@@ -8,16 +8,16 @@ import {
     UPDATE_CONTACT,
     CREATE_NOTIFICATION
 } from './queries';
-import StatusModal from '../../../components/StatusModal/StatusModal';
+import StatusModal from 'components/StatusModal/StatusModal';
 import { Subject } from 'rxjs';
 import { schema , widgets } from './contactsSchema';
-import { flattenObj } from '../../../components/utils/responseFlatten';
-import AuthContext from '../../../context/auth-context';
+import { flattenObj } from 'components/utils/responseFlatten';
+import AuthContext from 'context/auth-context';
 import {
     phoneCustomFormats,
     phoneTransformErrors
-} from '../../../components/utils/ValidationPatterns';
-import Toaster from '../../../components/Toaster';
+} from 'components/utils/ValidationPatterns';
+import Toaster from 'components/Toaster';
 import { PaymentDetails } from './PaymentDetailsInterface';
 import moment from 'moment';
 
@@ -42,8 +42,8 @@ function CreateEditContact(props: any, ref: any) {
     const [createContactNotification] = useMutation(CREATE_NOTIFICATION);
 
     const [createContact] = useMutation(ADD_CONTACT, {
-        onCompleted: (r: any) => {
-            const flattenData = flattenObj({ ...r });
+        onCompleted: (response: any) => {
+            const flattenData = flattenObj({ ...response });
 
             createContactNotification({
                 variables: {
@@ -70,7 +70,7 @@ function CreateEditContact(props: any, ref: any) {
     });
 
     const [updateContact] = useMutation(UPDATE_CONTACT, {
-        onCompleted: (r: any) => {
+        onCompleted: () => {
             modalTrigger.next(false);
             props.callback();
             setIsUpdated(!isUpdated);
@@ -79,7 +79,7 @@ function CreateEditContact(props: any, ref: any) {
     });
 
     const [deleteContact] = useMutation(DELETE_CONTACT, {
-        onCompleted: (e: any) => {
+        onCompleted: () => {
             modalTrigger.next(false);
             props.callback();
             setIsDeleted(!isDeleted);

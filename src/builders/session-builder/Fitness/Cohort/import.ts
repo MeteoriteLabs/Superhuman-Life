@@ -10,7 +10,7 @@ import { flattenObj } from 'components/utils/responseFlatten';
 import Loader from 'components/Loader/Loader';
 import DisplayImage from 'components/DisplayImage';
 import Calendar from 'react-calendar';
-// import CollapsibleScheduler from 'builders/program-builder/program-template/CollapsibleScheduler';
+import CollapsibleScheduler from 'builders/program-builder/program-template/CollapsibleScheduler';
 import { SideNav } from '../Event/import';
 
-export {useState, useEffect, useRef , GET_TAG_BY_ID, useQuery,Row, Col, Button, Dropdown, SideNav,Card, Badge, Table, Accordion, Form, SchedulerPage, moment, FitnessAction,Link,flattenObj, Loader, DisplayImage, Calendar};
+export {useState, useEffect, useRef , GET_TAG_BY_ID, useQuery,Row, Col, Button, Dropdown, SideNav,Card, Badge, Table, Accordion, Form, SchedulerPage, moment, FitnessAction,Link,flattenObj, Loader, DisplayImage, Calendar, CollapsibleScheduler};

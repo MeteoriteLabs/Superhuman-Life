@@ -30,7 +30,6 @@ import {
 } from '../../graphql/mutations';
 import { useQuery, useMutation } from '@apollo/client';
 import AuthContext from '../../../../context/auth-context';
-import 'rc-time-picker/assets/index.css';
 import './styles.css';
 import Toaster from '../../../../components/Toaster';
 import { flattenObj } from '../../../../components/utils/responseFlatten';
@@ -312,11 +311,11 @@ const WorkHours: React.FC = () => {
     }, []);
 
     function handleFromTimeInput(val: any) {
-        setFromTime(val.$H + ':' + (val.$m === 0 ? '00' : val.$m));
+        setFromTime((val.$H < 10 ? `0${val.$H}` : val.$H) + ':' + (val.$m === 0 ? '00' : val.$m));
     }
 
     function handleToTimeInput(val: any) {
-        setToTime(val.$H + ':' + (val.$m === 0 ? '00' : val.$m));
+        setToTime((val.$H < 10 ? `0${val.$H}` : val.$H) + ':' + (val.$m === 0 ? '00' : val.$m));
     }
 
     function handleTimeValidation() {
@@ -851,7 +850,7 @@ const WorkHours: React.FC = () => {
                                                         overflow: 'hidden'
                                                     }}
                                                     md={10}
-                                                    className="shadow p-1 mb-0 bg-white table_col"
+                                                    className="shadow p-0 mb-0 bg-white table_col"
                                                 >
                                                     <Row className="align-items-center">
                                                         <Col
@@ -861,6 +860,7 @@ const WorkHours: React.FC = () => {
                                                                 color: 'white',
                                                                 borderRadius: '10px',
                                                                 marginLeft: '5px',
+                                                
                                                                 fontSize: item.SessionTitle
                                                                     ? '14px'
                                                                     : 'inherit',
@@ -885,7 +885,7 @@ const WorkHours: React.FC = () => {
                                                                     {moment(
                                                                         item.start_time,
                                                                         'HH:mm'
-                                                                    ).format('HH:mm A')}
+                                                                    ).format('hh:mm A')}
                                                                     &nbsp;&nbsp;&nbsp;
                                                                 </span>
                                                                 <span>To&nbsp;&nbsp;&nbsp;</span>
@@ -965,7 +965,7 @@ const WorkHours: React.FC = () => {
                                         />
                                     </div>
                                 </Col>
-                                <Col lg={2} style={{ fontSize: '20px', marginTop: '9px' }}>
+                                <Col lg={2} style={{ fontSize: '20px', marginTop: '14px' }}>
                                     To
                                 </Col>
                                 <Col lg={5}>
@@ -978,7 +978,7 @@ const WorkHours: React.FC = () => {
                             </Row>
                             <div className="text-center mt-2">{handleTimeValidation()}</div>
                         </Col>
-                        <Col lg={2} className="pl-0 pr-0">
+                        <Col lg={2} className="pl-0 pr-0 ">
                             <Form.Control
                                 className="mode_picker"
                                 as="select"
@@ -1309,7 +1309,7 @@ const WorkHours: React.FC = () => {
                                     )}
                                     {!userConfig[daysOfWeek[dayIndex]]?.isHoliday && (
                                         <Row className="mt-4">
-                                            <Col lg={3} style={{ width: '30vw' }}>
+                                            <Col lg={3} style={{ width: '10vw' }}>
                                                 <TimePickers
                                                     label="start time"
                                                     disabled={false}

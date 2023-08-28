@@ -36,14 +36,14 @@ function CreateEditExercise(props: any, ref: any) {
     useQuery(FETCH_WORKOUTS, {
         variables: { id: auth.userid },
         skip: operation.type !== 'delete',
-        onCompleted: (r: any) => {
-            const flattenedData = flattenObj({ ...r });
+        onCompleted: (response: any) => {
+            const flattenedData = flattenObj({ ...response });
             setWorkoutDetails(flattenedData.workouts);
         }
     });
 
     const [createExercise] = useMutation(CREATE_EXERCISE, {
-        onCompleted: (r: any) => {
+        onCompleted: () => {
             modalTrigger.next(false);
             props.callback();
             setIsFormSubmitted(!isFormSubmitted);
@@ -53,7 +53,7 @@ function CreateEditExercise(props: any, ref: any) {
     });
 
     const [editExercise] = useMutation(UPDATE_EXERCISE, {
-        onCompleted: (r: any) => {
+        onCompleted: () => {
             modalTrigger.next(false);
             setIsFormSubmitted(!isFormSubmitted);
             props.callback();
@@ -63,7 +63,7 @@ function CreateEditExercise(props: any, ref: any) {
     });
 
     const [deleteExercise] = useMutation(DELETE_EXERCISE, {
-        onCompleted: (r: any) => {
+        onCompleted: () => {
             modalTrigger.next(false);
             props.callback();
             setToastType('success');

@@ -1,0 +1,14 @@
+{
+    "title": "",
+    "description": "",
+    "type": "object",
+    "required": ["duration"],
+    "properties": {
+        "duration": {
+            "title": "Duration",
+            "type": "string",
+            "enum": ["Yearly"],
+            "default": "Yearly"
+        }
+    }
+}

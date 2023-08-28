@@ -57,10 +57,6 @@ const ProgramManager = () => {
         handleScrollScheduler();
     }
 
-
-    
-
-
     useEffect(() => {
         setTimeout(() => {
             setShow(true);

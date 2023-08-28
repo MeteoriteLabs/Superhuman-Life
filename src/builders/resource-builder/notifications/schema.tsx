@@ -1,10 +1,10 @@
-import Upload from '../../../components/upload/upload';
+import Upload from 'components/upload/upload';
 
 export const widgets = {
     upload: Upload
 };
 
-export const schema: any = {
+export const schema: Record<string, unknown> = {
     title: {
         'ui:help': ' Assign a heading'
     },

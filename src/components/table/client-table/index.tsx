@@ -3,7 +3,7 @@ import { useTable, useExpanded } from 'react-table';
 import NoDataInCard from 'components/NoDataInCard';
 import './client-table.css';
 
-function ClientTable({ data, columns }: any) {
+function ClientTable({ data, columns }: any): JSX.Element {
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
         { columns, data },
         useExpanded

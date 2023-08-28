@@ -30,13 +30,6 @@ const ProfilePage: React.FC = () => {
                         <ChangemakersSettings />
                     </Tab>
 
-                    {/* <Tab eventKey="organisationssettings" title="Organisations Settings">
-            <OrganisationsSettings />
-          </Tab> */}
-
-                    {/* <Tab eventKey="myclientapp" title=" My Client App">
-            My Client App
-          </Tab> */}
                 </Tabs>
             </Card.Body>
         </Card>

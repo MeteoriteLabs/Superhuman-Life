@@ -3,7 +3,7 @@ import MessagePage from './notifications';
 import MindsetPage from './message';
 // import InformationPage from "./information bank";
 
-export default function ResourcePage() {
+export default function ResourcePage(): JSX.Element {
     return (
         <>
             <h2>Communications</h2>

@@ -16,6 +16,8 @@ export const GET_ALL_BOOKINGS = gql`
             data {
                 id
                 attributes {
+                    orderStatus
+                    BookingID
                     ClientUser {
                         data {
                             id
@@ -37,6 +39,8 @@ export const GET_ALL_BOOKINGS = gql`
                             id
                             attributes {
                                 packagename
+                                fitnesspackagepricing
+                                duration
                                 fitness_package_type {
                                     data {
                                         attributes {

@@ -120,7 +120,7 @@ const Address: React.FC<{ value: string; onChange: (args: string) => void }> = (
                         value={address1}
                         onChange={(e) => setAddress1(e.target.value)}
                         type="text"
-                        placeholder=""
+                        placeholder="Enter your first address"
                     />
                 )}
                 {googleAddressShow && (
@@ -143,7 +143,7 @@ const Address: React.FC<{ value: string; onChange: (args: string) => void }> = (
                     value={address2}
                     onChange={(e) => setAddress2(e.target.value)}
                     type="text"
-                    placeholder=""
+                    placeholder="Enter your second address"
                 />
             </Form.Group>
             <Form.Group controlId="formBasicEmail">
@@ -152,7 +152,7 @@ const Address: React.FC<{ value: string; onChange: (args: string) => void }> = (
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
                     type="text"
-                    placeholder=""
+                    placeholder="Enter your city name"
                 />
             </Form.Group>
             <Form.Group controlId="formBasicEmail">
@@ -161,7 +161,7 @@ const Address: React.FC<{ value: string; onChange: (args: string) => void }> = (
                     value={state}
                     onChange={(e) => setState(e.target.value)}
                     type="text"
-                    placeholder=""
+                    placeholder="Enter your state name"
                 />
             </Form.Group>
             <Form.Group controlId="formBasicEmail">
@@ -170,7 +170,7 @@ const Address: React.FC<{ value: string; onChange: (args: string) => void }> = (
                     value={country}
                     onChange={(e) => setCountry(e.target.value)}
                     type="text"
-                    placeholder=""
+                    placeholder="Enter your country name"
                 />
             </Form.Group>
             <Form.Group controlId="formBasicEmail">
@@ -179,7 +179,7 @@ const Address: React.FC<{ value: string; onChange: (args: string) => void }> = (
                     value={zip}
                     onChange={(e) => setZip(e.target.value)}
                     type="text"
-                    placeholder=""
+                    placeholder="Enter your zip code"
                 />
             </Form.Group>
             <Form.Group controlId="formBasicEmail">
@@ -188,7 +188,7 @@ const Address: React.FC<{ value: string; onChange: (args: string) => void }> = (
                     value={addressTitle}
                     onChange={(e) => setAddressTitle(e.target.value)}
                     type="text"
-                    placeholder=""
+                    placeholder="Enter address title"
                 />
             </Form.Group>
         </div>

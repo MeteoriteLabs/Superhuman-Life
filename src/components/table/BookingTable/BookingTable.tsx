@@ -7,7 +7,7 @@ import './bookingTable.css';
 import * as Icon from 'react-bootstrap-icons';
 import NoDataInCard from 'components/NoDataInCard';
 
-function Table({ data, columns, newPackageCount, loading, pageCount: controlledPageCount }: any) {
+function Table({ data, columns, newPackageCount }: any): JSX.Element {
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
         {
             columns,
@@ -16,32 +16,13 @@ function Table({ data, columns, newPackageCount, loading, pageCount: controlledP
                 sortBy: [{ id: 'purchase_date', desc: true }]
             },
 
-            isMultiSortEvent: (e) => {
+            isMultiSortEvent: () => {
                 return true;
             }
         },
         useSortBy,
         usePagination
     );
-
-    // const [isSort, setIsSort] = useState(false);
-
-    // const toggleSort = () => {
-    //     setIsSort(!isSort);
-    //     console.log(data);
-
-    //     data.sort((a, b) => {
-    //         if (new Date(a.purchase_data) > new Date(b.purchase_data)) {
-    //             if (isSort) {
-    //                 return 1
-    //             }
-    //         }
-
-    //         return -1
-    //     })
-
-    //     console.log('sort data', data)
-    // }
 
     return (
         <div className="table-responsive">
@@ -150,90 +131,8 @@ function Table({ data, columns, newPackageCount, loading, pageCount: controlledP
                         );
                     })}
 
-                    {/* <tr>
-                        {loading ? (
-                            // Use our custom loading state to show a loading indicator
-                            <td colSpan={10000}>Loading...</td>
-                        ) : (
-                            <td colSpan={10000}>
-                                Showing {page.length} of ~{controlledPageCount * pageSize}{' '}
-                                results
-                            </td>
-                        )}
-                    </tr> */}
                 </tbody>
             </table>
-
-            {/* <div className="pagination justify-content-around">
-                <div>
-                    <button onClick={() => {
-                        setPageIndex(0)
-                        gotoPage(0)
-                    }} disabled={pageIndex === 0 && !canPreviousPage}>
-                        {'<<'}
-                    </button>{' '}
-                    <button onClick={() => {
-                        setPageIndex(pageIndex - 1);
-                        previousPage()
-                    }} disabled={pageIndex === 0 && !canPreviousPage}>
-                        {'<'}
-                    </button>{' '}
-                    <button onClick={() => {
-                        setPageIndex(pageIndex + 1);
-                        nextPage()
-                    }} 
-                    // disabled={data.length <= pageSize }
-                    >
-                        {'>'}
-                    </button>{' '}
-                    <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-                        {'>>'}
-                    </button>{' '}
-                    <span>
-                        Page{' '}
-                        <strong>
-                            {pageIndex + 1} of {pageOptions.length}
-                        </strong>{' '}
-                    </span>
-                    <span>
-                        | Go to page:{' '}
-                        <input
-                            type="number"
-                            min="1"
-                            // defaultValue={pageIndex + 1}
-                            onChange={e => {
-                                let page = 0;
-                                page = Number(e.target.value) === 0 ? 0 : Number(e.target.value) - 1
-                                setPageIndex(page)
-
-                                console.log('page', page)
-                                // gotoPage(page)
-                            }}
-                            style={{ width: '100px' }}
-                        />
-                    </span>{' '}
-                </div>
-
-                <div className='d-flex justify-content-center align-items-center'>
-                    <p className='mb-0 mr-3'>
-                        Show
-                    </p>
-                    <select
-                        value={pageSize}
-                        onChange={e => {
-
-                            setPageSize(Number(e.target.value));
-
-                        }}
-                    >
-                        {[10, 20, 30, 50, 100].map(pageSize => (
-                            <option key={pageSize} value={pageSize}>
-                                {pageSize} rows
-                            </option>
-                        ))}
-                    </select>
-                </div>
-            </div> */}
         </div>
     );
 }
