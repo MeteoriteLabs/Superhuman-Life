@@ -8,7 +8,7 @@ Sentry.init({
     dsn: process.env.REACT_APP_SENTRY_DSN,
     integrations: [
         new Sentry.BrowserTracing({
-            tracePropagationTargets: [process.env.REACT_APP_URL as string]
+            tracePropagationTargets: [process.env.REACT_APP_DEPLOYED_URL as string]
         }),
         new Sentry.Replay()
     ],
