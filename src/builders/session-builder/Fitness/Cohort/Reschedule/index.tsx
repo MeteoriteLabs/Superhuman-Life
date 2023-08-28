@@ -4,7 +4,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { UPDATE_PACKAGE } from '../../../ExtendProgram/graphQL/queries';
 import { flattenObj } from 'components/utils/responseFlatten';
 import Toaster from 'components/Toaster/index';
-import { GET_TAG, UPDATE_SESSION } from '../../../graphQL/queries';
+import { GET_TAG, UPDATE_SESSION, UPDATE_CLIENT_PACKAGE } from '../../../graphQL/queries';
 import moment from 'moment';
 
 interface Props {
@@ -16,6 +16,7 @@ interface Props {
 export default function ExtendProgram(props: Props): JSX.Element {
     const [startDate, setStartDate] = useState<string>();
     const [endDate, setEndDate] = useState<string>();
+    const [clientPackageId, setClientPackageId] = useState<string>();
     const [fitnessPackageId, setFitnessPackageId] = useState<string>();
     const [isProgramUpdated, setIsProgramUpdated] = useState(false);
     const [programStartDate, setProgramStartDate] = useState<string>(
@@ -29,6 +30,7 @@ export default function ExtendProgram(props: Props): JSX.Element {
     let diff: any;
 
     const [updateSession] = useMutation(UPDATE_SESSION);
+    const [updateClientPackage] = useMutation(UPDATE_CLIENT_PACKAGE);
 
     useQuery(GET_TAG, {
         variables: { id: props.id },
@@ -38,6 +40,10 @@ export default function ExtendProgram(props: Props): JSX.Element {
             setStartDate(flattenData.fitnesspackage.Start_date);
             setEndDate(flattenData.fitnesspackage.End_date);
             setFitnessPackageId(flattenData.fitnesspackage.id);
+
+            if(flattenData.client_packages.length){
+                setClientPackageId(flattenData.client_packages[0].id);
+              }  
 
             const sessionsArr: { id: string; session_date: string }[] = [];
             if (flattenData.sessions && flattenData.sessions.length) {
@@ -70,6 +76,18 @@ export default function ExtendProgram(props: Props): JSX.Element {
                     End_date: moment(programEndDate).format()
                 }
             },onCompleted: () => {
+                if(clientPackageId){
+                    updateClientPackage({
+                        variables: {
+                            id: clientPackageId,
+                            data: {
+                                effective_date: moment(programStartDate).format()
+                            }
+                        }
+                    });
+
+                }
+                
                 if (sessions.length > 0) {
                     for (let i = 0; i < sessions.length; i++) {
                         updateSession({
