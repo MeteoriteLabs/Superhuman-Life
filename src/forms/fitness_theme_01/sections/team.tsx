@@ -73,7 +73,7 @@ function Team({ page }: { page: string }): JSX.Element {
         },
 
         onCompleted: (data) => {
-            if (initialValues.team.length === 0) {
+            if (!initialValues.team.length) {
                 setInitialValues({
                     ...initialValues,
                     sectionId: data.websiteSections.data[0].id,
@@ -153,7 +153,7 @@ function Team({ page }: { page: string }): JSX.Element {
                     {errors.description && <p>{errors.description.message}</p>}
                 </Form.Group>
 
-                {fields.length > 0
+                {fields.length
                     ? fields.map((item, index) => (
                           <Accordion style={{ padding: 0 }} key={index}>
                               <Card style={{ backgroundColor: 'transparent', border: 'none' }}>
@@ -217,20 +217,7 @@ function Team({ page }: { page: string }): JSX.Element {
                                                   )}
                                               />
                                           </Form.Group>
-                                          <Form.Group>
-                                              {/* <Form.Label>Image</Form.Label>
-                        <Controller
-                          name={`team.${index}.icons`}
-                          control={control}
-                          render={({ field }) => (
-                            <Form.Control
-                              type="file"
-                              style={{ fontSize: 14 }}
-                              as="input"
-                              {...field}></Form.Control>
-                          )}
-                        /> */}
-                                          </Form.Group>
+                                          <Form.Group></Form.Group>
                                       </Card.Body>
                                   </Accordion.Collapse>
                               </Card>
