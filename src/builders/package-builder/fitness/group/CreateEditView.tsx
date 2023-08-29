@@ -476,8 +476,8 @@ function CreateEditPackage(props: any, ref: any) {
                 ),
                 ptclasssize: ENUM_FITNESSPACKAGE_PTCLASSSIZE[frm.classSize],
                 users_permissions_user: frm.user_permissions_user,
-                publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
-                expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
+                publishing_date: moment.utc(frm.datesConfig?.publishingDate).local().format(),
+                expiry_date: moment.utc(frm.datesConfig?.expiryDate).local().format(),
                 thumbnail: frm.thumbnail,
                 equipmentList: frm.equipmentList,
                 videoUrl: frm?.VideoUrl,
@@ -485,8 +485,8 @@ function CreateEditPackage(props: any, ref: any) {
                     .map((item: any) => item.id)
                     .join(', ')
                     .split(', '),
-                Start_date: moment.utc(frm.dates.startDate).format(),
-                End_date: moment(frm.dates.startDate).add(360, 'days').toISOString()
+                Start_date: moment.utc(frm.dates.startDate).local().format(),
+                End_date: moment.utc(frm.dates.startDate).add(360, 'days').local().format()
             }
         });
     }
@@ -536,8 +536,8 @@ function CreateEditPackage(props: any, ref: any) {
                     (item: any) => item.mrp !== null
                 ),
                 users_permissions_user: frm.user_permissions_user,
-                publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
-                expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
+                publishing_date: moment.utc(frm.datesConfig?.publishingDate).local().format(),
+                expiry_date: moment.utc(frm.datesConfig?.expiryDate).local().format(),
                 thumbnail: frm.thumbnail,
 
                 equipmentList: frm.equipmentList,
@@ -547,8 +547,8 @@ function CreateEditPackage(props: any, ref: any) {
                     .join(', ')
                     .split(', '),
                 SubscriptionDuration: frm.durationOfOffering,
-                Start_date: moment(frm.dates.startDate).toISOString(),
-                End_date: moment(frm.dates.startDate).add(360, 'days').toISOString()
+                Start_date: moment.utc(frm.dates.startDate).local().format(),
+                End_date: moment.utc(frm.dates.startDate).add(360, 'days').local().format()
             }
         });
     }

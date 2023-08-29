@@ -345,7 +345,7 @@ function CreateEditCohort(props: any, ref: any) {
                 benefits: frm.Benifits,
                 packagename: frm.packageName,
                 channelinstantBooking: frm.channelinstantBooking,
-                expiry_date: moment(frm.datesConfig.expiryDate).toISOString(),
+                expiry_date: moment.utc(frm.datesConfig.expiryDate).local().format(),
                 level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
                 Intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
                 equipmentList:
@@ -378,7 +378,7 @@ function CreateEditCohort(props: any, ref: any) {
                               }
                           ]
                         : JSON.parse(frm.pricing),
-                publishing_date: moment(frm.datesConfig.publishingDate).toISOString(),
+                publishing_date: moment.utc(frm.datesConfig.publishingDate).local().format(),
                 tags: frm.tag,
                 users_permissions_user: frm.user_permissions_user,
                 fitness_package_type: findPackageType(operation.packageType),
@@ -395,8 +395,9 @@ function CreateEditCohort(props: any, ref: any) {
                     .map((item: any) => item.id)
                     .join(', ')
                     .split(', '),
-                Start_date: moment(frm.dates.startDate).toISOString(),
-                End_date: moment(frm.dates.endDate).toISOString(),
+
+                Start_date: moment.utc(frm.dates.startDate).local().format(),
+                End_date: moment.utc(frm.dates.endDate).local().format(),
                 Course_details: frm.courseDetails.details,
                 thumbnail: frm.thumbnail,
                 videoUrl: frm.VideoUrl,
@@ -453,8 +454,8 @@ function CreateEditCohort(props: any, ref: any) {
                               }
                           ]
                         : JSON.parse(frm.pricing),
-                publishing_date: moment(frm.datesConfig.publishingDate).toISOString(),
-                expiry_date: moment(frm.datesConfig.expiryDate).toISOString(),
+                publishing_date: moment.utc(frm.datesConfig.publishingDate).local().format(),
+                expiry_date: moment.utc(frm.datesConfig.expiryDate).local().format(),
                 tags: frm.tag,
                 duration:
                     frm.dates.startDate === frm.dates.endDate
@@ -475,8 +476,8 @@ function CreateEditCohort(props: any, ref: any) {
                     .map((item: any) => item.id)
                     .join(', ')
                     .split(', '),
-                Start_date: moment(frm.dates.startDate).toISOString(),
-                End_date: moment(frm.dates.endDate).toISOString(),
+                Start_date: moment.utc(frm.dates.startDate).local().format(),
+                End_date: moment.utc(frm.dates.endDate).local().format(),
                 Course_details: frm.courseDetails.details,
                 thumbnail: frm.thumbnail,
                 videoUrl: frm.VideoUrl,
@@ -592,7 +593,9 @@ function CreateEditCohort(props: any, ref: any) {
             </Modal>
 
             {/* Delete modal validation (if classAvailability is greater than zero show this dailouge box) */}
-            {offeringInventoryDetails && offeringInventoryDetails.ActiveBookings > 0  && operation.type === 'delete' ? (
+            {offeringInventoryDetails &&
+            offeringInventoryDetails.ActiveBookings > 0 &&
+            operation.type === 'delete' ? (
                 <Modal
                     size="lg"
                     aria-labelledby="contained-modal-title-vcenter"

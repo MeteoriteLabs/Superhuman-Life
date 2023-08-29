@@ -364,8 +364,8 @@ function CreateEditPackage(props: any, ref: any) {
                         ? [{ mrp: 'free', duration: frm.programDetails.duration }]
                         : JSON.parse(frm.pricingDetail),
                 users_permissions_user: frm.user_permissions_user,
-                publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
-                expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
+                publishing_date: moment.utc(frm.datesConfig?.publishingDate).local().format(),
+                expiry_date: moment.utc(frm.datesConfig?.expiryDate).local().format(),
                 thumbnail: frm.thumbnail,
                 upload: frm?.Upload?.upload,
                 equipmentList: frm.equipmentList,
@@ -414,8 +414,8 @@ function CreateEditPackage(props: any, ref: any) {
                         ? [{ mrp: 'free', duration: frm.programDetails.duration }]
                         : JSON.parse(frm.pricingDetail),
                 users_permissions_user: frm.user_permissions_user,
-                publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
-                expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
+                publishing_date: moment.utc(frm.datesConfig?.publishingDate).local().format(),
+                expiry_date: moment.utc(frm.datesConfig?.expiryDate).local().format(),
                 thumbnail: frm.thumbnail,
                 upload: frm?.Upload?.upload,
                 equipmentList: frm.equipmentList,
