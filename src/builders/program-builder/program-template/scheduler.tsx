@@ -1915,7 +1915,7 @@ const Schedular = (props: any, ref) => {
         sessionEndHour: number,
         sessionEndMinute: number
     ) => {
-        const currentTime = moment();
+        const currentTime = moment.utc();
         const expirySessionTime = moment(sessionDate)
             .add(sessionEndHour, 'hours')
             .add(sessionEndMinute, 'minutes');
