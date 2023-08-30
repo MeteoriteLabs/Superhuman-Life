@@ -1,5 +1,5 @@
 import { UseFormReset } from 'react-hook-form';
-import { ClientPlans, Data, FormData, SectionData, ServerPlans } from '../@types/pricingType';
+import { ClientPlans, Data, FormData, SectionData, ServerPlans } from '../types/pricingType';
 
 export const FormatReceivedDataToState = (plans: ServerPlans): ClientPlans[] => {
     return plans.map((plan): ClientPlans => {

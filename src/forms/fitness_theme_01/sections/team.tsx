@@ -1,30 +1,31 @@
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
-import style from '../style.module.css';
 import { Accordion, Button, Card, Form } from 'react-bootstrap';
-import { UPDATE_WEBSITE_SECTION } from './queries/pricing';
-import { GET_WEBSITE_SECTION } from './queries';
+import { UPDATE_WEBSITE_SECTION } from '../queries/features';
+import { GET_WEBSITE_SECTION } from '../queries';
 import { useContext, useEffect, useState } from 'react';
 import authContext from 'context/auth-context';
 import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
 import { useMutation, useQuery } from '@apollo/client';
 import { ArrowDownShort } from 'react-bootstrap-icons';
-import { Data, FormData, InputProps } from './@types/pricingType';
-import { InputComponent } from './components/PricingComponents';
-import { FormatStateToServerData, SetReceivingDataAndReset } from './libs/pricing';
 
-function Hero(): JSX.Element {
+import style from './style.module.css';
+// * --------------------- Types ---------------------
+
+type FormData = {
+    sectionId: number;
+    title: string;
+    description: string;
+    team: {
+        name: string;
+        description: string;
+        image: string;
+        designation: string;
+    }[];
+};
+
+function Team({ page }: { page: string }): JSX.Element {
     const auth = useContext(authContext);
     const [activeKey, setActiveKey] = useState('');
-    const planData: InputProps[] = [
-        'actual',
-        'buttonLink',
-        'buttonText',
-        'discount',
-        'features',
-        'price',
-        'recurring',
-        'title'
-    ];
 
     const handleToggle = (val: string) => {
         setActiveKey((prev) => (prev === val ? '' : val));
@@ -35,8 +36,8 @@ function Hero(): JSX.Element {
     const [initialValues, setInitialValues] = useState<FormData>({
         title: '',
         sectionId: 0,
-        plans: [],
-        currency: ''
+        description: '',
+        team: []
     });
 
     const { setChangemakerWebsiteState, changemakerWebsiteState } =
@@ -52,14 +53,14 @@ function Hero(): JSX.Element {
     } = useForm<FormData>({
         defaultValues: {
             title: '',
-            plans: [],
-            currency: '$'
+            description: '',
+            team: [{}]
         }
     });
 
     const { fields } = useFieldArray<FormData>({
         control,
-        name: 'plans'
+        name: 'team'
     });
 
     // * --------------------- Get the Website Section Data ---------------------
@@ -67,34 +68,43 @@ function Hero(): JSX.Element {
     useQuery(GET_WEBSITE_SECTION, {
         variables: {
             id: auth.userid,
-            sectionPage: 'Home',
-            sectionType: 'Pricing'
+            sectionPage: page,
+            sectionType: 'Team'
         },
 
-        onCompleted: (data: Data) => {
-            const sectionData = data.websiteSections.data[0].attributes.sectionData;
-            SetReceivingDataAndReset({ sectionData, reset, setInitialValues, data, initialValues });
+        onCompleted: (data) => {
+            if (!initialValues.team.length) {
+                setInitialValues({
+                    ...initialValues,
+                    sectionId: data.websiteSections.data[0].id,
+                    title: data.websiteSections.data[0].attributes.sectionData.title,
+                    description: data.websiteSections.data[0].attributes.sectionData.description,
+                    team: data.websiteSections.data[0].attributes.sectionData.team
+                });
+
+                reset({
+                    title: data.websiteSections.data[0].attributes.sectionData.title,
+                    description: data.websiteSections.data[0].attributes.sectionData.description,
+                    team: data.websiteSections.data[0].attributes.sectionData.team
+                });
+            }
         }
     });
 
     // * --------------------- Form Submission ---------------------
 
-    const [mutateFunction, { loading, error }] = useMutation(UPDATE_WEBSITE_SECTION);
+    const [mutateFunction, { loading }] = useMutation(UPDATE_WEBSITE_SECTION);
 
     const onSubmit = handleSubmit(async (formData) => {
         // ! Need to add image upload
-        const { title, plans, currency } = formData;
+        const { title, team } = formData;
 
         await mutateFunction({
             variables: {
                 id: initialValues.sectionId,
                 data: JSON.stringify({
                     title: title ? title : initialValues.title,
-                    plans:
-                        plans.length > 0
-                            ? FormatStateToServerData(plans)
-                            : FormatStateToServerData(initialValues.plans),
-                    currency: currency ? currency : initialValues.currency
+                    team: team.length ? team : initialValues.team
                 })
             }
         });
@@ -104,7 +114,7 @@ function Hero(): JSX.Element {
         loading
             ? setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: true })
             : setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: false });
-    }, [loading, error]);
+    }, [loading]);
 
     return (
         <div className={style.form_container}>
@@ -126,10 +136,10 @@ function Hero(): JSX.Element {
                     {errors.title && <p>{errors.title.message}</p>}
                 </Form.Group>
 
-                <Form.Group controlId="currency">
-                    <Form.Label className={style.label_text}>Currency</Form.Label>
+                <Form.Group controlId="description">
+                    <Form.Label className={style.label_text}>Description</Form.Label>
                     <Controller
-                        name="currency"
+                        name="description"
                         control={control}
                         render={({ field }) => (
                             <Form.Control
@@ -140,7 +150,7 @@ function Hero(): JSX.Element {
                             ></Form.Control>
                         )}
                     />
-                    {errors.title && <p>{errors.title.message}</p>}
+                    {errors.description && <p>{errors.description.message}</p>}
                 </Form.Group>
 
                 {fields.length
@@ -162,7 +172,7 @@ function Hero(): JSX.Element {
                                               fontSize: 14
                                           }}
                                       >
-                                          Pricing {index + 1}
+                                          {item.name}
                                       </p>
 
                                       <ArrowDownShort
@@ -177,15 +187,37 @@ function Hero(): JSX.Element {
 
                                   <Accordion.Collapse eventKey={`${index}`}>
                                       <Card.Body>
-                                          {planData.map((input: InputProps, id) => (
-                                              <span key={id + index}>
-                                                  <InputComponent
-                                                      input={input}
-                                                      index={index}
-                                                      control={control}
-                                                  />
-                                              </span>
-                                          ))}
+                                          <Form.Group>
+                                              <Form.Label>Title</Form.Label>
+                                              <Controller
+                                                  name={`team.${index}.name`}
+                                                  control={control}
+                                                  render={({ field }) => (
+                                                      <Form.Control
+                                                          type="text"
+                                                          style={{ fontSize: 14 }}
+                                                          as="input"
+                                                          {...field}
+                                                      ></Form.Control>
+                                                  )}
+                                              />
+                                          </Form.Group>
+                                          <Form.Group>
+                                              <Form.Label>Description</Form.Label>
+                                              <Controller
+                                                  name={`team.${index}.description`}
+                                                  control={control}
+                                                  render={({ field }) => (
+                                                      <Form.Control
+                                                          type="text"
+                                                          style={{ fontSize: 14 }}
+                                                          as="input"
+                                                          {...field}
+                                                      ></Form.Control>
+                                                  )}
+                                              />
+                                          </Form.Group>
+                                          <Form.Group></Form.Group>
                                       </Card.Body>
                                   </Accordion.Collapse>
                               </Card>
@@ -201,4 +233,4 @@ function Hero(): JSX.Element {
     );
 }
 
-export default Hero;
+export default Team;

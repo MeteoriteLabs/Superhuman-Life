@@ -1,13 +1,13 @@
 import { useForm, Controller } from 'react-hook-form';
 import { Button, Form } from 'react-bootstrap';
 import { useMutation, useQuery } from '@apollo/client';
-import { UPDATE_WEBSITE_SECTION } from './queries/hero';
-import { GET_WEBSITE_SECTION } from './queries';
+import { UPDATE_WEBSITE_SECTION } from '../queries/hero';
+import { GET_WEBSITE_SECTION } from '../queries';
 import authContext from 'context/auth-context';
 import { useContext, useEffect, useState } from 'react';
 import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
 import UploadImageToS3WithNativeSdk from 'components/upload/upload';
-import style from '../style.module.css';
+import style from './style.module.css';
 
 type FormData = {
     title: string;
@@ -15,7 +15,7 @@ type FormData = {
     image: string;
 };
 
-function Hero(): JSX.Element {
+function Hero({ page }: { page: string }): JSX.Element {
     const auth = useContext(authContext);
     const [initialValues, setInitialValues] = useState({
         title: '',
@@ -43,7 +43,7 @@ function Hero(): JSX.Element {
     useQuery(GET_WEBSITE_SECTION, {
         variables: {
             id: auth.userid,
-            sectionPage: 'Home',
+            sectionPage: page,
             sectionType: 'Hero'
         },
         onCompleted: (data) => {
