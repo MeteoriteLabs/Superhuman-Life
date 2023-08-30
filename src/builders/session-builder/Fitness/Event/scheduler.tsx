@@ -51,7 +51,7 @@ const Scheduler = (): JSX.Element => {
     const [showRescheduleModal, setShowRescheduleModal] = useState<boolean>(false);
     const [isReschedule, setIsReschedule] = useState<any>(false);
     const [total, setTotal] = useState<number>(10);
-    const [eventDate, setEventDate] = useState<any>()
+    const [eventDate, setEventDate] = useState<any>();
 
     const handleScrollScheduler = () => {
         ref.current?.scrollIntoView({ behaviour: 'smooth', inline: 'nearest' });
@@ -75,38 +75,42 @@ const Scheduler = (): JSX.Element => {
         onCompleted: (data) => loadTagData(data)
     });
 
-    const [tags, { data: get_tags }]  = useLazyQuery(GET_TAGS, {
-        variables: { tagId: tagId, userId: auth.userid,count: total },
+    const [tags, { data: get_tags }] = useLazyQuery(GET_TAGS, {
+        variables: { tagId: tagId, userId: auth.userid, count: total },
         onCompleted: (data) => {
-            setTotal(data.tags.meta.pagination.total)
-            console.log(data);
-//             let sessions = data.tags.map((currentTag) => currentTag.sessions.filter((currentSession) => currentSession.attributes
-// .session_date  ===            )            )
+            setTotal(data.tags.meta.pagination.total);
+
+            //             let sessions = data.tags.map((currentTag) => currentTag.sessions.filter((currentSession) => currentSession.attributes
+            // .session_date  ===            )            )
         }
     });
+    
     useEffect(() => {
-      tags();
-    },[total]);
+        tags();
+    }, [total]);
 
     function loadTagData(data: any) {
         setSchedulerSessions(data);
         const flattenData = flattenObj({ ...data });
-        console.log(flattenData);
+
         const total = [0];
         const clientValues = [...clientIds];
         const values = [...flattenData.tags[0]?.sessions];
-        const ids = [...sessionIds];
+
+        // const ids = [...sessionIds];
+        const ids = sessionIds ? [...sessionIds] : [];
         for (let i = 0; i < values.length; i++) {
             ids.push(values[i].id);
             if (values[i].tag === 'Classic') {
                 total[0] += 1;
             }
         }
+
         setEventDate(flattenData.tags[0].fitnesspackage.Start_date);
         setClientIds(clientValues);
         setSessionIds(ids);
         setTag(flattenData.tags[0]);
-    
+
         setIsReschedule(
             flattenData && flattenData.tags && flattenData.tags.length
                 ? moment(flattenData.tags[0].fitnesspackage.Start_date)
@@ -115,7 +119,7 @@ const Scheduler = (): JSX.Element => {
                 : false
         );
     }
-console.log(eventDate);
+
     function calculateLastSession(sessions) {
         if (sessions.length === 0) {
             return 'N/A';
@@ -303,9 +307,12 @@ console.log(eventDate);
                                                             <br />
                                                             <b>Event Date:</b>{' '}
                                                             {tag && tag.fitnesspackage
-                                                                ? moment(
-                                                                      tag.fitnesspackage.Start_date
-                                                                  ).format('DD MMMM, YYYY')
+                                                                ? moment
+                                                                      .utc(
+                                                                          tag.fitnesspackage
+                                                                              .Start_date
+                                                                      )
+                                                                      .format('DD MMMM, YYYY')
                                                                 : null}
                                                             <br />
                                                         </Col>
@@ -421,7 +428,6 @@ console.log(eventDate);
                                                             </tbody>
                                                         </Table>
                                                     </Col>
-                                                    
                                                 </Row>
                                                 <p>
                                                     Note: Create all the sessions to start accepting

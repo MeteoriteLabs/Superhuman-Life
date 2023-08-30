@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext, forwardRef } from 'react';
+import { useState, useEffect, useRef, useContext, forwardRef } from 'react';
 import {
     Modal,
     Button,
@@ -314,7 +314,7 @@ const Schedular = (props: any, ref) => {
             arr[d] = JSON.parse(JSON.stringify(schedulerDay));
         }
 
-        if (flattenData.sessionsBookings?.length > 0) {
+        if (flattenData.sessionsBookings?.length) {
             flattenData.sessionsBookings
                 ?.filter((itm) => itm.Is_restday === true)
                 .forEach((val) => {
@@ -365,6 +365,7 @@ const Schedular = (props: any, ref) => {
                         sessionDate: val.session.session_date
                     });
                 });
+               
         }
     }
 
@@ -462,7 +463,7 @@ const Schedular = (props: any, ref) => {
                 flattenData.tags &&
                 flattenData.tags.length &&
                 flattenData?.tags[0]?.sessions?.map((it: any, index: number) => {
-                    if (moment(it.session_date).isSameOrAfter(moment(props.startDate))) {
+                    if (moment.utc(it.session_date).isSameOrAfter(moment(props.startDate))) {
                         sessions.push(flattenData?.tags[0]?.sessions[index]);
                     }
                 });
@@ -522,6 +523,7 @@ const Schedular = (props: any, ref) => {
     }
 
     function calculateDay(startDate, sessionDate) {
+        
         const startDateFormatted = moment(startDate);
         startDateFormatted.set({ hour: 12, minute: 0, second: 0, millisecond: 0 });
         const sessionDateFormatted = moment(sessionDate);
@@ -775,7 +777,7 @@ const Schedular = (props: any, ref) => {
         setNewSessionId(newId);
         const values = [...templateSessionsIds];
         const holidayIds =
-            props.restDays.length > 0
+            props.restDays.length
                 ? props.restDays
                       .map((day: any) => day.id)
                       .join(',')
@@ -817,7 +819,7 @@ const Schedular = (props: any, ref) => {
                 moment(x.date).format('YYYY-MM-DD') === moment(addedEventDate).format('YYYY-MM-DD')
         );
         const availabilitySlots = availability ? [...availability.AllSlots] : [];
-        if (availabilitySlots.length > 0) {
+        if (availabilitySlots.length) {
             for (let x = 0; x < availabilitySlots.length; x++) {
                 if (
                     moment(timeInput.endTime, 'hh:mm:ss').isSameOrAfter(
@@ -866,7 +868,7 @@ const Schedular = (props: any, ref) => {
                     mode: e.mode,
                     type: e.type,
                     session_date:
-                        duplicatedDay.length === 0
+                        !duplicatedDay.length
                             ? e.sessionDate
                             : moment(duplicatedDay[0].day, 'Do, MMMM YYYY').format('YYYY-MM-DD'),
                     changemaker: auth.userid
@@ -1001,7 +1003,7 @@ const Schedular = (props: any, ref) => {
                 moment(x.date).format('YYYY-MM-DD') === moment(addedEventDate).format('YYYY-MM-DD')
         );
         const availabilitySlots = availability ? [...availability.AllSlots] : [];
-        if (availabilitySlots.length > 0) {
+        if (availabilitySlots.length) {
             for (let x = 0; x < availabilitySlots.length; x++) {
                 if (
                     moment(newEvent.endTime, 'hh:mm:ss').isSameOrAfter(
@@ -1659,7 +1661,7 @@ const Schedular = (props: any, ref) => {
 
     function handleAddRestDayFunc(day: number, type?: string) {
         const restDayData: any = moment(props.startDate)
-            .add(day - 1, 'days')
+            .add(day -1, 'days')
             .format('YYYY-MM-DD');
         if (type === 'day') {
             createTemplateRestDay({
@@ -1694,7 +1696,7 @@ const Schedular = (props: any, ref) => {
                 "name":
                     sessions[i].type === 'workout'
                         ? sessions[i].workout.workouttitle
-                        : sessions[i].activity.title
+                        : sessions[i].activity?.title
             }
         ]
              : [{
@@ -1913,7 +1915,7 @@ const Schedular = (props: any, ref) => {
         sessionEndHour: number,
         sessionEndMinute: number
     ) => {
-        const currentTime = moment.utc();
+        const currentTime = moment();
         const expirySessionTime = moment(sessionDate)
             .add(sessionEndHour, 'hours')
             .add(sessionEndMinute, 'minutes');
@@ -2040,7 +2042,6 @@ const Schedular = (props: any, ref) => {
                                         return (
                                             <div className="cell container" key={index}>
                                                 {min.map((m, index) => {
-                                                    
                                                     return (
                                                         <div
                                                             key={index}
@@ -2085,6 +2086,7 @@ const Schedular = (props: any, ref) => {
                                                             {arr[d][h][m] &&
                                                                 arr[d][h][m]?.map(
                                                                     (val, index: number) => {
+                                                                    
                                                                         val.index = index;
 
                                                                         return (
@@ -2104,21 +2106,11 @@ const Schedular = (props: any, ref) => {
                                                                                         ? false
                                                                                         : true
                                                                                 }
-                                                                                // onDrag={(e) => {
-                                                                                //      console.log(e.currentTarget.getAttribute(
-                                                                                //         'data-hour'
-                                                                                //     ), e.currentTarget.getAttribute(
-                                                                                //         'data-min'
-                                                                                //     ),  e.currentTarget.getAttribute(
-                                                                                //         'data-day'
-                                                                                //     ))
-                                                                                // }}
+                                                                                
                                                                                 onDragStart={(
                                                                                     e
                                                                                 ) => {
-                                                                                    // console.log(e, 'drag start', val, e.currentTarget.getAttribute(
-                                                                                    //     'data-hour'
-                                                                                    // ));
+                                                                                   
                                                                                     e.dataTransfer.setData(
                                                                                         'scheduler-event',
                                                                                         JSON.stringify(

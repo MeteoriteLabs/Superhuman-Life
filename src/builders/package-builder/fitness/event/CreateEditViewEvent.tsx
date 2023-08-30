@@ -333,8 +333,7 @@ function CreateEditEvent(props: any, ref: any) {
                 packagename: frm.packageName,
                 channelinstantBooking: frm.channelinstantBooking,
                 expiry_date: moment(frm.datesConfig.expiryDate).toISOString(),
-                // level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
-                // Intensity: ENUM_FITNESSPACKAGE_INTENSITY[frm.intensity],
+
                 equipmentList:
                     frm?.equipment?.length > 0
                         ? frm.equipment
@@ -382,8 +381,8 @@ function CreateEditEvent(props: any, ref: any) {
                     .map((item: any) => item.id)
                     .join(', ')
                     .split(', '),
-                Start_date: moment(frm.dates.startDate).toISOString(),
-                End_date: moment(frm.dates.startDate).toISOString(),
+                Start_date: moment.utc(frm.dates.startDate).local().format(),
+                End_date: moment.utc(frm.dates.startDate).local().format(),
                 Course_details: frm.courseDetails.details,
                 thumbnail: frm.thumbnail,
                 videoUrl: frm.VideoUrl,
