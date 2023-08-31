@@ -418,7 +418,7 @@ function CreateEditChannel(props: any, ref: any) {
                 packagename: frm.channelName,
                 channelinstantBooking: JSON.parse(frm.channelinstantBooking).instantBooking,
                 Is_free_demo: JSON.parse(frm.channelinstantBooking).freeDemo,
-                expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
+                expiry_date:  moment.utc(frm.datesConfig?.expiryDate).local().format(),
                 level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
                 equipmentList:
                     frm?.equipment?.length > 0
@@ -442,7 +442,7 @@ function CreateEditChannel(props: any, ref: any) {
                     frm.pricing === 'free'
                         ? [{ mrp: 'free' }]
                         : JSON.parse(frm.pricing).filter((item: any) => item.mrp !== null),
-                publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
+                publishing_date:  moment.utc(frm.datesConfig?.publishingDate).local().format(),
                 tags: frm?.tag,
                 users_permissions_user: frm.user_permissions_user,
                 fitness_package_type: findPackageType(operation.packageType),
@@ -454,8 +454,8 @@ function CreateEditChannel(props: any, ref: any) {
                     .map((item) => item.id)
                     .join(', ')
                     .split(', '),
-                Start_date: moment.utc(frm.dates.startDate).format(),
-                End_date: moment(frm.dates.startDate).add(360, 'days').toISOString()
+                Start_date: moment.utc(frm.dates.startDate).local().format(),
+                End_date: moment.utc(frm.dates.startDate).add(360, 'days').local().format()
             }
         });
     }
@@ -481,7 +481,7 @@ function CreateEditChannel(props: any, ref: any) {
                 packagename: frm.channelName,
                 channelinstantBooking: JSON.parse(frm.channelinstantBooking).instantBooking,
                 Is_free_demo: JSON.parse(frm.channelinstantBooking).freeDemo,
-                expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
+                expiry_date:  moment.utc(frm.datesConfig?.expiryDate).local().format(),
                 level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
                 equipmentList:
                     frm?.equipment?.length > 0
@@ -505,7 +505,7 @@ function CreateEditChannel(props: any, ref: any) {
                     frm.pricing === 'free'
                         ? [{ mrp: 'free' }]
                         : JSON.parse(frm.pricing).filter((item: any) => item.mrp !== null),
-                publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
+                        publishing_date:  moment.utc(frm.datesConfig?.publishingDate).local().format(),
                 tags: frm?.tag,
                 users_permissions_user: frm.user_permissions_user,
                 fitness_package_type: findPackageType(operation.packageType),
@@ -516,8 +516,9 @@ function CreateEditChannel(props: any, ref: any) {
                     .map((item: any) => item.id)
                     .join(', ')
                     .split(', '),
-                Start_date: moment(frm.dates.startDate).toISOString(),
-                End_date: moment(frm.dates.startDate).add(360, 'days').toISOString()
+
+                Start_date: moment.utc(frm.dates.startDate).local().format(),
+                End_date: moment.utc(frm.dates.startDate).add(360, 'days').local().format()
             }
         });
     }
