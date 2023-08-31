@@ -20,7 +20,6 @@ Sentry.init({
     replaysOnErrorSampleRate: 1.0
 });
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App />);
+ReactDOM.render(<App />, document.getElementById('root'));
 
 reportWebVitals();

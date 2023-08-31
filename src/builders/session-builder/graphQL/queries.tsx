@@ -289,15 +289,15 @@ export const GET_TAG = gql`
                 id
                 attributes {
                     tag_name
-                    sessions{
-                        data{
+                    sessions {
+                        data {
                             id
-                            attributes{
+                            attributes {
                                 session_date
-                                sessions_bookings{
-                                    data{
+                                sessions_bookings {
+                                    data {
                                         id
-                                        attributes{
+                                        attributes {
                                             session_date
                                         }
                                     }
@@ -306,19 +306,19 @@ export const GET_TAG = gql`
                         }
                     }
 
-                    client_packages{
-                        data{
+                    client_packages {
+                        data {
                             id
-                            attributes{
+                            attributes {
                                 effective_date
                             }
                         }
                     }
 
-                    fitnesspackage{
-                        data{
+                    fitnesspackage {
+                        data {
                             id
-                            attributes{
+                            attributes {
                                 Start_date
                                 End_date
                             }
@@ -826,6 +826,93 @@ export const GET_SESSIONS_FROM_TAGS = gql`
                     users_permissions_user: { id: { eq: $id } }
                     fitness_package_type: { type: { eq: "Custom Fitness" } }
                 }
+            }
+        ) {
+            meta {
+                pagination {
+                    pageCount
+                    total
+                }
+            }
+            data {
+                id
+                attributes {
+                    tag_name
+                    sessions {
+                        data {
+                            id
+                            attributes {
+                                day_of_program
+                                tag
+                                type
+                                end_time
+                                start_time
+                                Is_restday
+                                mode
+                                session_date
+                                activity {
+                                    data {
+                                        id
+                                        attributes {
+                                            title
+                                        }
+                                    }
+                                }
+                                activity_target
+                                workout {
+                                    data {
+                                        id
+                                        attributes {
+                                            workouttitle
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    client_packages {
+                        data {
+                            id
+                            attributes {
+                                effective_date
+                                accepted_date
+                                users_permissions_user {
+                                    data {
+                                        id
+                                        attributes {
+                                            username
+                                        }
+                                    }
+                                }
+                                fitnesspackages {
+                                    data {
+                                        id
+                                        attributes {
+                                            packagename
+                                            duration
+                                            mode
+                                            Status
+                                            expiry_date
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+export const GET_TAGS = gql`
+    query getSessionsFromTags($userId: ID, $tagId: ID, $count: Int) {
+        tags(
+            pagination: {pageSize: $count}
+            filters: {
+                id: { ne: $tagId }
+                fitnesspackage: { users_permissions_user: { id: { eq: $userId } } }
             }
         ) {
             meta {

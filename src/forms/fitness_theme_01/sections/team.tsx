@@ -73,7 +73,7 @@ function Team({ page }: { page: string }): JSX.Element {
         },
 
         onCompleted: (data) => {
-            if (initialValues.team.length === 0) {
+            if (!initialValues.team.length) {
                 setInitialValues({
                     ...initialValues,
                     sectionId: data.websiteSections.data[0].id,

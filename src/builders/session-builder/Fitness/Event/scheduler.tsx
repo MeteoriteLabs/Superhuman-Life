@@ -17,15 +17,20 @@ import {
     Link,
     flattenObj,
     SideNav,
-    Loader
+    useContext,
+    GET_TAGS,
+    useLazyQuery,
+    useEffect
 } from './import';
 import 'react-calendar/dist/Calendar.css';
 import '../../profilepicture.css';
 import '../Group/actionButton.css';
 import EditProgramName from '../../EditProgramName/index';
 import Reschedule from './Reschedule';
+import AuthContext from 'context/auth-context';
 
 const Scheduler = (): JSX.Element => {
+    const auth = useContext(AuthContext);
     const last = window.location.pathname.split('/').reverse();
     const tagId = window.location.pathname.split('/').pop();
     // const [show, setShow] = useState<boolean>(false);
@@ -45,6 +50,8 @@ const Scheduler = (): JSX.Element => {
     const [showProgramNameModal, setShowProgramNameModal] = useState<boolean>(false);
     const [showRescheduleModal, setShowRescheduleModal] = useState<boolean>(false);
     const [isReschedule, setIsReschedule] = useState<any>(false);
+    const [total, setTotal] = useState<number>(10);
+    const [eventDate, setEventDate] = useState<any>();
 
     const handleScrollScheduler = () => {
         ref.current?.scrollIntoView({ behaviour: 'smooth', inline: 'nearest' });
@@ -68,22 +75,42 @@ const Scheduler = (): JSX.Element => {
         onCompleted: (data) => loadTagData(data)
     });
 
+    const [tags, { data: get_tags }] = useLazyQuery(GET_TAGS, {
+        variables: { tagId: tagId, userId: auth.userid, count: total },
+        onCompleted: (data) => {
+            setTotal(data.tags.meta.pagination.total);
+
+            //             let sessions = data.tags.map((currentTag) => currentTag.sessions.filter((currentSession) => currentSession.attributes
+            // .session_date  ===            )            )
+        }
+    });
+    
+    useEffect(() => {
+        tags();
+    }, [total]);
+
     function loadTagData(data: any) {
         setSchedulerSessions(data);
         const flattenData = flattenObj({ ...data });
+
         const total = [0];
         const clientValues = [...clientIds];
         const values = [...flattenData.tags[0]?.sessions];
-        const ids = [...sessionIds];
+
+        // const ids = [...sessionIds];
+        const ids = sessionIds ? [...sessionIds] : [];
         for (let i = 0; i < values.length; i++) {
             ids.push(values[i].id);
             if (values[i].tag === 'Classic') {
                 total[0] += 1;
             }
         }
+
+        setEventDate(flattenData.tags[0].fitnesspackage.Start_date);
         setClientIds(clientValues);
         setSessionIds(ids);
         setTag(flattenData.tags[0]);
+
         setIsReschedule(
             flattenData && flattenData.tags && flattenData.tags.length
                 ? moment(flattenData.tags[0].fitnesspackage.Start_date)
@@ -142,8 +169,6 @@ const Scheduler = (): JSX.Element => {
         handleScrollScheduler();
     }
 
-    // if (!show) return <Loader msg="loading scheduler..." />;
-    // else
     return (
         <Row noGutters className="bg-light  py-4 mb-5  min-vh-100">
             <Col lg={collapse ? '11' : '10'} className="pr-2 pl-3 mb-5">
@@ -282,9 +307,12 @@ const Scheduler = (): JSX.Element => {
                                                             <br />
                                                             <b>Event Date:</b>{' '}
                                                             {tag && tag.fitnesspackage
-                                                                ? moment(
-                                                                      tag.fitnesspackage.Start_date
-                                                                  ).format('DD MMMM, YYYY')
+                                                                ? moment
+                                                                      .utc(
+                                                                          tag.fitnesspackage
+                                                                              .Start_date
+                                                                      )
+                                                                      .format('DD MMMM, YYYY')
                                                                 : null}
                                                             <br />
                                                         </Col>
@@ -400,29 +428,6 @@ const Scheduler = (): JSX.Element => {
                                                             </tbody>
                                                         </Table>
                                                     </Col>
-                                                    {/* <Col>
-                                                            <Calendar
-                                                                className="disabled"
-                                                                // tileClassName={tileContent}
-                                                                // onChange={onChange}
-                                                                // onActiveStartDateChange={({ action }) => {
-                                                                //     action === 'next'
-                                                                //         ? setMonth(month + 1)
-                                                                //         : setMonth(month - 1);
-                                                                // }}
-                                                                // value={value}
-                                                                minDate={moment()
-                                                                    .startOf('month')
-                                                                    .toDate()}
-                                                                maxDate={moment()
-                                                                    .add(2, 'months')
-                                                                    .toDate()}
-                                                                maxDetail="month"
-                                                                minDetail="month"
-                                                                next2Label={null}
-                                                                prev2Label={null}
-                                                            />
-                                                        </Col> */}
                                                 </Row>
                                                 <p>
                                                     Note: Create all the sessions to start accepting
