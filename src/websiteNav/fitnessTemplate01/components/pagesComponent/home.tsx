@@ -7,9 +7,6 @@ function Home(): JSX.Element {
     const { setChangemakerWebsiteState, changemakerWebsiteState } =
         useContext(ChangeMakerWebsiteContext);
 
-    useEffect(() => {
-        console.log(changemakerWebsiteState.section);
-    }, [changemakerWebsiteState.section]);
     return (
         <div>
             <div
@@ -20,7 +17,6 @@ function Home(): JSX.Element {
                         ...changemakerWebsiteState,
                         section: 'Hero'
                     });
-                    console.log(changemakerWebsiteState, 1);
                 }}
             >
                 <WindowFullscreen /> <span className={styles.section_title}>Hero</span>
@@ -45,7 +41,6 @@ function Home(): JSX.Element {
                         ...changemakerWebsiteState,
                         section: 'Cta'
                     });
-                    console.log();
                 }}
             >
                 <WindowFullscreen />

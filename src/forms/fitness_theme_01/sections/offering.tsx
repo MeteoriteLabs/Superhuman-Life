@@ -59,7 +59,7 @@ function Offering({ type }: { type: string }): JSX.Element {
         }
     });
 
-    const [mutateFunction, { loading, error }] = useMutation(UPDATE_WEBSITE_SECTION);
+    const [mutateFunction, { loading }] = useMutation(UPDATE_WEBSITE_SECTION);
 
     const onSubmit = handleSubmit(async (formData) => {
         const { title, description } = formData;
@@ -77,7 +77,7 @@ function Offering({ type }: { type: string }): JSX.Element {
         loading
             ? setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: true })
             : setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: false });
-    }, [loading, error]);
+    }, [loading]);
 
     return (
         <div className={style.form_container}>

@@ -6,7 +6,7 @@ import style from './info.module.css';
 import { FETCH_TEMPLATE_BY_ID } from '../queries/templates';
 import { useLazyQuery } from '@apollo/client';
 import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 
 function InfoModal({
     data,
@@ -26,26 +26,19 @@ function InfoModal({
     const [getUserSelectedTemplate] = useLazyQuery(FETCH_TEMPLATE_BY_ID);
 
     const setTemplateAsSelected = () => {
-        // call website templates and get the sections for this template
-        // console.log('template', data);
         getUserSelectedTemplate({
             variables: {
                 Id: data.id
             },
             onCompleted: (data) => {
-                // console.log('templateData', data);
                 setSelectedTemplateSections(data);
             }
         });
 
         // create a iterator that goes through each section and creates a new section using a mutation
-        selectedTemplateSections?.templateById?.sections?.map((section: any) => {
-            // console.log('section', section);
-            // console.log('section', section.sectionName);
-            // console.log('section', section.sectionType);
-            // console.log('section', section.sectionData);
-            // console.log('section', section.sectionOrder);
-        });
+        // selectedTemplateSections?.templateById?.sections?.map((section: any) => {
+
+        // });
 
         // set the template as selected in changemakerWebsite table using a mutation and give it subdomain using user id
         setInfoData(null);
