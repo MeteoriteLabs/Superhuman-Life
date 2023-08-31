@@ -44,7 +44,7 @@ export default function Dashboard(): JSX.Element {
                                             : index
                                     ]
                                 }`,
-                                height: '100vh'
+                                height: '94vh'
                             }}
                         >
                             <img style={{ width: data.imageWidth }} src={data.image} alt="icon" />
@@ -67,7 +67,7 @@ export default function Dashboard(): JSX.Element {
                                             : index
                                     ]
                                 }`,
-                                height: '31vh'
+                                height: '45vh'
                             }}
                         >
                             <img style={{ width: data.imageWidth }} src={data.image} alt="icon" />
