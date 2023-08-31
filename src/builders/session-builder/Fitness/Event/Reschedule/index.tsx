@@ -51,7 +51,6 @@ export default function ExtendProgram(props: Props): JSX.Element {
     });
 
     const [updatePackage] = useMutation(UPDATE_PACKAGE);
-
     const [updateSession] = useMutation(UPDATE_SESSION);
     const [updateClientPackage] = useMutation(UPDATE_CLIENT_PACKAGE);
 

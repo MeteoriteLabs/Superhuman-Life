@@ -2,18 +2,18 @@ import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import { Accordion, Button, Card, Form } from 'react-bootstrap';
 import { useContext, useEffect, useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
-import { UPDATE_WEBSITE_SECTION } from './queries/testimonials';
+import { UPDATE_WEBSITE_SECTION } from '../queries/testimonials';
 import authContext from 'context/auth-context';
-import { SetReceivingDataAndReset } from './libs/testimonials';
-import { Data, FormData, InputProps } from './@types/testimonialsType';
+import { SetReceivingDataAndReset } from '../libs/testimonials';
+import { Data, FormData, InputProps } from '../types/testimonialsType';
 import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
-import { GET_WEBSITE_SECTION } from './queries';
-import { InputComponent } from './components/TestimonialsComponents';
+import { GET_WEBSITE_SECTION } from '../queries';
+import { InputComponent } from '../components/TestimonialsComponents';
 import { ArrowDownShort } from 'react-bootstrap-icons';
-import style from '../style.module.css';
+import style from './style.module.css';
 import UploadImageToS3WithNativeSdk from 'components/upload/upload';
 
-function Hero(): JSX.Element {
+function Testimonials({ page }: { page: string }): JSX.Element {
     const auth = useContext(authContext);
     const [activeKey, setActiveKey] = useState('');
 
@@ -57,7 +57,7 @@ function Hero(): JSX.Element {
     useQuery(GET_WEBSITE_SECTION, {
         variables: {
             id: auth.userid,
-            sectionPage: 'Home',
+            sectionPage: page,
             sectionType: 'Testimonials'
         },
 
@@ -196,4 +196,4 @@ function Hero(): JSX.Element {
     );
 }
 
-export default Hero;
+export default Testimonials;

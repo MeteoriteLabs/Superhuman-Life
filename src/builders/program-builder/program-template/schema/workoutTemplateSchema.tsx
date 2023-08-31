@@ -1,7 +1,7 @@
-import WorkoutList from '../../../../components/customWidgets/workoutList';
-import TimeField from '../../../../components/customWidgets/timeField';
+import WorkoutList from 'components/customWidgets/workoutList';
+import TimeField from 'components/customWidgets/timeField';
 import DaysInput from '../daysInput';
-import ClassTypeSelect from '../../../../components/customWidgets/classTypeSelect';
+import ClassTypeSelect from 'components/customWidgets/classTypeSelect';
 
 export const widgets = {
     workoutList: WorkoutList,
