@@ -56,6 +56,8 @@ const Schedular = (props: any, ref) => {
     const [del, setDel] = useState<boolean>(false);
     const [duplicate, setDuplicate] = useState<boolean>(false);
     const [event, setEvent] = useState<any>({});
+    const [blockedArr, setBlockedArr] = useState<any[]>([]);
+
     const [arr, setArr] = useState<any[]>([]);
     const [arr2, setarr2] = useState<any>({});
     // const [program, setProgram] = useState('none');
@@ -74,6 +76,7 @@ const Schedular = (props: any, ref) => {
     // const [showRestDay, setShowRestDay] = useState<boolean>(false);
     const [isUpdated, setIsUpdated] = useState<boolean>(false);
 
+    const blockedSlots: any[] = [];
     const DELETE_REST_DAY = gql`
         mutation deleteRestDay($id: ID!) {
             deleteSession(id: $id) {
@@ -346,7 +349,7 @@ const Schedular = (props: any, ref) => {
                             val.session.activity === null
                                 ? val.session.workout.workouttitle
                                 : val.session.activity.title,
-                        color: 'skyblue',
+                        color: '#FFFDD1',
                         day: calculateDay(props.startDate, val.session.session_date),
                         hour: startTimeHour,
                         min: startTimeMinute,
@@ -365,7 +368,6 @@ const Schedular = (props: any, ref) => {
                         sessionDate: val.session.session_date
                     });
                 });
-               
         }
     }
 
@@ -419,7 +421,7 @@ const Schedular = (props: any, ref) => {
                 }
                 arr[val.day_of_program][startTimeHour][startTimeMinute].push({
                     title: val.activity === null ? val.workout.workouttitle : val.activity.title,
-                    color: 'skyblue',
+                    color: '#FFFDD1',
                     day: val.day_of_program,
                     hour: startTimeHour,
                     min: startTimeMinute,
@@ -454,7 +456,7 @@ const Schedular = (props: any, ref) => {
         for (let d = 1; d <= props.days; d++) {
             arr[d] = JSON.parse(JSON.stringify(schedulerDay));
         }
-        // flattenData.tags[0]?.sessions?.filter((data: any) => { return moment(props.startDate).isSameOrBefore(moment(data.session_date))});
+        console.log(arr);
 
         const sessions: any = [];
         if (!window.location.pathname.includes('classic')) {
@@ -476,6 +478,7 @@ const Schedular = (props: any, ref) => {
                     sessions.push(flattenData.tags[0]?.sessions[index]);
                 });
         }
+        console.log(sessions);
         if (sessions.length) {
             sessions
                 .filter((itm) => itm.Is_restday === false)
@@ -502,7 +505,7 @@ const Schedular = (props: any, ref) => {
                     arr[val.day_of_program][startTimeHour][startTimeMinute].push({
                         title:
                             val.activity === null ? val.workout?.workouttitle : val.activity.title,
-                        color: 'skyblue',
+                        color: '#FFFDD1',
                         day: val.day_of_program,
                         hour: startTimeHour,
                         min: startTimeMinute,
@@ -520,10 +523,73 @@ const Schedular = (props: any, ref) => {
                     });
                 });
         }
+        
+        // for (let d = 1; d <= props.days; d++) {
+        //     blockedArr[d] = JSON.parse(JSON.stringify(schedulerDay));
+        // }
+        // console.log(blockedArr);
+
+        if (props.blockedSessions && props.blockedSessions?.length) {
+            props.blockedSessions
+                .filter((itm) => itm.Is_restday === false)
+                .forEach((val) => {
+                    console.log(val);
+                    const startTimeHour: any = `${
+                        val.start_time
+                            ? Number(val.start_time.split(':')[0]) < 10
+                                ? `${Number(val.start_time.split(':')[0])}`
+                                : val.start_time.split(':')[0]
+                            : '0'
+                    }`;
+                    const startTimeMinute: any = `${
+                        val.start_time
+                            ? Number(val.start_time.split(':')[1]) < 10
+                                ? `${Number(val.start_time.split(':')[1])}`
+                                : val.start_time.split(':')[1]
+                            : '0'
+                    }`;
+                    const endTimeHour: any = `${val.end_time ? val.end_time.split(':')[0] : '0'} `;
+                    const endTimeMin: any = `${val.end_time ? val.end_time.split(':')[1] : '0'}`;
+                    console.log(
+                        startTimeHour,
+                        startTimeMinute,
+                        endTimeHour,
+                        endTimeMin,
+                        val.day_of_program
+                    );
+                    if (!arr[val.day_of_program][startTimeHour][startTimeMinute]) {
+                        arr[val.day_of_program][startTimeHour][startTimeMinute] = [];
+                    }
+                    console.log(arr);
+                    // arr[val.day_of_program][startTimeHour][startTimeMinute] = 1;
+                    arr[val.day_of_program][startTimeHour][startTimeMinute] = [{
+                        title:
+                            val.activity === null ? val.workout?.workouttitle : val.activity.title,
+                        color: 'red',
+                        day: val.day_of_program,
+                        hour: startTimeHour,
+                        min: startTimeMinute,
+                        type: val.type,
+                        endHour: endTimeHour,
+                        endMin: endTimeMin,
+                        sessions_bookings: val.sessions_bookings && val.sessions_bookings.length ? val.sessions_bookings.length : null ,
+                        id: val.activity === null ? val.workout?.id : val.activity.id,
+                        mode: val.mode ? val.mode : null,
+                        tag: val.tag,
+                        sessionId: val.id,
+                        activityTarget: val.activity === null ? null : val.activity_target,
+                        sessionDate: val.session_date
+                        //     isProgram: val.Is_program_template
+                    }];
+                });
+        }
+        // setBlockedArr(blockedArr);
+        console.log(arr);
     }
 
+    console.log(blockedArr, props.blockedSessions, arr);
+
     function calculateDay(startDate, sessionDate) {
-        
         const startDateFormatted = moment(startDate);
         startDateFormatted.set({ hour: 12, minute: 0, second: 0, millisecond: 0 });
         const sessionDateFormatted = moment(sessionDate);
@@ -776,13 +842,12 @@ const Schedular = (props: any, ref) => {
     function handleUpdateFitnessPrograms(newId: any) {
         setNewSessionId(newId);
         const values = [...templateSessionsIds];
-        const holidayIds =
-            props.restDays.length
-                ? props.restDays
-                      .map((day: any) => day.id)
-                      .join(',')
-                      .split(',')
-                : [];
+        const holidayIds = props.restDays.length
+            ? props.restDays
+                  .map((day: any) => day.id)
+                  .join(',')
+                  .split(',')
+            : [];
         values.push(newId);
         updateFitnessProgramSessions({
             variables: {
@@ -867,10 +932,9 @@ const Schedular = (props: any, ref) => {
                     tag: e.tag,
                     mode: e.mode,
                     type: e.type,
-                    session_date:
-                        !duplicatedDay.length
-                            ? e.sessionDate
-                            : moment(duplicatedDay[0].day, 'Do, MMMM YYYY').format('YYYY-MM-DD'),
+                    session_date: !duplicatedDay.length
+                        ? e.sessionDate
+                        : moment(duplicatedDay[0].day, 'Do, MMMM YYYY').format('YYYY-MM-DD'),
                     changemaker: auth.userid
                 }
             });
@@ -1395,7 +1459,7 @@ const Schedular = (props: any, ref) => {
             }
         });
     }
-
+    console.log(props.blockedSessions);
     const [ErrorModal, setErrorModal] = useState<boolean>(false);
 
     // this function handles drag and drop of an even once they confirm the drop.
@@ -1661,7 +1725,7 @@ const Schedular = (props: any, ref) => {
 
     function handleAddRestDayFunc(day: number, type?: string) {
         const restDayData: any = moment(props.startDate)
-            .add(day -1, 'days')
+            .add(day - 1, 'days')
             .format('YYYY-MM-DD');
         if (type === 'day') {
             createTemplateRestDay({
@@ -1683,32 +1747,34 @@ const Schedular = (props: any, ref) => {
     useEffect(() => {
         const sessionsObj = {};
         const tag = flattenObj({ ...props.schedulerSessions.tags });
-        
+
         const sessions =
             tag && tag.length && tag[0].sessions && tag[0].sessions.length ? tag[0].sessions : [];
-    
-        for (let i = 0; i < sessions.length; i++) {
-            sessionsObj[sessions[i].session_date] = sessionsObj[sessions[i].session_date] ?
-            [...sessionsObj[sessions[i].session_date], 
-            {
-                "startTime": sessions[i].start_time,
-                "endTime": sessions[i].end_time,
-                "name":
-                    sessions[i].type === 'workout'
-                        ? sessions[i].workout.workouttitle
-                        : sessions[i].activity?.title
-            }
-        ]
-             : [{
-                "startTime": sessions[i].start_time,
-                "endTime": sessions[i].end_time,
-                "name":
-                    sessions[i].type === 'workout'
-                        ? sessions[i].workout.workouttitle
-                        : sessions[i].activity?.title
-            }];
-        }
 
+        for (let i = 0; i < sessions.length; i++) {
+            sessionsObj[sessions[i].session_date] = sessionsObj[sessions[i].session_date]
+                ? [
+                      ...sessionsObj[sessions[i].session_date],
+                      {
+                          startTime: sessions[i].start_time,
+                          endTime: sessions[i].end_time,
+                          name:
+                              sessions[i].type === 'workout'
+                                  ? sessions[i].workout.workouttitle
+                                  : sessions[i].activity?.title
+                      }
+                  ]
+                : [
+                      {
+                          startTime: sessions[i].start_time,
+                          endTime: sessions[i].end_time,
+                          name:
+                              sessions[i].type === 'workout'
+                                  ? sessions[i].workout.workouttitle
+                                  : sessions[i].activity?.title
+                      }
+                  ];
+        }
     }, [props]);
 
     // it helps render the first row in the calendar(which displays the date and other data)
@@ -2038,6 +2104,7 @@ const Schedular = (props: any, ref) => {
                                                 : handle12HourFormat(h)}
                                         </span>
                                     </div>
+
                                     {days.map((d, index) => {
                                         return (
                                             <div className="cell container" key={index}>
@@ -2086,31 +2153,33 @@ const Schedular = (props: any, ref) => {
                                                             {arr[d][h][m] &&
                                                                 arr[d][h][m]?.map(
                                                                     (val, index: number) => {
-                                                                    
+                                                                        console.log(val);
                                                                         val.index = index;
 
                                                                         return (
                                                                             <div
                                                                                 key={index}
                                                                                 onClick={() => {
-                                                                                    setEvent(val);
+                                                                                    if(val.color !== 'red'){
+                                                                                        setEvent(val);
                                                                                     setClickedSessionId(
                                                                                         val.sessionId
                                                                                     );
+                                                                                    }
+                                                                                    
                                                                                 }}
                                                                                 id="dragMe"
-                                                                                className="schedular-content draggable"
+                                                                                className={`${val.color === 'red' ? 'schedular-blocked-content' : 'schedular-content draggable'}`}
+                                                                                
                                                                                 draggable={
                                                                                     val.type ===
-                                                                                    'restday'
+                                                                                    'restday'|| val.color === 'red'
                                                                                         ? false
                                                                                         : true
                                                                                 }
-                                                                                
                                                                                 onDragStart={(
                                                                                     e
                                                                                 ) => {
-                                                                                   
                                                                                     e.dataTransfer.setData(
                                                                                         'scheduler-event',
                                                                                         JSON.stringify(
@@ -2130,9 +2199,11 @@ const Schedular = (props: any, ref) => {
                                                                                         ) /
                                                                                             60
                                                                                     }px`,
-                                                                                    backgroundColor:
-                                                                                        '#FFFDD1',
-                                                                                    color: '#000',
+                                                                                    // backgroundColor:
+                                                                                    //     '#FFFDD1',
+                                                                                        backgroundColor:
+                                                                                        `${val.color}`,
+                                                                                    color: `${val.color === 'red' ? '#fff' : '#000'}`,
                                                                                     // background: 'rgb(135,206,235)',
                                                                                     width: `${
                                                                                         val.type ===
@@ -2162,7 +2233,7 @@ const Schedular = (props: any, ref) => {
                                                                                         '50% !important',
                                                                                     maxWidth:
                                                                                         '50% !important',
-                                                                                    cursor: 'pointer',
+                                                                                    cursor: `${val.color === 'red' ? '' : 'pointer'}`,
                                                                                     left: `${
                                                                                         index *
                                                                                         (100 /
@@ -2248,7 +2319,6 @@ const Schedular = (props: any, ref) => {
                                                                                                       val.endMin
                                                                                                   )
                                                                                               )}`}
-            
                                                                                     </div>
                                                                                     <div
                                                                                         className="event-time d-flex justify-content-end"
@@ -2277,6 +2347,8 @@ const Schedular = (props: any, ref) => {
                                             </div>
                                         );
                                     })}
+
+                                   
                                 </div>
                             );
                         })}
@@ -2325,7 +2397,7 @@ const Schedular = (props: any, ref) => {
                                             >
                                                 <i
                                                     className="fas fa-pencil-alt fa-lg"
-                                                    onClick={(e) => {
+                                                    onClick={() => {
                                                         setEdit(!edit);
                                                     }}
                                                     style={{

@@ -49,9 +49,10 @@ const Scheduler = (): JSX.Element => {
     const ref = useRef<any>(null);
     const [showProgramNameModal, setShowProgramNameModal] = useState<boolean>(false);
     const [showRescheduleModal, setShowRescheduleModal] = useState<boolean>(false);
-    const [isReschedule, setIsReschedule] = useState<any>(false);
+    const [isReschedule, setIsReschedule] = useState<boolean>(false);
     const [total, setTotal] = useState<number>(10);
     const [eventDate, setEventDate] = useState<any>();
+    const [blockedSessions, setBlockedSessions] = useState<any>();
 
     const handleScrollScheduler = () => {
         ref.current?.scrollIntoView({ behaviour: 'smooth', inline: 'nearest' });
@@ -79,12 +80,19 @@ const Scheduler = (): JSX.Element => {
         variables: { tagId: tagId, userId: auth.userid, count: total },
         onCompleted: (data) => {
             setTotal(data.tags.meta.pagination.total);
+            const flattenData = flattenObj({ ...data });
+            
+            const sessions = flattenData.tags && flattenData.tags.length && flattenData.tags.map((currentTag) =>
+                currentTag.sessions).flat().filter(
+                    (currentSession) => {
+                        return currentSession.session_date === moment(eventDate).format("YYYY-MM-DD")
+                    }
+                );
 
-            //             let sessions = data.tags.map((currentTag) => currentTag.sessions.filter((currentSession) => currentSession.attributes
-            // .session_date  ===            )            )
+            setBlockedSessions(sessions);
         }
     });
-    
+
     useEffect(() => {
         tags();
     }, [total]);
@@ -471,6 +479,7 @@ const Scheduler = (): JSX.Element => {
                                     sessionFilter={sessionFilter} //string
                                     program={program} //string
                                     ref={ref}
+                                    blockedSessions={blockedSessions}
                                 />
                             </div>
                         </Col>

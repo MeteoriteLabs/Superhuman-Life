@@ -22,13 +22,15 @@ import {
     Button,
     SideNav,
     Form,
-    CollapsibleScheduler
+    CollapsibleScheduler,
+    GET_TAGS, useLazyQuery, useContext
 } from './import';
 import '../../profilepicture.css';
 import '../Group/actionButton.css';
 import 'react-calendar/dist/Calendar.css';
 import EditProgramName from '../../EditProgramName/index';
 import Reschedule from './Reschedule';
+import AuthContext from 'context/auth-context';
 
 const Scheduler: React.FC = () => {
     const last = window.location.pathname.split('/').reverse();
@@ -53,6 +55,9 @@ const Scheduler: React.FC = () => {
     const [showRescheduleModal, setShowRescheduleModal] = useState<boolean>(false);
     const [showCollapseView, setShowCollapseView] = useState<boolean>(false);
     const [isReschedule, setIsReschedule] = useState<any>(false);
+    const [blockedSessions, setBlockedSessions] = useState<any>();
+    const auth = useContext(AuthContext);
+    const [total, setTotal] = useState<number>(10);
 
     const handleScrollScheduler = () => {
         ref.current?.scrollIntoView({ behaviour: 'smooth', inline: 'nearest' });
@@ -126,6 +131,27 @@ const Scheduler: React.FC = () => {
                 : false
         );
     }
+
+    const [tags, { data: get_tags }] = useLazyQuery(GET_TAGS, {
+        variables: { tagId: tagId, userId: auth.userid, count: total },
+        onCompleted: (data) => {
+            setTotal(data.tags.meta.pagination.total);
+            const flattenData = flattenObj({ ...data });
+            
+            const sessions = flattenData.tags && flattenData.tags.length && flattenData.tags.map((currentTag) =>
+                currentTag.sessions).flat().filter(
+                    (currentSession) => {
+                        return currentSession.session_date >= cohortStartDate && currentSession.session_date <= cohortEndDate
+                    }
+                );
+
+            setBlockedSessions(sessions);
+        }
+    });
+console.log(blockedSessions);
+    useEffect(() => {
+        tags();
+    }, [total]);
 
     function handleDatePicked(date: string) {
         setPrevDate(moment(date).format('YYYY-MM-DD'));
