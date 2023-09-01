@@ -170,7 +170,7 @@ const Scheduler = () => {
             setBlockedSessions(sessions);
         }
     });
-console.log(blockedSessions);
+
     useEffect(() => {
         tags();
     }, [total]);
