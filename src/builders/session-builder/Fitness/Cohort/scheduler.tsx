@@ -148,7 +148,7 @@ const Scheduler: React.FC = () => {
             setBlockedSessions(sessions);
         }
     });
-console.log(blockedSessions);
+
     useEffect(() => {
         tags();
     }, [total]);
@@ -902,6 +902,7 @@ console.log(blockedSessions);
                                 <Col lg={11} className="pl-0 pr-0">
                                     <div className="mt-5">
                                         <SchedulerPage
+                                            blockedSessions={blockedSessions}
                                             ref={ref}
                                             type="date"
                                             callback={handleCallback}

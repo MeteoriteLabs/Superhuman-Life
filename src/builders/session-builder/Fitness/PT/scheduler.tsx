@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
-import { GET_TAG_BY_ID } from '../../graphQL/queries';
+import { useState, useEffect, useRef, useContext } from 'react';
+import { GET_TAG_BY_ID, GET_TAGS } from '../../graphQL/queries';
 import { UPDATE_USERPACKAGE_EFFECTIVEDATE } from '../../graphQL/mutation';
-import { useQuery, useMutation } from '@apollo/client';
+import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
 import {
     Row,
     Col,
@@ -21,6 +21,7 @@ import { Link } from 'react-router-dom';
 import { flattenObj } from 'components/utils/responseFlatten';
 import '../fitness.css';
 import '../Group/actionButton.css';
+import AuthContext from 'context/auth-context';
 import Loader from 'components/Loader/Loader';
 import DisplayImage from 'components/DisplayImage';
 import '../../profilepicture.css';
@@ -52,6 +53,9 @@ const Scheduler: React.FC = () => {
     const [showRestDay, setShowRestDay] = useState<boolean>(false);
     const ref = useRef<any>(null);
     const [showProgramNameModal, setShowProgramNameModal] = useState<boolean>(false);
+    const [blockedSessions, setBlockedSessions] = useState<any>();
+    const auth = useContext(AuthContext);
+    const [total, setTotal] = useState<number>(10);
 
     const mainQuery = useQuery(GET_TAG_BY_ID, {
         variables: { id: tagId },
@@ -114,6 +118,7 @@ const Scheduler: React.FC = () => {
     function loadTagData(data: any) {
         setSchedulerSessions(data);
         const flattenData = flattenObj({ ...data });
+        console.log(flattenData);
         const ids = [...sessionIds];
         setSessionIds(ids);
         const total = [0, 0, 0, 0, 0];
@@ -134,6 +139,27 @@ const Scheduler: React.FC = () => {
         setTotalClasses(total);
         setTag(flattenData.tags[0]);
     }
+
+    const [tags, { data: get_tags }] = useLazyQuery(GET_TAGS, {
+        variables: { tagId: tagId, userId: auth.userid, count: total },
+        onCompleted: (data) => {
+            setTotal(data.tags.meta.pagination.total);
+            const flattenData = flattenObj({ ...data });
+            
+            const sessions = flattenData.tags && flattenData.tags.length && flattenData.tags.map((currentTag) =>
+                currentTag.sessions).flat().filter(
+                    (currentSession) => {
+                        // return currentSession.session_date >= groupStartDate && currentSession.session_date <= groupEndDate
+                    }
+                );
+
+            setBlockedSessions(sessions);
+        }
+    });
+
+    useEffect(() => {
+        tags();
+    }, [total]);
 
     if (userPackage.length) {
         programIndex = userPackage.findIndex(
@@ -857,6 +883,7 @@ const Scheduler: React.FC = () => {
                             <Col lg={11} className="pl-0 pr-0">
                                 <div className="mt-5">
                                     <SchedulerPage
+                                        blockedSessions={blockedSessions}
                                         show24HourFormat={show24HourFormat} //boolean
                                         type={
                                             tag?.fitnesspackage?.fitness_package_type.type ===

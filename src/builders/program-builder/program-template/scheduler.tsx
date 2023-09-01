@@ -456,7 +456,6 @@ const Schedular = (props: any, ref) => {
         for (let d = 1; d <= props.days; d++) {
             arr[d] = JSON.parse(JSON.stringify(schedulerDay));
         }
-        console.log(arr);
 
         const sessions: any = [];
         if (!window.location.pathname.includes('classic')) {
@@ -478,7 +477,7 @@ const Schedular = (props: any, ref) => {
                     sessions.push(flattenData.tags[0]?.sessions[index]);
                 });
         }
-        console.log(sessions);
+        
         if (sessions.length) {
             sessions
                 .filter((itm) => itm.Is_restday === false)
@@ -522,18 +521,13 @@ const Schedular = (props: any, ref) => {
                         isProgram: val.Is_program_template
                     });
                 });
+
         }
-        
-        // for (let d = 1; d <= props.days; d++) {
-        //     blockedArr[d] = JSON.parse(JSON.stringify(schedulerDay));
-        // }
-        // console.log(blockedArr);
 
         if (props.blockedSessions && props.blockedSessions?.length) {
             props.blockedSessions
                 .filter((itm) => itm.Is_restday === false)
                 .forEach((val) => {
-                    console.log(val);
                     const startTimeHour: any = `${
                         val.start_time
                             ? Number(val.start_time.split(':')[0]) < 10
@@ -550,23 +544,16 @@ const Schedular = (props: any, ref) => {
                     }`;
                     const endTimeHour: any = `${val.end_time ? val.end_time.split(':')[0] : '0'} `;
                     const endTimeMin: any = `${val.end_time ? val.end_time.split(':')[1] : '0'}`;
-                    console.log(
-                        startTimeHour,
-                        startTimeMinute,
-                        endTimeHour,
-                        endTimeMin,
-                        val.day_of_program
-                    );
+                    console.log(val.day_of_program, val.session_date, props.startDate,  moment(val.session_date).diff(moment(props.startDate), 'days')+1);
                     if (!arr[val.day_of_program][startTimeHour][startTimeMinute]) {
                         arr[val.day_of_program][startTimeHour][startTimeMinute] = [];
                     }
-                    console.log(arr);
-                    // arr[val.day_of_program][startTimeHour][startTimeMinute] = 1;
-                    arr[val.day_of_program][startTimeHour][startTimeMinute] = [{
+                
+                    arr[moment(val.session_date).diff(moment(props.startDate), 'days')+1][startTimeHour][startTimeMinute] = [{
                         title:
                             val.activity === null ? val.workout?.workouttitle : val.activity.title,
                         color: 'red',
-                        day: val.day_of_program,
+                        day: moment(val.session_date).diff(moment(props.startDate), 'days')+1,
                         hour: startTimeHour,
                         min: startTimeMinute,
                         type: val.type,
@@ -579,15 +566,12 @@ const Schedular = (props: any, ref) => {
                         sessionId: val.id,
                         activityTarget: val.activity === null ? null : val.activity_target,
                         sessionDate: val.session_date
-                        //     isProgram: val.Is_program_template
                     }];
                 });
         }
-        // setBlockedArr(blockedArr);
         console.log(arr);
-    }
 
-    console.log(blockedArr, props.blockedSessions, arr);
+    }
 
     function calculateDay(startDate, sessionDate) {
         const startDateFormatted = moment(startDate);
@@ -1459,7 +1443,7 @@ const Schedular = (props: any, ref) => {
             }
         });
     }
-    console.log(props.blockedSessions);
+    
     const [ErrorModal, setErrorModal] = useState<boolean>(false);
 
     // this function handles drag and drop of an even once they confirm the drop.
@@ -2153,9 +2137,8 @@ const Schedular = (props: any, ref) => {
                                                             {arr[d][h][m] &&
                                                                 arr[d][h][m]?.map(
                                                                     (val, index: number) => {
-                                                                        console.log(val);
                                                                         val.index = index;
-
+console.log(val);
                                                                         return (
                                                                             <div
                                                                                 key={index}

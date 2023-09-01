@@ -3,10 +3,10 @@ import {
     GET_TABLEDATA,
     GET_ALL_FITNESS_PACKAGE_BY_TYPE,
     GET_ALL_CLIENT_PACKAGE,
-    GET_TAG_BY_ID
+    GET_TAG_BY_ID, GET_TAGS
 } from '../../graphQL/queries';
 import { UPDATE_STARTDATE } from '../../graphQL/mutation';
-import { useQuery, useMutation } from '@apollo/client';
+import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
 import {
     Row,
     Col,
@@ -76,6 +76,8 @@ const Scheduler = () => {
     const ref = useRef<any>(null);
     const [showProgramNameModal, setShowProgramNameModal] = useState<boolean>(false);
     const [showExtendProgramModal, setShowExtendProgramModal] = useState<boolean>(false);
+    const [blockedSessions, setBlockedSessions] = useState<any>();
+    const [total, setTotal] = useState<number>(10);
 
     const handleScrollScheduler = () => {
         ref.current?.scrollIntoView({ behaviour: 'smooth', inline: 'nearest' });
@@ -151,6 +153,27 @@ const Scheduler = () => {
         setTotalClasses(total);
         setTag(flattenData.tags[0]);
     }
+
+    const [tags, { data: get_tags }] = useLazyQuery(GET_TAGS, {
+        variables: { tagId: tagId, userId: auth.userid, count: total },
+        onCompleted: (data) => {
+            setTotal(data.tags.meta.pagination.total);
+            const flattenData = flattenObj({ ...data });
+            
+            const sessions = flattenData.tags && flattenData.tags.length && flattenData.tags.map((currentTag) =>
+                currentTag.sessions).flat().filter(
+                    (currentSession) => {
+                        return currentSession.session_date >= groupStartDate && currentSession.session_date <= groupEndDate
+                    }
+                );
+
+            setBlockedSessions(sessions);
+        }
+    });
+console.log(blockedSessions);
+    useEffect(() => {
+        tags();
+    }, [total]);
 
     const { data: data4 } = useQuery(GET_TABLEDATA, {
         variables: {
@@ -990,6 +1013,7 @@ const Scheduler = () => {
                                 <Col lg={11} className="pl-0 pr-0">
                                     <div className="mt-5">
                                         <SchedulerPage
+                                            blockedSessions={blockedSessions}
                                             ref={ref}
                                             show24HourFormat={show24HourFormat}
                                             type="date"
