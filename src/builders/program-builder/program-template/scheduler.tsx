@@ -543,7 +543,7 @@ const Schedular = (props: any, ref) => {
                     }`;
                     const endTimeHour: any = `${val.end_time ? val.end_time.split(':')[0] : '0'} `;
                     const endTimeMin: any = `${val.end_time ? val.end_time.split(':')[1] : '0'}`;
-                   
+
                     if (!arr[val.day_of_program][startTimeHour][startTimeMinute]) {
                         arr[val.day_of_program][startTimeHour][startTimeMinute] = [];
                     }
@@ -1310,7 +1310,7 @@ const Schedular = (props: any, ref) => {
     }
 
     handleTimeChange({ startChange });
-    
+
     function handleAgenda(d: any) {
         return (
             <>
@@ -1765,7 +1765,36 @@ const Schedular = (props: any, ref) => {
                       }
                   ];
         }
+        // Check if props.schedulerSessions is defined before proceeding
+        if (props.schedulerSessions && props.schedulerSessions.tags) {
+            const sessionsObj = {};
+            const tag = flattenObj({ ...props.schedulerSessions.tags });
+    
+            const sessions =
+                tag && tag.length && tag[0].sessions && tag[0].sessions.length ? tag[0].sessions : [];
+    
+            for (let i = 0; i < sessions.length; i++) {
+                sessionsObj[sessions[i].session_date] = sessionsObj[sessions[i].session_date]
+                    ? [...sessionsObj[sessions[i].session_date], {
+                        "startTime": sessions[i].start_time,
+                        "endTime": sessions[i].end_time,
+                        "name":
+                            sessions[i].type === 'workout'
+                                ? sessions[i].workout.workouttitle
+                                : sessions[i].activity?.title
+                    }]
+                    : [{
+                        "startTime": sessions[i].start_time,
+                        "endTime": sessions[i].end_time,
+                        "name":
+                            sessions[i].type === 'workout'
+                                ? sessions[i].workout.workouttitle
+                                : sessions[i].activity?.title
+                    }];
+            }
+        }
     }, [props]);
+    
 
     // it helps render the first row in the calendar(which displays the date and other data)
     function handleDaysRowRender() {
@@ -2111,7 +2140,6 @@ const Schedular = (props: any, ref) => {
                                                                     d
                                                                 )}`
                                                             }}
-                                                           
                                                             onDrop={(e) => {
                                                                 changedEvent = JSON.parse(
                                                                     e.dataTransfer.getData(
@@ -2145,7 +2173,7 @@ const Schedular = (props: any, ref) => {
                                                                 arr[d][h][m]?.map(
                                                                     (val, index: number) => {
                                                                         val.index = index;
-                                                                        
+
                                                                         return (
                                                                             <div
                                                                                 key={index}
@@ -2177,7 +2205,6 @@ const Schedular = (props: any, ref) => {
                                                                                         ? false
                                                                                         : true
                                                                                 }
-                                                                               
                                                                                 onDragStart={(
                                                                                     e
                                                                                 ) => {
