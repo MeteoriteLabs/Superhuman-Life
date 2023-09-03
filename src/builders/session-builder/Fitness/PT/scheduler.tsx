@@ -56,6 +56,8 @@ const Scheduler: React.FC = () => {
     const [blockedSessions, setBlockedSessions] = useState<any>();
     const auth = useContext(AuthContext);
     const [total, setTotal] = useState<number>(10);
+    const [effectiveDate, setEffectiveDate] = useState<any>();
+    const [fitnessPackageType, setFitnessPackageType] = useState<string>();
 
     const mainQuery = useQuery(GET_TAG_BY_ID, {
         variables: { id: tagId },
@@ -118,7 +120,7 @@ const Scheduler: React.FC = () => {
     function loadTagData(data: any) {
         setSchedulerSessions(data);
         const flattenData = flattenObj({ ...data });
-        console.log(flattenData);
+        
         const ids = [...sessionIds];
         setSessionIds(ids);
         const total = [0, 0, 0, 0, 0];
@@ -138,6 +140,10 @@ const Scheduler: React.FC = () => {
         }
         setTotalClasses(total);
         setTag(flattenData.tags[0]);
+        setEffectiveDate(
+            moment.utc(flattenData.tags[0].client_packages[0].effective_date).format('YYYY-MM-DD')
+        );
+        setFitnessPackageType(flattenData.tags[0].fitness_package_type.type);
     }
 
     const [tags, { data: get_tags }] = useLazyQuery(GET_TAGS, {
@@ -145,15 +151,30 @@ const Scheduler: React.FC = () => {
         onCompleted: (data) => {
             setTotal(data.tags.meta.pagination.total);
             const flattenData = flattenObj({ ...data });
-            
-            const sessions = flattenData.tags && flattenData.tags.length && flattenData.tags.map((currentTag) =>
-                currentTag.sessions).flat().filter(
-                    (currentSession) => {
-                        // return currentSession.session_date >= groupStartDate && currentSession.session_date <= groupEndDate
-                    }
-                );
 
-            setBlockedSessions(sessions);
+            if (fitnessPackageType === 'On-Demand PT') {
+                const sessions =
+                    flattenData.tags &&
+                    flattenData.tags.length &&
+                    flattenData.tags
+                        .map((currentTag) => currentTag.sessions)
+                        .flat()
+                        .filter((currentSession) => {
+                            return currentSession.session_date === effectiveDate;
+                        });
+                setBlockedSessions(sessions);
+            } else {
+                const sessions =
+                    flattenData.tags &&
+                    flattenData.tags.length &&
+                    flattenData.tags
+                        .map((currentTag) => currentTag.sessions)
+                        .flat()
+                        .filter((currentSession) => {
+                            return currentSession.session_date === effectiveDate;
+                        });
+                setBlockedSessions(sessions);
+            }
         }
     });
 
@@ -286,12 +307,13 @@ const Scheduler: React.FC = () => {
                                                                     </Dropdown.Toggle>
 
                                                                     <Dropdown.Menu>
-                                                                        <Dropdown.Item key={1}
-                                                                        onClick={() =>
-                                                                            setShowProgramNameModal(
-                                                                                true
-                                                                            )
-                                                                        }
+                                                                        <Dropdown.Item
+                                                                            key={1}
+                                                                            onClick={() =>
+                                                                                setShowProgramNameModal(
+                                                                                    true
+                                                                                )
+                                                                            }
                                                                         >
                                                                             Edit Program Name
                                                                         </Dropdown.Item>
@@ -309,7 +331,9 @@ const Scheduler: React.FC = () => {
                                                                     variant="dark"
                                                                     className="p-2"
                                                                 >
-                                                                    {tag.fitnesspackage?.level}
+                                                                    {tag &&
+                                                                        tag.fitnesspackage &&
+                                                                        tag.fitnesspackage?.level}
                                                                 </Badge>
 
                                                                 <br />
@@ -886,10 +910,11 @@ const Scheduler: React.FC = () => {
                                         blockedSessions={blockedSessions}
                                         show24HourFormat={show24HourFormat} //boolean
                                         type={
-                                            tag?.fitnesspackage?.fitness_package_type.type ===
-                                            'On-Demand PT'
-                                                ? 'day'
-                                                : 'date'
+                                            // tag?.fitnesspackage?.fitness_package_type.type ===
+                                            // 'On-Demand PT'
+                                            //     ? 'day'
+                                            // :
+                                            'date'
                                         }
                                         days={
                                             tag?.fitnesspackage?.fitness_package_type.type ===

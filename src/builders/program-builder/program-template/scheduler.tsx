@@ -477,7 +477,7 @@ const Schedular = (props: any, ref) => {
                     sessions.push(flattenData.tags[0]?.sessions[index]);
                 });
         }
-        
+
         if (sessions.length) {
             sessions
                 .filter((itm) => itm.Is_restday === false)
@@ -521,7 +521,6 @@ const Schedular = (props: any, ref) => {
                         isProgram: val.Is_program_template
                     });
                 });
-
         }
 
         if (props.blockedSessions && props.blockedSessions?.length) {
@@ -544,33 +543,40 @@ const Schedular = (props: any, ref) => {
                     }`;
                     const endTimeHour: any = `${val.end_time ? val.end_time.split(':')[0] : '0'} `;
                     const endTimeMin: any = `${val.end_time ? val.end_time.split(':')[1] : '0'}`;
-                    console.log(val.day_of_program, val.session_date, props.startDate,  moment(val.session_date).diff(moment(props.startDate), 'days')+1);
+                   
                     if (!arr[val.day_of_program][startTimeHour][startTimeMinute]) {
                         arr[val.day_of_program][startTimeHour][startTimeMinute] = [];
                     }
-                
-                    arr[moment(val.session_date).diff(moment(props.startDate), 'days')+1][startTimeHour][startTimeMinute] = [{
-                        title:
-                            val.activity === null ? val.workout?.workouttitle : val.activity.title,
-                        color: 'red',
-                        day: moment(val.session_date).diff(moment(props.startDate), 'days')+1,
-                        hour: startTimeHour,
-                        min: startTimeMinute,
-                        type: val.type,
-                        endHour: endTimeHour,
-                        endMin: endTimeMin,
-                        sessions_bookings: val.sessions_bookings && val.sessions_bookings.length ? val.sessions_bookings.length : null ,
-                        id: val.activity === null ? val.workout?.id : val.activity.id,
-                        mode: val.mode ? val.mode : null,
-                        tag: val.tag,
-                        sessionId: val.id,
-                        activityTarget: val.activity === null ? null : val.activity_target,
-                        sessionDate: val.session_date
-                    }];
+
+                    arr[moment(val.session_date).diff(moment(props.startDate), 'days') + 1][
+                        startTimeHour
+                    ][startTimeMinute] = [
+                        {
+                            title:
+                                val.activity === null
+                                    ? val.workout?.workouttitle
+                                    : val.activity.title,
+                            color: 'red',
+                            day: moment(val.session_date).diff(moment(props.startDate), 'days') + 1,
+                            hour: startTimeHour,
+                            min: startTimeMinute,
+                            type: val.type,
+                            endHour: endTimeHour,
+                            endMin: endTimeMin,
+                            sessions_bookings:
+                                val.sessions_bookings && val.sessions_bookings.length
+                                    ? val.sessions_bookings.length
+                                    : null,
+                            id: val.activity === null ? val.workout?.id : val.activity.id,
+                            mode: val.mode ? val.mode : null,
+                            tag: val.tag,
+                            sessionId: val.id,
+                            activityTarget: val.activity === null ? null : val.activity_target,
+                            sessionDate: val.session_date
+                        }
+                    ];
                 });
         }
-        console.log(arr);
-
     }
 
     function calculateDay(startDate, sessionDate) {
@@ -1304,7 +1310,7 @@ const Schedular = (props: any, ref) => {
     }
 
     handleTimeChange({ startChange });
-
+    
     function handleAgenda(d: any) {
         return (
             <>
@@ -1443,7 +1449,7 @@ const Schedular = (props: any, ref) => {
             }
         });
     }
-    
+
     const [ErrorModal, setErrorModal] = useState<boolean>(false);
 
     // this function handles drag and drop of an even once they confirm the drop.
@@ -2105,6 +2111,7 @@ const Schedular = (props: any, ref) => {
                                                                     d
                                                                 )}`
                                                             }}
+                                                           
                                                             onDrop={(e) => {
                                                                 changedEvent = JSON.parse(
                                                                     e.dataTransfer.getData(
@@ -2138,28 +2145,39 @@ const Schedular = (props: any, ref) => {
                                                                 arr[d][h][m]?.map(
                                                                     (val, index: number) => {
                                                                         val.index = index;
-console.log(val);
+                                                                        
                                                                         return (
                                                                             <div
                                                                                 key={index}
                                                                                 onClick={() => {
-                                                                                    if(val.color !== 'red'){
-                                                                                        setEvent(val);
-                                                                                    setClickedSessionId(
-                                                                                        val.sessionId
-                                                                                    );
+                                                                                    if (
+                                                                                        val.color !==
+                                                                                        'red'
+                                                                                    ) {
+                                                                                        setEvent(
+                                                                                            val
+                                                                                        );
+                                                                                        setClickedSessionId(
+                                                                                            val.sessionId
+                                                                                        );
                                                                                     }
-                                                                                    
                                                                                 }}
                                                                                 id="dragMe"
-                                                                                className={`${val.color === 'red' ? 'schedular-blocked-content' : 'schedular-content draggable'}`}
-                                                                                
+                                                                                className={`${
+                                                                                    val.color ===
+                                                                                    'red'
+                                                                                        ? 'schedular-blocked-content'
+                                                                                        : 'schedular-content draggable'
+                                                                                }`}
                                                                                 draggable={
                                                                                     val.type ===
-                                                                                    'restday'|| val.color === 'red'
+                                                                                        'restday' ||
+                                                                                    val.color ===
+                                                                                        'red'
                                                                                         ? false
                                                                                         : true
                                                                                 }
+                                                                               
                                                                                 onDragStart={(
                                                                                     e
                                                                                 ) => {
@@ -2184,9 +2202,13 @@ console.log(val);
                                                                                     }px`,
                                                                                     // backgroundColor:
                                                                                     //     '#FFFDD1',
-                                                                                        backgroundColor:
-                                                                                        `${val.color}`,
-                                                                                    color: `${val.color === 'red' ? '#fff' : '#000'}`,
+                                                                                    backgroundColor: `${val.color}`,
+                                                                                    color: `${
+                                                                                        val.color ===
+                                                                                        'red'
+                                                                                            ? '#fff'
+                                                                                            : '#000'
+                                                                                    }`,
                                                                                     // background: 'rgb(135,206,235)',
                                                                                     width: `${
                                                                                         val.type ===
@@ -2216,7 +2238,12 @@ console.log(val);
                                                                                         '50% !important',
                                                                                     maxWidth:
                                                                                         '50% !important',
-                                                                                    cursor: `${val.color === 'red' ? '' : 'pointer'}`,
+                                                                                    cursor: `${
+                                                                                        val.color ===
+                                                                                        'red'
+                                                                                            ? ''
+                                                                                            : 'pointer'
+                                                                                    }`,
                                                                                     left: `${
                                                                                         index *
                                                                                         (100 /
@@ -2330,8 +2357,6 @@ console.log(val);
                                             </div>
                                         );
                                     })}
-
-                                   
                                 </div>
                             );
                         })}
