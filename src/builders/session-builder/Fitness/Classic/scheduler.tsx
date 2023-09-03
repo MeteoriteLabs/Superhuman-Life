@@ -3,9 +3,10 @@ import {
     GET_TABLEDATA,
     GET_ALL_FITNESS_PACKAGE_BY_TYPE,
     GET_ALL_CLIENT_PACKAGE,
-    GET_TAG_BY_ID
+    GET_TAG_BY_ID,
+    GET_TAGS
 } from '../../graphQL/queries';
-import { useQuery } from '@apollo/client';
+import { useQuery, useLazyQuery } from '@apollo/client';
 import { Row, Col, Table, Card, Dropdown, Badge, Accordion } from 'react-bootstrap';
 import SchedulerPage from 'builders/program-builder/program-template/scheduler';
 import moment from 'moment';
@@ -47,6 +48,8 @@ const Scheduler: React.FC = () => {
     const [show24HourFormat, setShow24HourFormat] = useState(false);
     const ref = useRef<any>(null);
     const [showProgramNameModal, setShowProgramNameModal] = useState<boolean>(false);
+    const [blockedSessions, setBlockedSessions] = useState<any>();
+    const [total, setTotal] = useState<number>(10);
 
     const handleScrollScheduler = () => {
         ref.current?.scrollIntoView({ behaviour: 'smooth', inline: 'nearest' });
@@ -56,6 +59,27 @@ const Scheduler: React.FC = () => {
     const handleAccordionToggle = () => {
         setAccordionExpanded(!accordionExpanded);
     };
+
+    const [tags, { data: get_tags }] = useLazyQuery(GET_TAGS, {
+        variables: { tagId: tagId, userId: auth.userid, count: total },
+        onCompleted: (data) => {
+            setTotal(data.tags.meta.pagination.total);
+            const flattenData = flattenObj({ ...data });
+            
+            const sessions = flattenData.tags && flattenData.tags.length && flattenData.tags.map((currentTag) =>
+                currentTag.sessions).flat().filter(
+                    (currentSession) => {
+                        return currentSession.session_date >= classicStartDate && currentSession.session_date <= classicEndDate
+                    }
+                );
+
+            setBlockedSessions(sessions);
+        }
+    });
+
+    useEffect(() => {
+        tags();
+    }, [total]);
 
     const [program, setProgram] = useState('none');
     const [sessionFilter, setSessionFilter] = useState('none');
@@ -924,6 +948,7 @@ const Scheduler: React.FC = () => {
                             <Col lg={11} className="pl-0 pr-0">
                                 <div className="mt-5">
                                     <SchedulerPage
+                                        // blockedSessions={blockedSessions}
                                         ref={ref}
                                         callback={handleCallback}
                                         type="day"

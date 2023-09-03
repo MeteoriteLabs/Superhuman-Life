@@ -1,13 +1,13 @@
 import { useQuery } from '@apollo/client';
 import { useContext, useMemo, useRef, useState } from 'react';
 import { Badge, Row, Col, Button } from 'react-bootstrap';
-import AuthContext from '../../../../context/auth-context';
-import PTTable from '../../../../components/table/PtTable/PTTable';
+import AuthContext from 'context/auth-context';
+import PTTable from 'components/table/PtTable/PTTable';
 import { GET_SESSIONS_FROM_TAGS_FOR_ONE_ON_ONE_OR_ON_DEMAND } from '../../graphQL/queries';
 import moment from 'moment';
-import ActionButton from '../../../../components/actionbutton';
+import ActionButton from 'components/actionbutton';
 import FitnessAction from '../FitnessAction';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 
 export default function PT(): JSX.Element {
     const auth = useContext(AuthContext);

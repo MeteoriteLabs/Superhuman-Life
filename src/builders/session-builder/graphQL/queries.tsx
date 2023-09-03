@@ -925,6 +925,7 @@ export const GET_TAGS = gql`
                 id
                 attributes {
                     tag_name
+                    
                     sessions {
                         data {
                             id
@@ -937,6 +938,12 @@ export const GET_TAGS = gql`
                                 Is_restday
                                 mode
                                 session_date
+                                Is_program_template
+                    sessions_bookings{
+                        data{
+                            id
+                        }
+                    }
                                 activity {
                                     data {
                                         id

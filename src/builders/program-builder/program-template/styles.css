@@ -53,6 +53,12 @@
     z-index: 997;
 }
 
+.schedular-blocked-content {
+    position: absolute;
+    display: flex;
+    z-index: 997;
+}
+
 .draggable.dragging {
     box-shadow:  0px 0px 10px 5px #eeeee6 inset;
     opacity: 0.5;
