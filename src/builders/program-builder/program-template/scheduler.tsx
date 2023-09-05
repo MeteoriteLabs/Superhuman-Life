@@ -2191,13 +2191,7 @@ const Schedular = (props: any, ref) => {
                                                                                         );
                                                                                     }
                                                                                 }}
-                                                                                onDrag={(e)=>{
-                                                                 console.log(e.currentTarget.getAttribute(
-                                                                        'data-hour'
-                                                                    ), e.currentTarget.getAttribute(
-                                                                        'data-min'
-                                                                    ))
-                                                            }}
+                                                                                
                                                                                 id="dragMe"
                                                                                 className={`${
                                                                                     val.color ===
