@@ -2154,6 +2154,7 @@ const Schedular = (props: any, ref) => {
                                                                 );
                                                                 e.preventDefault();
                                                             }}
+                                                            
                                                             onDragLeave={(e) => {
                                                                 changedDay =
                                                                     e.currentTarget.getAttribute(
@@ -2190,6 +2191,7 @@ const Schedular = (props: any, ref) => {
                                                                                         );
                                                                                     }
                                                                                 }}
+                                                                                
                                                                                 id="dragMe"
                                                                                 className={`${
                                                                                     val.color ===
