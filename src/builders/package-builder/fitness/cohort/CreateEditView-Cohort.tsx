@@ -41,6 +41,7 @@ interface Operation {
 function CreateEditCohort(props: any, ref: any) {
     const auth = useContext(AuthContext);
     const programSchema: { [name: string]: any } = require('./cohort.json');
+    const genericSchema: { [name: string]: any } = require('./genericForm.json');
     const [programDetails, setProgramDetails] = useState<any>({});
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [fitnessPackageTypes, setFitnessPackageTypes] = useState<any>([]);
@@ -539,7 +540,7 @@ function CreateEditCohort(props: any, ref: any) {
                 customFormats={youtubeUrlCustomFormats}
                 transformErrors={youtubeUrlTransformErrors}
                 formUISchema={operation.type === 'view' ? schemaView : schema}
-                formSchema={programSchema}
+                formSchema={props.industry.industry.id === "12" ? programSchema : genericSchema}
                 formSubmit={
                     name === 'View'
                         ? () => {

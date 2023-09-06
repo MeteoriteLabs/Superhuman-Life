@@ -41,6 +41,7 @@ interface Operation {
 function CreateEditPackage(props: any, ref: any) {
     const auth = useContext(AuthContext);
     const personalTrainingSchema: Record<string, unknown> = require('./group.json');
+    const genericSchema: Record<string, unknown> = require('./genericGroup.json');
     const [groupDetails, setGroupDetails] = useState<any>({});
     const [fitnessTypes, setFitnessType] = useState<any[]>([]);
     const [operation, setOperation] = useState<Operation>({} as Operation);
@@ -613,7 +614,7 @@ function CreateEditPackage(props: any, ref: any) {
                         : schema
                 }
                 stepperValues={['Creator', 'Details', 'Program', 'Schedule', 'Pricing', 'Config']}
-                formSchema={personalTrainingSchema}
+                formSchema={props.industry.industry.id === "12" ? personalTrainingSchema : genericSchema}
                 formSubmit={
                     name === 'View'
                         ? () => {

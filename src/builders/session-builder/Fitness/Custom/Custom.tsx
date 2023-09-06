@@ -9,7 +9,7 @@ import ActionButton from 'components/actionbutton';
 import FitnessAction from '../FitnessAction';
 import { flattenObj } from 'components/utils/responseFlatten';
 
-export default function Custom() {
+export default function Custom(industry: any) {
     const auth = useContext(AuthContext);
     const [userPackage, setUserPackage] = useState<any>([]);
     const fitnessActionRef = useRef<any>(null);
@@ -18,6 +18,7 @@ export default function Custom() {
 
     const mainQuery = useQuery(GET_SESSIONS_FROM_TAGS, {
         variables: {
+            industryId: industry.industry.industry.id,
             id: auth.userid,
             tagType: 'Custom Fitness',
             start: page * 10 - 10,

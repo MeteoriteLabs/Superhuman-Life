@@ -10,7 +10,7 @@ import ActionButton from 'components/actionbutton';
 import FitnessAction from '../FitnessAction';
 import { flattenObj } from 'components/utils/responseFlatten';
 
-const Group: React.FC = () => {
+const Group: React.FC<{industry: any;}> = (industry) => {
     const auth = useContext(AuthContext);
     const [userPackage, setUserPackage] = useState<unknown[]>([]);
     const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
@@ -27,6 +27,7 @@ const Group: React.FC = () => {
 
     const mainQuery = useQuery(GET_TAGS_FOR_GROUP, {
         variables: {
+            industryId: industry.industry.industry.id,
             id: auth.userid,
             start: page * 10 - 10,
             limit: 10

@@ -10,7 +10,7 @@ import { flattenObj } from 'components/utils/responseFlatten';
 import moment from 'moment';
 import { Tag, TableContent } from '../Interfaces';
 
-const Event: React.FC = () => {
+const Event: React.FC<{industry: any;}> = (industry) => {
     const auth = useContext(AuthContext);
     const [userPackage, setUserPackage] = useState<TableContent[]>([]);
     const fitnessActionRef = useRef<any>(null);
@@ -18,7 +18,7 @@ const Event: React.FC = () => {
     const [totalRecords, setTotalRecords] = useState<number>(0);
 
     const mainQuery = useQuery(GET_TAGS_FOR_EVENT, {
-        variables: { id: auth.userid, start: page * 10 - 10, limit: 10 },
+        variables: { industryId: industry.industry.industry.id , id: auth.userid, start: page * 10 - 10, limit: 10 },
         onCompleted: (data) => {
             loadData(data);
             setTotalRecords(data.tags.meta.pagination.total);
