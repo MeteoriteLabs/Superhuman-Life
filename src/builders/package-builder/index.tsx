@@ -17,8 +17,7 @@ export default function PackagePage(): JSX.Element {
             setIndustryData(flattenData.usersPermissionsUser.industries);
         }
     });
-    if(industryData)
-console.log(industryData);
+    
     return (
         <>
             <h2>Services</h2>
