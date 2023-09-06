@@ -13,10 +13,10 @@ import {
     Dropdown,
     ProgressBar
 } from 'react-bootstrap';
-import Table from '../../../components/table';
-import AuthContext from '../../../context/auth-context';
+import Table from 'components/table';
+import AuthContext from 'context/auth-context';
 import './fitness.css';
-import ActionButton from '../../../components/actionbutton';
+import ActionButton from 'components/actionbutton';
 import CreateEditViewPersonalTraining from './personal-training/CreateEditView';
 import CreateEditViewOnDemandPt from './onDemand-PT/CreateEditView';
 import CreateEditViewGroupClass from './group/CreateEditView';
@@ -26,15 +26,15 @@ import CreateEditViewChannel from './live-stream/CreateEditView-Channel';
 import CreateEditViewCohort from './cohort/CreateEditView-Cohort';
 import CreateEditViewEvent from './event/CreateEditViewEvent';
 import { GET_FITNESS, GET_TAGS } from './graphQL/queries';
-import { flattenObj } from '../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 import moment from 'moment';
-import Drawer from '../../../components/Drawer';
-import DrawerTrigger from '../../../components/Drawer/DrawerTrigger';
-import Backdrop from '../../../components/Drawer/Backdrop';
-import Icon from '../../../components/Icons';
-import Loader from '../../../components/Loader/Loader';
+import Drawer from 'components/Drawer';
+import DrawerTrigger from 'components/Drawer/DrawerTrigger';
+import Backdrop from 'components/Drawer/Backdrop';
+import Icon from 'components/Icons';
+import Loader from 'components/Loader/Loader';
 
-export default function FitnessTab() {
+export default function FitnessTab(industry) {
     const auth = useContext(AuthContext);
     const createEditViewPersonalTrainingRef = useRef<any>(null);
     const CreateEditViewOnDemandPtRef = useRef<any>(null);
@@ -1066,7 +1066,7 @@ export default function FitnessTab() {
         refetch: refetchFitness,
         loading: fitnessLoading
     } = useQuery(GET_FITNESS, {
-        variables: { id: auth.userid, start: page * 10 - 10, limit: 10 },
+        variables: { id: auth.userid, start: page * 10 - 10, limit: 10, industryId: industry.industry.id },
         onCompleted: (data) => {
             setTotalRecords(data.fitnesspackages.meta.pagination.total);
             tags({
@@ -1197,47 +1197,55 @@ export default function FitnessTab() {
                                     ref={createEditViewChannelRef}
                                     refetchTags={refetch_tags}
                                     refetchOfferings={refetchFitness}
+                                    industry={industry}
                                 ></CreateEditViewChannel>
                                 <CreateEditViewCohort
                                     totalRecords={totalRecords}
                                     ref={createEditViewCohortRef}
                                     refetchTags={refetch_tags}
                                     refetchOfferings={refetchFitness}
+                                    industry={industry}
                                 ></CreateEditViewCohort>
                                 <CreateEditViewEvent
                                     totalRecords={totalRecords}
                                     ref={createEditViewEventRef}
                                     refetchTags={refetch_tags}
                                     refetchOfferings={refetchFitness}
+                                    industry={industry}
                                 ></CreateEditViewEvent>
 
                                 <CreateEditViewPersonalTraining
                                     ref={createEditViewPersonalTrainingRef}
                                     refetchTags={refetch_tags}
                                     refetchOfferings={refetchFitness}
+                                    industry={industry}
                                 />
                                 <CreateEditViewOnDemandPt
                                     ref={CreateEditViewOnDemandPtRef}
                                     refetchTags={refetch_tags}
                                     refetchOfferings={refetchFitness}
+                                    industry={industry}
                                 />
                                 <CreateEditViewGroupClass
                                     totalRecords={totalRecords}
                                     ref={CreateEditViewGroupClassRef}
                                     refetchTags={refetch_tags}
                                     refetchOfferings={refetchFitness}
+                                    industry={industry}
                                 />
                                 <CreateEditViewClassicClass
                                     totalRecords={totalRecords}
                                     ref={CreateEditViewClassicClassRef}
                                     refetchTags={refetch_tags}
                                     refetchOfferings={refetchFitness}
+                                    industry={industry}
                                 />
                                 <CreateEditViewCustomFitness
                                     totalRecords={totalRecords}
                                     ref={CreateEditViewCustomFitnessRef}
                                     refetchTags={refetch_tags}
                                     refetchOfferings={refetchFitness}
+                                    industry={industry}
                                 />
                             </Card.Title>
                         </Col>

@@ -1,5 +1,35 @@
 import { gql } from '@apollo/client';
 
+export const FETCH_USER_INDUSTRY = gql`
+    query fetchUserIndustryData($id: ID!) {
+        usersPermissionsUser(id: $id) {
+            data {
+                id
+                attributes {
+                    industries{
+                        data{
+                            id
+                            attributes{
+                                IndustryName
+                            }
+                        }
+                    }
+                    designations {
+                        data {
+                            id
+                            attributes {
+                                Designation_title
+                                description
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+`;
+
+
 export const GET_ADDRESS = gql`
     query fitnessdisciplines($userId: ID) {
         addresses(filters: { users_permissions_user: { id: { eq: $userId } } }) {
@@ -140,10 +170,10 @@ export const GET_TAGS = gql`
 `;
 
 export const GET_FITNESS = gql`
-    query fitnesspackages($id: ID, $start: Int, $limit: Int) {
+    query fitnesspackages($id: ID, $start: Int, $limit: Int, $industryId: ID) {
         fitnesspackages(
             sort: ["updatedAt:desc"]
-            filters: { users_permissions_user: { id: { eq: $id } } }
+            filters: { Industry:{ id: {eq: $industryId }}, users_permissions_user: { id: { eq: $id } } }
             pagination: { start: $start, limit: $limit }
         ) {
             meta {

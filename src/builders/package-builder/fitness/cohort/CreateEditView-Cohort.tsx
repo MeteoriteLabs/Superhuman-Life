@@ -341,6 +341,7 @@ function CreateEditCohort(props: any, ref: any) {
         }
         CreateCohortPackage({
             variables: {
+                Industry: props.industry.industry.id,
                 aboutpackage: frm.About,
                 benefits: frm.Benifits,
                 packagename: frm.packageName,

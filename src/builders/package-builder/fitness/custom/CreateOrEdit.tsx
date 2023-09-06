@@ -292,6 +292,7 @@ function CreateEditPackage(props: any, ref: any) {
 
         createPackage({
             variables: {
+                Industry: props.industry.industry.id,
                 Status: true,
                 client_address: `${
                     frm.programDetails.distance ? frm.programDetails.distance : null
