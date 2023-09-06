@@ -168,7 +168,7 @@ function CreateEditOnDemadPt(props: any, ref: any) {
             sapienPricing: null
         }
     ];
-console.log(props, props.industry.industry.id);
+
     function FillDetails(data: any) {
         const flattenedData = flattenObj({ ...data });
         const msg = flattenedData.fitnesspackages[0];
