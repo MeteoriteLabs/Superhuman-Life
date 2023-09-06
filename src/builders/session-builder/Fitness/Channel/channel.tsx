@@ -1,6 +1,6 @@
 import {useQuery, useContext, useMemo, useRef, useState , useEffect,Badge, Row, Col, Button, Table, AuthContext, GET_TAGS_FOR_CHANNEL,FitnessAction, ActionButton, flattenObj, moment } from "./import";
 
-export default function Channel(): JSX.Element {
+export default function Channel(industry): JSX.Element {
     const auth = useContext(AuthContext);
     const [userPackage, setUserPackage] = useState<any>([]);
     const fitnessActionRef = useRef<any>(null);
@@ -9,6 +9,7 @@ export default function Channel(): JSX.Element {
 
     const mainQuery = useQuery(GET_TAGS_FOR_CHANNEL, {
         variables: {
+            industryId: industry.industry.industry.id,
             id: auth.userid,
             start: page * 10 - 10,
             limit: 10

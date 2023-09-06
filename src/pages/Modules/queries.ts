@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 
 export const FETCH_INDUSTRIES = gql`
     query fetchIndustries {
-        industries{
+        industries(pagination:{pageSize: 20}){
             data {
                 id
                 attributes {

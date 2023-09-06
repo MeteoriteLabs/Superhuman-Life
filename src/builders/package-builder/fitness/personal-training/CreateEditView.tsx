@@ -33,6 +33,9 @@ function CreateEditPt(props: any, ref: any) {
     const personalTrainingSchema: {
         [name: string]: any;
     } = require('./personal-training.json');
+    const genericSchema: {
+        [name: string]: any;
+    } = require('./genericPersonalTraining.json');
     const [personalTrainingDetails, setPersonalTrainingDetails] = useState<any>({});
     const [fitnessTypes, setFitnessType] = useState<any[]>([]);
     const [operation, setOperation] = useState<Operation>({} as Operation);
@@ -430,7 +433,7 @@ function CreateEditPt(props: any, ref: any) {
                 showErrorList={false}
                 formUISchema={operation.type === 'view' ? schemaView : schema}
                 stepperValues={['Creator', 'Details', 'Program', 'Schedule', 'Pricing', 'Config']}
-                formSchema={personalTrainingSchema}
+                formSchema={props.industry.industry.id === "12" ? personalTrainingSchema : genericSchema}
                 formSubmit={
                     name === 'View'
                         ? () => {

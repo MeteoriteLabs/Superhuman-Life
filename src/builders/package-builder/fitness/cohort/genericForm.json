@@ -1,0 +1,111 @@
+{
+    "1": {
+        "title": "",
+        "type": "object",
+        "required": ["packageName", "equipment",  "dates"],
+        "properties": {
+            "packageName": {
+                "type": "string",
+                "title": "Name of Offering",
+                "description": "Enter the Title for Offering"
+            },
+            "equipment": {
+                "type": "string",
+                "description": "Add all tools required"
+            },
+            "tag": {
+                "type": "string",
+                "title": "Hash tags",
+                "description": "Use hashtags to improve your listing"
+            },
+            "dates": {
+                "type": "string"
+            }
+        }
+    },
+    "2": {
+        "title": "",
+        "type": "object",
+        "required": ["About", "Benifits", "languages", "classSize", "thumbnail", "VideoUrl"],
+        "properties": {
+            "About": {
+                "type": "string",
+                "title": "About",
+                "description": "Summarize the offering"
+            },
+            "Benifits": {
+                "type": "string",
+                "title": "Benefits",
+                "description": "List the advantages"
+            },
+            "languages": {
+                "type": "string",
+                "title": "Languages"
+            },
+            "classSize": {
+                "type": "number",
+                "title": "Class Size",
+                "minimum": 1,
+                "maximum": 200,
+                "default": 1
+            },
+            "thumbnail": {
+                "type": "string",
+                "description": "This image will be seen in the listing screen"
+            },
+            "VideoUrl": {
+                "type": "string",
+                "format": "youtubeurl",
+                "description": "Add Youtube URL"
+            }
+        }
+    },
+    "3": {
+        "title": "",
+        "type": "object",
+        "required": ["programDetails", "courseDetails"],
+        "properties": {
+            "programDetails": {
+                "type": "string"
+            },
+            "courseDetails": {
+                "title": "Course Details",
+                "type": "object",
+                "required": ["details"],
+                "properties": {
+                    "details": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    },
+    "4": {
+        "title": "",
+        "type": "object",
+        "required": ["pricing"],
+        "properties": {
+            "pricing": {
+                "type": "string"
+            }
+        }
+    },
+    "5": {
+        "title": "Package Settings",
+        "type": "object",
+        "required": ["visibility", "datesConfig"],
+        "properties": {
+            "visibility": {
+                "type": "number",
+                "title": "Visibility",
+                "enum": [0, 1],
+                "enumNames": ["Public", "Private"],
+                "default": 0,
+                "description": "Public: The Offering will be visible to the user as soon as it is created, Private: The offering will not ve seen by anyone until you share it with them"
+            },
+            "datesConfig": {
+                "type": "string"
+            }
+        }
+    }
+}

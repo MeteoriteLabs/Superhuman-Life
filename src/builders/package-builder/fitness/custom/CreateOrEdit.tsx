@@ -34,6 +34,9 @@ function CreateEditPackage(props: any, ref: any) {
     const personalTrainingSchema: {
         [name: string]: any;
     } = require('./custom.json');
+    const genericSchema: {
+        [name: string]: any;
+    } = require('./genericCustom.json');
     const [customDetails, setCustomDetails] = useState<any>({});
     const [fitnessTypes, setFitnessType] = useState<any[]>([]);
     const [operation, setOperation] = useState<Operation>({} as Operation);
@@ -441,7 +444,7 @@ function CreateEditPackage(props: any, ref: any) {
                 showErrorList={false}
                 formUISchema={operation.type === 'view' ? schemaView : schema}
                 stepperValues={['Creator', 'Details', 'Program', 'Schedule', 'Pricing', 'Config']}
-                formSchema={personalTrainingSchema}
+                formSchema={props.industry.industry.id === "12" ? personalTrainingSchema : genericSchema}
                 formSubmit={
                     name === 'View'
                         ? () => {
