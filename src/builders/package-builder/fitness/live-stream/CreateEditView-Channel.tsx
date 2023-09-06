@@ -1,6 +1,6 @@
 import React, { useContext, useImperativeHandle, useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-import ModalView from '../../../../components/modal';
+import ModalView from 'components/modal';
 import {
     CREATE_CHANNEL_PACKAGE,
     DELETE_PACKAGE,
@@ -17,19 +17,19 @@ import {
     GET_SINGLE_PACKAGE_BY_ID,
     GET_INVENTORY
 } from '../graphQL/queries';
-import AuthContext from '../../../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { schema, widgets } from './channelSchema';
 import { schemaView } from './schemaView';
 import { editLiveStreamSchema } from './editLiveStreamSchema';
 import { Subject } from 'rxjs';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 import moment from 'moment';
 import { Modal, Button } from 'react-bootstrap';
-import Toaster from '../../../../components/Toaster';
+import Toaster from 'components/Toaster';
 import {
     youtubeUrlCustomFormats,
     youtubeUrlTransformErrors
-} from '../../../../components/utils/ValidationPatterns';
+} from 'components/utils/ValidationPatterns';
 import { OfferingInventory } from '../../interface/offeringInventory';
 
 interface Operation {
@@ -412,6 +412,7 @@ function CreateEditChannel(props: any, ref: any) {
 
         CreatePackage({
             variables: {
+                Industry: props.industry.industry.id,
                 SubscriptionDuration: frm.durationOfOffering,
                 aboutpackage: frm.About,
                 benefits: frm.Benifits,

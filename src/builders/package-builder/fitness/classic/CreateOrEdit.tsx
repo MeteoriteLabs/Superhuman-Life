@@ -345,6 +345,7 @@ function CreateEditPackage(props: any, ref: any) {
 
         createPackage({
             variables: {
+                Industry: props.industry.industry.id,
                 packagename: frm.packagename,
                 tags: frm?.tags,
                 level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],

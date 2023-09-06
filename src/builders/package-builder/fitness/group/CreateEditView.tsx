@@ -449,6 +449,7 @@ function CreateEditPackage(props: any, ref: any) {
 
         createPackage({
             variables: {
+                Industry: props.industry.industry.id,
                 SubscriptionDuration: frm.durationOfOffering,
                 packagename: frm.packagename,
                 tags: frm?.tags,
