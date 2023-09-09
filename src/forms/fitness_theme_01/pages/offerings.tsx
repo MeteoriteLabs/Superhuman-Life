@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
 
 import Hero from '../sections/hero';
+import Offering from '../sections/offering';
 
 function Offerings(): JSX.Element {
     const { changemakerWebsiteState } = useContext(ChangeMakerWebsiteContext);
@@ -10,11 +11,11 @@ function Offerings(): JSX.Element {
 
     const Section = {
         Hero: <Hero page="Offerings" />,
-        'Group Offerings': '',
-        Cohort: '',
-        'One to One': '',
-        'Live Stream': '',
-        Custom: ''
+        'Group Offerings': <Offering type="Group" />,
+        Cohort: <Offering type="Cohort" />,
+        'One to One': <Offering type="One to One" />,
+        'Live Stream': <Offering type="Live" />,
+        Custom: <Offering type="Custom" />
     };
     return Section[section || 'Hero'];
 }

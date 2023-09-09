@@ -3,7 +3,7 @@ import WebsiteBuilder_settings from './components/websiteBuilder_settings';
 import WebsiteBuilder_template from './components/websiteBuilder_template';
 import { FC, useState, useContext, useEffect } from 'react';
 import MobileIcon from 'components/Icons/mobile';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import AuthContext from 'context/auth-context';
 import SideNav from './layout/sidenav';
 import Icon from 'components/Icons';
@@ -222,15 +222,22 @@ const WebsiteBuilder: FC = () => {
                                 'rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px'
                         }}
                     >
-                        <Button
+                        <Link
+                            to="website/templates"
                             style={{
-                                width: '100%',
-                                paddingBlock: '12px'
+                                width: '100%'
                             }}
-                            variant="outline-light"
                         >
-                            Browse Templates
-                        </Button>
+                            <Button
+                                style={{
+                                    width: '100%',
+                                    paddingBlock: '12px'
+                                }}
+                                variant="outline-light"
+                            >
+                                Browse Templates
+                            </Button>
+                        </Link>
                         <div style={{ fontWeight: 'bold' }}>OR</div>
                         <Button
                             style={{

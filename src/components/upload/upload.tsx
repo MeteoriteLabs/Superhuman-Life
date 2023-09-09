@@ -38,6 +38,7 @@ export interface UploadImageToS3WithNativeSdkProps {
     title?: string;
     readonly?: boolean;
     uploadInterface?: string;
+    form?: boolean;
 }
 
 const UploadImageToS3WithNativeSdk = (props: UploadImageToS3WithNativeSdkProps): JSX.Element => {
@@ -405,16 +406,6 @@ const UploadImageToS3WithNativeSdk = (props: UploadImageToS3WithNativeSdkProps):
     }
 
     function videoDelete() {
-        // try {
-        //      fetch(process.env.REACT_APP_CLOUDFLARE_URL, {
-        //           method: "DELETE",
-        //           body: JSON.stringify({
-        //                Key: videoId,
-        //           }),
-        //      });
-        // } catch (err) {
-        //      console.log(err);
-        // }
         setVideoID(null);
         setProgress(0);
         setRender(null);
@@ -438,7 +429,14 @@ const UploadImageToS3WithNativeSdk = (props: UploadImageToS3WithNativeSdkProps):
     const UploadImageUiBody = (type?: string): JSX.Element => {
         return (
             <>
-                <div className="crop-container">
+                <div
+                    className="crop-container"
+                    style={{
+                        backgroundColor: `${
+                            props.form ? 'rgba(255,255,255,0)' : 'rgb(255,255,255)'
+                        }`
+                    }}
+                >
                     <Cropper
                         image={imageSrc}
                         crop={crop}
@@ -593,9 +591,9 @@ const UploadImageToS3WithNativeSdk = (props: UploadImageToS3WithNativeSdkProps):
                     {url || videoUpload ? (
                         ' '
                     ) : (
-                        <div className="bg-white">
+                        <div className={`${props.form ? '' : 'bg-white'}`}>
                             <div
-                                className="mb-3 p-4 dropzone"
+                                className={`mb-3 ${props.form ? '' : 'dropzone'}`}
                                 onDragOver={(e) => {
                                     e.preventDefault();
                                 }}
@@ -606,8 +604,7 @@ const UploadImageToS3WithNativeSdk = (props: UploadImageToS3WithNativeSdkProps):
                             >
                                 {props.allowImage && !props.allowVideo ? (
                                     <>
-                                        <p className="d-inline">Drag & Drop Image</p>
-                                        <p className="font-weight-bold d-inline"> (png/jpeg/jpg)</p>
+                                        <p className="d-inline">Drag & Drop Image (png/jpeg/jpg)</p>
                                     </>
                                 ) : (
                                     ' '
@@ -633,13 +630,17 @@ const UploadImageToS3WithNativeSdk = (props: UploadImageToS3WithNativeSdkProps):
                                 )}
 
                                 <p className="mt-3">OR</p>
-                                <input
-                                    id="video-upload"
-                                    type="file"
-                                    className="pt-2"
-                                    disabled={props.readonly}
-                                    onChange={handleFileInput}
-                                />
+                                <div className={`${props.form ? 'upload-btn-wrapper' : ''}`}>
+                                    <button className="btn">Upload a file</button>
+                                    <input
+                                        id="video-upload"
+                                        type="file"
+                                        className="pt-2"
+                                        disabled={props.readonly}
+                                        onChange={handleFileInput}
+                                    />
+                                </div>
+
                                 {videoSizeError && (
                                     <p className="mt-3 text-danger">
                                         The video duration must be lesser than 60 seconds.
