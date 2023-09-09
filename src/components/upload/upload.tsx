@@ -400,7 +400,8 @@ const UploadImageToS3WithNativeSdk = (props: UploadImageToS3WithNativeSdkProps):
                 }
             }
         }
-
+        // If the data is invalid or empty, you can handle it accordingly
+        // For example, you can set a default aspect ratio or return null/undefined.
         return 5 / 3;
     }
 
