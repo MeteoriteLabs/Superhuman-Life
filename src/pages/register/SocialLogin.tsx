@@ -51,6 +51,10 @@ const SocialLogin: React.FC = () => {
         }
     });
 
+    useEffect(() => {
+        localStorage.setItem('dataKey', JSON.stringify(data));
+    }, [data]);
+
     return (
         <div>
             <label>Select any from below for autofill</label>

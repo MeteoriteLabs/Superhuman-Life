@@ -113,9 +113,10 @@ const UploadImageToS3WithNativeSdk = (props: UploadImageToS3WithNativeSdkProps):
         } as AWS.S3.HeadObjectRequest;
         try {
             myBucket.headObject(deleteparams).promise();
-
+            console.log('File Found in S3');
             try {
                 myBucket.deleteObject(deleteparams).promise();
+                console.log('file deleted Successfully');
             } catch (err) {
                 console.log('ERROR in file Deleting : ' + JSON.stringify(err));
             }
@@ -370,6 +371,7 @@ const UploadImageToS3WithNativeSdk = (props: UploadImageToS3WithNativeSdkProps):
                     setProgress(Number(((bytesUploaded / bytesTotal) * 100).toFixed(2)));
                 },
                 onSuccess: function () {
+                    console.log('Upload finished');
                     setVideoUpload(true);
                     setRender(1);
                 },
