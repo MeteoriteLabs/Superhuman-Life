@@ -1,6 +1,6 @@
 import React, { useContext, useImperativeHandle, useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-import ModalView from '../../../../components/modal';
+import ModalView from 'components/modal';
 import { GET_SINGLE_PACKAGE_BY_ID, GET_FITNESS_PACKAGE_TYPES } from '../graphQL/queries';
 import {
     CREATE_PACKAGE,
@@ -10,17 +10,17 @@ import {
     CREATE_NOTIFICATION
 } from '../graphQL/mutations';
 import { Modal, Button } from 'react-bootstrap';
-import AuthContext from '../../../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { schema, widgets } from './onDemandSchema';
 import { schemaView } from './schemaView';
 import { Subject } from 'rxjs';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 import moment from 'moment';
-import Toaster from '../../../../components/Toaster';
+import Toaster from 'components/Toaster';
 import {
     youtubeUrlCustomFormats,
     youtubeUrlTransformErrors
-} from '../../../../components/utils/ValidationPatterns';
+} from 'components/utils/ValidationPatterns';
 
 interface Operation {
     id: string;
@@ -33,6 +33,9 @@ function CreateEditOnDemadPt(props: any, ref: any) {
     const personalTrainingSchema: {
         [name: string]: any;
     } = require('./onDemand-PT.json');
+    const genericSchema: {
+        [name: string]: any;
+    } = require('./genericOnDemandPT.json');
     const [personalTrainingDetails, setPersonalTrainingDetails] = useState<any>({});
     const [fitnessTypes, setFitnessType] = useState<any[]>([]);
     const [operation, setOperation] = useState<Operation>({} as Operation);
@@ -263,6 +266,7 @@ function CreateEditOnDemadPt(props: any, ref: any) {
 
         createPackage({
             variables: {
+                Industry: props.industry.industry.id,
                 Status: true,
                 packagename: frm.packagename,
                 tags: frm?.tags,
@@ -287,8 +291,8 @@ function CreateEditOnDemadPt(props: any, ref: any) {
                 } ${frm.programDetails.clientAddress ? frm.programDetails.clientAddress : null}`,
                 ptclasssize: ENUM_FITNESSPACKAGE_PTCLASSSIZE[frm.classSize],
                 users_permissions_user: frm.user_permissions_user,
-                publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
-                expiry_date: moment(frm.datesConfig?.expiry_date).toISOString(),
+                publishing_date: moment.utc(frm.datesConfig?.publishingDate).local().format(),
+                expiry_date: moment.utc(frm.datesConfig?.expiryDate).local().format(),
                 thumbnail: frm.thumbnail,
                 equipmentList: frm.equipmentList,
                 videoUrl: frm?.VideoUrl,
@@ -340,8 +344,8 @@ function CreateEditOnDemadPt(props: any, ref: any) {
                 ),
                 ptclasssize: ENUM_FITNESSPACKAGE_PTCLASSSIZE[frm.classSize],
                 users_permissions_user: frm.user_permissions_user,
-                publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
-                expiry_date: moment(frm.datesConfig?.expiry_date).toISOString(),
+                publishing_date: moment.utc(frm.datesConfig?.publishingDate).local().format(),
+                expiry_date: moment.utc(frm.datesConfig?.expiryDate).local().format(),
                 thumbnail: frm.thumbnail,
                 equipmentList: frm.equipmentList,
                 videoUrl: frm?.VideoUrl,
@@ -405,7 +409,7 @@ function CreateEditOnDemadPt(props: any, ref: any) {
                 formUISchema={operation.type === 'view' ? schemaView : schema}
                 showErrorList={false}
                 stepperValues={['Creator', 'Details', 'Program', 'Pricing', 'Config']}
-                formSchema={personalTrainingSchema}
+                formSchema={props.industry.industry.id === "12" ? personalTrainingSchema : genericSchema}
                 formSubmit={
                     name === 'View'
                         ? () => {

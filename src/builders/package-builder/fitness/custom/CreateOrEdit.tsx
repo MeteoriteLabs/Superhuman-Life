@@ -34,6 +34,9 @@ function CreateEditPackage(props: any, ref: any) {
     const personalTrainingSchema: {
         [name: string]: any;
     } = require('./custom.json');
+    const genericSchema: {
+        [name: string]: any;
+    } = require('./genericCustom.json');
     const [customDetails, setCustomDetails] = useState<any>({});
     const [fitnessTypes, setFitnessType] = useState<any[]>([]);
     const [operation, setOperation] = useState<Operation>({} as Operation);
@@ -292,6 +295,7 @@ function CreateEditPackage(props: any, ref: any) {
 
         createPackage({
             variables: {
+                Industry: props.industry.industry.id,
                 Status: true,
                 client_address: `${
                     frm.programDetails.distance ? frm.programDetails.distance : null
@@ -319,8 +323,8 @@ function CreateEditPackage(props: any, ref: any) {
                 ),
                 ptclasssize: ENUM_FITNESSPACKAGE_PTCLASSSIZE[frm.classSize],
                 users_permissions_user: frm.user_permissions_user,
-                publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
-                expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
+                publishing_date: moment.utc(frm.datesConfig?.publishingDate).local().format(),
+                expiry_date: moment.utc(frm.datesConfig?.expiryDate).local().format(),
                 thumbnail: frm.thumbnail,
                 equipmentList: frm.equipmentList,
                 videoUrl: frm.VideoUrl,
@@ -375,8 +379,8 @@ function CreateEditPackage(props: any, ref: any) {
                 ),
                 ptclasssize: ENUM_FITNESSPACKAGE_PTCLASSSIZE[frm.classSize],
                 users_permissions_user: frm.user_permissions_user,
-                publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
-                expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
+                publishing_date: moment.utc(frm.datesConfig?.publishingDate).local().format(),
+                expiry_date: moment.utc(frm.datesConfig?.expiryDate).local().format(),
                 thumbnail: frm.thumbnail,
                 equipmentList: frm.equipmentList,
                 videoUrl: frm.VideoUrl,
@@ -440,7 +444,7 @@ function CreateEditPackage(props: any, ref: any) {
                 showErrorList={false}
                 formUISchema={operation.type === 'view' ? schemaView : schema}
                 stepperValues={['Creator', 'Details', 'Program', 'Schedule', 'Pricing', 'Config']}
-                formSchema={personalTrainingSchema}
+                formSchema={props.industry.industry.id === "12" ? personalTrainingSchema : genericSchema}
                 formSubmit={
                     name === 'View'
                         ? () => {

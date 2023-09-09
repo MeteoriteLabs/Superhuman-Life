@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import {
     // GET_TABLEDATA,
     // GET_ALL_FITNESS_PACKAGE_BY_TYPE,
     // GET_ALL_CLIENT_PACKAGE,
     GET_TAG_BY_ID
 } from '../../graphQL/queries';
-import { useQuery } from '@apollo/client';
+import { useQuery, useLazyQuery } from '@apollo/client';
 import { Row, Col, Dropdown, Card, Badge, Table, Accordion, Button, Form } from 'react-bootstrap';
 import SchedulerPage from 'builders/program-builder/program-template/scheduler';
 import moment from 'moment';
@@ -22,6 +22,8 @@ import { SideNav } from '../Event/import';
 import EditProgramName from '../../EditProgramName/index';
 import ExtendProgram from './ExtendProgram';
 import { CollapsibleScheduler } from '../Cohort/import';
+import { GET_TAGS } from '../../graphQL/queries';
+import AuthContext from 'context/auth-context';
 
 const Scheduler: React.FC = () => {
     const last = window.location.pathname.split('/').reverse();
@@ -46,6 +48,9 @@ const Scheduler: React.FC = () => {
     const [showProgramNameModal, setShowProgramNameModal] = useState<boolean>(false);
     const [showExtendProgramModal, setShowExtendProgramModal] = useState<boolean>(false);
     const [showCollapseView, setShowCollapseView] = useState<boolean>(false);
+    const [blockedSessions, setBlockedSessions] = useState<any>();
+    const auth = useContext(AuthContext);
+    const [total, setTotal] = useState<number>(10);
 
     const handleScrollScheduler = () => {
         ref.current?.scrollIntoView({ behaviour: 'smooth', inline: 'nearest' });
@@ -110,6 +115,27 @@ const Scheduler: React.FC = () => {
         // setTotalClasses(total);
         setTag(flattenData.tags[0]);
     }
+
+    const [tags, { data: get_tags }] = useLazyQuery(GET_TAGS, {
+        variables: { tagId: tagId, userId: auth.userid, count: total },
+        onCompleted: (data) => {
+            setTotal(data.tags.meta.pagination.total);
+            const flattenData = flattenObj({ ...data });
+            
+            const sessions = flattenData.tags && flattenData.tags.length && flattenData.tags.map((currentTag) =>
+                currentTag.sessions).flat().filter(
+                    (currentSession) => {
+                        return currentSession.session_date >= channelStartDate && currentSession.session_date <= channelEndDate
+                    }
+                );
+
+            setBlockedSessions(sessions);
+        }
+    });
+
+    useEffect(() => {
+        tags();
+    }, [total]);
 
     function calculateLastSession(sessions) {
         if (sessions.length === 0) {
@@ -813,6 +839,7 @@ const Scheduler: React.FC = () => {
                                             ref={ref}
                                             type="date"
                                             callback={handleCallback}
+                                            blockedSessions={blockedSessions}
                                             sessionIds={sessionIds}
                                             days={calculateDays(prevDate, nextDate)}
                                             restDays={tag?.sessions.filter(

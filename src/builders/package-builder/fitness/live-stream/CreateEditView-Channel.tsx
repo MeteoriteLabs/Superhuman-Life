@@ -1,6 +1,6 @@
 import React, { useContext, useImperativeHandle, useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-import ModalView from '../../../../components/modal';
+import ModalView from 'components/modal';
 import {
     CREATE_CHANNEL_PACKAGE,
     DELETE_PACKAGE,
@@ -17,19 +17,19 @@ import {
     GET_SINGLE_PACKAGE_BY_ID,
     GET_INVENTORY
 } from '../graphQL/queries';
-import AuthContext from '../../../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import { schema, widgets } from './channelSchema';
 import { schemaView } from './schemaView';
 import { editLiveStreamSchema } from './editLiveStreamSchema';
 import { Subject } from 'rxjs';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 import moment from 'moment';
 import { Modal, Button } from 'react-bootstrap';
-import Toaster from '../../../../components/Toaster';
+import Toaster from 'components/Toaster';
 import {
     youtubeUrlCustomFormats,
     youtubeUrlTransformErrors
-} from '../../../../components/utils/ValidationPatterns';
+} from 'components/utils/ValidationPatterns';
 import { OfferingInventory } from '../../interface/offeringInventory';
 
 interface Operation {
@@ -42,6 +42,7 @@ interface Operation {
 function CreateEditChannel(props: any, ref: any) {
     const auth = useContext(AuthContext);
     const programSchema: { [name: string]: any } = require('./channel.json');
+    const genericSchema: { [name: string]: any } = require('./genericChannel.json');
     const [programDetails, setProgramDetails] = useState<any>({});
     const [operation, setOperation] = useState<Operation>({} as Operation);
     const [fitnessPackageTypes, setFitnessPackageTypes] = useState<any>([]);
@@ -412,13 +413,14 @@ function CreateEditChannel(props: any, ref: any) {
 
         CreatePackage({
             variables: {
+                Industry: props.industry.industry.id,
                 SubscriptionDuration: frm.durationOfOffering,
                 aboutpackage: frm.About,
                 benefits: frm.Benifits,
                 packagename: frm.channelName,
                 channelinstantBooking: JSON.parse(frm.channelinstantBooking).instantBooking,
                 Is_free_demo: JSON.parse(frm.channelinstantBooking).freeDemo,
-                expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
+                expiry_date:  moment.utc(frm.datesConfig?.expiryDate).local().format(),
                 level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
                 equipmentList:
                     frm?.equipment?.length > 0
@@ -442,7 +444,7 @@ function CreateEditChannel(props: any, ref: any) {
                     frm.pricing === 'free'
                         ? [{ mrp: 'free' }]
                         : JSON.parse(frm.pricing).filter((item: any) => item.mrp !== null),
-                publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
+                publishing_date:  moment.utc(frm.datesConfig?.publishingDate).local().format(),
                 tags: frm?.tag,
                 users_permissions_user: frm.user_permissions_user,
                 fitness_package_type: findPackageType(operation.packageType),
@@ -454,8 +456,8 @@ function CreateEditChannel(props: any, ref: any) {
                     .map((item) => item.id)
                     .join(', ')
                     .split(', '),
-                Start_date: moment.utc(frm.dates.startDate).format(),
-                End_date: moment(frm.dates.startDate).add(360, 'days').toISOString()
+                Start_date: moment.utc(frm.dates.startDate).local().format(),
+                End_date: moment.utc(frm.dates.startDate).add(360, 'days').local().format()
             }
         });
     }
@@ -481,7 +483,7 @@ function CreateEditChannel(props: any, ref: any) {
                 packagename: frm.channelName,
                 channelinstantBooking: JSON.parse(frm.channelinstantBooking).instantBooking,
                 Is_free_demo: JSON.parse(frm.channelinstantBooking).freeDemo,
-                expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
+                expiry_date:  moment.utc(frm.datesConfig?.expiryDate).local().format(),
                 level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
                 equipmentList:
                     frm?.equipment?.length > 0
@@ -505,7 +507,7 @@ function CreateEditChannel(props: any, ref: any) {
                     frm.pricing === 'free'
                         ? [{ mrp: 'free' }]
                         : JSON.parse(frm.pricing).filter((item: any) => item.mrp !== null),
-                publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
+                        publishing_date:  moment.utc(frm.datesConfig?.publishingDate).local().format(),
                 tags: frm?.tag,
                 users_permissions_user: frm.user_permissions_user,
                 fitness_package_type: findPackageType(operation.packageType),
@@ -516,8 +518,9 @@ function CreateEditChannel(props: any, ref: any) {
                     .map((item: any) => item.id)
                     .join(', ')
                     .split(', '),
-                Start_date: moment(frm.dates.startDate).toISOString(),
-                End_date: moment(frm.dates.startDate).add(360, 'days').toISOString()
+
+                Start_date: moment.utc(frm.dates.startDate).local().format(),
+                End_date: moment.utc(frm.dates.startDate).add(360, 'days').local().format()
             }
         });
     }
@@ -577,7 +580,7 @@ function CreateEditChannel(props: any, ref: any) {
                         ? editLiveStreamSchema
                         : schema
                 }
-                formSchema={programSchema}
+                formSchema={props.industry.industry.id === "12" ? programSchema : genericSchema}
                 formSubmit={
                     name === 'View'
                         ? () => {

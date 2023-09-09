@@ -40,6 +40,7 @@ interface Operation {
 function CreateEditPackage(props: any, ref: any) {
     const auth = useContext(AuthContext);
     const personalTrainingSchema: Record<string, unknown> = require('./classic.json');
+    const genericSchema: Record<string, unknown> = require('./genericClassic.json');
     const [classicDetails, setClassicDetails] = useState<any>({});
     const [fitnessTypes, setFitnessType] = useState<any[]>([]);
     const [operation, setOperation] = useState<Operation>({} as Operation);
@@ -345,6 +346,7 @@ function CreateEditPackage(props: any, ref: any) {
 
         createPackage({
             variables: {
+                Industry: props.industry.industry.id,
                 packagename: frm.packagename,
                 tags: frm?.tags,
                 level: ENUM_FITNESSPACKAGE_LEVEL[frm.level],
@@ -364,8 +366,8 @@ function CreateEditPackage(props: any, ref: any) {
                         ? [{ mrp: 'free', duration: frm.programDetails.duration }]
                         : JSON.parse(frm.pricingDetail),
                 users_permissions_user: frm.user_permissions_user,
-                publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
-                expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
+                publishing_date: moment.utc(frm.datesConfig?.publishingDate).local().format(),
+                expiry_date: moment.utc(frm.datesConfig?.expiryDate).local().format(),
                 thumbnail: frm.thumbnail,
                 upload: frm?.Upload?.upload,
                 equipmentList: frm.equipmentList,
@@ -414,8 +416,8 @@ function CreateEditPackage(props: any, ref: any) {
                         ? [{ mrp: 'free', duration: frm.programDetails.duration }]
                         : JSON.parse(frm.pricingDetail),
                 users_permissions_user: frm.user_permissions_user,
-                publishing_date: moment(frm.datesConfig?.publishingDate).toISOString(),
-                expiry_date: moment(frm.datesConfig?.expiryDate).toISOString(),
+                publishing_date: moment.utc(frm.datesConfig?.publishingDate).local().format(),
+                expiry_date: moment.utc(frm.datesConfig?.expiryDate).local().format(),
                 thumbnail: frm.thumbnail,
                 upload: frm?.Upload?.upload,
                 equipmentList: frm.equipmentList,
@@ -479,7 +481,7 @@ function CreateEditPackage(props: any, ref: any) {
                 showErrorList={false}
                 formUISchema={operation.type === 'view' ? schemaView : schema}
                 stepperValues={['Creator', 'Details', 'Program', 'Pricing', 'Config']}
-                formSchema={personalTrainingSchema}
+                formSchema={props.industry.industry.id === "12" ? personalTrainingSchema : genericSchema}
                 formSubmit={
                     name === 'View'
                         ? () => {

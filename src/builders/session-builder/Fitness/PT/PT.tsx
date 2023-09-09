@@ -1,15 +1,15 @@
 import { useQuery } from '@apollo/client';
 import { useContext, useMemo, useRef, useState } from 'react';
 import { Badge, Row, Col, Button } from 'react-bootstrap';
-import AuthContext from '../../../../context/auth-context';
-import PTTable from '../../../../components/table/PtTable/PTTable';
+import AuthContext from 'context/auth-context';
+import PTTable from 'components/table/PtTable/PTTable';
 import { GET_SESSIONS_FROM_TAGS_FOR_ONE_ON_ONE_OR_ON_DEMAND } from '../../graphQL/queries';
 import moment from 'moment';
-import ActionButton from '../../../../components/actionbutton';
+import ActionButton from 'components/actionbutton';
 import FitnessAction from '../FitnessAction';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 
-export default function PT(): JSX.Element {
+export default function PT(industry): JSX.Element {
     const auth = useContext(AuthContext);
     const [userPackage, setUserPackage] = useState<any>([]);
     const fitnessActionRef = useRef<any>(null);
@@ -18,6 +18,7 @@ export default function PT(): JSX.Element {
 
     const { refetch: refetch_tags } = useQuery(GET_SESSIONS_FROM_TAGS_FOR_ONE_ON_ONE_OR_ON_DEMAND, {
         variables: {
+            industryId: industry.industry.industry.id,
             id: auth.userid,
             start: page * 10 - 10,
             limit: 10

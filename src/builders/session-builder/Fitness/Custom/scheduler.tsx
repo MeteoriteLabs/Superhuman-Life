@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
-import { GET_TAG_BY_ID } from '../../graphQL/queries';
+import { useState, useEffect, useRef, useContext } from 'react';
+import { GET_TAG_BY_ID, GET_TAGS } from '../../graphQL/queries';
 import { UPDATE_USERPACKAGE_EFFECTIVEDATE } from '../../graphQL/mutation';
-import { useQuery, useMutation } from '@apollo/client';
+import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
 import {
     Row,
     Col,
@@ -24,6 +24,7 @@ import { flattenObj } from 'components/utils/responseFlatten';
 import Loader from 'components/Loader/Loader';
 import DisplayImage from 'components/DisplayImage';
 import { SideNav } from '../Event/import';
+import AuthContext from 'context/auth-context';
 
 const Scheduler = () => {
     const last = window.location.pathname.split('/').reverse();
@@ -33,6 +34,8 @@ const Scheduler = () => {
     const [userPackage, setUserPackage] = useState<any>([]);
     const [editDatesModal, setEditdatesModal] = useState<boolean>(false);
     const [startDate, setStartDate] = useState<string>('');
+    const [customStartDate, setCustomStartDate] = useState<string>('');
+    const [customEndDate, setCustomEndDate] = useState<string>('');
     const [totalClasses, setTotalClasses] = useState<any>([]);
     const [tag, setTag] = useState<any>();
     const [key, setKey] = useState('');
@@ -45,6 +48,9 @@ const Scheduler = () => {
     const [sessionIds, setSessionIds] = useState<any>([]);
     const [show24HourFormat, setShow24HourFormat] = useState(false);
     const ref = useRef<any>(null);
+    const [blockedSessions, setBlockedSessions] = useState<any>();
+    const auth = useContext(AuthContext);
+    const [total, setTotal] = useState<number>(10);
 
     const handleScrollScheduler = () => {
         ref.current?.scrollIntoView({ behaviour: "smooth",
@@ -71,6 +77,10 @@ const Scheduler = () => {
 
     function loadTagData(data: any) {
         const flattenData = flattenObj({ ...data });
+        setCustomStartDate(
+            moment(flattenData.tags[0].fitnesspackage.Start_date).format('YYYY-MM-DD')
+        );
+        setCustomEndDate(moment(flattenData.tags[0].fitnesspackage.End_date).format('YYYY-MM-DD'));
         const total = [0, 0, 0, 0, 0];
         const values = [...flattenData.tags[0].sessions];
         const clientValues = [...clientIds];
@@ -95,6 +105,27 @@ const Scheduler = () => {
 
         setSessionIds(ids);
     }
+
+    const [tags, { data: get_tags }] = useLazyQuery(GET_TAGS, {
+        variables: { tagId: tagId, userId: auth.userid, count: total },
+        onCompleted: (data) => {
+            setTotal(data.tags.meta.pagination.total);
+            const flattenData = flattenObj({ ...data });
+            
+            const sessions = flattenData.tags && flattenData.tags.length && flattenData.tags.map((currentTag) =>
+                currentTag.sessions).flat().filter(
+                    (currentSession) => {
+                        return currentSession.session_date >= customStartDate && currentSession.session_date <= customEndDate
+                    }
+                );
+
+            setBlockedSessions(sessions);
+        }
+    });
+
+    useEffect(() => {
+        tags();
+    }, [total]);
 
     const handleCloseDatesModal = () => setEditdatesModal(false);
     const handleShowDatesModal = () => setEditdatesModal(true);
@@ -745,6 +776,7 @@ const Scheduler = () => {
                             <Col lg={11} className="pl-0 pr-0">
                                 <div className="mt-5">
                                     <SchedulerPage
+                                        blockedSessions={blockedSessions}
                                         ref={ref}
                                         callback={() => mainQuery}
                                         type="date"

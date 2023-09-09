@@ -331,12 +331,13 @@ export const GET_TAG = gql`
 `;
 
 export const GET_TAGS_FOR_GROUP = gql`
-    query getTagsforGroup($id: ID!, $start: Int, $limit: Int) {
+    query getTagsforGroup($id: ID!, $start: Int, $limit: Int, $industryId: ID) {
         tags(
             pagination: { start: $start, limit: $limit }
             sort: ["updatedAt:desc"]
             filters: {
                 fitnesspackage: {
+                    Industry: {id: { eq: $industryId }}
                     users_permissions_user: { id: { eq: $id } }
                     fitness_package_type: { type: { eq: "Group Class" } }
                 }
@@ -429,12 +430,13 @@ export const GET_TAGS_FOR_GROUP = gql`
 `;
 
 export const GET_TAGS_FOR_CLASSIC = gql`
-    query getTagsforRecorded($id: ID!, $start: Int, $limit: Int) {
+    query getTagsforRecorded($id: ID!, $start: Int, $limit: Int, $industryId: ID) {
         tags(
             pagination: { start: $start, limit: $limit }
             sort: ["updatedAt:desc"]
             filters: {
                 fitnesspackage: {
+                    Industry: {id: { eq: $industryId }}
                     users_permissions_user: { id: { eq: $id } }
                     fitness_package_type: { type: { eq: "Classic Class" } }
                 }
@@ -488,12 +490,13 @@ export const GET_TAGS_FOR_CLASSIC = gql`
 `;
 
 export const GET_TAGS_FOR_CHANNEL = gql`
-    query getTagsforLiveStream($id: ID!, $start: Int, $limit: Int) {
+    query getTagsforLiveStream($id: ID!, $start: Int, $limit: Int, $industryId: ID) {
         tags(
             pagination: { start: $start, limit: $limit }
             sort: ["updatedAt:desc"]
             filters: {
                 fitnesspackage: {
+                    Industry: {id: { eq: $industryId }}
                     users_permissions_user: { id: { eq: $id } }
                     fitness_package_type: { type: { eq: "Live Stream Channel" } }
                 }
@@ -556,12 +559,13 @@ export const GET_TAGS_FOR_CHANNEL = gql`
 `;
 
 export const GET_TAGS_FOR_EVENT = gql`
-    query getTagsforEvent($id: ID!, $start: Int, $limit: Int) {
+    query getTagsforEvent($id: ID!, $start: Int, $limit: Int, $industryId: ID ) {
         tags(
             pagination: { start: $start, limit: $limit }
             sort: ["updatedAt:desc"]
             filters: {
                 fitnesspackage: {
+                    Industry: {id: { eq: $industryId }}
                     users_permissions_user: { id: { eq: $id } }
                     fitness_package_type: { type: { eq: "Event" } }
                 }
@@ -625,12 +629,13 @@ export const GET_TAGS_FOR_EVENT = gql`
 `;
 
 export const GET_TAGS_FOR_COHORT = gql`
-    query getTagsforCohort($id: ID!, $start: Int, $limit: Int) {
+    query getTagsforCohort($id: ID!, $start: Int, $limit: Int, $industryId: ID) {
         tags(
             pagination: { start: $start, limit: $limit }
             sort: ["updatedAt:desc"]
             filters: {
                 fitnesspackage: {
+                    Industry: {id: { eq: $industryId }}
                     users_permissions_user: { id: { eq: $id } }
                     fitness_package_type: { type: { eq: "Cohort" } }
                 }
@@ -909,7 +914,7 @@ export const GET_SESSIONS_FROM_TAGS = gql`
 export const GET_TAGS = gql`
     query getSessionsFromTags($userId: ID, $tagId: ID, $count: Int) {
         tags(
-            pagination: {pageSize: $count}
+            pagination: { pageSize: $count }
             filters: {
                 id: { ne: $tagId }
                 fitnesspackage: { users_permissions_user: { id: { eq: $userId } } }
@@ -925,6 +930,7 @@ export const GET_TAGS = gql`
                 id
                 attributes {
                     tag_name
+
                     sessions {
                         data {
                             id
@@ -937,6 +943,12 @@ export const GET_TAGS = gql`
                                 Is_restday
                                 mode
                                 session_date
+                                Is_program_template
+                                sessions_bookings {
+                                    data {
+                                        id
+                                    }
+                                }
                                 activity {
                                     data {
                                         id
@@ -994,12 +1006,13 @@ export const GET_TAGS = gql`
 `;
 
 export const GET_SESSIONS_FROM_TAGS_FOR_ONE_ON_ONE_OR_ON_DEMAND = gql`
-    query getSessionsFromTags($id: ID!, $start: Int, $limit: Int) {
+    query getSessionsFromTags($id: ID!, $start: Int, $limit: Int, $industryId: ID) {
         tags(
             pagination: { start: $start, limit: $limit }
             sort: ["updatedAt:desc"]
             filters: {
                 fitnesspackage: {
+                    Industry: {id: { eq: $industryId }}
                     users_permissions_user: { id: { eq: $id } }
                     or: [
                         { fitness_package_type: { type: { eq: "One-On-One" } } }

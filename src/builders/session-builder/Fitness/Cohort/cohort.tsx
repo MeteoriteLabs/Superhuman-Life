@@ -9,7 +9,7 @@ import ActionButton from 'components/actionbutton';
 import { flattenObj } from 'components/utils/responseFlatten';
 import moment from 'moment';
 
-export default function Cohort(): JSX.Element {
+export default function Cohort(industry): JSX.Element {
     const auth = useContext(AuthContext);
     const [userPackage, setUserPackage] = useState<any>([]);
     const fitnessActionRef = useRef<any>(null);
@@ -17,7 +17,7 @@ export default function Cohort(): JSX.Element {
     const [totalRecords, setTotalRecords] = useState<number>(0);
 
     const mainQuery = useQuery(GET_TAGS_FOR_COHORT, {
-        variables: { id: auth.userid, start: page * 10 - 10, limit: 10 },
+        variables: { industryId: industry.industry.industry.id ,id: auth.userid, start: page * 10 - 10, limit: 10 },
         onCompleted: (data) => {
             loadData(data);
             setTotalRecords(data.tags.meta.pagination.total);

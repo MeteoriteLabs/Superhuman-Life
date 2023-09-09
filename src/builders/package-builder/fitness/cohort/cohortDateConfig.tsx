@@ -9,12 +9,15 @@ const PackageDateConfig = (props: any) => {
     const [publishingDate, setPublishingDate] = useState(
         props.value === undefined
             ? ''
-            : moment(JSON.parse(props.value).publishingDate).format('YYYY-MM-DDTHH:mm')
+            :
+            moment.utc(JSON.parse(props.value).publishingDate).local().format('YYYY-MM-DDTHH:mm')
     );
     const [expiryDate, setExpiryDate] = useState(
         props.value === undefined
-            ? moment(cohortStartDate).format('YYYY-MM-DDTHH:mm')
-            : moment(JSON.parse(props.value).expiryDate).format('YYYY-MM-DDTHH:mm')
+            ? 
+
+            moment.utc(cohortStartDate).local().format('YYYY-MM-DDTHH:mm')
+            : moment.utc(JSON.parse(props.value).expiryDate).local().format('YYYY-MM-DDTHH:mm')
     );
 
     if (publishingDate && expiryDate) {
@@ -29,8 +32,8 @@ const PackageDateConfig = (props: any) => {
                     aria-label="Default"
                     aria-describedby="inputGroup-sizing-default"
                     type="datetime-local"
-                    min={moment().format('YYYY-MM-DDTHH:mm')}
-                    max={moment(cohortStartDate).format('YYYY-MM-DDTHH:mm')}
+                    min={moment.utc().local().format('YYYY-MM-DDTHH:mm')}
+                    max={moment.utc(cohortStartDate).local().format('YYYY-MM-DDTHH:mm')}
                     value={publishingDate}
                     onChange={(e) => {
                         setPublishingDate(e.target.value);
@@ -54,7 +57,7 @@ const PackageDateConfig = (props: any) => {
                     onChange={(e) => {
                         setExpiryDate(e.target.value);
                     }}
-                    max={moment(cohortStartDate).subtract(1, 'days').format('YYYY-MM-DDTHH:mm')}
+                    max={moment.utc(cohortStartDate).subtract(1, 'days').local().format('YYYY-MM-DDTHH:mm')}
                 />
             </InputGroup>
             {props?.title2 && (

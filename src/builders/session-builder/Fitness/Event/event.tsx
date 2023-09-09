@@ -1,16 +1,16 @@
 import { useQuery } from '@apollo/client';
 import React, { useContext, useMemo, useRef, useState , useEffect } from 'react';
 import { Badge, Row, Col, Button } from 'react-bootstrap';
-import Table from '../../../../components/table';
-import AuthContext from '../../../../context/auth-context';
+import Table from 'components/table';
+import AuthContext from 'context/auth-context';
 import { GET_TAGS_FOR_EVENT } from '../../graphQL/queries';
 import FitnessAction from '../FitnessAction';
-import ActionButton from '../../../../components/actionbutton';
-import { flattenObj } from '../../../../components/utils/responseFlatten';
+import ActionButton from 'components/actionbutton';
+import { flattenObj } from 'components/utils/responseFlatten';
 import moment from 'moment';
 import { Tag, TableContent } from '../Interfaces';
 
-const Event: React.FC = () => {
+const Event: React.FC<{industry: any;}> = (industry) => {
     const auth = useContext(AuthContext);
     const [userPackage, setUserPackage] = useState<TableContent[]>([]);
     const fitnessActionRef = useRef<any>(null);
@@ -18,7 +18,7 @@ const Event: React.FC = () => {
     const [totalRecords, setTotalRecords] = useState<number>(0);
 
     const mainQuery = useQuery(GET_TAGS_FOR_EVENT, {
-        variables: { id: auth.userid, start: page * 10 - 10, limit: 10 },
+        variables: { industryId: industry.industry.industry.id , id: auth.userid, start: page * 10 - 10, limit: 10 },
         onCompleted: (data) => {
             loadData(data);
             setTotalRecords(data.tags.meta.pagination.total);

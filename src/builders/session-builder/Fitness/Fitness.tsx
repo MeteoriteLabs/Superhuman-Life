@@ -9,7 +9,7 @@ import Cohort from './Cohort/cohort';
 import Event from './Event/event';
 import './fitness.css';
 
-const Fitness: React.FC = () => {
+const Fitness: React.FC<{industry: any;}> = (industry) => {
     return (
         <div>
             <Card className="shadow-sm mt-2" border="light">
@@ -25,37 +25,37 @@ const Fitness: React.FC = () => {
                             title="One-On-One"
                             style={{ whiteSpace: 'nowrap', textAlign: 'center' }}
                         >
-                            <PT />
+                            <PT industry={industry}/>
                         </Tab>
                         <Tab
                             eventKey="group"
                             title="Group"
                             style={{ whiteSpace: 'nowrap', textAlign: 'center' }}
                         >
-                            <Group />
+                            <Group industry={industry}/>
                         </Tab>
                         <Tab
                             eventKey="classic"
                             title="Recorded"
                             style={{ whiteSpace: 'nowrap', textAlign: 'center' }}
                         >
-                            <Classic />
+                            <Classic industry={industry}/>
                         </Tab>
                         <Tab eventKey="custom" title="Custom">
-                            <Custom />
+                            <Custom industry={industry}/>
                         </Tab>
                         <Tab
                             eventKey="liveStream"
                             title="Live Stream"
                             style={{ whiteSpace: 'nowrap', textAlign: 'center' }}
                         >
-                            <Channel />
+                            <Channel industry={industry}/>
                         </Tab>
                         <Tab eventKey="cohort" title="Cohort">
-                            <Cohort />
+                            <Cohort industry={industry}/>
                         </Tab>
                         <Tab eventKey="event" title="Event">
-                            <Event />
+                            <Event industry={industry}/>
                         </Tab>
                     </Tabs>
                 </Card.Body>

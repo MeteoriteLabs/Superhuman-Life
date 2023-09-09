@@ -111,7 +111,7 @@ const ChangemakersSettings: React.FC = () => {
                     </Col> */}
 
                     {/* Modules */}
-                    {/* <Col className="pb-1 pt-2" md={{ span: 4 }} sm={12} onClick={() => setShowModuleSetting(true)} style={{ cursor: 'pointer' }}>
+                    <Col className="pb-1 pt-2" md={{ span: 4 }} sm={12} onClick={() => setShowModuleSetting(true)} style={{ cursor: 'pointer' }}>
                         <Card className="shadow-lg bg-white rounded p-3">
 
                             <Card.Body className='text-center'>
@@ -122,7 +122,7 @@ const ChangemakersSettings: React.FC = () => {
                                 </Card.Text>
                             </Card.Body>
                         </Card>
-                    </Col> */}
+                    </Col>
 
                     {/* Delete Account */}
                     <Col
