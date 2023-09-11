@@ -9,6 +9,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { ArrowDownShort } from 'react-bootstrap-icons';
 
 import style from './style.module.css';
+import UploadImageToS3WithNativeSdk from 'components/upload/upload';
 // * --------------------- Types ---------------------
 
 type FormData = {
@@ -195,19 +196,30 @@ function Features({ page }: { page: string }): JSX.Element {
                                                   )}
                                               />
                                           </Form.Group>
-                                          <Form.Group>
-                                              {/* <Form.Label>Image</Form.Label>
-                        <Controller
-                          name={`features.${index}.icons`}
-                          control={control}
-                          render={({ field }) => (
-                            <Form.Control
-                              type="file"
-                              style={{ fontSize: 14 }}
-                              as="input"
-                              {...field}></Form.Control>
-                          )}
-                        /> */}
+
+                                          <Form.Group controlId="image">
+                                              <Form.Label className={style.label_text}>
+                                                  Image
+                                              </Form.Label>
+                                              <Controller
+                                                  name={`features.${index}.icons`}
+                                                  control={control}
+                                                  render={({ field }) => (
+                                                      <UploadImageToS3WithNativeSdk
+                                                          allowImage={true}
+                                                          allowVideo={false}
+                                                          form={true}
+                                                          uploadInterface="modal"
+                                                          onChange={(
+                                                              event: React.ChangeEvent<HTMLInputElement>
+                                                          ) => {
+                                                              field.onChange(event);
+                                                          }}
+                                                          value={field.value}
+                                                          aspectRatio={'1:1'}
+                                                      />
+                                                  )}
+                                              />
                                           </Form.Group>
                                       </Card.Body>
                                   </Accordion.Collapse>

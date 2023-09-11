@@ -124,7 +124,7 @@ function Hero({ page }: { page: string }): JSX.Element {
                         </Form.Control.Feedback>
                     )}
                 </Form.Group>
-                <Form.Group controlId="description">
+                <Form.Group controlId="image">
                     <Form.Label className={style.label_text}>Image</Form.Label>
                     <Controller
                         name="image"
