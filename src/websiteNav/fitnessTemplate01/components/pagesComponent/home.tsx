@@ -1,7 +1,8 @@
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import styles from '../../../style.module.css';
 import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
 import { WindowFullscreen } from 'react-bootstrap-icons';
+import returnRoute from 'lib/returnRoutes';
 
 function Home(): JSX.Element {
     const { setChangemakerWebsiteState, changemakerWebsiteState } =
@@ -15,7 +16,8 @@ function Home(): JSX.Element {
                     e.stopPropagation();
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
-                        section: 'Hero'
+                        section: 'Hero',
+                        currentSelectedRoute: `${returnRoute('Home')}/#hero`
                     });
                 }}
             >
@@ -27,7 +29,8 @@ function Home(): JSX.Element {
                     e.stopPropagation();
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
-                        section: 'Features'
+                        section: 'Features',
+                        currentSelectedRoute: `${returnRoute('Home')}/#features`
                     });
                 }}
             >
@@ -39,7 +42,8 @@ function Home(): JSX.Element {
                     e.stopPropagation();
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
-                        section: 'Cta'
+                        section: 'Cta',
+                        currentSelectedRoute: `${returnRoute('Home')}/#cta`
                     });
                 }}
             >
@@ -53,7 +57,8 @@ function Home(): JSX.Element {
                     e.stopPropagation();
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
-                        section: 'Pricing'
+                        section: 'Pricing',
+                        currentSelectedRoute: `${returnRoute('Home')}/#pricing`
                     });
                 }}
             >
@@ -66,7 +71,8 @@ function Home(): JSX.Element {
                     e.stopPropagation();
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
-                        section: 'Testimonials'
+                        section: 'Testimonials',
+                        currentSelectedRoute: `${returnRoute('Home')}/#testimonials`
                     });
                 }}
             >

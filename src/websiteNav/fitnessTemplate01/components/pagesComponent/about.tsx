@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import styles from '../../../style.module.css';
 import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
 import { WindowFullscreen } from 'react-bootstrap-icons';
+import returnRoute from 'lib/returnRoutes';
 
 function Home(): JSX.Element {
     const { setChangemakerWebsiteState, changemakerWebsiteState } =
@@ -14,7 +15,8 @@ function Home(): JSX.Element {
                     e.stopPropagation();
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
-                        section: 'Hero'
+                        section: 'Hero',
+                        currentSelectedRoute: `${returnRoute('About')}/#hero`
                     });
                 }}
             >
@@ -26,7 +28,8 @@ function Home(): JSX.Element {
                     e.stopPropagation();
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
-                        section: 'Team'
+                        section: 'Team',
+                        currentSelectedRoute: `${returnRoute('Offerings')}/#team`
                     });
                 }}
             >
