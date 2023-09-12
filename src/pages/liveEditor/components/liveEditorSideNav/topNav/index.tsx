@@ -1,14 +1,15 @@
 import { Button, Col, Row } from 'react-bootstrap';
-
 import style from './style.module.css';
-import ArrowDown from 'components/Icons/componentIcons/arrowDown';
 import ArrowRight from 'components/Icons/componentIcons/arrowRight';
 import { useContext } from 'react';
 import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
+import MobileViewIcon from 'components/Icons/mobileViewIcon';
+import DesktopViewIcon from 'components/Icons/desktopViewIcon';
 import { Link } from 'react-router-dom';
 
 function TopNav(): JSX.Element {
-    const { changemakerWebsiteState } = useContext(ChangeMakerWebsiteContext);
+    const { changemakerWebsiteState, setChangemakerWebsiteState } =
+        useContext(ChangeMakerWebsiteContext);
     return (
         <div className={style.top_nav}>
             <Row className="mb-0">
@@ -21,10 +22,36 @@ function TopNav(): JSX.Element {
                     </Link>
                 </Col>
 
-                <Col className={style.top_nav_col} lg="5" xs="4">
-                    <p className="mb-0">Options</p>
-                    <div className={style.svg_cont}>
-                        <ArrowDown width={7} height={7} />
+                <Col className={style.top_nav_col} xs="5">
+                    <div
+                        className={`${style.responsive_icon} ${
+                            changemakerWebsiteState.iframeSize === 'mobile'
+                                ? style.active_mobile_view
+                                : ''
+                        }`}
+                        onClick={() =>
+                            setChangemakerWebsiteState({
+                                ...changemakerWebsiteState,
+                                iframeSize: 'mobile'
+                            })
+                        }
+                    >
+                        <MobileViewIcon />
+                    </div>
+                    <div
+                        className={`${style.responsive_icon} ${
+                            changemakerWebsiteState.iframeSize === 'desktop'
+                                ? style.active_mobile_view
+                                : ''
+                        }`}
+                        onClick={() =>
+                            setChangemakerWebsiteState({
+                                ...changemakerWebsiteState,
+                                iframeSize: 'desktop'
+                            })
+                        }
+                    >
+                        <DesktopViewIcon />
                     </div>
                 </Col>
                 <Col className={style.top_nav_col} xs="1">

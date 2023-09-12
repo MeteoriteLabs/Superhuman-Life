@@ -28,7 +28,7 @@ function Index(): JSX.Element {
                 margin: 'auto'
             }}
         >
-            <div style={{ width: '100%', height: '92vh' }}>
+            <div style={{ width: '100%', height: '92vh', display: 'flex' }}>
                 {changemakerWebsiteState.loading ? (
                     <div
                         style={{
@@ -48,7 +48,10 @@ function Index(): JSX.Element {
                         allowFullScreen={true}
                         style={{
                             background: 'white',
-                            width: '100%',
+                            width: `${
+                                changemakerWebsiteState.iframeSize === 'mobile' ? '560px' : '100%'
+                            }`,
+                            margin: '0 auto',
                             height: '142%',
                             borderRadius: '10px 10px 0 0',
                             transform: 'scale(.7)',
