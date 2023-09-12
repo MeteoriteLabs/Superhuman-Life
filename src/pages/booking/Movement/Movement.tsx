@@ -10,7 +10,7 @@ import { GET_ALL_BOOKINGS } from '../GraphQL/queries';
 import BookingAction from './BookingAction';
 import { flattenObj } from 'components/utils/responseFlatten';
 
-export default function Movement() {
+export default function Movement(industry) {
     const history = useHistory();
     const auth = useContext(authContext);
     const [userPackage, setUserPackage] = useState<any>([]);
@@ -18,12 +18,12 @@ export default function Movement() {
     const [page, setPage] = useState<number>(1);
     const [totalRecords, setTotalRecords] = useState<number>(0);
 
-    // eslint-disable-next-line
-    const { data: get_bookings, refetch: refetchBookings } = useQuery(GET_ALL_BOOKINGS, {
+    const { refetch: refetchBookings } = useQuery(GET_ALL_BOOKINGS, {
         variables: {
             id: auth.userid,
             start: page * 10 - 10,
-            limit: 10
+            limit: 10,
+            industryId: industry.industry.id
         },
         onCompleted: (data) => {
             setTotalRecords(data.clientBookings.meta.pagination.total);
@@ -91,13 +91,13 @@ export default function Movement() {
                     );
                 }
             },
-            {
-                accessor: 'effectiveDate',
-                Header: 'Effective Date',
-                Cell: (row: any) => {
-                    return <p>{moment(row.value).format('MMMM DD, YYYY')}</p>;
-                }
-            },
+            // {
+            //     accessor: 'effectiveDate',
+            //     Header: 'Effective Date',
+            //     Cell: (row: any) => {
+            //         return <p>{moment(row.value).format('MMMM DD, YYYY')}</p>;
+            //     }
+            // },
             {
                 accessor: 'packageRenewal',
                 Header: 'Renewal Date',

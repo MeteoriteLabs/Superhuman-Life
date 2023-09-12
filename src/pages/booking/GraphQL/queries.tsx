@@ -1,9 +1,9 @@
 import { gql } from '@apollo/client';
 
 export const GET_ALL_BOOKINGS = gql`
-    query clientBookings($id: ID!, $start: Int, $limit: Int) {
+    query clientBookings($id: ID!, $start: Int, $limit: Int, $industryId: ID) {
         clientBookings(
-            filters: { fitnesspackages: { users_permissions_user: { id: { eq: $id } } } }
+            filters: { fitnesspackages: { Industry:{ id: { eq: $industryId } } ,   users_permissions_user: { id: { eq: $id } } } }
             pagination: { start: $start, limit: $limit }
             sort: ["booking_date:desc"]
         ) {
@@ -51,6 +51,13 @@ export const GET_ALL_BOOKINGS = gql`
                                 users_permissions_user {
                                     data {
                                         id
+                                        attributes{
+                                            industries{
+                                                data{
+                                                    id
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
