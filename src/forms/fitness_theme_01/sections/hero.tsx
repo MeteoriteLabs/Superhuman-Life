@@ -23,7 +23,7 @@ function Hero({ page }: { page: string }): JSX.Element {
         image: '',
         sectionId: ''
     });
-
+    console.log(page);
     const {
         handleSubmit,
         control,
@@ -124,26 +124,28 @@ function Hero({ page }: { page: string }): JSX.Element {
                         </Form.Control.Feedback>
                     )}
                 </Form.Group>
-                <Form.Group controlId="description">
-                    <Form.Label className={style.label_text}>Image</Form.Label>
-                    <Controller
-                        name="image"
-                        control={control}
-                        render={({ field }) => (
-                            <UploadImageToS3WithNativeSdk
-                                allowImage={true}
-                                allowVideo={false}
-                                form={true}
-                                uploadInterface="modal"
-                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                    field.onChange(event);
-                                }}
-                                value={field.value}
-                                aspectRatio={'1:1'}
-                            />
-                        )}
-                    />
-                </Form.Group>
+                {page !== 'Offerings' && (
+                    <Form.Group controlId="image">
+                        <Form.Label className={style.label_text}>Image</Form.Label>
+                        <Controller
+                            name="image"
+                            control={control}
+                            render={({ field }) => (
+                                <UploadImageToS3WithNativeSdk
+                                    allowImage={true}
+                                    allowVideo={false}
+                                    form={true}
+                                    uploadInterface="modal"
+                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                        field.onChange(event);
+                                    }}
+                                    value={field.value}
+                                    aspectRatio={'1:1'}
+                                />
+                            )}
+                        />
+                    </Form.Group>
+                )}
                 {errors.image && (
                     <Form.Control.Feedback tooltip>{errors.image.message}</Form.Control.Feedback>
                 )}
