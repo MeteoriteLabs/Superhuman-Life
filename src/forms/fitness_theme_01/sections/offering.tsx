@@ -1,12 +1,12 @@
 import { useForm, Controller } from 'react-hook-form';
 import { Button, Form } from 'react-bootstrap';
 import { useMutation, useQuery } from '@apollo/client';
-import { UPDATE_WEBSITE_SECTION } from '../queries/hero';
+import { UPDATE_WEBSITE_SECTION } from '../queries/offerings';
 import { GET_WEBSITE_SECTION } from '../queries';
 import authContext from 'context/auth-context';
 import { useContext, useEffect, useState } from 'react';
 import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
-import UploadImageToS3WithNativeSdk from 'components/upload/upload';
+
 import style from './style.module.css';
 
 type FormData = {
@@ -15,7 +15,7 @@ type FormData = {
     image: string;
 };
 
-function Hero({ page }: { page: string }): JSX.Element {
+function Offering({ type }: { type: string }): JSX.Element {
     const auth = useContext(authContext);
     const [initialValues, setInitialValues] = useState({
         title: '',
@@ -32,8 +32,7 @@ function Hero({ page }: { page: string }): JSX.Element {
     } = useForm<FormData>({
         defaultValues: {
             title: initialValues.title,
-            description: initialValues.description,
-            image: initialValues.image
+            description: initialValues.description
         }
     });
 
@@ -43,35 +42,33 @@ function Hero({ page }: { page: string }): JSX.Element {
     useQuery(GET_WEBSITE_SECTION, {
         variables: {
             id: auth.userid,
-            sectionPage: page,
-            sectionType: 'Hero'
+            sectionPage: 'Offerings',
+            sectionType: type
         },
         onCompleted: (data) => {
             setInitialValues({
                 ...initialValues,
                 sectionId: data.websiteSections.data[0].id,
-                title: data.websiteSections.data[0].attributes.sectionData.title,
-                description: data.websiteSections.data[0].attributes.sectionData.description,
-                image: data.websiteSections.data[0].attributes.sectionData.image
+                title: data.websiteSections.data[0].attributes.sectionData.intro.title,
+                description: data.websiteSections.data[0].attributes.sectionData.intro.description
             });
             reset({
-                title: data.websiteSections.data[0].attributes.sectionData.title,
-                description: data.websiteSections.data[0].attributes.sectionData.description
+                title: data.websiteSections.data[0].attributes.sectionData.intro.title,
+                description: data.websiteSections.data[0].attributes.sectionData.intro.description
             });
         }
     });
 
-    const [mutateFunction, { loading, error }] = useMutation(UPDATE_WEBSITE_SECTION);
+    const [mutateFunction, { loading }] = useMutation(UPDATE_WEBSITE_SECTION);
 
     const onSubmit = handleSubmit(async (formData) => {
-        const { title, description, image } = formData;
+        const { title, description } = formData;
 
         await mutateFunction({
             variables: {
                 id: initialValues.sectionId,
                 title: title ? title : initialValues.title,
-                desc: description ? description : initialValues.description,
-                image: image ? image : initialValues.image
+                desc: description ? description : initialValues.description
             }
         });
     });
@@ -80,7 +77,7 @@ function Hero({ page }: { page: string }): JSX.Element {
         loading
             ? setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: true })
             : setChangemakerWebsiteState({ ...changemakerWebsiteState, loading: false });
-    }, [loading, error]);
+    }, [loading]);
 
     return (
         <div className={style.form_container}>
@@ -124,26 +121,7 @@ function Hero({ page }: { page: string }): JSX.Element {
                         </Form.Control.Feedback>
                     )}
                 </Form.Group>
-                <Form.Group controlId="description">
-                    <Form.Label className={style.label_text}>Image</Form.Label>
-                    <Controller
-                        name="image"
-                        control={control}
-                        render={({ field }) => (
-                            <UploadImageToS3WithNativeSdk
-                                allowImage={true}
-                                allowVideo={false}
-                                form={true}
-                                uploadInterface="modal"
-                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                    field.onChange(event);
-                                }}
-                                value={field.value}
-                                aspectRatio={'1:1'}
-                            />
-                        )}
-                    />
-                </Form.Group>
+
                 {errors.image && (
                     <Form.Control.Feedback tooltip>{errors.image.message}</Form.Control.Feedback>
                 )}
@@ -156,4 +134,4 @@ function Hero({ page }: { page: string }): JSX.Element {
     );
 }
 
-export default Hero;
+export default Offering;

@@ -41,3 +41,39 @@ export const FETECH_SELECTED_TEMPLATE = gql`
         }
     }
 `;
+
+export const FETCH_TEMPLATE_BY_ID = gql`
+query getTemplate($Id: ID!) {
+  template(id: $Id) {
+    data {
+      id
+      attributes {
+        templateName
+        CreatedBy
+        logo
+        thumbnail
+        description
+        features
+        goodFor
+        defaultData
+        website_sections {
+          data {
+            id
+            attributes {
+              inUse
+              sectionName
+              sectionData
+              sectionPage
+              sectionType
+              createdAt
+              updatedAt
+            }
+          }
+        }
+        templateUrl
+        createdAt
+        updatedAt
+      }
+    }
+  }
+}`;

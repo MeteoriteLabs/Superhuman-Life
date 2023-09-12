@@ -1,0 +1,34 @@
+.card-body .nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+    color: white;
+    background-color: #343a40;
+    font-weight: bold;
+}
+
+.cards {
+    padding: 0.1rem 1.25rem 1.25rem !important;
+}
+
+.cards .nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+    background-color: #636363;
+    border-radius: 20px;
+    color: white;
+    padding: 0.5rem 3rem;
+    transition: all 0.5s;
+}
+
+.cards .nav-link {
+    padding: 0.5rem 3rem;
+}
+
+.nav-pills a {
+    color: #636363;
+    white-space: nowrap !important;
+    text-align: center !important;
+}
+
+.scheduler-badge {
+    border: 2px solid skyblue;
+    border-radius: 20px;
+}

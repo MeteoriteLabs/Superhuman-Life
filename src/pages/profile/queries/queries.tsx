@@ -16,6 +16,14 @@ export const FETCH_USER_PROFILE_DATA = gql`
                     about_mini_description
                     Document_Verified
                     updatedAt
+                    industries{
+                        data{
+                            id
+                            attributes{
+                                IndustryName
+                            }
+                        }
+                    }
                     designations {
                         data {
                             id

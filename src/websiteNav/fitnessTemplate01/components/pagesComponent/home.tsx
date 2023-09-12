@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import styles from '../../../style.module.css';
 import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
 import { WindowFullscreen } from 'react-bootstrap-icons';
@@ -6,11 +6,13 @@ import { WindowFullscreen } from 'react-bootstrap-icons';
 function Home(): JSX.Element {
     const { setChangemakerWebsiteState, changemakerWebsiteState } =
         useContext(ChangeMakerWebsiteContext);
+
     return (
         <div>
             <div
                 className={styles.section_title_cont}
-                onClick={() => {
+                onClick={(e) => {
+                    e.stopPropagation();
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
                         section: 'Hero'
@@ -21,7 +23,8 @@ function Home(): JSX.Element {
             </div>
             <div
                 className={styles.section_title_cont}
-                onClick={() => {
+                onClick={(e) => {
+                    e.stopPropagation();
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
                         section: 'Features'
@@ -32,7 +35,8 @@ function Home(): JSX.Element {
             </div>
             <div
                 className={styles.section_title_cont}
-                onClick={() => {
+                onClick={(e) => {
+                    e.stopPropagation();
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
                         section: 'Cta'
@@ -45,7 +49,8 @@ function Home(): JSX.Element {
 
             <div
                 className={styles.section_title_cont}
-                onClick={() => {
+                onClick={(e) => {
+                    e.stopPropagation();
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
                         section: 'Pricing'
@@ -57,7 +62,8 @@ function Home(): JSX.Element {
             </div>
             <div
                 className={styles.section_title_cont}
-                onClick={() => {
+                onClick={(e) => {
+                    e.stopPropagation();
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
                         section: 'Testimonials'

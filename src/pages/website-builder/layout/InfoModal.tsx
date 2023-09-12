@@ -3,6 +3,10 @@ import { CheckCircle } from 'react-bootstrap-icons';
 import { Button, Col, ListGroup, Modal, Row } from 'react-bootstrap';
 
 import style from './info.module.css';
+import { FETCH_TEMPLATE_BY_ID } from '../queries/templates';
+import { useLazyQuery } from '@apollo/client';
+import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
+import { useContext, useState } from 'react';
 
 function InfoModal({
     data,
@@ -11,12 +15,32 @@ function InfoModal({
     data: Template;
     setInfoData: (data: Template | null) => void;
 }): JSX.Element {
+    const { changemakerWebsiteState, setChangemakerWebsiteState } =
+        useContext(ChangeMakerWebsiteContext);
+
+    const [selectedTemplateSections, setSelectedTemplateSections] = useState() as any;
     const handleClose = () => {
         setInfoData(null);
     };
 
+    const [getUserSelectedTemplate] = useLazyQuery(FETCH_TEMPLATE_BY_ID);
+
     const setTemplateAsSelected = () => {
-        // ! multiple templates
+        getUserSelectedTemplate({
+            variables: {
+                Id: data.id
+            },
+            onCompleted: (data) => {
+                setSelectedTemplateSections(data);
+            }
+        });
+
+        // create a iterator that goes through each section and creates a new section using a mutation
+        // selectedTemplateSections?.templateById?.sections?.map((section: any) => {
+
+        // });
+
+        // set the template as selected in changemakerWebsite table using a mutation and give it subdomain using user id
         setInfoData(null);
     };
 

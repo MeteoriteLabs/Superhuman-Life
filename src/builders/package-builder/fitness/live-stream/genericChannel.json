@@ -1,0 +1,104 @@
+{
+    "1": {
+        "title": "",
+        "type": "object",
+        "required": ["channelName", "equipment", "dates"],
+        "properties": {
+            "channelName": {
+                "type": "string",
+                "title": "Name of Offering",
+                "description": "Enter the Title for Offering"
+            },
+            "equipment": {
+                "type": "string",
+                "description": "Add all tools required"
+            },
+            "tag": {
+                "type": "string",
+                "title": "Hash tags",
+                "description": "Use hashtags to improve your listing"
+            },
+            "dates": {
+                "type": "string"
+            },
+            "durationOfOffering": {
+                "type": "array",
+                "title": "Choose the relevant payment durations",
+                "items": {
+                    "type": "string",
+                    "enum": ["1 day", "30 days", "90 days", "180 days", "360 days"]
+                },
+                "uniqueItems": true,
+                "default": ["1 day", "30 days", "90 days", "180 days", "360 days"]
+            }
+        }
+    },
+    "2": {
+        "title": "",
+        "type": "object",
+        "required": ["About", "Benifits", "thumbnail", "VideoUrl", "languages"],
+        "properties": {
+            "About": {
+                "type": "string",
+                "title": "About",
+                "description": "Summarize the offering"
+            },
+            "Benifits": {
+                "type": "string",
+                "title": "Benefits",
+                "description": "List the advantages"
+            },
+            "languages": {
+                "type": "string"
+            },
+            "thumbnail": {
+                "type": "string",
+                "description": "This image will be seen in the listing screen"
+            },
+            "VideoUrl": {
+                "type": "string",
+                "format": "youtubeurl",
+                "description": "Add Youtube URL"
+            }
+        }
+    },
+    "3": {
+        "title": "",
+        "type": "object",
+        "required": ["channelinstantBooking"],
+        "properties": {
+            "channelinstantBooking": {
+                "type": "string",
+                "title": "Allow instant Bookings"
+            }
+        }
+    },
+    "4": {
+        "title": "",
+        "type": "object",
+        "required": ["pricing"],
+        "properties": {
+            "pricing": {
+                "type": "string"
+            }
+        }
+    },
+    "5": {
+        "title": "Package Settings",
+        "type": "object",
+        "required": ["visibility", "datesConfig"],
+        "properties": {
+            "visibility": {
+                "type": "number",
+                "title": "Visibility",
+                "enum": [0, 1],
+                "enumNames": ["Public", "Private"],
+                "default": 0,
+                "description": "Public: The Offering will be visible to the user as soon as it is created, Private: The offering will not ve seen by anyone until you share it with them"
+            },
+            "datesConfig": {
+                "type": "string"
+            }
+        }
+    }
+}

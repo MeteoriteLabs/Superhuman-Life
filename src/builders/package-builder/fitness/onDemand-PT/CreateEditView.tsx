@@ -33,6 +33,9 @@ function CreateEditOnDemadPt(props: any, ref: any) {
     const personalTrainingSchema: {
         [name: string]: any;
     } = require('./onDemand-PT.json');
+    const genericSchema: {
+        [name: string]: any;
+    } = require('./genericOnDemandPT.json');
     const [personalTrainingDetails, setPersonalTrainingDetails] = useState<any>({});
     const [fitnessTypes, setFitnessType] = useState<any[]>([]);
     const [operation, setOperation] = useState<Operation>({} as Operation);
@@ -406,7 +409,7 @@ function CreateEditOnDemadPt(props: any, ref: any) {
                 formUISchema={operation.type === 'view' ? schemaView : schema}
                 showErrorList={false}
                 stepperValues={['Creator', 'Details', 'Program', 'Pricing', 'Config']}
-                formSchema={personalTrainingSchema}
+                formSchema={props.industry.industry.id === "12" ? personalTrainingSchema : genericSchema}
                 formSubmit={
                     name === 'View'
                         ? () => {

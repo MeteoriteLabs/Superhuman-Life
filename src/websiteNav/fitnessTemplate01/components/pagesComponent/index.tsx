@@ -59,6 +59,7 @@ function Index(): JSX.Element {
                                 ...changemakerWebsiteState,
                                 currentSelectedRoute: returnRoute(page)
                             });
+
                             setCountClick(countClick + 1);
                         }}
                     >
