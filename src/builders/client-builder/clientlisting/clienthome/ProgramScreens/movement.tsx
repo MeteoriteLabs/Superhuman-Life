@@ -62,6 +62,26 @@ function Movement() {
                                     ) : (
                                         ''
                                     )}
+                                    {row.value === 'Cohort' ? (
+                                        <img src="/assets/cohort.svg" alt="Cohort" />
+                                    ) : (
+                                        ''
+                                    )}
+                                    {row.value === 'On-Demand PT' ? (
+                                        <img src="/assets/pt.svg" alt="OnDemand" />
+                                    ) : (
+                                        ''
+                                    )}
+                                    {row.value === 'Live Stream Channel' ? (
+                                        <img src="/assets/livestream.svg" alt="Live Stream" />
+                                    ) : (
+                                        ''
+                                    )}
+                                    {row.value === 'Event' ? (
+                                        <img src="/assets/event-1.jpeg" alt="Event" />
+                                    ) : (
+                                        ''
+                                    )}
                                 </>
                             );
                         }
@@ -138,56 +158,81 @@ function Movement() {
 
     function loadData(data: any) {
         const flattenData = flattenObj({ ...data });
+
+        flattenData.clientPackages ? 
         setHistoryDataTable(
             [...flattenData.clientPackages].flatMap((Detail) =>
-                compareDates(getRenewalDate(Detail.effective_date, Detail.package_duration))
+                !compareDates(getRenewalDate(Detail.effective_date, Detail.package_duration))
                     ? {
-                          id: Detail.users_permissions_user.id,
-                          packagetype: Detail.fitnesspackages[0].fitness_package_type.type,
-                          //   packagename: Detail.program_managers[0]
-                          //        ? Detail.program_managers[0].fitnesspackages[0].packagename
-                          //        : Detail.fitnesspackages[0].packagename,
-                          packagedate: getDate(Date.parse(Detail.effective_date)),
-                          packagerenewdate: getRenewalDate(
-                              Detail.effective_date,
-                              Detail.package_duration
-                          )
-                          //   programname: Detail.program_managers[0]
-                          //        ? Detail.program_managers[0].fitnessprograms[0].title
-                          //        : "N/A",
-                          //   programrenewal: Detail.program_managers[0]
-                          //        ? getRenewalDate(Detail.effective_date, Detail.package_duration)
-                          //        : "N/A",
-                          //   programstatus: Detail.program_managers[0] ? "Assigned" : "Not Assigned",
+                       
+                        id: Detail.fitnesspackages[0].users_permissions_user.id,
+
+                        packagetype: Detail && Detail.fitnesspackages && Detail.fitnesspackages.length  && Detail.fitnesspackages[0].fitness_package_type ? Detail.fitnesspackages[0].fitness_package_type.type : null,
+
+
+                        packagedate: getDate(Date.parse(Detail.effective_date)),
+                        packagename:
+                            Detail && Detail.fitnesspackages && Detail.fitnesspackages.length
+                                ? Detail.fitnesspackages[0].packagename
+                                : null,
+
+                        packagerenewdate: getRenewalDate(
+                            Detail.effective_date,
+                            Detail.package_duration
+                        ),
+
+                        programname: Detail && Detail.fitnesspackages && Detail.fitnesspackages.length
+                                ? Detail.fitnesspackages[0].__typename
+                                : null,
+                        programrenewal:
+                           getRenewalDate(Detail.effective_date, Detail.package_duration),
+                          
+
+                        programstatus: Detail && Detail.fitnesspackages && Detail.fitnesspackages.length
+                        ? Detail.fitnesspackages[0].Status.toString()
+                        : null,
+
                       }
                     : []
             )
-        );
+        ) : null;
+
+
+        flattenData.clientPackages ? 
         setActiveDataTable(
             [...flattenData.clientPackages].flatMap((Detail) =>
                 !compareDates(getRenewalDate(Detail.effective_date, Detail.package_duration))
                     ? {
                           id: Detail.fitnesspackages[0].users_permissions_user.id,
-                          packagetype: Detail.fitnesspackages[0].fitness_package_type.type,
-                          //   packagename: Detail.program_managers[0]
-                          //        ? Detail.program_managers[0].fitnesspackages[0].packagename
-                          //        : Detail.fitnesspackages[0].packagename,
+
+                          packagetype: Detail && Detail.fitnesspackages && Detail.fitnesspackages.length  && Detail.fitnesspackages[0].fitness_package_type ? Detail.fitnesspackages[0].fitness_package_type.type : null,
+
+
                           packagedate: getDate(Date.parse(Detail.effective_date)),
+                          packagename:
+                              Detail && Detail.fitnesspackages && Detail.fitnesspackages.length
+                                  ? Detail.fitnesspackages[0].packagename
+                                  : null,
+
                           packagerenewdate: getRenewalDate(
                               Detail.effective_date,
                               Detail.package_duration
-                          )
-                          //   programname: Detail.program_managers[0]
-                          //        ? Detail.program_managers[0].fitnessprograms[0].title
-                          //        : "N/A",
-                          //   programrenewal: Detail.program_managers[0]
-                          //        ? getRenewalDate(Detail.effective_date, Detail.package_duration)
-                          //        : "N/A",
-                          //   programstatus: Detail.program_managers[0] ? "Assigned" : "Not Assigned",
+                          ),
+
+                          programname: Detail && Detail.fitnesspackages && Detail.fitnesspackages.length
+                                  ? Detail.fitnesspackages[0].__typename
+                                  : null,
+                          programrenewal:
+                             getRenewalDate(Detail.effective_date, Detail.package_duration),
+                            
+
+                          programstatus: Detail && Detail.fitnesspackages && Detail.fitnesspackages.length
+                          ? Detail.fitnesspackages[0].Status.toString()
+                          : null,
                       }
                     : []
             )
-        );
+        ) : null;
     }
 
     FetchData({ id: auth.userid, clientid: last });

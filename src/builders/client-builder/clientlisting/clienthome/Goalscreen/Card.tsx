@@ -1,47 +1,49 @@
-import { Card } from 'react-bootstrap';
 import './GoalCard.css';
 
 function GoalCard(props: any) {
     return (
-        <Card border="secondary" className="goalCard" onClick={props.click}>
-            <Card.Body>
-                <Card.Title>
-                    <h4>{props.goalName}</h4>
-                </Card.Title>
-                <Card.Text as="div">
-                    <div className="d-flex">
-                        <div className="flex-fill">
-                            <p className="font-weight-bold p-1">Start Date:</p>
-                            <p className="p-1">{props.startDate}</p>
-                        </div>
-                        <div className="flex-fill">
-                            <p className="font-weight-bold p-1">End Date:</p>
-                            <p className="p-1">{props.endDate}</p>
-                        </div>
+        <>
+            <div className="d-flex justify-content-center" onClick={props.click}>
+                <div
+                    className="d-flex flex-column align-items-center justify-content-center mb-2 shadow bg-white rounded"
+                    style={{
+                        maxWidth: '90%',
+                        padding: '25px',
+                        width:"100%"
+                    }}
+                >
+                    <img
+                        src="/assets/image_placeholder.svg"
+                        height="90"
+                        className="rounded-circle"
+                        width="90"
+                        alt="avatar"
+                        style={{ backgroundColor: 'gray' }}
+                    />
+                    <div className="text-center mt-2">
+                        <p className="font-weight-bold">Updated By: {props.updatedBy}</p>
                     </div>
-                </Card.Text>
-            </Card.Body>
-            <Card.Header>
-                <div className="d-flex">
-                    <div className="flex-fill">
-                        <p className="font-weight-bold">Updated By:</p>
-                        <div className="d-flex flex-row ">
-                            <img
-                                src="/assets/avatar-1.jpg"
-                                height="50"
-                                className="rounded-circle"
-                                alt="avatar"
-                            />
-                            <p className="p-2">{props.updatedBy}</p>
-                        </div>
+                    <div className="text-center mt-3" style={{letterSpacing:"1px"}}>
+                        <h2>{props.goalName}</h2>
                     </div>
-                    <div className="flex-fill">
-                        <p className="font-weight-bold">Updated On:</p>
-                        <p className="p-1">{props.updatedOn}</p>
+                    <div style={{ marginTop: '30px'  }}>
+                        <div className="d-flex">
+                            <p className="font-weight-bold ">Start Date:</p>
+                            <p className="">{props.startDate}</p>
+                        </div>
+                        <div className="d-flex">
+                            <p className="font-weight-bold ">End Date:</p>
+                            <p className="">{props.endDate}</p>
+                        </div>
+                        <div className="d-flex">
+                            <p className="font-weight-bold ">Updated On:</p>
+                            <p className="">{props.updatedOn}</p>
+                        </div>
                     </div>
                 </div>
-            </Card.Header>
-        </Card>
+            </div>
+           </>
+    
     );
 }
 
