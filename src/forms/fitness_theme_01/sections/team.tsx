@@ -9,6 +9,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { ArrowDownShort } from 'react-bootstrap-icons';
 
 import style from './style.module.css';
+import UploadImageToS3WithNativeSdk from 'components/upload/upload';
 // * --------------------- Types ---------------------
 
 type FormData = {
@@ -216,6 +217,30 @@ function Team({ page }: { page: string }): JSX.Element {
                                                           rows={6}
                                                           {...field}
                                                       ></Form.Control>
+                                                  )}
+                                              />
+                                          </Form.Group>
+                                          <Form.Group controlId="image">
+                                              <Form.Label className={style.label_text}>
+                                                  Image
+                                              </Form.Label>
+                                              <Controller
+                                                  name={`team.${index}.image`}
+                                                  control={control}
+                                                  render={({ field }) => (
+                                                      <UploadImageToS3WithNativeSdk
+                                                          allowImage={true}
+                                                          allowVideo={false}
+                                                          form={true}
+                                                          uploadInterface="modal"
+                                                          onChange={(
+                                                              event: React.ChangeEvent<HTMLInputElement>
+                                                          ) => {
+                                                              field.onChange(event);
+                                                          }}
+                                                          value={field.value}
+                                                          aspectRatio={'1:1'}
+                                                      />
                                                   )}
                                               />
                                           </Form.Group>
