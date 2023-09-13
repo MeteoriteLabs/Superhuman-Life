@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import styles from '../../../style.module.css';
 import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
 import { WindowFullscreen } from 'react-bootstrap-icons';
+import returnRoute from 'lib/returnRoutes';
 
 function Home(): JSX.Element {
     const { setChangemakerWebsiteState, changemakerWebsiteState } =
@@ -13,7 +14,8 @@ function Home(): JSX.Element {
                 onClick={() => {
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
-                        section: 'Hero'
+                        section: 'Hero',
+                        currentSelectedRoute: `${returnRoute('Classes')}/#hero`
                     });
                 }}
             >
@@ -24,7 +26,8 @@ function Home(): JSX.Element {
                 onClick={() => {
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
-                        section: 'Features'
+                        section: 'Features',
+                        currentSelectedRoute: `${returnRoute('Classes')}/#features`
                     });
                 }}
             >
@@ -35,7 +38,8 @@ function Home(): JSX.Element {
                 onClick={() => {
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
-                        section: 'Scheduler'
+                        section: 'Scheduler',
+                        currentSelectedRoute: `${returnRoute('Classes')}/#scheduler`
                     });
                 }}
             >

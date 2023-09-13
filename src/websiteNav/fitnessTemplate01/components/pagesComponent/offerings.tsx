@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import styles from '../../../style.module.css';
 import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
 import { WindowFullscreen } from 'react-bootstrap-icons';
+import returnRoute from 'lib/returnRoutes';
 
 function Home(): JSX.Element {
     const { setChangemakerWebsiteState, changemakerWebsiteState } =
@@ -14,7 +15,8 @@ function Home(): JSX.Element {
                     e.stopPropagation();
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
-                        section: 'Hero'
+                        section: 'Hero',
+                        currentSelectedRoute: `${returnRoute('Offerings')}/#hero`
                     });
                 }}
             >
@@ -26,7 +28,8 @@ function Home(): JSX.Element {
                     e.stopPropagation();
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
-                        section: 'Group Offerings'
+                        section: 'Group Offerings',
+                        currentSelectedRoute: `${returnRoute('Offerings')}/#group-offerings`
                     });
                 }}
             >
@@ -38,7 +41,8 @@ function Home(): JSX.Element {
                     e.stopPropagation();
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
-                        section: 'Cohort'
+                        section: 'Cohort',
+                        currentSelectedRoute: `${returnRoute('Offerings')}/#cohort`
                     });
                 }}
             >
@@ -52,7 +56,8 @@ function Home(): JSX.Element {
                     e.stopPropagation();
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
-                        section: 'One to One'
+                        section: 'One to One',
+                        currentSelectedRoute: `${returnRoute('Offerings')}/#one-to-one`
                     });
                 }}
             >
@@ -65,7 +70,8 @@ function Home(): JSX.Element {
                     e.stopPropagation();
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
-                        section: 'Live Stream'
+                        section: 'Live Stream',
+                        currentSelectedRoute: `${returnRoute('Offerings')}/#live-stream`
                     });
                 }}
             >
@@ -77,7 +83,8 @@ function Home(): JSX.Element {
                     e.stopPropagation();
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
-                        section: 'Custom'
+                        section: 'Custom',
+                        currentSelectedRoute: `${returnRoute('Offerings')}/#custom`
                     });
                 }}
             >
