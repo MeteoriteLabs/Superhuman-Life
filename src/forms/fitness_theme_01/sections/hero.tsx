@@ -23,7 +23,7 @@ function Hero({ page }: { page: string }): JSX.Element {
         image: '',
         sectionId: ''
     });
-    console.log(page);
+   
     const {
         handleSubmit,
         control,
