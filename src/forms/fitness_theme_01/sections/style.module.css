@@ -25,3 +25,23 @@
     position: relative;
     width: 100%;
 }
+.svg_icons:hover{
+    background-color: #151515;
+    transform: scale(1.1);
+}
+.svg_icons{
+    cursor: pointer;
+}
+.svg_icons:active{
+    transform: scale(1);
+}
+.minus_icon{
+    width: 20px;
+    height: 20px;
+    padding-left: 3px;
+    padding-top: 4px
+}
+.plus_icon{
+    width: 25px; height: 25px
+
+}
