@@ -35,7 +35,7 @@ export default function Dashboard(): JSX.Element {
                             to={data.link}
                             sm
                             key={data.id}
-                            className="d-flex justify-content-center align-items-center lobby__card"
+                            className="d-none d-md-flex justify-content-center align-items-center lobby__card"
                             style={{
                                 background: `${
                                     LobbyColors[
@@ -56,9 +56,9 @@ export default function Dashboard(): JSX.Element {
                         <Col
                             as={Link}
                             to={data.link}
-                            sm={2}
+                            sm={6}
                             key={data.id}
-                            className="d-lg-none d-md-none d-sm-block d-flex justify-content-center align-items-center lobby__card1"
+                            className="d-lg-none d-md-none d-sm-flex d-flex justify-content-center align-items-center lobby__card1"
                             style={{
                                 background: `${
                                     LobbyColors[
