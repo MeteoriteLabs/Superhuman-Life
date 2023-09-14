@@ -23,7 +23,7 @@ export const LobbyData = [
     {
         color: '#0D6EBA',
         image: '/assets/miniLobby_icons/learn.svg',
-        link: '/support',
+        link: 'http://blog.sapien.systems',
         label: 'Learn',
         id: 6
     }

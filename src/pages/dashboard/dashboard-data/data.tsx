@@ -25,7 +25,7 @@ export const ImageCaptions = [
     {
         image: 'assets/lobby_images/learn.svg',
         color: '#0D6EBA',
-        link: '/support',
+        link: 'http://blog.sapien.systems',
         imageWidth: '55px',
         id: 6
     }
