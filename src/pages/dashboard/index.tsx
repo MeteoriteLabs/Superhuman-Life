@@ -46,7 +46,7 @@ export default function Dashboard(): JSX.Element {
                          }`,
                          height: '94vh'
                        }}
-                       target={data.link === "http://blog.sapien.systems" ? "_blank" : "_self"}
+                       target={data.link === process.env.REACT_APP_BLOG_URL || process.env.REACT_APP_SUPPORT_URL ? "_blank" : "_self"}
                      >
                        <img style={{ width: data.imageWidth }} src={data.image} alt="icon" />
                      </Col>
@@ -71,7 +71,7 @@ export default function Dashboard(): JSX.Element {
                                 }`,
                                 height: '45vh'
                             }}
-                            target={data.link === "http://blog.sapien.systems" ? "_blank" : "_self"}
+                            target={data.link === process.env.REACT_APP_BLOG_URL || process.env.REACT_APP_SUPPORT_URL ? "_blank" : "_self"}
                         >
                             <img style={{ width: data.imageWidth }} src={data.image} alt="icon" />
                         </Col>

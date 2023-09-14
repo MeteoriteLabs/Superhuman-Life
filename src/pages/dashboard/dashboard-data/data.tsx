@@ -18,14 +18,14 @@ export const ImageCaptions = [
     {
         image: 'assets/lobby_images/support.svg',
         color: '#0D6EBA',
-        link: '/support',
+        link: process.env.REACT_APP_SUPPORT_URL,
         imageWidth: '55px',
         id: 5
     },
     {
         image: 'assets/lobby_images/learn.svg',
         color: '#0D6EBA',
-        link: 'http://blog.sapien.systems',
+        link: process.env.REACT_APP_BLOG_URL,
         imageWidth: '55px',
         id: 6
     }

@@ -16,14 +16,14 @@ export const LobbyData = [
     {
         color: '#FFFFFF',
         image: '/assets/miniLobby_icons/support.svg',
-        link: '/support',
+        link: process.env.REACT_APP_SUPPORT_URL,
         label: 'Support',
         id: 5
     },
     {
         color: '#0D6EBA',
         image: '/assets/miniLobby_icons/learn.svg',
-        link: 'http://blog.sapien.systems',
+        link: process.env.REACT_APP_BLOG_URL,
         label: 'Learn',
         id: 6
     }
