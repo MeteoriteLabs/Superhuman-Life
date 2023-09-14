@@ -124,6 +124,7 @@ function Hero({ page }: { page: string }): JSX.Element {
                         </Form.Control.Feedback>
                     )}
                 </Form.Group>
+
                 {page !== 'Offerings' && (
                     <Form.Group controlId="image">
                         <Form.Label className={style.label_text}>Image</Form.Label>
@@ -146,6 +147,7 @@ function Hero({ page }: { page: string }): JSX.Element {
                         />
                     </Form.Group>
                 )}
+
                 {errors.image && (
                     <Form.Control.Feedback tooltip>{errors.image.message}</Form.Control.Feedback>
                 )}

@@ -9,6 +9,7 @@ export type changeMakerWebsiteStateTs = {
     loading: boolean;
     section: string | null;
     currentSelectedRoute: string | null;
+    iframeSize: 'mobile'| 'desktop'
 };
 export type changeMakerWebsiteTs = {
     changemakerWebsiteState: changeMakerWebsiteStateTs;

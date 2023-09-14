@@ -30,35 +30,37 @@ export default function Dashboard(): JSX.Element {
                 {/* main options on lobby for insights, blog, dashboard, website, support and learn */}
                 <Row>
                     {ImageCaptions.map((data, index) => (
-                        <Col
-                            as={Link}
-                            to={data.link}
-                            sm
-                            key={data.id}
-                            className="d-flex justify-content-center align-items-center lobby__card"
-                            style={{
-                                background: `${
-                                    LobbyColors[
-                                        randomColorInArray + index < totalNumberOfColors
-                                            ? randomColorInArray + index
-                                            : index
-                                    ]
-                                }`,
-                                height: '94vh'
-                            }}
-                        >
-                            <img style={{ width: data.imageWidth }} src={data.image} alt="icon" />
-                        </Col>
+                       <Col
+                       as={Link}
+                       to={{ pathname: data.link, state: { externalLink: true } }}
+                       sm
+                       key={data.id}
+                       className="d-none d-md-flex justify-content-center align-items-center lobby__card"
+                       style={{
+                         background: `${
+                           LobbyColors[
+                             randomColorInArray + index < totalNumberOfColors
+                               ? randomColorInArray + index
+                               : index
+                           ]
+                         }`,
+                         height: '94vh'
+                       }}
+                       target={data.link === process.env.REACT_APP_BLOG_URL || process.env.REACT_APP_SUPPORT_URL ? "_blank" : "_self"}
+                     >
+                       <img style={{ width: data.imageWidth }} src={data.image} alt="icon" />
+                     </Col>
+                     
                     ))}
 
                     {/* lobby for small screen */}
                     {ImageCaptions.map((data, index) => (
                         <Col
                             as={Link}
-                            to={data.link}
-                            sm={2}
+                            to={{ pathname: data.link, state: { externalLink: true } }}
+                            sm={6}
                             key={data.id}
-                            className="d-lg-none d-md-none d-sm-block d-flex justify-content-center align-items-center lobby__card1"
+                            className="d-lg-none d-md-none d-sm-flex d-flex justify-content-center align-items-center lobby__card1"
                             style={{
                                 background: `${
                                     LobbyColors[
@@ -69,6 +71,7 @@ export default function Dashboard(): JSX.Element {
                                 }`,
                                 height: '45vh'
                             }}
+                            target={data.link === process.env.REACT_APP_BLOG_URL || process.env.REACT_APP_SUPPORT_URL ? "_blank" : "_self"}
                         >
                             <img style={{ width: data.imageWidth }} src={data.image} alt="icon" />
                         </Col>

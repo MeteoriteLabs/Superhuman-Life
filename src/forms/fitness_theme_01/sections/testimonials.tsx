@@ -160,22 +160,24 @@ function Testimonials({ page }: { page: string }): JSX.Element {
                                                           />
                                                       ) : (
                                                           <Controller
-                                                              name={`testimonials.${index}.${input}`}
+                                                              name={`testimonials.${index}.image`}
                                                               control={control}
                                                               render={({ field }) => (
-                                                                  //   <UploadImageToS3WithNativeSdk
-                                                                  //       {...field}
-                                                                  //       allowImage={true}
-                                                                  //       allowVideo={false}
-                                                                  //       title={'Website Images'}
-                                                                  //       aspectRatio={'1:1'}
-                                                                  //       onChange={(
-                                                                  //           event: React.ChangeEvent<HTMLInputElement>
-                                                                  //       ) => {
-                                                                  //           field.onChange(event);
-                                                                  //       }}
-                                                                  //   />
-                                                                  <div></div>
+                                                                  <UploadImageToS3WithNativeSdk
+                                                                      {...field}
+                                                                      allowImage={true}
+                                                                      form={true}
+                                                                      allowVideo={false}
+                                                                      title={'Testimonial Images'}
+                                                                      aspectRatio={'1:1'}
+                                                                      uploadInterface="modal"
+                                                                      value={field.value}
+                                                                      onChange={(
+                                                                          event: React.ChangeEvent<HTMLInputElement>
+                                                                      ) => {
+                                                                          field.onChange(event);
+                                                                      }}
+                                                                  />
                                                               )}
                                                           />
                                                       )}

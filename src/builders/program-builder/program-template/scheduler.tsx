@@ -1735,36 +1735,6 @@ const Schedular = (props: any, ref) => {
     }
 
     useEffect(() => {
-        const sessionsObj = {};
-        const tag = flattenObj({ ...props.schedulerSessions.tags });
-
-        const sessions =
-            tag && tag.length && tag[0].sessions && tag[0].sessions.length ? tag[0].sessions : [];
-
-        for (let i = 0; i < sessions.length; i++) {
-            sessionsObj[sessions[i].session_date] = sessionsObj[sessions[i].session_date]
-                ? [
-                      ...sessionsObj[sessions[i].session_date],
-                      {
-                          startTime: sessions[i].start_time,
-                          endTime: sessions[i].end_time,
-                          name:
-                              sessions[i].type === 'workout'
-                                  ? sessions[i].workout.workouttitle
-                                  : sessions[i].activity?.title
-                      }
-                  ]
-                : [
-                      {
-                          startTime: sessions[i].start_time,
-                          endTime: sessions[i].end_time,
-                          name:
-                              sessions[i].type === 'workout'
-                                  ? sessions[i].workout.workouttitle
-                                  : sessions[i].activity?.title
-                      }
-                  ];
-        }
         // Check if props.schedulerSessions is defined before proceeding
         if (props.schedulerSessions && props.schedulerSessions.tags) {
             const sessionsObj = {};

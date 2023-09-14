@@ -9,13 +9,13 @@ import {
     Row,
     Col
 } from 'react-bootstrap';
-import Table from '../../../components/table/leads-table';
+import Table from 'components/table/leads-table';
 import { useQuery, useLazyQuery } from '@apollo/client';
-import ActionButton from '../../../components/actionbutton/index';
+import ActionButton from 'components/actionbutton/index';
 import { GET_TRANSACTIONS, GET_PAYMENT_SCHEDULE } from './queries';
-import { flattenObj } from '../../../components/utils/responseFlatten';
+import { flattenObj } from 'components/utils/responseFlatten';
 import { useHistory } from 'react-router-dom';
-import AuthContext from '../../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import moment from 'moment';
 
 export default function AllTransactions() {

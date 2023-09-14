@@ -280,6 +280,7 @@ export const GET_CLIENT_DATA_NEW = gql`
                                 email
                                 Phone_Number
                                 Gender
+                                Photo_ID
                                 addresses {
                                     data {
                                         id

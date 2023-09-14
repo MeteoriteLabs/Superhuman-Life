@@ -25,3 +25,16 @@
     font-size: 12px;
 }
 
+.responsive_icon{
+    width: 35px;
+    height: 35px;
+    padding: 5px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+.active_mobile_view{
+    background-color: #000000;
+}
+.responsive_icon:hover{
+    background-color: #141414;
+}

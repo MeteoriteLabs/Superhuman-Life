@@ -5,8 +5,9 @@ import Contact from './contact';
 import Home from './home';
 import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
 import Offerings from './offerings';
-import { Accordion, Button, Card } from 'react-bootstrap';
+import { Accordion, Button } from 'react-bootstrap';
 import { ArrowDown } from 'react-bootstrap-icons';
+import returnRoute from 'lib/returnRoutes';
 
 function Index(): JSX.Element {
     const { changemakerWebsiteState, setChangemakerWebsiteState } =
@@ -14,23 +15,6 @@ function Index(): JSX.Element {
 
     const { currentSelectedRoute } = changemakerWebsiteState;
     const [countClick, setCountClick] = useState(0); // counting clicks to force arrow to rotate on second click to original position
-
-    const returnRoute = (type): string | null => {
-        switch (type) {
-            case 'Home':
-                return '/';
-            case 'Classes':
-                return '/classes';
-            case 'About':
-                return '/aboutUs';
-            case 'Contact':
-                return '/contact';
-            case 'Offerings':
-                return '/offerings';
-            default:
-                return '/';
-        }
-    };
 
     useEffect(() => {
         if (countClick === 2) {
@@ -57,6 +41,7 @@ function Index(): JSX.Element {
                         onClick={() => {
                             setChangemakerWebsiteState({
                                 ...changemakerWebsiteState,
+
                                 currentSelectedRoute: returnRoute(page)
                             });
 

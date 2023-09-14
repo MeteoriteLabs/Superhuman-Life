@@ -1,19 +1,5 @@
 export const LobbyData = [
     {
-        color: '#B73642',
-        image: '/assets/miniLobby_icons/insights.svg',
-        link: '/insights',
-        label: 'Insights',
-        id: 1
-    },
-    {
-        color: '#A9A9A9',
-        image: '/assets/miniLobby_icons/blog.svg',
-        link: '/blog',
-        label: 'Blog',
-        id: 2
-    },
-    {
         color: '#258274',
         image: '/assets/miniLobby_icons/dashboard.svg',
         link: '/home',
@@ -30,14 +16,14 @@ export const LobbyData = [
     {
         color: '#FFFFFF',
         image: '/assets/miniLobby_icons/support.svg',
-        link: '/support',
+        link: process.env.REACT_APP_SUPPORT_URL,
         label: 'Support',
         id: 5
     },
     {
         color: '#0D6EBA',
         image: '/assets/miniLobby_icons/learn.svg',
-        link: '/support',
+        link: process.env.REACT_APP_BLOG_URL,
         label: 'Learn',
         id: 6
     }
