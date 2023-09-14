@@ -1,0 +1,51 @@
+.dropDown{
+    background: #fff;
+    min-width: 100px;
+    border-radius: 3px;
+    overflow: hidden;
+    position: absolute;
+    right:0;
+    top: 24px
+}
+.selectOptions{
+    margin:0;
+    padding: 3px 10px;
+    cursor: pointer;
+}
+.selectOptions:hover{
+    background: #eaeaea;
+}
+.inputStyle{
+    background-color: #343A3F;
+    border:1px solid #b6b6b6;
+    min-width: 300px;
+    padding: 3px 5px;
+    border-radius: 3px;
+    color:#eaeaea;
+}
+.inputStyle:focus{
+    outline-width: 0;
+}
+.btnStyle{
+    padding: 5.5px 10px;
+    border:0;
+    border-radius: 3px;
+    margin-left: 5px;
+    display: inline-block;
+    font-weight: 500;
+    font-size: 14px;
+}
+.cancelBtn{
+    background-color: #ae0101;
+    color:#eaeaea;
+   
+}
+.error{
+    margin: 0px auto;
+    color: #e3e3e3;
+    background-color: #a12020;
+    font-weight: 500;
+    text-align: center;
+    width: fit-content;
+    padding: 3px 20px;
+}
