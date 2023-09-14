@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
 import AuthContext from 'context/auth-context';
+import {Link} from "react-router-dom";
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import ChangePasswordPage from '../../changePassword';
 import Modules from '../../Modules';
@@ -111,7 +112,8 @@ const ChangemakersSettings: React.FC = () => {
                     </Col> */}
 
                     {/* Modules */}
-                    <Col className="pb-1 pt-2" md={{ span: 4 }} sm={12} onClick={() => setShowModuleSetting(true)} style={{ cursor: 'pointer' }}>
+                    <Col className="pb-1 pt-2" md={{ span: 4 }} sm={12} as={Link} 
+                            to={"/modules"} style={{ cursor: 'pointer' }}>
                         <Card className="shadow-lg bg-white rounded p-3">
 
                             <Card.Body className='text-center'>
