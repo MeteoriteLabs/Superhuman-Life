@@ -66,7 +66,8 @@ function Index(): JSX.Element {
                                 <div
                                     style={{
                                         fontWeight: 600,
-                                        fontSize: '.8rem'
+                                        fontSize: '.9rem',
+                                        color: '#ddd'
                                     }}
                                 >
                                     {page}
