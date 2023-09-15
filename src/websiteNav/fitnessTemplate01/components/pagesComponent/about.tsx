@@ -29,7 +29,7 @@ function Home(): JSX.Element {
                     setChangemakerWebsiteState({
                         ...changemakerWebsiteState,
                         section: 'Team',
-                        currentSelectedRoute: `${returnRoute('Offerings')}/#team`
+                        currentSelectedRoute: `${returnRoute('About')}/#team`
                     });
                 }}
             >
