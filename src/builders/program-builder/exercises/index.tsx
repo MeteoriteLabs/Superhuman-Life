@@ -34,7 +34,7 @@ interface ExerciseTable {
     updatedOn: string;
 }
 
-export default function EventsTab(): JSX.Element {
+export default function EventsTab(industry): JSX.Element {
     const auth = useContext(AuthContext);
     const [tableData, setTableData] = useState<ExerciseTable[]>([]);
     const createEditExerciseComponent = useRef<CreateEditExerciseComponentRef>();
@@ -114,7 +114,7 @@ export default function EventsTab(): JSX.Element {
     }
 
     const fetch = useQuery(GET_TABLEDATA, {
-        variables: { id: auth.userid, filter: searchFilter, start: page * 10 - 10, limit: 10 },
+        variables: { id: auth.userid, filter: searchFilter, start: page * 10 - 10, limit: 10, industryId: industry.industry.industry.id },
         onCompleted: (data) => {
             setTotalRecords(data.exercises.meta.pagination.total);
             loadData(data);

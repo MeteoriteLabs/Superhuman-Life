@@ -19,7 +19,7 @@ import CreateEditWorkout from './createoredit-workout';
 import { flattenObj } from 'components/utils/responseFlatten';
 import moment from 'moment';
 
-export default function EventsTab(): JSX.Element {
+export default function EventsTab(industry): JSX.Element {
     const auth = useContext(AuthContext);
     const [show, setShow] = useState<boolean>(false);
     const [name, setName] = useState('');
@@ -131,7 +131,7 @@ export default function EventsTab(): JSX.Element {
     );
 
     const fetch = useQuery(GET_TABLEDATA, {
-        variables: { id: auth.userid, filter: searchFilter, start: page * 10 - 10, limit: 10 },
+        variables: { id: auth.userid, filter: searchFilter, start: page * 10 - 10, limit: 10,industryId: industry.industry.industry.id},
         onCompleted: (data) => {
             setTotalRecords(data.workouts.meta.pagination.total);
             loadData(data);
