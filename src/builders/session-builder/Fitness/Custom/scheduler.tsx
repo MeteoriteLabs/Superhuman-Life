@@ -47,6 +47,7 @@ const Scheduler = () => {
     const [sessionFilter, setSessionFilter] = useState('none');
     const [sessionIds, setSessionIds] = useState<any>([]);
     const [show24HourFormat, setShow24HourFormat] = useState(false);
+    const [showBlockedSlots, setShowBlockedSlots] = useState(true);
     const ref = useRef<any>(null);
     const [blockedSessions, setBlockedSessions] = useState<any>();
     const auth = useContext(AuthContext);
@@ -810,6 +811,7 @@ const Scheduler = () => {
                                         program={program}
                                         showRestDay={showRestDay}
                                         show24HourFormat={show24HourFormat}
+                                        showBlockedSlots={showBlockedSlots}
                                     />
                                 </div>
                             </Col>
@@ -860,6 +862,8 @@ const Scheduler = () => {
                         handleScrollScheduler={handleScrollScheduler}
                         show24HourFormat={show24HourFormat}
                         setShow24HourFormat={setShow24HourFormat}
+                        showBlockedSlots={showBlockedSlots}
+                        setShowBlockedSlots={setShowBlockedSlots}
                         collapse={collapse}
                         setCollapse={setCollapse}
                         accordionExpanded={accordionExpanded}

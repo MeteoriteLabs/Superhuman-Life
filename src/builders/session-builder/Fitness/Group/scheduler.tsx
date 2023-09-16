@@ -73,6 +73,7 @@ const Scheduler = () => {
     const [program, setProgram] = useState('none');
     const [sessionFilter, setSessionFilter] = useState('none');
     const [show24HourFormat, setShow24HourFormat] = useState(false);
+    const [showBlockedSlots, setShowBlockedSlots] = useState(true);
     const ref = useRef<any>(null);
     const [showProgramNameModal, setShowProgramNameModal] = useState<boolean>(false);
     const [showExtendProgramModal, setShowExtendProgramModal] = useState<boolean>(false);
@@ -1016,6 +1017,7 @@ const Scheduler = () => {
                                             blockedSessions={blockedSessions}
                                             ref={ref}
                                             show24HourFormat={show24HourFormat}
+                                            showBlockedSlots={showBlockedSlots}
                                             type="date"
                                             days={calculateDays(prevDate, nextDate)}
                                             callback={handleCallback}
@@ -1125,6 +1127,8 @@ const Scheduler = () => {
                         handleScrollScheduler={handleScrollScheduler}
                         show24HourFormat={show24HourFormat}
                         setShow24HourFormat={setShow24HourFormat}
+                        showBlockedSlots={showBlockedSlots}
+                        setShowBlockedSlots={setShowBlockedSlots}
                         collapse={collapse}
                         setCollapse={setCollapse}
                         accordionExpanded={accordionExpanded}
