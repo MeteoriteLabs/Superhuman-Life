@@ -50,6 +50,7 @@ const Scheduler: React.FC = () => {
     const [collapse, setCollapse] = useState<boolean>(true);
     const [accordionExpanded, setAccordionExpanded] = useState(true);
     const [show24HourFormat, setShow24HourFormat] = useState(false);
+    const [showBlockedSlots, setShowBlockedSlots] = useState(true);
     const ref = useRef<any>(null);
     const [showProgramNameModal, setShowProgramNameModal] = useState<boolean>(false);
     const [showRescheduleModal, setShowRescheduleModal] = useState<boolean>(false);
@@ -930,6 +931,8 @@ const Scheduler: React.FC = () => {
                                             sessionFilter={sessionFilter}
                                             program={program}
                                             show24HourFormat={show24HourFormat}
+                                            showBlockedSlots={showBlockedSlots}
+
                                         />
                                     </div>
                                 </Col>
@@ -942,6 +945,8 @@ const Scheduler: React.FC = () => {
                 <Col lg={collapse ? '1' : '2'} className="d-lg-block">
                     <SideNav
                         type="date"
+                        showBlockedSlots={showBlockedSlots}
+                        setShowBlockedSlots={setShowBlockedSlots}
                         handleScrollScheduler={handleScrollScheduler}
                         show24HourFormat={show24HourFormat}
                         setShow24HourFormat={setShow24HourFormat}

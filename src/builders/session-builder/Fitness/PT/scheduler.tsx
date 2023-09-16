@@ -45,6 +45,7 @@ const Scheduler: React.FC = () => {
     const [collapse, setCollapse] = useState<boolean>(true);
     const [accordionExpanded, setAccordionExpanded] = useState(true);
     const [show24HourFormat, setShow24HourFormat] = useState(false);
+    const [showBlockedSlots, setShowBlockedSlots] = useState(true);
     const [sessionIds, setSessionIds] = useState<string[]>([]);
     // const [clientIds, setClientIds] = useState<string[]>([]);
     // these are the sessions that will passed onto the scheduler
@@ -908,6 +909,7 @@ const Scheduler: React.FC = () => {
                                 <div className="mt-5">
                                     <SchedulerPage
                                         blockedSessions={blockedSessions}
+                                        showBlockedSlots={showBlockedSlots}
                                         show24HourFormat={show24HourFormat} //boolean
                                         type={
                                             // tag?.fitnesspackage?.fitness_package_type.type ===
@@ -1031,6 +1033,8 @@ const Scheduler: React.FC = () => {
                         handleScrollScheduler={handleScrollScheduler}
                         show24HourFormat={show24HourFormat}
                         setShow24HourFormat={setShow24HourFormat}
+                        showBlockedSlots={showBlockedSlots}
+                        setShowBlockedSlots={setShowBlockedSlots}
                         collapse={collapse}
                         setCollapse={setCollapse}
                         accordionExpanded={accordionExpanded}

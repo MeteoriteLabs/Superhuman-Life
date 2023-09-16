@@ -44,6 +44,7 @@ const Scheduler: React.FC = () => {
     const [collapse, setCollapse] = useState<boolean>(true);
     const [accordionExpanded, setAccordionExpanded] = useState(true);
     const [show24HourFormat, setShow24HourFormat] = useState(false);
+    const [showBlockedSlots, setShowBlockedSlots] = useState(true);
     const ref = useRef<any>(null);
     const [showProgramNameModal, setShowProgramNameModal] = useState<boolean>(false);
     const [showExtendProgramModal, setShowExtendProgramModal] = useState<boolean>(false);
@@ -836,6 +837,7 @@ const Scheduler: React.FC = () => {
                                 <Col lg={11} className="pl-0 pr-0">
                                     <div className="mt-3">
                                         <SchedulerPage
+                                            showBlockedSlots={showBlockedSlots}
                                             ref={ref}
                                             type="date"
                                             callback={handleCallback}
@@ -872,6 +874,8 @@ const Scheduler: React.FC = () => {
                 {/* Right sidebar */}
                 <Col lg={collapse ? '1' : '2'} className="d-lg-block">
                     <SideNav
+                        showBlockedSlots={showBlockedSlots}
+                        setShowBlockedSlots={setShowBlockedSlots}
                         type="date"
                         handleScrollScheduler={handleScrollScheduler}
                         show24HourFormat={show24HourFormat}
