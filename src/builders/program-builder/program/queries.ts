@@ -1,10 +1,10 @@
 import { gql } from '@apollo/client';
 
 export const GET_TABLEDATA = gql`
-    query ProgramQuery($id: ID, $filter: String!, $start: Int, $limit: Int) {
+    query ProgramQuery($id: ID, $filter: String!, $start: Int, $limit: Int, $industryId: ID) {
         fitnessprograms(
             pagination: { start: $start, limit: $limit }
-            filters: { users_permissions_user: { id: { eq: $id } }, title: { containsi: $filter } }
+            filters: { users_permissions_user: { fitnesspackages:{Industry: {id: {eq: $industryId}}}, id: { eq: $id } }, title: { containsi: $filter } }
             sort: ["updatedAt:desc"]
         ) {
             meta {

@@ -5,6 +5,7 @@ import ClassesPageForm from './pages/classes';
 import AboutPageForm from './pages/aboutUs';
 import ContactPageForm from './pages/contact';
 import OfferingsPageForm from './pages/offerings';
+import extractPageRoute from 'lib/extractPageRoute';
 
 function Index(): JSX.Element {
     const { changemakerWebsiteState } = useContext(ChangeMakerWebsiteContext);
@@ -18,7 +19,7 @@ function Index(): JSX.Element {
         '/contact': <ContactPageForm />,
         '/offerings': <OfferingsPageForm />
     };
-    return Page[currentSelectedRoute || '/'];
+    return Page[extractPageRoute(currentSelectedRoute) || '/'];
 }
 
 export default Index;

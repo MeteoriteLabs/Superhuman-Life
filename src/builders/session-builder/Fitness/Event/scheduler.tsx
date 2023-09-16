@@ -46,6 +46,7 @@ const Scheduler = (): JSX.Element => {
     const [collapse, setCollapse] = useState<boolean>(true);
     const [accordionExpanded, setAccordionExpanded] = useState(true);
     const [show24HourFormat, setShow24HourFormat] = useState(false);
+    const [showBlockedSlots, setShowBlockedSlots] = useState(true);
     const ref = useRef<any>(null);
     const [showProgramNameModal, setShowProgramNameModal] = useState<boolean>(false);
     const [showRescheduleModal, setShowRescheduleModal] = useState<boolean>(false);
@@ -454,6 +455,7 @@ const Scheduler = (): JSX.Element => {
                         <Col lg={11} className="pl-0 pr-0">
                             <div className="mt-5">
                                 <SchedulerPage
+                                    showBlockedSlots={showBlockedSlots}
                                     show24HourFormat={show24HourFormat} //boolean
                                     type="date" //string
                                     callback={handleCallback} //()=>void
@@ -494,6 +496,8 @@ const Scheduler = (): JSX.Element => {
                     handleScrollScheduler={handleScrollScheduler}
                     show24HourFormat={show24HourFormat}
                     setShow24HourFormat={setShow24HourFormat}
+                    showBlockedSlots={showBlockedSlots}
+                    setShowBlockedSlots={setShowBlockedSlots}
                     collapse={collapse}
                     setCollapse={setCollapse}
                     accordionExpanded={accordionExpanded}

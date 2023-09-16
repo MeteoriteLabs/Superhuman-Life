@@ -101,10 +101,10 @@ export const FETCH_FITNESSDISCPLINES = gql`
 `;
 
 export const GET_TABLEDATA = gql`
-    query fetchdata($id: ID, $filter: String!, $start: Int, $limit: Int) {
+    query fetchdata($id: ID, $filter: String!, $start: Int, $limit: Int, $industryId: ID) {
         workouts(
             filters: {
-                users_permissions_user: { id: { eq: $id } }
+                users_permissions_user: {fitnesspackages:{Industry: {id: {eq: $industryId}}}, id: { eq: $id } }
                 workouttitle: { containsi: $filter }
             }
             pagination: { start: $start, limit: $limit }
