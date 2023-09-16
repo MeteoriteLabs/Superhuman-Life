@@ -129,7 +129,7 @@ export default function EventsTab(industry): JSX.Element {
         ],
         []
     );
-console.log(industry);
+
     const fetch = useQuery(GET_TABLEDATA, {
         variables: { id: auth.userid, filter: searchFilter, start: page * 10 - 10, limit: 10,industryId: industry.industry.industry.id},
         onCompleted: (data) => {
