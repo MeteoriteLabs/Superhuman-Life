@@ -28,7 +28,6 @@ export default function ProgramPage(): JSX.Element {
                         className="pb-3 cards"
                         variant="pills"
                         transition={false}
-                        // defaultActiveKey="fitness"
                         key={industryData && industryData.length ? industryData[0].IndustryName: ""}
                         defaultActiveKey={industryData && industryData.length ? industryData[0].IndustryName: ""}
                     >
