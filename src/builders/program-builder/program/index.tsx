@@ -20,7 +20,7 @@ import { flattenObj } from 'components/utils/responseFlatten';
 import moment from 'moment';
 import Toaster from 'components/Toaster';
 
-export default function EventsTab(): JSX.Element {
+export default function EventsTab(industry): JSX.Element {
     const auth = useContext(AuthContext);
     const [tableData, setTableData] = useState<any[]>([]);
     const createEditProgramComponent = useRef<any>(null);
@@ -147,7 +147,7 @@ export default function EventsTab(): JSX.Element {
     );
 
     const fetch = useQuery(GET_TABLEDATA, {
-        variables: { id: auth.userid, filter: searchFilter, start: page * 10 - 10, limit: 10 },
+        variables: { id: auth.userid, filter: searchFilter, start: page * 10 - 10, limit: 10, industryId: industry.industry.industry.id },
         onCompleted: (data) => {
             setTotalRecords(data.fitnessprograms.meta.pagination.total);
             loadData(data);
