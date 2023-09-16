@@ -39,10 +39,6 @@ export default function ProgramPage(): JSX.Element {
                   
                     
                     ): null}
-                        {/* <Tab eventKey="fitness" title="Fitness">
-                            <FitnessTab />
-                        </Tab> */}
-                      
                     </Tabs>
                 </Card.Body>
             </Card>
