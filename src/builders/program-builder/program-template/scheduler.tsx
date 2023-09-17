@@ -2146,6 +2146,7 @@ const Schedular = (props: any, ref) => {
                                                                         val.index = index;
 
                                                                         return (
+                                                                            
                                                                             <div
                                                                                 key={index}
                                                                                 onClick={() => {
@@ -2208,6 +2209,7 @@ const Schedular = (props: any, ref) => {
                                                                                             ? '#fff'
                                                                                             : '#000'
                                                                                     }`,
+                                                                                    display:`${props && props.showBlockedSlots && val.color === 'red' || val.color !== 'red' ? 'block': 'none'}`,
                                                                                     // background: 'rgb(135,206,235)',
                                                                                     width: `${
                                                                                         val.type ===

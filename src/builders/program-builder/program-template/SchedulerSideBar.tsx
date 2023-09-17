@@ -1,4 +1,4 @@
-import { Accordion, Button,Form, Nav } from 'react-bootstrap';
+import { Accordion, Button, Form, Nav } from 'react-bootstrap';
 import { useState, useRef, useEffect } from 'react';
 import Icon from 'components/Icons';
 import CreateEditProgramManager from './create-edit/createoredit-workoutTemplate';
@@ -23,6 +23,8 @@ export default function SideNav({
     onAccordionToggle,
     show24HourFormat,
     setShow24HourFormat,
+    showBlockedSlots,
+    setShowBlockedSlots,
     handleScrollScheduler,
     type,
     sessionDate,
@@ -41,6 +43,8 @@ export default function SideNav({
     showRestDayAction: any;
     accordionExpanded: any;
     onAccordionToggle: any;
+    showBlockedSlots: boolean;
+    setShowBlockedSlots: (parmas: boolean) => void;
     show24HourFormat: boolean;
     handleScrollScheduler: () => void;
     setShow24HourFormat: (parmas: boolean) => void;
@@ -102,7 +106,7 @@ export default function SideNav({
                             <Accordion.Toggle
                                 as={Nav.Link}
                                 eventKey="ai"
-                                style={{color: "#cebaa8"}}
+                                style={{ color: '#cebaa8' }}
                                 className={`d-flex ${
                                     activeKey === 'ai' && !collapse ? 'active' : ''
                                 }`}
@@ -114,7 +118,7 @@ export default function SideNav({
                                             name="ai"
                                             height={25}
                                             width={25}
-                                            style={{ marginRight: '10px'}}
+                                            style={{ marginRight: '10px' }}
                                         />
                                         AI
                                     </>
@@ -148,7 +152,7 @@ export default function SideNav({
                                 className={`d-flex ${
                                     activeKey === 'create' && !collapse ? 'active' : ''
                                 }`}
-                                style={{color: "#cebaa8"}}
+                                style={{ color: '#cebaa8' }}
                                 onClick={() => handleAccordionToggle('create')}
                             >
                                 {!collapse ? (
@@ -157,7 +161,7 @@ export default function SideNav({
                                             name="create"
                                             height={25}
                                             width={25}
-                                            style={{ marginRight: '10px'}}
+                                            style={{ marginRight: '10px' }}
                                         />{' '}
                                         Create
                                     </>
@@ -210,7 +214,7 @@ export default function SideNav({
                             <Accordion.Toggle
                                 as={Nav.Link}
                                 eventKey="library"
-                                style={{color: "#cebaa8"}}
+                                style={{ color: '#cebaa8' }}
                                 className={`d-flex ${
                                     activeKey === 'library' && !collapse ? 'active' : ''
                                 }`}
@@ -273,7 +277,7 @@ export default function SideNav({
                             <Accordion.Toggle
                                 as={Nav.Link}
                                 eventKey="activeprogram"
-                                style={{color: "#cebaa8"}}
+                                style={{ color: '#cebaa8' }}
                                 className={`d-flex ${
                                     activeKey === 'activeprogram' && !collapse ? 'active' : ''
                                 }`}
@@ -294,7 +298,7 @@ export default function SideNav({
                                         name="activeprograms"
                                         height={25}
                                         width={25}
-                                        style={{ marginRight: '10px'}}
+                                        style={{ marginRight: '10px' }}
                                     />
                                 )}
                             </Accordion.Toggle>
@@ -312,8 +316,6 @@ export default function SideNav({
                                         >
                                             Import sessions
                                         </Nav.Link>
-
-                                        
                                     </Nav>
                                 </Accordion.Collapse>
                             ) : null}
@@ -327,7 +329,7 @@ export default function SideNav({
                                 className={`d-flex ${
                                     activeKey === 'markday' && !collapse ? 'active' : ''
                                 }`}
-                                style={{color: "#cebaa8"}}
+                                style={{ color: '#cebaa8' }}
                                 onClick={() => handleAccordionToggle('markday')}
                             >
                                 {!collapse ? (
@@ -336,7 +338,7 @@ export default function SideNav({
                                             name="markday"
                                             height={25}
                                             width={25}
-                                            style={{ marginRight: '10px'}}
+                                            style={{ marginRight: '10px' }}
                                         />{' '}
                                         Mark day
                                     </>
@@ -376,7 +378,7 @@ export default function SideNav({
                                 className={`d-flex ${
                                     activeKey === 'views' && !collapse ? 'active' : ''
                                 }`}
-                                style={{color: "#cebaa8"}}
+                                style={{ color: '#cebaa8' }}
                                 onClick={() => handleAccordionToggle('views')}
                             >
                                 {!collapse ? (
@@ -385,7 +387,7 @@ export default function SideNav({
                                             name="view"
                                             height={25}
                                             width={25}
-                                            style={{ marginRight: '10px'}}
+                                            style={{ marginRight: '10px' }}
                                         />{' '}
                                         Views
                                     </>
@@ -404,24 +406,40 @@ export default function SideNav({
                                     in={activeKey === 'views' && accordionOpen}
                                 >
                                     <Nav className="flex-column pl-3">
-                                        <Nav.Link className="text-white">Availaibility</Nav.Link>
-                                        <Nav.Link className="text-white">Routine</Nav.Link>
-                                        <Form className='d-flex'>
-                                          
-                                            <p className='text-white pr-1'>12 hour </p>
-                                    <Form.Check
-                                        type="switch"
-                                        id="timeformat"
-                                        label="24 hour"
-                                        className='text-white'
-                                        onChange={() => {
-                                            setShow24HourFormat(!show24HourFormat)
-                                            handleScrollScheduler();
-                                        }}
-                                    />
-                                     
-                                </Form>
-                               
+                                        <Form.Check
+                                            type="switch"
+                                            id="availability"
+                                            label="Availaibility"
+                                            className="text-white"
+                                            defaultChecked={showBlockedSlots}
+                                            onChange={() => {
+                                                setShowBlockedSlots(!showBlockedSlots);
+                                                handleScrollScheduler();
+                                            }}
+                                        />
+                                        <Form.Check
+                                            type="switch"
+                                            id="rotine"
+                                            label="Routine"
+                                            className="text-white"
+                                            onChange={() => {
+                                                // setShow24HourFormat(!show24HourFormat);
+                                                handleScrollScheduler();
+                                            }}
+                                        />
+
+                                        <Form className="d-flex">
+                                            <Form.Check
+                                                type="switch"
+                                                id="timeformat"
+                                                label="24 hour"
+                                                className="text-white"
+                                                onChange={() => {
+                                                    setShow24HourFormat(!show24HourFormat);
+                                                    handleScrollScheduler();
+                                                }}
+                                            />
+                                        </Form>
                                     </Nav>
                                 </Accordion.Collapse>
                             ) : null}

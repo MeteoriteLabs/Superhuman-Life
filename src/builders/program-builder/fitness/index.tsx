@@ -3,7 +3,7 @@ import ExercisesTab from '../exercises';
 import WorkoutTab from '../workout';
 import ProgramTab from '../program';
 
-export default function FitnessTab(): JSX.Element {
+export default function FitnessTab(industry): JSX.Element {
     return (
         <Card className="shadow-sm mt-3" border="light">
             <Card.Body>
@@ -15,13 +15,13 @@ export default function FitnessTab(): JSX.Element {
                     defaultActiveKey="exercises"
                 >
                     <Tab eventKey="exercises" title="Exercises">
-                        <ExercisesTab />
+                        <ExercisesTab industry={industry}/>
                     </Tab>
                     <Tab eventKey="workout" title="Workout">
-                        <WorkoutTab />
+                        <WorkoutTab industry={industry}/>
                     </Tab>
                     <Tab eventKey="program" title="Program Template">
-                        <ProgramTab />
+                        <ProgramTab industry={industry}/>
                     </Tab>
                 </Tabs>
             </Card.Body>
