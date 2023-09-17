@@ -1,9 +1,12 @@
-import { useContext, useState } from 'react';
+import { FormEvent, useContext, useState } from 'react';
 import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
 import { ThreeDots } from 'react-bootstrap-icons';
-import styles from './style.module.css';
 import { useLazyQuery } from '@apollo/client';
-import { BLACKLISTED_SUBDOMAINS } from '../queries/blackListedDomains';
+import {
+    GET_CHANGEMAKER_WEBSITE_SUBDOMAIN,
+    GET_BLACKLISTED_DOMAINS
+} from '../queries/GetDomainIfExists';
+import styles from './style.module.css';
 
 function WebsiteBuilder_settings(): JSX.Element {
     const { changemakerWebsiteState } = useContext(ChangeMakerWebsiteContext);
@@ -12,21 +15,33 @@ function WebsiteBuilder_settings(): JSX.Element {
     const [newSubdomain, setNewSubdomain] = useState('');
     const [subdomainExists, setSubdomainExists] = useState(false);
 
-    const [getBlacklistedDomains] = useLazyQuery(BLACKLISTED_SUBDOMAINS);
+    const [getBlacklistedDomains] = useLazyQuery(GET_BLACKLISTED_DOMAINS);
+    const [getChangemakerDomains] = useLazyQuery(GET_CHANGEMAKER_WEBSITE_SUBDOMAIN);
 
-    const handleSubdomainSubmit = async () => {
+    const handleSubdomainSubmit = async (e: FormEvent) => {
+        setSubdomainExists(false);
+        e.preventDefault();
         try {
-            const data = await getBlacklistedDomains({
+            const { data } = await getBlacklistedDomains({
                 variables: {
                     subdomain: newSubdomain
                 }
             });
+
             // if subdomain exists
-            if (data) {
+            if (data.sapienSubdomains.data.length) {
                 setSubdomainExists(true);
+            } else {
+                // check if the subdomain exists in changemaker tables
+                const { data } = await getChangemakerDomains({
+                    variables: {
+                        subdomain: newSubdomain
+                    }
+                });
+                if (data.changemakerWebsites.data.length) {
+                    setSubdomainExists(true);
+                }
             }
-            //todo: if the subdomain does not exists
-            //todo: update in changemaker-website
             //todo: update in templatesName
         } catch (err) {
             console.log(err);
@@ -98,7 +113,6 @@ function WebsiteBuilder_settings(): JSX.Element {
                                             <input
                                                 type="text"
                                                 value={newSubdomain}
-                                                defaultValue={changemakerWebsiteState.subdomain}
                                                 onChange={(e) => setNewSubdomain(e.target.value)}
                                                 className={styles.inputStyle}
                                             />
