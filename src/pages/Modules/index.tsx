@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Button, Card, Row, Col, Form } from 'react-bootstrap';
 import { FETCH_INDUSTRIES, UPDATE_USER_PROFILE_DATA } from './queries';
+import { GET_FITNESS } from 'builders/package-builder/fitness/graphQL/queries';
 import { FETCH_USER_PROFILE_DATA } from '../profile/queries/queries';
 import { useQuery, useMutation, useLazyQuery } from '@apollo/client';
 import { flattenObj } from 'components/utils/responseFlatten';
@@ -8,6 +9,7 @@ import { AuthContext } from 'builders/session-builder/Fitness/Channel/import';
 import Toaster from 'components/Toaster';
 import { Link } from 'react-router-dom';
 import Loader from 'components/Loader/Loader';
+import WarningModal from './WarningModal';
 
 const Modules: React.FC<{ show: boolean; onHide: () => void }> = () => {
     const [industryData, setIndustryData] = useState<any[]>([]);
@@ -19,12 +21,21 @@ const Modules: React.FC<{ show: boolean; onHide: () => void }> = () => {
     const auth = useContext(AuthContext);
     const [prefilledIndustry, setPreFilledIndustry] = useState<any[]>([]);
     const [prefilledDesignations, setPreFilledDesignations] = useState<any[]>([]);
+    const [showModuleSetting, setShowModuleSetting] = useState<boolean>(false);
+
+    const [fitnessPackages] = useLazyQuery(GET_FITNESS, {
+        onCompleted: (data) => {
+            if (data.fitnesspackages.data.length > 0) {
+                setShowModuleSetting(true);
+            }
+        }
+    });
 
     const [getUsers] = useLazyQuery(FETCH_USER_PROFILE_DATA, {
         variables: { id: auth.userid },
         onCompleted: (response) => {
             const flattenData = flattenObj({ ...response });
-            console.log(flattenData);
+
             setPreFilledIndustry(
                 flattenData.usersPermissionsUser.industries &&
                     flattenData.usersPermissionsUser.industries.length
@@ -83,7 +94,7 @@ const Modules: React.FC<{ show: boolean; onHide: () => void }> = () => {
 
     useEffect(() => {
         getUsers({ variables: { id: auth.userid } });
-    }, []);
+    }, [showModuleSetting]);
 
     if (loading) return <Loader msg="Industries are loading..." />;
 
@@ -119,7 +130,21 @@ const Modules: React.FC<{ show: boolean; onHide: () => void }> = () => {
                                                             )
                                                           : false
                                                   }
+                                                  disabled={
+                                                      selectedIndustryIds &&
+                                                      selectedIndustryIds.length &&
+                                                      selectedIndustryIds.length === 1
+                                                          ? true
+                                                          : false
+                                                  }
                                                   onChange={(e) => {
+                                                      fitnessPackages({
+                                                          variables: {
+                                                              id: auth.userid,
+                                                              industryId: curr.id
+                                                          }
+                                                      });
+
                                                       let isDeselect = false;
                                                       const updatedValue =
                                                           prefilledIndustry &&
@@ -165,6 +190,13 @@ const Modules: React.FC<{ show: boolean; onHide: () => void }> = () => {
                                                             name={j.Designation_title}
                                                             value={j.Designation_title}
                                                             style={{ marginLeft: '30px' }}
+                                                            disabled={
+                                                                designationSelected &&
+                                                                designationSelected.length &&
+                                                                designationSelected.length === 1
+                                                                    ? true
+                                                                    : false
+                                                            }
                                                             defaultChecked={
                                                                 prefilledDesignations &&
                                                                 prefilledDesignations.length
@@ -220,6 +252,11 @@ const Modules: React.FC<{ show: boolean; onHide: () => void }> = () => {
                     msg="Industries and designations has been updated"
                 />
             ) : null}
+
+            {/* warning modal */}
+            {showModuleSetting && (
+                <WarningModal show={showModuleSetting} onHide={() => setShowModuleSetting(false)} />
+            )}
         </>
     );
 };

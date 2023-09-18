@@ -3,7 +3,6 @@ import AuthContext from 'context/auth-context';
 import {Link} from "react-router-dom";
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import ChangePasswordPage from '../../changePassword';
-import Modules from '../../Modules';
 import DeleteAccountConfirmation from '../../DeleteAccountConfirmation';
 import { FETCH_USER_PROFILE_DATA } from '../queries/queries';
 import { useQuery } from '@apollo/client';
@@ -35,7 +34,6 @@ interface ProfileData {
 
 const ChangemakersSettings: React.FC = () => {
     const [showPasswordSetting, setShowPasswordSetting] = useState<boolean>(false);
-    const [showModuleSetting, setShowModuleSetting] = useState<boolean>(false);
     const [showDeleteAccountSetting, setShowDeleteAccountSetting] = useState<boolean>(false);
     const auth = useContext(AuthContext);
     const [profileData, setProfileData] = useState<ProfileData>({} as ProfileData);
@@ -58,9 +56,7 @@ const ChangemakersSettings: React.FC = () => {
                         onHide={() => setShowPasswordSetting(false)}
                     />
                 )}
-                {showModuleSetting && (
-                    <Modules show={showModuleSetting} onHide={() => setShowModuleSetting(false)} />
-                )}
+                
                 {showDeleteAccountSetting && (
                     <DeleteAccountConfirmation
                         show={showDeleteAccountSetting}
@@ -113,14 +109,14 @@ const ChangemakersSettings: React.FC = () => {
 
                     {/* Modules */}
                     <Col className="pb-1 pt-2" md={{ span: 4 }} sm={12} as={Link} 
-                            to={"/modules"} style={{ cursor: 'pointer' }}>
+                            to={"/modules"} style={{ cursor: 'pointer', color: "#000", textDecoration: "none" }}>
                         <Card className="shadow-lg bg-white rounded p-3">
 
                             <Card.Body className='text-center'>
                                 <img src="/assets/profile_icons/modules.svg" alt="modules" height="24px" />
                                 <Card.Title className='pt-1'>Modules</Card.Title>
                                 <Card.Text>
-                                    <small>Last updated: 29 Aug 2022</small>
+                                    <small></small>
                                 </Card.Text>
                             </Card.Body>
                         </Card>
