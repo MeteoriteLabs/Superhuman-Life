@@ -21,15 +21,18 @@ const Modules: React.FC<{ show: boolean; onHide: () => void }> = () => {
     const auth = useContext(AuthContext);
     const [prefilledIndustry, setPreFilledIndustry] = useState<any[]>([]);
     const [prefilledDesignations, setPreFilledDesignations] = useState<any[]>([]);
-    const [showModuleSetting, setShowModuleSetting] = useState<boolean>(false);
+    const [fitness, setFitness] = useState<any[]>();
 
-    const [fitnessPackages] = useLazyQuery(GET_FITNESS, {
-        onCompleted: (data) => {
-            if (data.fitnesspackages.data.length > 0) {
-                setShowModuleSetting(true);
-            }
+    useQuery(GET_FITNESS, {
+        variables: {id: auth.userid, pageSize: 1000},
+        onCompleted: (response) => {  
+            const flattenData = flattenObj({ ...response });
+            setFitness(flattenData.fitnesspackages)
+            
         }
     });
+    if(fitness && fitness.length )
+    console.log(fitness.findIndex((curr) => curr.Industry.id === '5'));
 
     const [getUsers] = useLazyQuery(FETCH_USER_PROFILE_DATA, {
         variables: { id: auth.userid },
@@ -94,7 +97,7 @@ const Modules: React.FC<{ show: boolean; onHide: () => void }> = () => {
 
     useEffect(() => {
         getUsers({ variables: { id: auth.userid } });
-    }, [showModuleSetting]);
+    }, []);
 
     if (loading) return <Loader msg="Industries are loading..." />;
 
@@ -118,6 +121,8 @@ const Modules: React.FC<{ show: boolean; onHide: () => void }> = () => {
                                       <Col sm={12}>
                                           <Form>
                                               <Form.Check
+                                                  title={fitness && fitness.length ? (fitness.filter((industry) => industry.Industry?.id === curr.id).length.toString()+ " services exist for this industry" )
+                                                     : '0 services'}
                                                   type="switch"
                                                   id={curr.id}
                                                   value={curr.IndustryName}
@@ -131,19 +136,17 @@ const Modules: React.FC<{ show: boolean; onHide: () => void }> = () => {
                                                           : false
                                                   }
                                                   disabled={
-                                                      selectedIndustryIds &&
+                                                      (selectedIndustryIds &&
                                                       selectedIndustryIds.length &&
-                                                      selectedIndustryIds.length === 1
+                                                      selectedIndustryIds.length === 1) 
+                                                      || (fitness && fitness.length ? ((fitness.findIndex((industry) => industry.Industry?.id === curr.id) > -1 )
+                                                      ) : 1
+                                                      )
                                                           ? true
                                                           : false
                                                   }
                                                   onChange={(e) => {
-                                                      fitnessPackages({
-                                                          variables: {
-                                                              id: auth.userid,
-                                                              industryId: curr.id
-                                                          }
-                                                      });
+                                                     
 
                                                       let isDeselect = false;
                                                       const updatedValue =
@@ -253,10 +256,6 @@ const Modules: React.FC<{ show: boolean; onHide: () => void }> = () => {
                 />
             ) : null}
 
-            {/* warning modal */}
-            {showModuleSetting && (
-                <WarningModal show={showModuleSetting} onHide={() => setShowModuleSetting(false)} />
-            )}
         </>
     );
 };
