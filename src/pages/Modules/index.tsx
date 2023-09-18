@@ -31,8 +31,6 @@ const Modules: React.FC<{ show: boolean; onHide: () => void }> = () => {
             
         }
     });
-    if(fitness && fitness.length )
-    console.log(fitness.findIndex((curr) => curr.Industry.id === '5'));
 
     const [getUsers] = useLazyQuery(FETCH_USER_PROFILE_DATA, {
         variables: { id: auth.userid },
