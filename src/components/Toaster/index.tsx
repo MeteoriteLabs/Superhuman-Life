@@ -8,7 +8,7 @@ const Toaster: React.FC<{ type: string; msg: string; handleCallback: () => void 
     const toggleShowToaster = () => setShowToaster(!showToaster);
 
     return (
-        <div aria-live="polite" aria-atomic="true" className="fixed-bottom float-right ml-auto">
+        <div aria-live="polite" aria-atomic="true" className="fixed-bottom float-right ml-auto" style={{zIndex: 999}}>
             <Row>
                 <Col xs={6} className="my-1 ml-auto">
                     <Toast
