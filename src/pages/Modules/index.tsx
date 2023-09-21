@@ -9,7 +9,6 @@ import { AuthContext } from 'builders/session-builder/Fitness/Channel/import';
 import Toaster from 'components/Toaster';
 import { Link } from 'react-router-dom';
 import Loader from 'components/Loader/Loader';
-import WarningModal from './WarningModal';
 
 const Modules: React.FC<{ show: boolean; onHide: () => void }> = () => {
     const [industryData, setIndustryData] = useState<any[]>([]);
@@ -119,8 +118,8 @@ const Modules: React.FC<{ show: boolean; onHide: () => void }> = () => {
                                       <Col sm={12}>
                                           <Form>
                                               <Form.Check
-                                                  title={fitness && fitness.length ? (fitness.filter((industry) => industry.Industry?.id === curr.id).length.toString()+ " services exist for this industry" )
-                                                     : '0 services'}
+                                                  title={fitness && fitness.length ? (fitness.filter((industry) => industry.Industry?.id === curr.id).length.toString()+ " services exist for this industry, delete all the services to unselect this industry." )
+                                                     : 'You have 0 services for this industry'}
                                                   type="switch"
                                                   id={curr.id}
                                                   value={curr.IndustryName}
