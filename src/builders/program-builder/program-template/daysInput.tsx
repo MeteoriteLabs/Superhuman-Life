@@ -54,7 +54,7 @@ const DaysInput = (props: any) => {
 
     return (
         <>
-            <div style={{zIndex: 999, height: "150px"}}>
+            <div style={{zIndex: 999, height: "60px"}}>
                 {props.type === 'transfer' ? null : <label>Select Day</label>}
                 <Typeahead
                     id="basic-typeahead-multiple"
