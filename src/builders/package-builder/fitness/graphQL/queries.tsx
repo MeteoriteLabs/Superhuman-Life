@@ -170,11 +170,11 @@ export const GET_TAGS = gql`
 `;
 
 export const GET_FITNESS = gql`
-    query fitnesspackages($id: ID, $start: Int, $limit: Int, $industryId: ID) {
+    query fitnesspackages($id: ID, $start: Int, $limit: Int, $industryId: ID, $pageSize: Int) {
         fitnesspackages(
             sort: ["updatedAt:desc"]
             filters: { Industry:{ id: {eq: $industryId }}, users_permissions_user: { id: { eq: $id } } }
-            pagination: { start: $start, limit: $limit }
+            pagination: { start: $start, limit: $limit, pageSize: $pageSize }
         ) {
             meta {
                 pagination {
@@ -201,6 +201,11 @@ export const GET_FITNESS = gql`
                     groupinstantbooking
                     bookingleadtime
                     level
+                    Industry{
+                        data{
+                            id
+                        }
+                    }
                     users_permissions_user {
                         data {
                             id

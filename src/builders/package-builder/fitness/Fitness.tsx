@@ -986,13 +986,11 @@ export default function FitnessTab(industry) {
                 }
             }
         ],
-        // eslint-disable-next-line
         [selectedDuration, currentIndex]
     );
 
     const [dataTable, setDataTable] = useState<any>([]);
 
-    // eslint-disable-next-line
     const [tags, { data: get_tags, refetch: refetch_tags, loading: tagsLoading }] = useLazyQuery(
         GET_TAGS,
         {
