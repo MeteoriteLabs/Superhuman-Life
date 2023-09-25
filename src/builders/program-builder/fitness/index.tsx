@@ -5,7 +5,7 @@ import ProgramTab from '../program';
 import SessionTab from '../Session';
 
 export default function FitnessTab(industry): JSX.Element {
-    console.log(industry);
+    
     return (
         <Card className="shadow-sm mt-3" border="light">
             <Card.Body>

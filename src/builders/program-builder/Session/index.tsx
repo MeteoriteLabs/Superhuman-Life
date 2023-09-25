@@ -31,12 +31,7 @@ export default function EventsTab(industry): JSX.Element {
     const [page, setPage] = useState<number>(1);
     const [totalRecords, setTotalRecords] = useState<number>(0);
 
-    const [createWorkout] = useMutation(CREATE_INDUSTRY_SESSION, {
-        onCompleted: () => {
-            refetchQueryCallback();
-        }
-    });
-console.log("p");
+
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 

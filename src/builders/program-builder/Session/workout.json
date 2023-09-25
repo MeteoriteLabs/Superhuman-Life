@@ -24,6 +24,9 @@
                 "type": "string",
                 "title": "Agenda",
                 "description": "Explain the agenda"
+            },
+            "pdfUpload": {
+                "type": "string"
             }
            
         }
