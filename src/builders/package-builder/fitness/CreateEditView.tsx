@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useImperativeHandle, useRef, useState } from 'react';
-import AuthContext from '../../../context/auth-context';
+import AuthContext from 'context/auth-context';
 import FitnessClasses from './widgetCustom/FitnessClasses/FitnessClasses';
 import FitnessRestday from './widgetCustom/FitnessRestday';
 import { useMutation, useQuery } from '@apollo/client';
@@ -12,9 +12,9 @@ import {
     EDIT_PACKAGE,
     UPDATE_PACKAGE_PRIVATE
 } from './graphQL/mutations';
-import StatusModal from '../../../components/StatusModal/StatusModal';
+import StatusModal from 'components/StatusModal/StatusModal';
 import FitnessMultiSelect from './widgetCustom/FitnessMultiSelect';
-import EquipmentListSelect from '../../../components/customWidgets/equipmentListSelect';
+import EquipmentListSelect from 'components/customWidgets/equipmentListSelect';
 import FitnessAddress from './widgetCustom/FitnessAddress';
 import FitnessPricingTable from './widgetCustom/tableComponent/FitnessPricingTable';
 import FitnessDuration from './widgetCustom/FitnessDuration';
@@ -22,9 +22,9 @@ import FitnessMode from './widgetCustom/FitnessMode/FitnessMode';
 import BookingLeadday from './widgetCustom/FitnessBooking/BookingLeadday';
 import BookingLeadTime from './widgetCustom/FitnessBooking/BookingLeadTime';
 import { Subject } from 'rxjs';
-import CreateFitnessPackageModal from '../../../components/CreateFitnessPackageModal/CreateFitnessPackageModal';
-import Upload from '../../../components/upload/upload';
-import { flattenObj } from '../../../components/utils/responseFlatten';
+import CreateFitnessPackageModal from 'components/CreateFitnessPackageModal/CreateFitnessPackageModal';
+import Upload from 'components/upload/upload';
+import { flattenObj } from 'components/utils/responseFlatten';
 
 interface Operation {
     id: string;
