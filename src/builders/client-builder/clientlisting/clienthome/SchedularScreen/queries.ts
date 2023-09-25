@@ -2,12 +2,12 @@ import { gql } from '@apollo/client';
 
 export const GET_CLIENT_SESSIONS = gql`
     query getClientSessions($id: ID!, $startDate: Date, $endDate: Date) {
-        sessionsBookings(
+            sessionsBookings(
             filters: {
                 client: { id: { eq: $id } }
                 session: {
                     session_date: { gte: $startDate, lte: $endDate }
-                    Is_restday: { eq: true }
+                    Is_restday: { eq: false }
                 }
             }
         ) {

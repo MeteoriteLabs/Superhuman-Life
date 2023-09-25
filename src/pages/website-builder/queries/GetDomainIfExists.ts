@@ -17,3 +17,13 @@ query SapienSubdomain($subdomain: String) {
   }
 }`
   
+  export const GET_CHANGEMAKER_WEBSITE_SUBDOMAIN = gql`
+  query getChangemakerWebsiteSubdomain($subdomain: String){
+    changemakerWebsites(filters: {subdomain: {eq: $subdomain}}){
+      data{
+        attributes{
+          subdomain
+        }
+      }
+    }
+  }`
