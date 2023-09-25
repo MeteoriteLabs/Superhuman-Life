@@ -188,7 +188,7 @@ const ProgramManager = () => {
             </Col>
             {/* Right sidebar */}
             <Col lg={collapse ? '1' : '2'} className="d-lg-block">
-                    <SideNav
+                    {/* <SideNav
                         type="day"
                         handleScrollScheduler={handleScrollScheduler}
                         show24HourFormat={show24HourFormat}
@@ -206,7 +206,7 @@ const ProgramManager = () => {
                         callback3={handleRefetch}
                         restDayCallback={handleShowRestDay}
                         showRestDayAction={showRestDay}
-                    />
+                    /> */}
                 </Col>
             </Row>
         );

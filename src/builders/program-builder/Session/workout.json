@@ -1,0 +1,32 @@
+{
+    "1": {
+        "title": "",
+        "type": "object",
+        "required": [
+            "workout", 
+            "about" 
+        ],
+        "properties": {
+            "workout": {
+                "type": "string",
+                "title": "Session title"
+            },
+            "equipment": {
+                "type": "string"
+            },
+           
+            "about": {
+                "type": "string",
+                "title": "About",
+                "description": "Explain in detail about the session"
+            },
+            "agenda": {
+                "type": "string",
+                "title": "Agenda",
+                "description": "Explain the agenda"
+            }
+           
+        }
+       
+    }
+}
