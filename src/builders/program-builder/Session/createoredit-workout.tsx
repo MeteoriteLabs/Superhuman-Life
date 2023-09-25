@@ -3,7 +3,7 @@ import { useQuery, useMutation } from '@apollo/client';
 import ModalView from 'components/modal';
 import {
     FETCH_DATA,
-    CREATE_WORKOUT,
+    CREATE_INDUSTRY_SESSION,
     UPDATE_WORKOUT,
     DELETE_WORKOUT,
     FETCH_FITNESS_PROGRAMS
@@ -20,6 +20,7 @@ interface Operation {
     id: string;
     type: 'create' | 'edit' | 'view' | 'toggle-status' | 'delete';
     current_status: boolean;
+    industry: any;
 }
 
 function CreateEditWorkout(props: any, ref: any) {
@@ -42,13 +43,13 @@ function CreateEditWorkout(props: any, ref: any) {
         }
     });
 
-    const [createWorkout] = useMutation(CREATE_WORKOUT, {
+    const [createWorkout] = useMutation(CREATE_INDUSTRY_SESSION, {
         onCompleted: () => {
             modalTrigger.next(false);
             props.callback();
             setIsFormSubmitted(!isFormSubmitted);
             setToastType('success');
-            setToastMessage('Workout details created successfully');
+            setToastMessage('Session details created successfully');
         }
     });
 
@@ -102,7 +103,7 @@ function CreateEditWorkout(props: any, ref: any) {
         Medium,
         High
     }
-
+    console.log(operation);
     useEffect(() => {
         if (operation.type === 'create') {
             setWorkoutDetails({});
@@ -182,24 +183,28 @@ function CreateEditWorkout(props: any, ref: any) {
     }
 
     function CreateWorkout(frm: any) {
+        console.log(frm);
         frm.equipment = JSON.parse(frm.equipment);
+        console.log(frm.equipment);
 
         createWorkout({
             variables: {
-                workouttitle: frm.workout,
+                data: {
+                    title: frm.workout,
+                    industryId: `${operation.industry.industry.industry.id}`,
+                    about: frm.about,
 
-                About: frm.about,
-
-                workout_text: frm.agenda,
-                // workout_URL: frm.addWorkout.AddWorkout === 'Add URL' ? frm.addWorkout.AddURL : null,
-
-                equipment_lists: frm.equipment
-                    .map((item: any) => {
-                        return item.id;
-                    })
-                    .join(',')
-                    .split(','),
-                users_permissions_user: frm.user_permissions_user
+                    agenda: frm.agenda,
+                    // workout_URL: frm.addWorkout.AddWorkout === 'Add URL' ? frm.addWorkout.AddURL : null,
+                    
+                    equipment_lists: frm.equipment
+                        .map((item: any) => {
+                            return item.id;
+                        })
+                        .join(',')
+                        .split(','),
+                    users_permissions_user: frm.user_permissions_user
+                }
             }
         });
     }
@@ -210,9 +215,9 @@ function CreateEditWorkout(props: any, ref: any) {
         editWorkout({
             variables: {
                 workoutid: operation.id,
-                workouttitle: frm.workout,
-
-                About: frm.about,
+                title: frm.workout,
+                agenda: frm.agenda,
+                about: frm.about,
 
                 // workout_URL: frm.addWorkout.AddWorkout === 'Add URL' ? frm.addWorkout.AddURL : null,
 

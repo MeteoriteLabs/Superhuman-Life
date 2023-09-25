@@ -100,15 +100,12 @@ export const FETCH_FITNESSDISCPLINES = gql`
     }
 `;
 
-export const GET_TABLEDATA = gql`
-    query fetchdata($id: ID, $filter: String!, $start: Int, $limit: Int, $industryId: ID) {
-        workouts(
-            filters: {
-                users_permissions_user: {fitnesspackages:{Industry: {id: {eq: $industryId}}}, id: { eq: $id } }
-                workouttitle: { containsi: $filter }
-            }
+export const GET_INDUSTRY_SESSIONS = gql`
+    query industrySessions($id: ID, $start: Int, $limit: Int, $industryId: String) {
+        industrySessions(
+            filters: {industryId:{eq: $industryId}, users_permissions_user: {id: {eq: $id}}} 
             pagination: { start: $start, limit: $limit }
-            sort: ["updatedAt:desc"]
+            
         ) {
             meta {
                 pagination {
@@ -119,40 +116,15 @@ export const GET_TABLEDATA = gql`
             data {
                 id
                 attributes {
-                    workouttitle
-                    intensity
-                    level
-                    updatedAt
-                    About
-                    Benifits
-                    workout_URL
-                    Workout_Video_ID
-                    workout_text
-                    warmup
-                    cooldown
-                    mainmovement
-                    calories
+                    title
+                    agenda
+                    about
                     users_permissions_user {
                         data {
                             id
                         }
                     }
-                    fitnessdisciplines {
-                        data {
-                            id
-                            attributes {
-                                disciplinename
-                            }
-                        }
-                    }
-                    muscle_groups {
-                        data {
-                            id
-                            attributes {
-                                name
-                            }
-                        }
-                    }
+                    
                     equipment_lists {
                         data {
                             id
@@ -165,66 +137,20 @@ export const GET_TABLEDATA = gql`
                 }
             }
         }
-        fitnessdisciplines(sort: ["updatedAt"]) {
+       
+    }
+`;
+
+export const CREATE_INDUSTRY_SESSION = gql`
+    mutation createIndustrySession($data: IndustrySessionInput!) {
+        createIndustrySession(data: $data) {
             data {
                 id
-                attributes {
-                    disciplinename
-                    updatedAt
-                }
             }
         }
     }
 `;
 
-export const CREATE_WORKOUT = gql`
-    mutation createworkout(
-        $workouttitle: String
-        $intensity: ENUM_WORKOUT_INTENSITY
-        $level: ENUM_WORKOUT_LEVEL
-        $About: String
-        $Benifits: String
-        $users_permissions_user: ID!
-        $calories: Int
-        $fitnessdisciplines: [ID]
-        $equipment_lists: [ID]
-        $muscle_groups: [ID]
-        $workout_URL: String
-        $workout_text: String
-        $warmup: JSON
-        $mainmovement: JSON
-        $cooldown: JSON
-        $Workout_Video_ID: String
-    ) {
-        createWorkout(
-            data: {
-                workouttitle: $workouttitle
-                intensity: $intensity
-                level: $level
-                About: $About
-                Benifits: $Benifits
-                users_permissions_user: $users_permissions_user
-                equipment_lists: $equipment_lists
-                fitnessdisciplines: $fitnessdisciplines
-                muscle_groups: $muscle_groups
-                workout_URL: $workout_URL
-                workout_text: $workout_text
-                calories: $calories
-                warmup: $warmup
-                mainmovement: $mainmovement
-                cooldown: $cooldown
-                Workout_Video_ID: $Workout_Video_ID
-            }
-        ) {
-            data {
-                id
-                attributes {
-                    workouttitle
-                }
-            }
-        }
-    }
-`;
 
 export const UPDATE_WORKOUT = gql`
     mutation updateworkout(

@@ -1,4 +1,4 @@
-import { useMemo, useContext, useState, useRef ,useEffect} from 'react';
+import { useMemo, useContext, useState, useRef, useEffect } from 'react';
 import {
     Button,
     Card,
@@ -12,7 +12,7 @@ import {
 } from 'react-bootstrap';
 import Table from 'components/table';
 import { useQuery, useMutation } from '@apollo/client';
-import { GET_TABLEDATA, CREATE_WORKOUT } from './queries';
+import { GET_INDUSTRY_SESSIONS, CREATE_INDUSTRY_SESSION } from './queries';
 import AuthContext from 'context/auth-context';
 import ActionButton from 'components/actionbutton';
 import CreateEditWorkout from './createoredit-workout';
@@ -31,57 +31,19 @@ export default function EventsTab(industry): JSX.Element {
     const [page, setPage] = useState<number>(1);
     const [totalRecords, setTotalRecords] = useState<number>(0);
 
-    const [createWorkout] = useMutation(CREATE_WORKOUT, {
+    const [createWorkout] = useMutation(CREATE_INDUSTRY_SESSION, {
         onCompleted: () => {
             refetchQueryCallback();
         }
     });
-
+console.log("p");
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-
-    function CreateWorkout(
-        _variables: Record<string, unknown> = { id: auth.userid, details: frm }
-    ) {
-        frm.rawDiscipline = frm.rawDiscipline
-            .map((item: any) => item.id)
-            .join(', ')
-            .split(', ');
-        frm.rawEquipment = frm.rawEquipment
-            .map((item: any) => item.id)
-            .join(', ')
-            .split(', ');
-        frm.rawMuscleGroup = frm.rawMuscleGroup
-            .map((item: any) => item.id)
-            .join(', ')
-            .split(', ');
-
-        createWorkout({
-            variables: {
-                workouttitle: name,
-                intensity: frm.intensity,
-                level: frm.level,
-                fitnessdisciplines: frm.rawDiscipline,
-                About: frm.about,
-                Benifits: frm.benifits,
-                warmup: frm.warmup,
-                mainmovement: frm.mainmovement,
-                cooldown: frm.cooldown,
-                workout_text: frm.workout_text,
-                workout_URL: frm.workout_url,
-                Workout_Video_ID: frm.workout_video_id,
-                calories: frm.calories,
-                equipment_lists: frm.rawEquipment,
-                muscle_groups: frm.rawMuscleGroup,
-                users_permissions_user: frm.users_permissions_user
-            }
-        });
-    }
 
     const columns = useMemo<any>(
         () => [
             { accessor: 'workoutName', Header: 'Session Name' },
-            { accessor: 'workout_text', Header: 'Things you need' },
+            { accessor: 'equipment', Header: 'Things you need' },
             { accessor: 'about', Header: 'About' },
             { accessor: 'agenda', Header: 'Agenda' },
             {
@@ -126,11 +88,18 @@ export default function EventsTab(industry): JSX.Element {
         []
     );
 
-    const fetch = useQuery(GET_TABLEDATA, {
-        variables: { id: auth.userid, filter: searchFilter, start: page * 10 - 10, limit: 10,industryId: industry.industry.industry.id},
+    const fetch = useQuery(GET_INDUSTRY_SESSIONS, {
+        variables: {
+            id: auth.userid,
+            filter: searchFilter,
+            start: page * 10 - 10,
+            limit: 10,
+            industryId: industry.industry.industry.id
+        },
         onCompleted: (data) => {
-            setTotalRecords(data.workouts.meta.pagination.total);
+            setTotalRecords(data.industrySessions.meta.pagination.total);
             loadData(data);
+            console.log(data);
         }
     });
 
@@ -138,67 +107,24 @@ export default function EventsTab(industry): JSX.Element {
         fetch.refetch();
     }
 
-    function getDate(time: any) {
-        const monthNames = [
-            'Jan',
-            'Feb',
-            'Mar',
-            'Apr',
-            'May',
-            'Jun',
-            'Jul',
-            'Aug',
-            'Sept',
-            'Oct',
-            'Nov',
-            'Dec'
-        ];
-        const dateObj = new Date(time);
-        const month = monthNames[dateObj.getMonth()];
-        const year = dateObj.getFullYear();
-        const date = dateObj.getDate();
-
-        return `${date}-${month}-${year}`;
-    }
-
     function loadData(data: any) {
         const flattenData = flattenObj({ ...data });
+        console.log(flattenData);
         setTableData(
-            [...flattenData.workouts].map((detail) => {
+            [...flattenData.industrySessions].map((detail) => {
                 return {
                     id: detail.id,
-                    workoutName: detail.workouttitle,
-                    rawDiscipline: detail.fitnessdisciplines,
-                    discipline: detail.fitnessdisciplines
-                        .map((val: any) => {
-                            return val.disciplinename;
-                        })
-                        .join(', '),
-                    level: detail.level,
-                    intensity: detail.intensity,
-                    calories: detail.calories,
-                    rawMuscleGroup: detail.muscle_groups,
-                    muscleGroup: detail.muscle_groups
-                        .map((muscle: any) => {
-                            return muscle.name;
-                        })
-                        .join(', '),
-                    rawEquipment: detail.equipment_lists,
+                    workoutName: detail.title,
+
                     equipment: detail.equipment_lists
                         .map((equipment: any) => {
                             return equipment.name;
                         })
                         .join(', '),
-                    updatedOn: moment(getDate(Date.parse(detail.updatedAt))).format('Do MMM YYYY'),
-                    about: detail.About,
-                    benifits: detail.Benifits,
-                    users_permissions_user: detail.users_permissions_user.id,
-                    workout_url: detail.workout_URL,
-                    workout_text: detail.workout_text,
-                    warmup: detail.warmup,
-                    mainmovement: detail.mainmovement,
-                    cooldown: detail.cooldown,
-                    workout_video_id: detail.Workout_Video_ID
+                    agenda: detail.agenda,
+                    about: detail.about,
+
+                    users_permissions_user: detail.users_permissions_user.id
                 };
             })
         );
@@ -248,7 +174,8 @@ export default function EventsTab(industry): JSX.Element {
                                 onClick={() => {
                                     createEditWorkoutComponent.current.TriggerForm({
                                         id: null,
-                                        type: 'create'
+                                        type: 'create',
+                                        industry: industry
                                     });
                                 }}
                             >
@@ -277,7 +204,7 @@ export default function EventsTab(industry): JSX.Element {
                                             variant="success"
                                             onClick={() => {
                                                 handleClose();
-                                                CreateWorkout({ id: auth.userid, frm: frm });
+                                                // CreateWorkout({ id: auth.userid, frm: frm });
                                             }}
                                         >
                                             Save Changes

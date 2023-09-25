@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useImperativeHandle, useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-import ModalView from '../../../components/modal';
+import ModalView from 'components/modal';
 import {
     GET_TRIGGERS,
     ADD_MESSAGE,
@@ -9,13 +9,13 @@ import {
     DELETE_MESSAGE,
     UPDATE_STATUS
 } from './queries';
-import AuthContext from '../../../context/auth-context';
-import StatusModal from '../../../components/StatusModal/StatusModal';
+import AuthContext from 'context/auth-context';
+import StatusModal from 'components/StatusModal/StatusModal';
 import { Subject } from 'rxjs';
 import { schema, widgets } from './schema';
 import { schemaView } from './messageViewSchema';
-import Toaster from '../../../components/Toaster';
-import { flattenObj } from '../../../components/utils/responseFlatten';
+import Toaster from 'components/Toaster';
+import { flattenObj } from 'components/utils/responseFlatten';
 
 interface Operation {
     id: string;
