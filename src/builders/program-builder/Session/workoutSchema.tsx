@@ -3,6 +3,7 @@ import EquipmentSearch from 'components/customWidgets/equipmentListSelect';
 import ExerciseList from 'components/customWidgets/exerciseList';
 import FitnessMultiSelect from 'components/customWidgets/fitnessMultiSelect';
 import Upload from 'components/upload/uploadPDF';
+import Urls from './urls';
 
 export const widgets = {
     fitnessSelect: FitnessMultiSelect,
@@ -16,7 +17,7 @@ export const schema: any = {
     workout: {
         'ui:placeholder': 'Enter session title'
     },
-    
+
     about: {
         'ui:widget': 'textEditor',
         'ui:tile': 'About',
@@ -33,12 +34,13 @@ export const schema: any = {
     },
     pdfUpload: {
         'ui:widget': (props: any) => {
-            return (
-                <Upload  onChange={props.onChange}
-                value={props.value}/>
-            );
+            return <Upload onChange={props.onChange} value={props.value} />;
+        }
+    },
+    url: {
+        'ui:widget': (props: any) => {
+            return <Urls onChange={props.onChange} value={props.value} />;
+            
         }
     }
-   
-    
 };

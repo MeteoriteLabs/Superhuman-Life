@@ -14,8 +14,8 @@ function UploadPdf(props: {onChange: (args: string) => void; value: string;}) {
   const [uploadedfile, setUploadedFile] = useState<string|null>(null);
 
   // Function to upload file to s3
-  const uploadFile = async () => {
-
+  const uploadFile = async (e) => {
+    e.preventDefault();
     // S3 Credentials
     AWS.config.update({
       accessKeyId: process.env.REACT_APP_S3_ACCESS_KEY,
@@ -47,8 +47,8 @@ function UploadPdf(props: {onChange: (args: string) => void; value: string;}) {
 
     await upload.then((err: any) => {
       // File successfully uploaded
-      props.onChange(err.$response.request.httpRequest.path);
       setUploadedFile(err.$response.request.httpRequest.path);
+      props.onChange((err.$response.request.httpRequest.path).toString());
     });
   };
 
@@ -65,7 +65,7 @@ function UploadPdf(props: {onChange: (args: string) => void; value: string;}) {
       <div>
         <p>Upload PDF document</p>
         <input type="file" onChange={handleFileChange} />
-        <button onClick={uploadFile}>Upload</button>
+        <button onClick={(e)=>uploadFile(e)}>Upload</button>
       </div>
       {uploadedfile ? <p className="text-success">Uploaded successfully</p> : null}
     </div>

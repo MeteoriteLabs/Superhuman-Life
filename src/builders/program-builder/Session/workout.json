@@ -4,7 +4,11 @@
         "type": "object",
         "required": [
             "workout", 
-            "about" 
+            "about",
+            "equipment",
+            "agenda",
+            "url",
+            "pdfUpload"
         ],
         "properties": {
             "workout": {
@@ -24,6 +28,9 @@
                 "type": "string",
                 "title": "Agenda",
                 "description": "Explain the agenda"
+            },
+            "url": {
+                "type": "string"
             },
             "pdfUpload": {
                 "type": "string"
