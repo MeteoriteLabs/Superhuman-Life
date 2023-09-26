@@ -98,14 +98,13 @@ function CreateEditWorkout(props: any, ref: any) {
 
     function FillDetails(data: any) {
         const flattenData = flattenObj({ ...data });
-console.log(flattenData);
         const details: any = {};
         const msg = flattenData.industrySession;
-console.log(msg, msg.title);
         details.workout = msg.title;
         details.document = msg.document;
         details.agenda = msg.agenda;
         details.about = msg.about;
+        details.url = msg.url && msg.url.length && msg.url.map((curr) => curr);
         details.equipment = msg.equipment_lists.map((val: any) => {
             return val;
         });
@@ -124,13 +123,13 @@ console.log(msg, msg.title);
             skip: operation.type === 'create' || operation.type === 'delete' || !operation.id,
             onCompleted: (e: any) => {
                 FillDetails(e);
-                // console.log(e);
             }
         });
     }
 
     function CreateWorkout(frm: any) {
-        frm.equipment = JSON.parse(frm.equipment);
+        
+        frm.equipment = frm.equipment ? JSON.parse(frm.equipment) : null;
 
         createWorkout({
             variables: {
@@ -140,7 +139,7 @@ console.log(msg, msg.title);
                     about: frm.about,
                     document: frm.pdfUpload,
                     agenda: frm.agenda,
-                    
+                    url: frm.url? JSON.parse(frm.url) : null,
                     equipment_lists: frm.equipment
                         .map((item: any) => {
                             return item.id;
@@ -163,6 +162,7 @@ console.log(msg, msg.title);
                 agenda: frm.agenda,
                 about: frm.about,
                 document: frm.pdfUpload,
+                url: frm.url,
                 equipment_lists: frm.equipment && frm.equipment.length && frm.equipment
                     .map((item: any) => {
                         return item.id;

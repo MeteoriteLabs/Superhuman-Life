@@ -17,7 +17,6 @@ import AuthContext from 'context/auth-context';
 import ActionButton from 'components/actionbutton';
 import CreateEditWorkout from './createoredit-workout';
 import { flattenObj } from 'components/utils/responseFlatten';
-import moment from 'moment';
 
 export default function EventsTab(industry): JSX.Element {
     const auth = useContext(AuthContext);
@@ -30,7 +29,6 @@ export default function EventsTab(industry): JSX.Element {
     const searchInput = useRef<HTMLInputElement>(null);
     const [page, setPage] = useState<number>(1);
     const [totalRecords, setTotalRecords] = useState<number>(0);
-
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -94,7 +92,7 @@ export default function EventsTab(industry): JSX.Element {
         onCompleted: (data) => {
             setTotalRecords(data.industrySessions.meta.pagination.total);
             loadData(data);
-            console.log(data);
+          
         }
     });
 
@@ -104,7 +102,7 @@ export default function EventsTab(industry): JSX.Element {
 
     function loadData(data: any) {
         const flattenData = flattenObj({ ...data });
-        console.log(flattenData);
+        
         setTableData(
             [...flattenData.industrySessions].map((detail) => {
                 return {
