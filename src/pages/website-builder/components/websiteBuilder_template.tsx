@@ -1,5 +1,4 @@
 import { useContext } from 'react';
-import Toggle from 'react-toggle';
 import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
 import { Link } from 'react-router-dom';
 
@@ -7,36 +6,12 @@ function WebsiteBuilder_template(): JSX.Element {
     const { changemakerWebsiteState } = useContext(ChangeMakerWebsiteContext);
 
     return (
-        <div className="my-5 bg-dark" style={{ borderRadius: '15px' }}>
-            <hr />
-            <div
-                className="mb-2 mt-5 d-flex justify-content-between align-items-baseline"
-                style={{ paddingInline: '20px' }}
-            >
-                <h4
-                    style={{
-                        fontSize: 20,
-                        fontWeight: 800,
-                        color: '#fff',
-                        boxShadow:
-                            'rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px'
-                    }}
-                >
-                    My Website
-                </h4>
-                <div className="d-flex" style={{ gap: 20, color: '#fff' }}>
-                    <p>Draft</p>
-                    <Toggle icons={false} />
-                    <p>Publish</p>
-                </div>
-            </div>
+        <div>
             <div
                 style={{
-                    width: '80%',
                     position: 'relative',
-                    paddingBlock: '60px',
                     margin: 'auto',
-                    borderRadius: '20px',
+                    borderRadius: '20px 20px 0 0',
                     overflow: 'hidden'
                 }}
             >
@@ -45,7 +20,7 @@ function WebsiteBuilder_template(): JSX.Element {
                         style={{
                             objectFit: 'cover',
                             width: '100%',
-                            height: 540
+                            height: '257px'
                         }}
                     >
                         <img
@@ -53,7 +28,7 @@ function WebsiteBuilder_template(): JSX.Element {
                             alt="template"
                             width={1400}
                             height={900}
-                            style={{ objectFit: 'cover', width: '100%', height: 540 }}
+                            style={{ objectFit: 'cover', width: '100%' }}
                         />
                     </div>
                 ) : (
@@ -75,7 +50,7 @@ function WebsiteBuilder_template(): JSX.Element {
             <div
                 className="d-flex"
                 style={{
-                    borderRadius: '0 0 15px 15px',
+                    borderRadius: '0 0 10px 10px',
                     width: '100%',
                     overflow: 'hidden',
                     textAlign: 'center'

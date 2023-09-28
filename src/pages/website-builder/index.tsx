@@ -8,6 +8,7 @@ import AuthContext from 'context/auth-context';
 import SideNav from './layout/sidenav';
 import Icon from 'components/Icons';
 import Icons from 'components/Icons';
+import Toggle from 'react-toggle';
 import 'react-toggle/style.css';
 import clsx from 'clsx';
 import classes from './style.module.css';
@@ -50,7 +51,7 @@ const WebsiteBuilder: FC = () => {
                     fixed="bottom"
                     bg="dark"
                     variant="dark"
-                    className="d-lg-none d-sm-block mt-5"
+                    className="d-lg-none d-sm-block"
                 >
                     <div
                         style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}
@@ -199,9 +200,21 @@ const WebsiteBuilder: FC = () => {
                         className={`${clsx(classes.side_nav_proxy, classes.side_nav_proxy_active)}`}
                     />
                 )}
-                <Container className="mt-5 pt-3 px-3" style={{ position: 'relative' }}>
-                    <WebsiteBuilder_settings />
-                    <WebsiteBuilder_template />
+                <Container className="mt-5 pt-3 " style={{ position: 'relative' }}>
+                    <div className="d-flex justify-content-between">
+                        <h1 style={{ fontSize: '28px' }}>Website Builder</h1>
+                        <div className="d-flex" style={{ color: '#fff' }}>
+                            <p>Draft</p>
+                            <Toggle icons={false} />
+                            <p>Publish</p>
+                        </div>
+                    </div>
+                    <hr />
+
+                    <div className="d-flex">
+                        <WebsiteBuilder_settings />
+                        <WebsiteBuilder_template />
+                    </div>
 
                     <div
                         className="d-flex bg-dark flex-wrap flex-md-nowrap"
@@ -209,7 +222,7 @@ const WebsiteBuilder: FC = () => {
                             width: '100%',
                             gap: '20px',
                             marginBottom: '100px',
-                            marginTop: '90px',
+                            marginTop: '20px',
                             padding: '35px',
                             display: 'flex',
                             alignItems: 'center',
