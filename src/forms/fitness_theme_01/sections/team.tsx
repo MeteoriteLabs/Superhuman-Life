@@ -7,6 +7,8 @@ import authContext from 'context/auth-context';
 import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
 import { useMutation, useQuery } from '@apollo/client';
 import { ArrowDownShort } from 'react-bootstrap-icons';
+import MinusIcon from 'components/Icons/minusIcon';
+import PlusIcon from 'components/Icons/plusIcon';
 
 import style from './style.module.css';
 import UploadImageToS3WithNativeSdk from 'components/upload/upload';
@@ -59,8 +61,9 @@ function Team({ page }: { page: string }): JSX.Element {
         }
     });
 
-    const { fields } = useFieldArray<FormData>({
+    const { fields, append, remove } = useFieldArray<FormData>({
         control,
+
         name: 'team'
     });
 
@@ -99,7 +102,7 @@ function Team({ page }: { page: string }): JSX.Element {
     const onSubmit = handleSubmit(async (formData) => {
         // ! Need to add image upload
         const { title, team } = formData;
-
+        localStorage.setItem('team', `${team.length}`);
         await mutateFunction({
             variables: {
                 id: initialValues.sectionId,
@@ -153,6 +156,21 @@ function Team({ page }: { page: string }): JSX.Element {
                         )}
                     />
                     {errors.description && <p>{errors.description.message}</p>}
+                </Form.Group>
+
+                <Form.Group
+                    controlId="removeAndAddTeams"
+                    style={{ display: 'flex', gap: '4px', justifyContent: 'flex-end' }}
+                >
+                    <div
+                        className={`${style.minus_icon} ${style.svg_icons}`}
+                        onClick={() => remove(fields.length - 1)}
+                    >
+                        <MinusIcon />
+                    </div>
+                    <div className={`${style.plus_icon} ${style.svg_icons}`}>
+                        <PlusIcon />
+                    </div>
                 </Form.Group>
 
                 {fields.length

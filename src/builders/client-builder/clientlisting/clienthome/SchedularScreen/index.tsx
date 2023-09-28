@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Schedular from '../../../../../builders/program-builder/program-template/scheduler';
 import moment from 'moment';
 import { useQuery } from '@apollo/client';
@@ -23,11 +23,11 @@ const SchedulerScreen = (props: any) => {
     const [sessionFilter, setSessionFilter] = useState('none');
     const [showRestDay, setShowRestDay] = useState<boolean>(false);
     const [sessionIds, setSessionIds] = useState<string[]>([]);
-    2;
     const [key, setKey] = useState('');
     const [tag, setTag] = useState<any>();
     const [showProgramNameModal, setShowProgramNameModal] = useState<boolean>(false);
     const [totalClasses, setTotalClasses] = useState<any>([]);
+    const [schedulerSessions, setSchedulerSessions] = useState([]);
 
     function handleDatePicked(date: any) {
         setScheduleDate(date);
@@ -52,28 +52,25 @@ const SchedulerScreen = (props: any) => {
                 .format('YYYY-MM-DD')
         },
         onCompleted: (data: any) => {
+            setSchedulerSessions(data);
             const flattenData = flattenObj({ ...data });
-            const ids = [...sessionIds];
-            setTag(flattenData.tags[0]);
-            setSessionIds(ids);
+            const sessionIds = flattenData.sessionsBookings.map(
+                (sessionBooking) => sessionBooking.session.id
+            );
+            setSessionIds(sessionIds);
             setRestDays(flattenData);
+            setTag(flattenData.sessionsBookings[0]);
         }
     });
 
-    mainQuery.refetch();
     function handleCallback() {
         mainQuery.refetch();
     }
 
-    function calculateLastSession(sessions) {
-        if (sessions.length === 0) {
-            return 'N/A';
-        }
-
-        const moments = sessions.map((currentDate) => moment(currentDate.session_date));
-        const maxDate = moment.max(moments);
-
-        return maxDate.format('MMM Do,YYYY');
+    function calculateDuration(startDate: string, endDate: string) {
+        const packageStartDate = moment(startDate);
+        const packageEndDate = moment(endDate);
+        return packageEndDate.diff(packageStartDate, 'days') + 1;
     }
 
     const handleScrollScheduler = () => {
@@ -104,14 +101,6 @@ const SchedulerScreen = (props: any) => {
     function handleShowRestDay() {
         setShowRestDay(!showRestDay);
         handleScrollScheduler();
-    }
-
-    function handleTimeFormatting(data: any, duration: number) {
-        const digits = duration <= 30 ? 2 : 3;
-        return (data === undefined ? 0 : data).toLocaleString('en-US', {
-            minimumIntegerDigits: digits.toString(),
-            useGrouping: false
-        });
     }
 
     return (
@@ -335,26 +324,41 @@ const SchedulerScreen = (props: any) => {
                     </span>
                 </div>
                 <Schedular
+                    show24HourFormat={show24HourFormat}
                     type="date"
                     days={moment(scheduleDate).daysInMonth()}
-                    classType={'One-On-One'}
-                    restDays={restDays.sessionsBookings}
-                    programId={clientsSessions}
+                    classType={tag && tag.session ? tag.session.type : null}
+                    sessionDate={tag && tag.session ? tag.session.session_date : null}
+                    restDays={
+                        restDays && restDays.sessionsBookings && restDays.sessionsBookings.length
+                            ? restDays.sessionsBookings.filter(
+                                  (ses) => ses.session.type === 'restday'
+                              )
+                            : null
+                    }
+                    schedulerSessions={schedulerSessions}
+                    // programId={tag && tag.session && tag?.session.id}
+
                     startDate={moment(scheduleDate).startOf('month').format('YYYY-MM-DD')}
-                    clientId={1}
+                    clientId={clientsSessions}
                     clientSessions={true}
-                    sessionIds={sessionIds}
-                    program={program}
                     sessionFilter={sessionFilter}
+                    program={program}
+                    ref={ref}
+                    showRestDay={showRestDay}
                     handleFloatingActionProgramCallback={handleFloatingActionProgramCallback}
                     handleFloatingActionProgramCallback2={handleFloatingActionProgramCallback2}
+                    handleRefetch={handleRefetch}
+                    callback={handleCallback}
+                    sessionIds={sessionIds}
                 />
             </Col>
 
             <Col lg={collapse ? '1' : '2'} className="d-lg-block">
                 <SideNav
-                    sessionDate=""
-                    type=""
+                    sessionDate={tag && tag.session ? tag.session.session_date : null}
+                    days={moment(scheduleDate).daysInMonth()}
+                    type="workout"
                     handleScrollScheduler={handleScrollScheduler}
                     show24HourFormat={show24HourFormat}
                     setShow24HourFormat={setShow24HourFormat}
@@ -362,13 +366,22 @@ const SchedulerScreen = (props: any) => {
                     setCollapse={setCollapse}
                     accordionExpanded={accordionExpanded}
                     onAccordionToggle={handleAccordionToggle}
-                    clientIds=""
+                    clientIds={clientsSessions}
                     sessionIds={sessionIds}
-                    startDate=""
-                    duration=""
+                    startDate={moment(
+                        moment(scheduleDate).startOf('month').format('YYYY-MM-DD')
+                    ).format('YYYY-MM-DD')}
+                    duration={calculateDuration(
+                        moment(moment(scheduleDate).startOf('month').format('YYYY-MM-DD')).format(
+                            'YYYY-MM-DD'
+                        ),
+                        moment(moment(scheduleDate).startOf('month').format('YYYY-MM-DD'))
+                            .add(moment(scheduleDate).daysInMonth() - 1, 'days')
+                            .format('YYYY-MM-DD')
+                    )}
                     callback={handleFloatingActionProgramCallback}
                     callback2={handleFloatingActionProgramCallback2}
-                    callback3={handleRefetch}
+                    callback3={handleRefetch} 
                     restDayCallback={handleShowRestDay}
                     showRestDayAction={showRestDay}
                 />

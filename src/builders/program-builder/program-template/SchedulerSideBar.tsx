@@ -410,7 +410,7 @@ export default function SideNav({
                                             type="switch"
                                             id="availability"
                                             label="Availaibility"
-                                            className="text-white"
+                                            className="text-white mt-2"
                                             defaultChecked={showBlockedSlots}
                                             onChange={() => {
                                                 setShowBlockedSlots(!showBlockedSlots);
@@ -421,7 +421,7 @@ export default function SideNav({
                                             type="switch"
                                             id="rotine"
                                             label="Routine"
-                                            className="text-white"
+                                            className="text-white mt-2"
                                             onChange={() => {
                                                 // setShow24HourFormat(!show24HourFormat);
                                                 handleScrollScheduler();
@@ -433,7 +433,7 @@ export default function SideNav({
                                                 type="switch"
                                                 id="timeformat"
                                                 label="24 hour"
-                                                className="text-white"
+                                                className="text-white mt-2"
                                                 onChange={() => {
                                                     setShow24HourFormat(!show24HourFormat);
                                                     handleScrollScheduler();

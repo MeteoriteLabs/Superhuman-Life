@@ -26,6 +26,7 @@ const SettingsPage = React.lazy(() => import('pages/settings'));
 const FinancePage = React.lazy(() => import('pages/finance'));
 const SummaryPage = React.lazy(() => import('pages/Summary'));
 const FailedPage = React.lazy(() => import('pages/failed'));
+const ModulePage = React.lazy(() => import('pages/Modules'));
 
 const ClientHomePage = React.lazy(() => import('builders/client-builder/clientlisting/client'));
 const PackagePage = React.lazy(() => import('builders/package-builder'));
@@ -102,6 +103,7 @@ export default function Routes({ token }: { token: string }): JSX.Element {
                                 component={LiveEditor}
                             />
                             <Route path="/bookings" component={BookingPage} />
+                            <Route path="/modules" component={ModulePage} />
                             <Route exact path="/bookingSettings" component={BookingSetting} />
                             <Route path="/chats" component={ChatPage} />
                             <Route path="/clients" component={ClientPage} />
