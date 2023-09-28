@@ -241,6 +241,7 @@ const Schedular = (props: any, ref) => {
 
     // ENTRY POINT
     // Props to this component must be passed from the parent component.
+
     useEffect(() => {
         if (!props?.clientSessions) {
             handleRenderTable(props.schedulerSessions);
@@ -318,56 +319,80 @@ const Schedular = (props: any, ref) => {
         }
 
         if (flattenData.sessionsBookings?.length) {
-            flattenData.sessionsBookings
-                ?.filter((itm) => itm.Is_restday === true)
-                .forEach((val) => {
-                    const startTimeHour: any = `${
-                        val.session.start_time === null ? '0' : val.session.start_time.split(':')[0]
-                    }`;
-                    const startTimeMinute: any = `${
-                        val.session.start_time === null ? '0' : val.session.start_time.split(':')[1]
-                    }`;
-                    const endTimeHour: any = `${
-                        val.session.end_time === null ? '0' : val.session.end_time.split(':')[0]
-                    }`;
-                    const endTimeMin: any = `${
-                        val.session.end_time === null ? '0' : val.session.end_time.split(':')[1]
-                    }`;
-                    if (
-                        !arr[calculateDay(props.startDate, val.session.session_date)][
-                            startTimeHour
-                        ][startTimeMinute]
-                    ) {
-                        arr[calculateDay(props.startDate, val.session.session_date)][startTimeHour][
-                            startTimeMinute
-                        ] = [];
-                    }
+            flattenData.sessionsBookings?.forEach((val) => {
+                const startTimeHour: any = `${
+                    val.session.start_time
+                        ? Number(val.session.start_time.split(':')[0]) < 10
+                            ? `${Number(val.session.start_time.split(':')[0])}`
+                            : val.start_time.split(':')[0]
+                        : '0'
+                }`;
+
+                // const startTimeHour: any = `${
+                //     val.session.start_time === null ? '0' : val.session.start_time.split(':')[0]
+                // }`;
+
+                const startTimeMinute: any = `${
+                    val.session.start_time
+                        ? Number(val.session.start_time.split(':')[1]) < 10
+                            ? `${Number(val.session.start_time.split(':')[1])}`
+                            : val.session.start_time.split(':')[1]
+                        : '0'
+                }`;
+
+                // const startTimeMinute: any = `${
+                //     val.session.start_time === null ? '0' : val.session.start_time.split(':')[1]
+                // }`;
+
+                const endTimeHour: any = `${
+                    val.session.end_time ? val.session.end_time.split(':')[0] : '0'
+                } `;
+                const endTimeMin: any = `${
+                    val.session.end_time ? val.session.end_time.split(':')[1] : '0'
+                }`;
+
+                // const endTimeHour: any = `${
+                //     val.session.end_time === null ? '0' : val.session.end_time.split(':')[0]
+                // }`;
+                // const endTimeMin: any = `${
+                //     val.session.end_time === null ? '0' : val.session.end_time.split(':')[1]
+                // }`;
+
+                if (
+                    !arr[calculateDay(props.startDate, val.session.session_date)][startTimeHour][
+                        startTimeMinute
+                    ]
+                ) {
                     arr[calculateDay(props.startDate, val.session.session_date)][startTimeHour][
                         startTimeMinute
-                    ].push({
-                        title:
-                            val.session.activity === null
-                                ? val.session.workout.workouttitle
-                                : val.session.activity.title,
-                        color: '#FFFDD1',
-                        day: calculateDay(props.startDate, val.session.session_date),
-                        hour: startTimeHour,
-                        min: startTimeMinute,
-                        type: val.session.type,
-                        endHour: endTimeHour,
-                        endMin: endTimeMin,
-                        id:
-                            val.session.activity === null
-                                ? val.session.workout.id
-                                : val.session.activity.id,
-                        mode: val.session.mode,
-                        tag: val.session.tag,
-                        sessionId: val.session.id,
-                        activityTarget:
-                            val.session.activity === null ? null : val.session.activity_target,
-                        sessionDate: val.session.session_date
-                    });
+                    ] = [];
+                }
+                arr[calculateDay(props.startDate, val.session.session_date)][startTimeHour][
+                    startTimeMinute
+                ].push({
+                    title:
+                        val.session.activity === null
+                            ? val.session.workout.workouttitle
+                            : val.session.activity.title,
+                    color: '#FFFDD1',
+                    day: calculateDay(props.startDate, val.session.session_date),
+                    hour: startTimeHour,
+                    min: startTimeMinute,
+                    type: val.session.type,
+                    endHour: endTimeHour,
+                    endMin: endTimeMin,
+                    id:
+                        val.session.activity === null
+                            ? val.session.workout.id
+                            : val.session.activity.id,
+                    mode: val.session.mode,
+                    tag: val.session.tag,
+                    sessionId: val.session.id,
+                    activityTarget:
+                        val.session.activity === null ? null : val.session.activity_target,
+                    sessionDate: val.session.session_date
                 });
+            });
         }
     }
 
@@ -704,6 +729,7 @@ const Schedular = (props: any, ref) => {
         }
         // the first if statement is to check if we are in the client scheduler page
         // the else if block is to run if we are in the session scheduler page
+
         if (props.clientSessions) {
             if (props.restDays) {
                 for (let k = 0; k < props.restDays.length; k++) {
@@ -1739,32 +1765,38 @@ const Schedular = (props: any, ref) => {
         if (props.schedulerSessions && props.schedulerSessions.tags) {
             const sessionsObj = {};
             const tag = flattenObj({ ...props.schedulerSessions.tags });
-    
+
             const sessions =
-                tag && tag.length && tag[0].sessions && tag[0].sessions.length ? tag[0].sessions : [];
-    
+                tag && tag.length && tag[0].sessions && tag[0].sessions.length
+                    ? tag[0].sessions
+                    : [];
+
             for (let i = 0; i < sessions.length; i++) {
                 sessionsObj[sessions[i].session_date] = sessionsObj[sessions[i].session_date]
-                    ? [...sessionsObj[sessions[i].session_date], {
-                        "startTime": sessions[i].start_time,
-                        "endTime": sessions[i].end_time,
-                        "name":
-                            sessions[i].type === 'workout'
-                                ? sessions[i].workout.workouttitle
-                                : sessions[i].activity?.title
-                    }]
-                    : [{
-                        "startTime": sessions[i].start_time,
-                        "endTime": sessions[i].end_time,
-                        "name":
-                            sessions[i].type === 'workout'
-                                ? sessions[i].workout.workouttitle
-                                : sessions[i].activity?.title
-                    }];
+                    ? [
+                          ...sessionsObj[sessions[i].session_date],
+                          {
+                              startTime: sessions[i].start_time,
+                              endTime: sessions[i].end_time,
+                              name:
+                                  sessions[i].type === 'workout'
+                                      ? sessions[i].workout.workouttitle
+                                      : sessions[i].activity?.title
+                          }
+                      ]
+                    : [
+                          {
+                              startTime: sessions[i].start_time,
+                              endTime: sessions[i].end_time,
+                              name:
+                                  sessions[i].type === 'workout'
+                                      ? sessions[i].workout.workouttitle
+                                      : sessions[i].activity?.title
+                          }
+                      ];
             }
         }
     }, [props]);
-    
 
     // it helps render the first row in the calendar(which displays the date and other data)
     function handleDaysRowRender() {
@@ -2124,7 +2156,6 @@ const Schedular = (props: any, ref) => {
                                                                 );
                                                                 e.preventDefault();
                                                             }}
-                                                            
                                                             onDragLeave={(e) => {
                                                                 changedDay =
                                                                     e.currentTarget.getAttribute(
@@ -2162,7 +2193,6 @@ const Schedular = (props: any, ref) => {
                                                                                         );
                                                                                     }
                                                                                 }}
-                                                                                
                                                                                 id="dragMe"
                                                                                 className={`${
                                                                                     val.color ===

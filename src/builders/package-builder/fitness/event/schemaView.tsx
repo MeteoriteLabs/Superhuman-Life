@@ -1,11 +1,11 @@
 import PricingTableChannel from './pricingTable';
-import LocationList from '../../../../components/customWidgets/locationList';
-import LanguageList from '../../../../components/customWidgets/languageSelect';
+import LocationList from 'components/customWidgets/locationList';
+import LanguageList from 'components/customWidgets/languageSelect';
 import ProgramDetails from './ProgramDetails';
 import CourseDetails from '../cohort/course_details';
-import Upload from '../../../../components/upload/upload';
-import DatesConfig from '../../../../components/customWidgets/datesConfig';
-import EquipmentSelect from '../../../../components/customWidgets/equipmentListSelect';
+import Upload from 'components/upload/upload';
+import DatesConfig from 'components/customWidgets/datesConfig';
+import EquipmentSelect from 'components/customWidgets/equipmentListSelect';
 import BookingConfig from './bookingConfig';
 import CohortDateConfig from '../cohort/cohortDateConfig';
 

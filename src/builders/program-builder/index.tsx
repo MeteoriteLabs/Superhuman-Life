@@ -1,5 +1,5 @@
 import { Card, Tab, Tabs } from 'react-bootstrap';
-import {useState, useContext} from "react";
+import { useState, useContext, useEffect } from 'react';
 import { FETCH_USER_INDUSTRY } from '../package-builder/fitness/graphQL/queries';
 import { useQuery } from '@apollo/client';
 import { flattenObj } from 'components/utils/responseFlatten';
@@ -8,6 +8,7 @@ import FitnessTab from './fitness';
 
 export default function ProgramPage(): JSX.Element {
     const [industryData, setIndustryData] = useState<any[]>([]);
+    const [selectedIndustry, setSelectedIndustry] = useState<any>('');
     const auth = useContext(AuthContext);
 
     useQuery(FETCH_USER_INDUSTRY, {
@@ -17,6 +18,12 @@ export default function ProgramPage(): JSX.Element {
             setIndustryData(flattenData.usersPermissionsUser.industries);
         }
     });
+
+    useEffect(() => {
+        setSelectedIndustry(
+            industryData && industryData.length ? industryData[0].IndustryName : ''
+        );
+    }, [industryData]);
 
     return (
         <>
@@ -28,17 +35,30 @@ export default function ProgramPage(): JSX.Element {
                         className="pb-3 cards"
                         variant="pills"
                         transition={false}
-                        key={industryData && industryData.length ? industryData[0].IndustryName: ""}
-                        defaultActiveKey={industryData && industryData.length ? industryData[0].IndustryName: ""}
+                        key={
+                            industryData && industryData.length ? industryData[0].IndustryName : ''
+                        }
+                        defaultActiveKey={
+                            industryData && industryData.length ? industryData[0].IndustryName : ''
+                        }
+                        onSelect={(key) => {
+                            setSelectedIndustry(key);
+                        }}
                     >
-                         {
-                        industryData && industryData.length ? industryData.map((curr) => 
-                        <Tab eventKey={curr.IndustryName} title={curr.IndustryName} key={curr.IndustryName}>
-                           <FitnessTab industry={curr}/> 
-                       </Tab> 
-                  
-                    
-                    ): null}
+                        {industryData && industryData.length
+                            ? industryData.map((curr) => (
+                                  <Tab
+                                      eventKey={curr.IndustryName}
+                                      title={curr.IndustryName}
+                                      key={curr.IndustryName}
+                                  >
+                                      <FitnessTab
+                                          industry={curr}
+                                          selectedIndustry={selectedIndustry}
+                                      />
+                                  </Tab>
+                              ))
+                            : null}
                     </Tabs>
                 </Card.Body>
             </Card>

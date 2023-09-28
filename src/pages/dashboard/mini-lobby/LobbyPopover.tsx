@@ -65,6 +65,8 @@ export const MiniLobbyComponent: React.FC = () => {
                             ]
                         }`
                     }}
+
+                    target={data.link === process.env.REACT_APP_BLOG_URL ||  data.link === process.env.REACT_APP_SUPPORT_URL ? "_blank" : "_self"}
                 >
                     <Row>
                         <div className="pr-1">
