@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Gear, WindowFullscreen } from 'react-bootstrap-icons';
 import clsx from 'clsx';
 
@@ -7,6 +7,7 @@ import ThemeSettings from './themeSettings';
 import GeneralSettings from './generalSettings';
 
 import style from './tabs.module.css';
+import { ChangeMakerWebsiteContext } from 'context/changemakerWebsite-context';
 function CustomTabs({
     activeTab,
     setActiveTab
@@ -15,6 +16,8 @@ function CustomTabs({
     setActiveTab: (arg: 'website' | 'theme' | 'settings') => void;
 }): JSX.Element {
     const [renderActiveTab, setRenderActiveTab] = useState<JSX.Element>(<WebsiteNav />);
+    const { setChangemakerWebsiteState, changemakerWebsiteState } =
+        useContext(ChangeMakerWebsiteContext);
     useEffect(() => {
         const renderActiveTab = (activeTab: string): JSX.Element => {
             switch (activeTab) {
@@ -30,18 +33,24 @@ function CustomTabs({
         };
         setRenderActiveTab(renderActiveTab(activeTab));
     }, [activeTab]);
+
+    const handleTabToggle = (tab) => {
+        setActiveTab(tab);
+        setChangemakerWebsiteState({ ...changemakerWebsiteState, tabs: tab });
+    };
+
     return (
         <div>
             <div className={style.top_tabs}>
-                <div onClick={() => setActiveTab('website')} className={style.tabs_cont}>
+                <div onClick={() => handleTabToggle('website')} className={style.tabs_cont}>
                     <WindowFullscreen fontSize={15} className="mb-2" />
                     <p className={style.h_text}>Website</p>
                 </div>
-                <div onClick={() => setActiveTab('theme')} className={style.tabs_cont}>
+                <div onClick={() => handleTabToggle('theme')} className={style.tabs_cont}>
                     <img src="/assets/colour 1.png" width={15} className="mb-2" />
                     <p className={style.h_text}>Theme</p>
                 </div>
-                <div onClick={() => setActiveTab('settings')} className={style.tabs_cont}>
+                <div onClick={() => handleTabToggle('settings')} className={style.tabs_cont}>
                     <Gear fontSize={15} className="mb-2" />
                     <p className={style.h_text}>Settings</p>
                 </div>
