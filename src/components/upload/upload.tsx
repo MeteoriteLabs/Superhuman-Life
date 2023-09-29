@@ -82,6 +82,7 @@ const UploadImageToS3WithNativeSdk = (props: UploadImageToS3WithNativeSdkProps):
             uploadFile(file);
             return;
         } else {
+            console.log(URL.createObjectURL(file), file)
             setImageSrc(URL.createObjectURL(file));
         }
     }
@@ -216,6 +217,7 @@ const UploadImageToS3WithNativeSdk = (props: UploadImageToS3WithNativeSdkProps):
     }
 
     function uploadTOS3(file, filename, filetype) {
+        console.log(filename);
         const buf = Buffer.from(file.replace(/^data:image\/\w+;base64,/, ''), 'base64');
         const params = {
             Body: buf,
@@ -239,6 +241,7 @@ const UploadImageToS3WithNativeSdk = (props: UploadImageToS3WithNativeSdkProps):
                 const promise = myBucket.getSignedUrlPromise('getObject', paramUrl);
                 promise.then(
                     function (url) {
+                        console.log(url);
                         setUrl(url);
                     },
                     function (err) {
@@ -258,6 +261,7 @@ const UploadImageToS3WithNativeSdk = (props: UploadImageToS3WithNativeSdkProps):
             const promise = myBucket.getSignedUrlPromise('getObject', paramUrl);
             promise.then(
                 function (url) {
+                    console.log(url);
                     setUrl(url);
                 },
                 function (err) {
@@ -294,6 +298,7 @@ const UploadImageToS3WithNativeSdk = (props: UploadImageToS3WithNativeSdkProps):
     }
 
     const uploadFile = (file: any) => {
+        console.log(file);
         if (allowedVideoFormats.indexOf(file.type) > -1) {
             VideoUpload(file);
             return;
@@ -303,6 +308,7 @@ const UploadImageToS3WithNativeSdk = (props: UploadImageToS3WithNativeSdkProps):
             const fileType = '.' + file.type.split('/')[1];
 
             const fileName = uuidv4() + fileType;
+            console.log(fileName);
             reader.onload = function () {
                 onImageLoadedSmall('sm-' + fileName, file.type);
                 onImageLoadedMedium('md-' + fileName, file.type);

@@ -1,4 +1,5 @@
 import AWS from "aws-sdk";
+import DisplayPdf from "components/DisplayImage/pdfReader";
 import { useState } from "react";
 
 const S3_BUCKET: string | undefined = process.env.REACT_APP_S3_BUCKET_NAME;
@@ -11,7 +12,7 @@ interface File{
 function UploadPdf(props: {onChange: (args: string) => void; value: string;}) {
   // Create state to store file
   const [file, setFile] = useState<File>({} as File);
-  const [uploadedfile, setUploadedFile] = useState<string|null>(null);
+  const [uploadedfile, setUploadedFile] = useState<string|null>(props.value? props.value : null);
 
   // Function to upload file to s3
   const uploadFile = async (e) => {
@@ -44,11 +45,12 @@ function UploadPdf(props: {onChange: (args: string) => void; value: string;}) {
         );
       })
       .promise();
+      
 
     await upload.then((err: any) => {
       // File successfully uploaded
-      setUploadedFile(err.$response.request.httpRequest.path);
-      props.onChange((err.$response.request.httpRequest.path).toString());
+      setUploadedFile(file.name);
+      props.onChange(file.name);
     });
   };
 
@@ -58,6 +60,7 @@ function UploadPdf(props: {onChange: (args: string) => void; value: string;}) {
     const file = e.target.files[0];
     // Changing file state
     setFile(file);
+    
   };
 
   return (
@@ -65,8 +68,13 @@ function UploadPdf(props: {onChange: (args: string) => void; value: string;}) {
       <div>
         <p>Upload PDF document</p>
         <input type="file" onChange={handleFileChange} />
-        <button onClick={(e)=>uploadFile(e)}>Upload</button>
+        <button onClick={(e)=>uploadFile(e)} disabled={file.name === undefined}>Upload</button>
       </div>
+      {
+        uploadedfile ? <>
+        <DisplayPdf imageName={uploadedfile} defaultImageUrl="/assets/image_placeholder.svg" imageCSS="m-2"/>
+        </>: null
+      }
       {uploadedfile ? <p className="text-success">Uploaded successfully</p> : null}
     </div>
   );

@@ -18,7 +18,6 @@ export const schemaView: Record<string,unknown> = {
         'ui:placeholder': 'Enter session title',
         'ui:readonly': true
     },
-    
     about: {
         'ui:widget': 'textEditor',
         'ui:tile': 'About',
@@ -38,24 +37,14 @@ export const schemaView: Record<string,unknown> = {
     },
     pdfUpload: {
         'ui:widget': (props: any) => {
-            return (
-                <Upload  onChange={props.onChange}
-                value={props.value}
-                // readonly={true}
-                />
-            );
+            return <Upload onChange={props.onChange} value={props.value} />;
         }
     },
     url: {
         'ui:widget': (props: any) => {
-            return (
-                <Urls  onChange={props.onChange}
-                value={props.value}/>
-            );
+            return <Urls onChange={props.onChange} value={props.value} />;  
         }
-    }
-   
-    
+    }    
 };
 
 
