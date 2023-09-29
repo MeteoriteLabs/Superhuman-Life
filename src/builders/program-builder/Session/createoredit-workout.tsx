@@ -32,15 +32,6 @@ function CreateEditWorkout(props: any, ref: any) {
     const [toastType, setToastType] = useState<string>('');
     const [toastMessage, setToastMessage] = useState<string>('');
 
-    // useQuery(GET_INDUSTRY_SESSIONS, {
-    //     variables: { id: operation.id?.toString() },
-    //     skip: operation.type !== 'delete',
-    //     onCompleted: (response: any) => {
-    //         const flattenData = flattenObj({ ...response });
-    //         setProgramDetails(flattenData);
-    //     }
-    // });
-
     const [createWorkout] = useMutation(CREATE_INDUSTRY_SESSION, {
         onCompleted: () => {
             modalTrigger.next(false);
@@ -89,7 +80,6 @@ function CreateEditWorkout(props: any, ref: any) {
         }
     }));
 
-    
     useEffect(() => {
         if (operation.type === 'create') {
             setWorkoutDetails({});
@@ -109,8 +99,7 @@ function CreateEditWorkout(props: any, ref: any) {
         details.equipment = msg.equipment_lists.map((val: any) => {
             return val;
         });
-        
-        
+
         setWorkoutDetails(details);
 
         //if message exists - show form only for edit and view
@@ -129,7 +118,6 @@ function CreateEditWorkout(props: any, ref: any) {
     }
 
     function CreateWorkout(frm: any) {
-        
         frm.equipment = frm.equipment ? JSON.parse(frm.equipment) : null;
 
         createWorkout({
@@ -140,7 +128,7 @@ function CreateEditWorkout(props: any, ref: any) {
                     about: frm.about,
                     document: frm.pdfUpload,
                     agenda: frm.agenda,
-                    url: frm.url? JSON.parse(frm.url) : null,
+                    url: frm.url ? JSON.parse(frm.url) : null,
                     equipment_lists: frm.equipment
                         .map((item: any) => {
                             return item.id;
@@ -154,25 +142,27 @@ function CreateEditWorkout(props: any, ref: any) {
     }
 
     function EditWorkout(frm: any) {
-        frm.equipment = frm.equipment ? JSON.parse(frm.equipment): null;
+        frm.equipment = frm.equipment ? JSON.parse(frm.equipment) : null;
 
         editWorkout({
             variables: {
-                data:{
                 id: operation.id,
-                title: frm.title,
-                agenda: frm.agenda,
-                about: frm.about,
-                document: frm.pdfUpload,
-                url: frm.url,
-                equipment_lists: frm.equipment && frm.equipment.length && frm.equipment
-                    .map((item: any) => {
-                        return item.id;
-                    })
-                    .join(',')
-                    .split(','),
-
-                users_permissions_user: frm.user_permissions_user
+                data: {
+                    title: frm.title,
+                    agenda: frm.agenda,
+                    about: frm.about,
+                    document: frm.pdfUpload,
+                    url: frm.url,
+                    equipment_lists:
+                        frm.equipment &&
+                        frm.equipment.length &&
+                        frm.equipment
+                            .map((item: any) => {
+                                return item.id;
+                            })
+                            .join(',')
+                            .split(','),
+                    users_permissions_user: frm.user_permissions_user
                 }
             }
         });

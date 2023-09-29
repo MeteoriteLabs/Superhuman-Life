@@ -48,7 +48,7 @@ const DisplayPdf: React.FC<{
 
     return (
         <>
-            {/* <object width="100%" height="400" data={photoUrl} type="application/pdf">   </object> */}
+            {/* {photoUrl && <object width="100%" height="400" data={photoUrl} type="application/pdf" >   </object>} */}
             <Button
                 variant="dark"
                 className='m-2'
