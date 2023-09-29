@@ -82,7 +82,6 @@ const UploadImageToS3WithNativeSdk = (props: UploadImageToS3WithNativeSdkProps):
             uploadFile(file);
             return;
         } else {
-            console.log(URL.createObjectURL(file), file)
             setImageSrc(URL.createObjectURL(file));
         }
     }
