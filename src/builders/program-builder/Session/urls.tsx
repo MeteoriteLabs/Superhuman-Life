@@ -35,7 +35,7 @@ const Urls = (props: any) => {
                 minLength={MIN}
                 className="p-1 w-50"
             />
-            <Button onClick={handleAdd} variant="dark" className="ml-3">
+            <Button disabled={props.readonly?props.readonly:false} onClick={handleAdd} variant="dark" className="ml-3">
                 Add
             </Button>
             {isUrlExist ? <p className="text-danger">url already exist</p> : null}
@@ -64,9 +64,8 @@ const Urls = (props: any) => {
                                   }}
                               />
                           </OverlayTrigger>
-                          <div onClick={() => handleDelete(curr)}>
+                          <div onClick={() => {props.readonly ? null :handleDelete(curr)}} >
                           <Icon
-                              
                               name="delete"
                               height={25}
                               width={25}

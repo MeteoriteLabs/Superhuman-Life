@@ -37,12 +37,12 @@ export const schemaView: Record<string,unknown> = {
     },
     pdfUpload: {
         'ui:widget': (props: any) => {
-            return <Upload onChange={props.onChange} value={props.value} />;
+            return <Upload onChange={props.onChange} value={props.value} readonly={true}/>;
         }
     },
     url: {
         'ui:widget': (props: any) => {
-            return <Urls onChange={props.onChange} value={props.value} />;  
+            return <Urls onChange={props.onChange} value={props.value} readonly={true}/>;  
         }
     }    
 };

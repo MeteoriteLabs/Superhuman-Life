@@ -9,7 +9,7 @@ interface File{
     name: string;
 }
 
-function UploadPdf(props: {onChange: (args: string) => void; value: string;}) {
+function UploadPdf(props: {onChange: (args: string) => void; value: string; readonly?: boolean;}) {
   // Create state to store file
   const [file, setFile] = useState<File>({} as File);
   const [uploadedfile, setUploadedFile] = useState<string|null>(props.value? props.value : null);
@@ -67,8 +67,8 @@ function UploadPdf(props: {onChange: (args: string) => void; value: string;}) {
     <div className="border shadow p-3 mb-5 bg-white rounded">
       <div>
         <p>Upload PDF document</p>
-        <input type="file" onChange={handleFileChange} />
-        <button onClick={(e)=>uploadFile(e)} disabled={file.name === undefined}>Upload</button>
+        <input type="file" onChange={handleFileChange} disabled={props.readonly?props.readonly:false }/>
+        <button onClick={(e)=>uploadFile(e)} disabled={file.name === undefined || props.readonly?props.readonly:false}>Upload</button>
       </div>
       {
         uploadedfile ? <>
