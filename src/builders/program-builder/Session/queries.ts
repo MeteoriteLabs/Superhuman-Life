@@ -51,6 +51,7 @@ export const GET_INDUSTRY_SESSION = gql`
             data {
                 id
                 attributes {
+                    url
                     title
                     agenda
                     about

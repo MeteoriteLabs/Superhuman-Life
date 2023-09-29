@@ -100,8 +100,9 @@ function CreateEditWorkout(props: any, ref: any) {
         const flattenData = flattenObj({ ...data });
         const details: any = {};
         const msg = flattenData.industrySession;
+        console.log(msg);
         details.workout = msg.title;
-        details.document = msg.document;
+        details.pdfUpload = msg.document;
         details.agenda = msg.agenda;
         details.about = msg.about;
         details.url = msg.url && msg.url.length && msg.url.map((curr) => curr);
@@ -157,6 +158,7 @@ function CreateEditWorkout(props: any, ref: any) {
 
         editWorkout({
             variables: {
+                data:{
                 id: operation.id,
                 title: frm.title,
                 agenda: frm.agenda,
@@ -171,6 +173,7 @@ function CreateEditWorkout(props: any, ref: any) {
                     .split(','),
 
                 users_permissions_user: frm.user_permissions_user
+                }
             }
         });
     }
