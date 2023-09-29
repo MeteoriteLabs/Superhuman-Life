@@ -68,7 +68,7 @@ function UploadPdf(props: {onChange: (args: string) => void; value: string; read
       <div>
         <p>Upload PDF document</p>
         <input type="file" onChange={handleFileChange} disabled={props.readonly?props.readonly:false }/>
-        <button onClick={(e)=>uploadFile(e)} disabled={file.name === undefined || props.readonly?props.readonly:false}>Upload</button>
+        <button onClick={(e)=>uploadFile(e)} disabled={(file.name === undefined) || (props.readonly?props.readonly:false)}>Upload</button>
       </div>
       {
         uploadedfile ? <>
