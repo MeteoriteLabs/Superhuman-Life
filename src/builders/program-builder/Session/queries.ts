@@ -89,8 +89,8 @@ export const CREATE_INDUSTRY_SESSION = gql`
 `;
 
 export const UPDATE_INDUSTRY_SESSION = gql`
-    mutation createIndustrySession($id: ID!, $data: IndustrySessionInput!) {
-        createIndustrySession(id: $id, data: $data) {
+    mutation updateIndustrySession($id: ID!, $data: IndustrySessionInput!) {
+        updateIndustrySession(id: $id, data: $data) {
             data {
                 id
             }
