@@ -1,11 +1,17 @@
-import { Accordion, Button, Form, Nav } from 'react-bootstrap';
-import { useState, useRef, useEffect } from 'react';
+import { Accordion, Button, Form, Nav, Tab, Tabs } from 'react-bootstrap';
+import { useState, useRef, useEffect, useContext } from 'react';
 import Icon from 'components/Icons';
 import CreateEditProgramManager from './create-edit/createoredit-workoutTemplate';
 import CreateEditNewWorkout from './create-edit/createoredit-newWorkout';
 import CreateEditNewActivity from './create-edit/createoredit-newActivity';
 import CreateEditRestDay from './create-edit/createoredit-restDay';
+import { FETCH_USER_INDUSTRY } from '../../package-builder/fitness/graphQL/queries';
+import { AuthContext } from 'builders/session-builder/Fitness/Channel/import';
+import { flattenObj } from 'components/utils/responseFlatten';
+
+import CreateEditNewSesion from '../Session/createoredit-workout';
 import './sidebar.css';
+import { useQuery } from '@apollo/client';
 
 export default function SideNav({
     collapse,
@@ -54,14 +60,19 @@ export default function SideNav({
 }): JSX.Element {
     const createEditWorkoutTemplateComponent = useRef<any>(null);
     const createEditNewWorkoutComponent = useRef<any>(null);
+    const createEditNewSessionComponent = useRef<any>(null);
     const createEditNewActivityComponent = useRef<any>(null);
     const createEditRestDayComponent = useRef<any>(null);
     const [existingEvents, setExistingEvents] = useState<any[]>([]);
     const [restDays, setRestDays] = useState<any[]>([]);
     const [renewalDate, setRenewalDate] = useState('');
-
     const [accordionOpen, setAccordionOpen] = useState(accordionExpanded);
     const [activeKey, setActiveKey] = useState('');
+    const auth = useContext(AuthContext);
+    const [industryData, setIndustryData] = useState<any[]>([]);
+    const [selectedIndustryId, setSelectedIndustryId] = useState<any>('');
+    const last = window.location.pathname.split('/').reverse();
+
 
     // Sync accordionOpen with accordionExpanded prop
     useEffect(() => {
@@ -92,6 +103,18 @@ export default function SideNav({
         }
     };
 
+    useQuery(FETCH_USER_INDUSTRY, {
+        variables: { id: auth.userid },
+        onCompleted: (response) => {
+            const flattenData = flattenObj({ ...response });
+            setIndustryData(flattenData.usersPermissionsUser.industries);
+        }
+    });
+
+    useEffect(() => {
+        setSelectedIndustryId(industryData && industryData.length ? industryData[0].id : '');
+    }, [industryData]);
+
     return (
         <>
             <aside
@@ -102,6 +125,78 @@ export default function SideNav({
                 <Nav className="flex-column ">
                     <Accordion as={Nav} className="flex-column mt-5">
                         {/* AI */}
+
+                        {last[2] === 'client' ? (
+                            <Nav.Item>
+                                <Accordion.Toggle
+                                    as={Nav.Link}
+                                    eventKey="ai"
+                                    style={{ color: '#cebaa8' }}
+                                    className={`d-flex ${
+                                        activeKey === 'industry' && !collapse ? 'active' : ''
+                                    }`}
+                                >
+                                    {!collapse ? (
+                                        <>
+                                            <div
+                                                style={{
+                                                    backgroundColor: '',
+                                                    width: '10vw',
+                                                    flexDirection: 'column'
+                                                }}
+                                            >
+                                                <div>
+                                                    <Tabs
+                                                        style={{
+                                                            borderBottom: '1px solid white',
+                                                            overflowX: 'hidden',
+                                                            borderTop: '1px solid white',
+                                                            backgroundColor: '',
+                                                            fontColor:"white"
+                                                            
+                                                        }}
+                                                        variant="pills"
+                                                        transition={false}
+                                                        key={
+                                                            industryData && industryData.length
+                                                                ? industryData[0].id
+                                                                : ''
+                                                        }
+                                                        defaultActiveKey={
+                                                            industryData && industryData.length
+                                                                ? industryData[0].id
+                                                                : ''
+                                                        }
+                                                        onSelect={(key) => {
+                                                            setSelectedIndustryId(key);
+                                                        }}
+                                                    >
+                                                        {industryData && industryData.length
+                                                            ? industryData.map((curr) => (
+                                                                  <Tab
+                                                                      eventKey={curr.id}
+                                                                      title={curr.IndustryName}
+                                                                      key={curr.id}
+                                                                      className="text-white"
+                                                                  ></Tab>
+                                                              ))
+                                                            : null}
+                                                    </Tabs>
+                                                </div>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <Icon
+                                            name="ai"
+                                            height={25}
+                                            width={25}
+                                            style={{ marginRight: '10px', marginTop: '10px' }}
+                                        />
+                                    )}
+                                </Accordion.Toggle>
+                            </Nav.Item>
+                        ) : null}
+
                         <Nav.Item>
                             <Accordion.Toggle
                                 as={Nav.Link}
@@ -131,6 +226,7 @@ export default function SideNav({
                                     />
                                 )}
                             </Accordion.Toggle>
+
                             {!collapse ? (
                                 <Accordion.Collapse
                                     eventKey="ai"
@@ -192,6 +288,23 @@ export default function SideNav({
                                         >
                                             Create workout
                                         </Nav.Link>
+                                        {last[2] === 'client' ? (
+                                            <Nav.Link
+                                                className="text-white"
+                                                onClick={() => {
+                                                    handleScrollScheduler();
+                                                    createEditNewSessionComponent.current.TriggerForm(
+                                                        {
+                                                            id: null,
+                                                            type: 'create'
+                                                        }
+                                                    );
+                                                }}
+                                            >
+                                                Create session
+                                            </Nav.Link>
+                                        ) : null}
+
                                         <Nav.Link
                                             className="text-white"
                                             onClick={() => {
@@ -259,6 +372,24 @@ export default function SideNav({
                                         >
                                             Import workout
                                         </Nav.Link>
+
+                                        {last[2] === 'client' ? (
+                                            <Nav.Link
+                                                className="text-white"
+                                                onClick={() => {
+                                                    // handleScrollScheduler();
+                                                    // createEditWorkoutTemplateComponent.current.TriggerForm(
+                                                    //     {
+                                                    //         id: null,
+                                                    //         type: 'create'
+                                                    //     }
+                                                    // );
+                                                }}
+                                            >
+                                                Import session
+                                            </Nav.Link>
+                                        ) : null}
+
                                         <Nav.Link
                                             className="text-white"
                                             onClick={() => {
@@ -474,6 +605,7 @@ export default function SideNav({
                 events={existingEvents}
                 renewalDate={renewalDate}
             ></CreateEditProgramManager>
+
             <CreateEditNewWorkout
                 type={type}
                 clientIds={clientIds}
@@ -486,6 +618,21 @@ export default function SideNav({
                 sessionDate={sessionDate}
                 days={days}
             ></CreateEditNewWorkout>
+
+            <CreateEditNewSesion
+                type={type}
+                clientIds={clientIds}
+                sessionIds={sessionIds}
+                callback={callback3}
+                startDate={startDate}
+                duration={duration}
+                ref={createEditNewSessionComponent}
+                events={existingEvents}
+                sessionDate={sessionDate}
+                days={days}
+                industryId={selectedIndustryId}
+            ></CreateEditNewSesion>
+
             <CreateEditNewActivity
                 clientIds={clientIds}
                 sessionIds={sessionIds}

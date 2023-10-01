@@ -110,106 +110,6 @@ const SchedulerScreen = (props: any) => {
                     <Card>
                         <Accordion.Toggle
                             as={Card.Header}
-                            eventKey="0"
-                            onClick={() => {
-                                key === '' ? setKey('0') : setKey('');
-                            }}
-                            style={{ backgroundColor: '#343A40', color: 'white' }}
-                        >
-                            <span className="d-inline-block">
-                                <b> {props.clientName ? props.clientName : null}</b>
-                            </span>
-                            <span className="d-inline-block btn float-right">
-                                {key === '0' ? (
-                                    <i className="fa fa-chevron-up d-flex justify-content-end text-white" />
-                                ) : (
-                                    <i className="fa fa-chevron-down d-flex justify-content-end text-white" />
-                                )}
-                            </span>
-                        </Accordion.Toggle>
-                        <Accordion.Collapse eventKey="0">
-                            {/* Package details card */}
-                            <Card style={{ width: '100%' }}>
-                                <Card.Body>
-                                    <Row>
-                                        <Col lg={10} sm={8}>
-                                            <Card.Title className="mt-2">
-                                                <h4 style={{ letterSpacing: '1px' }}>
-                                                    {props.clientName ? props.clientName : null}
-                                                </h4>
-                                            </Card.Title>
-                                        </Col>
-                                        <Col>
-                                            <Row className="justify-content-end">
-                                                <Dropdown>
-                                                    <Dropdown.Toggle
-                                                        variant="bg-light"
-                                                        id="dropdown-basic"
-                                                    >
-                                                        <img
-                                                            src="/assets/cardsKebab.svg"
-                                                            alt="notification"
-                                                            className="img-responsive "
-                                                            style={{
-                                                                height: '20px',
-                                                                width: '20px'
-                                                            }}
-                                                        />
-                                                    </Dropdown.Toggle>
-
-                                                    <Dropdown.Menu>
-                                                        <Dropdown.Item
-                                                            key={1}
-                                                            onClick={() =>
-                                                                setShowProgramNameModal(true)
-                                                            }
-                                                        >
-                                                            Edit Program Name
-                                                        </Dropdown.Item>
-                                                    </Dropdown.Menu>
-                                                </Dropdown>
-                                            </Row>
-                                        </Col>
-                                    </Row>
-
-                                    <Card.Text>
-                                        <Row>
-                                            <Col lg={9} sm={5} style={{ fontWeight: '500' }}>
-                                                <b>
-                                                    Date of session:{' '}
-                                                    {props.effectiveDate
-                                                        ? moment(props.effectiveDate).format(
-                                                              'DD MMMM, YY'
-                                                          )
-                                                        : null}
-                                                </b>
-                                            </Col>
-                                            <Col style={{ marginTop: '-20px' }}>
-                                                {' '}
-                                                <img
-                                                    src={
-                                                        props.clientPhoto
-                                                            ? props.clientPhoto
-                                                            : '/assets/image_placeholder.svg'
-                                                    }
-                                                    height="100"
-                                                    className="rounded-circle"
-                                                    width="100"
-                                                    alt="avatar"
-                                                    style={{ backgroundColor: 'gray' }}
-                                                />
-                                                <br />
-                                                <b>{props.clientName ? props.clientName : null}</b>
-                                            </Col>
-                                        </Row>
-                                    </Card.Text>
-                                </Card.Body>
-                            </Card>
-                        </Accordion.Collapse>
-                    </Card>
-                    <Card>
-                        <Accordion.Toggle
-                            as={Card.Header}
                             eventKey="1"
                             onClick={() => {
                                 key === '' ? setKey('1') : setKey('');
@@ -256,25 +156,6 @@ const SchedulerScreen = (props: any) => {
                                             </Table>
                                         </Col>
 
-                                        <Col>
-                                            <Calendar
-                                                className="disabled"
-                                                // tileClassName={tileContent}
-                                                // onChange={onChange}
-                                                // onActiveStartDateChange={({ action }) => {
-                                                //     action === 'next'
-                                                //         ? setMonth(month + 1)
-                                                //         : setMonth(month - 1);
-                                                // }}
-                                                // value={value}
-                                                minDate={moment().startOf('month').toDate()}
-                                                maxDate={moment().add(2, 'months').toDate()}
-                                                maxDetail="month"
-                                                minDetail="month"
-                                                next2Label={null}
-                                                prev2Label={null}
-                                            />
-                                        </Col>
                                     </Row>
                                 </Card.Body>
                             </Card>
@@ -351,6 +232,7 @@ const SchedulerScreen = (props: any) => {
                     handleRefetch={handleRefetch}
                     callback={handleCallback}
                     sessionIds={sessionIds}
+
                 />
             </Col>
 
@@ -381,10 +263,11 @@ const SchedulerScreen = (props: any) => {
                     )}
                     callback={handleFloatingActionProgramCallback}
                     callback2={handleFloatingActionProgramCallback2}
-                    callback3={handleRefetch} 
+                    callback3={handleRefetch}
                     restDayCallback={handleShowRestDay}
-                    showRestDayAction={showRestDay}
-                />
+                    showRestDayAction={showRestDay} showBlockedSlots={false} setShowBlockedSlots={function (parmas: boolean): void {
+                        throw new Error('Function not implemented.');
+                    } }                />
             </Col>
         </Row>
     );
