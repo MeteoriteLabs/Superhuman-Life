@@ -33,6 +33,14 @@ export const GET_CLIENT_SESSIONS = gql`
                                 Is_restday
                                 start_time
                                 mode
+                                IndustrySession{
+                                    data{
+                                      id
+                                      attributes{
+                                        title
+                                      }
+                                    }
+                                  }
                                 activity {
                                     data {
                                         id

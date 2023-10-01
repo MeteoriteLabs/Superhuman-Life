@@ -191,7 +191,8 @@ function CreateEditWorkout(props: any, ref: any) {
             variables: {
                 data: {
                     title: frm.workout,
-                    industryId: `${operation.industry.industry.industry.id}`,
+                    // industryId: `${operation.industry.industry.industry.id}`,
+                    industryId: props.industryId,
                     about: frm.about,
 
                     agenda: frm.agenda,
