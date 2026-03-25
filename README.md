@@ -1,6 +1,6 @@
-# Superhuman Life: Changemaker Dashboard
+# Superhuman Life: Wellness & Health Professional Dashboard
 
-Superhuman Life (formerly "Sapien") is an open-source dashboard for changemakers, creators, and community managers to launch branded experiences, manage members, and run daily operations without writing code. The project bundles website builders, booking flows, CRM-style modules, community engagement tools, and analytics into a single React + GraphQL application that you can self-host or deploy to your preferred cloud provider.
+Superhuman Life is an open-source dashboard for wellness and health professionals to launch branded experiences, manage members, and run daily operations without writing code. The project bundles website builders, booking flows, CRM-style modules, community engagement tools, and analytics into a single React + GraphQL application that you can self-host or deploy to your preferred cloud provider.
 
 ## Table of Contents
 - [Project Vision](#project-vision)
@@ -23,13 +23,13 @@ Superhuman Life (formerly "Sapien") is an open-source dashboard for changemakers
 - [Acknowledgements](#acknowledgements)
 
 ## Project Vision
-Superhuman Life empowers mission-driven teams to:
+Superhuman Life empowers wellness and health teams to:
 - Launch and customise branded portals for their audience.
 - Coordinate schedules, bookings, and client success workflows.
 - Build community with in-product chat, notifications, and content feeds.
 - Measure performance through finance and analytics dashboards.
 
-By open-sourcing the dashboard we welcome contributors to extend the platform with new modules, integrations, localisation support, and deployment targets.
+As an open-source project, we welcome contributors to extend the platform with new modules, integrations, localisation support, and deployment targets.
 
 ## Key Features
 - **Dashboard Home** – Aggregated metrics, quick links, and a mini lobby to surface important announcements (`src/pages/dashboard`).
@@ -166,7 +166,7 @@ Continuous Integration (CI) pipelines should mirror these steps and may also bui
 - **Static hosting:** The production build is a static bundle compatible with Netlify, Vercel, Cloudflare Pages, AWS Amplify, or any CDN-backed host.
 - **Backend requirements:** The dashboard expects a GraphQL API reachable at `REACT_APP_URL`. Ensure the backend supports CORS for your domain(s).
 - **File storage:** When using AWS S3, configure CORS and IAM policies to allow the browser upload flows.
-- **Media streaming:** Cloudflare Stream credentials are required for the built-in video player. Alternatively, replace `SpaienVideoPlayer` with your preferred provider.
+- **Media streaming:** Cloudflare Stream credentials are required for the built-in video player. Alternatively, replace the existing video player component with your preferred provider.
 
 ## Contributing
 We welcome contributions of all sizes—from typo fixes to new modules. To get started:
@@ -186,7 +186,7 @@ Before contributing, please read (or help us draft!) the forthcoming `CONTRIBUTI
 If you discover a vulnerability, please follow responsible disclosure practices. Avoid sharing exploit details publicly until a fix is available. Add a `SECURITY.md` to document the official policy if you operate this project in production.
 
 ## License
-Select an OSI-approved license (for example, **Apache-2.0** or **MIT**) and add it as `LICENSE` at the repository root. Update this section once finalised. Until then, no implicit license is granted.
+This repository is open source. To complete licensing setup, add an OSI-approved license (for example, **Apache-2.0** or **MIT**) as `LICENSE` at the repository root and update this section with the final license name.
 
 ## Acknowledgements
 Superhuman Life is built on the efforts of contributors and the broader open-source ecosystem. Thank you to everyone who maintains the frameworks and libraries that make this project possible.
