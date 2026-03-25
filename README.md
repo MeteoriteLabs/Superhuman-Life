@@ -2,17 +2,6 @@
 
 Superhuman Life is an open-source dashboard for wellness and health professionals to launch branded experiences, manage members, and run daily operations without writing code. The project bundles website builders, booking flows, CRM-style modules, community engagement tools, and analytics into a single React + GraphQL application that you can self-host or deploy to your preferred cloud provider.
 
-<p align="left">
-  <img alt="Open Source" src="https://img.shields.io/badge/Open%20Source-Yes-22c55e?style=flat-square" />
-  <img alt="Frontend" src="https://img.shields.io/badge/Frontend-React%20%2B%20TypeScript-2563eb?style=flat-square" />
-  <img alt="API" src="https://img.shields.io/badge/API-GraphQL-a855f7?style=flat-square" />
-</p>
-
-## At a Glance
-- 🌿 **Purpose-built for wellness and health professionals** managing sessions, communities, and digital experiences.
-- 🧩 **All-in-one toolkit** for websites, bookings, CRM-style workflows, communication, and analytics.
-- 🌍 **Open source and extensible** so teams can customize modules, integrations, and deployments.
-
 ## Table of Contents
 - [At a Glance](#at-a-glance)
 - [Project Vision](#project-vision)
