@@ -3,6 +3,7 @@
 Superhuman Life is an open-source dashboard for wellness and health professionals to launch branded experiences, manage members, and run daily operations without writing code. The project bundles website builders, booking flows, CRM-style modules, community engagement tools, and analytics into a single React + GraphQL application that you can self-host or deploy to your preferred cloud provider.
 
 ## Table of Contents
+- [At a Glance](#at-a-glance)
 - [Project Vision](#project-vision)
 - [Key Features](#key-features)
 - [Architecture Overview](#architecture-overview)
@@ -62,6 +63,14 @@ The application is a single-page React app written in TypeScript. Core architect
 
 ## Getting Started
 Follow the steps below to run the dashboard locally for development.
+
+### Quick Start
+```bash
+git clone https://github.com/<your-org>/superhuman-life.git
+cd superhuman-life
+npm install
+npm start
+```
 
 ### Prerequisites
 - Node.js **>= 16** (LTS recommended)
