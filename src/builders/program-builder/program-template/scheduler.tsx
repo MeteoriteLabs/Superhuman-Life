@@ -44,6 +44,7 @@ import AuthContext from 'context/auth-context';
 import { AvailabilityCheck } from './availabilityCheck';
 import SapienVideoPlayer from 'components/customWidgets/SpaienVideoPlayer';
 import Toaster from 'components/Toaster';
+
 // import SideNav from '../program-template/SchedulerSideBar';
 
 const Schedular = (props: any, ref) => {
@@ -75,6 +76,8 @@ const Schedular = (props: any, ref) => {
     const [clickedSessionId, setClickedSessionId] = useState('');
     // const [showRestDay, setShowRestDay] = useState<boolean>(false);
     const [isUpdated, setIsUpdated] = useState<boolean>(false);
+
+    console.log('props ', props);
 
     const blockedSlots: any[] = [];
     const DELETE_REST_DAY = gql`
@@ -340,6 +343,7 @@ const Schedular = (props: any, ref) => {
                         : '0'
                 }`;
 
+                console.log('val', val);
                 // const startTimeMinute: any = `${
                 //     val.session.start_time === null ? '0' : val.session.start_time.split(':')[1]
                 // }`;
@@ -370,10 +374,11 @@ const Schedular = (props: any, ref) => {
                 arr[calculateDay(props.startDate, val.session.session_date)][startTimeHour][
                     startTimeMinute
                 ].push({
-                    title:
-                        val.session.activity === null
-                            ? val.session.workout.workouttitle
-                            : val.session.activity.title,
+                    title: val.session.activity
+                        ? val.session.activity.title
+                        : val.session.workout
+                        ? val.session.workout.workouttitle
+                        : val.session.IndustrySession.title,
                     color: '#FFFDD1',
                     day: calculateDay(props.startDate, val.session.session_date),
                     hour: startTimeHour,
@@ -381,10 +386,11 @@ const Schedular = (props: any, ref) => {
                     type: val.session.type,
                     endHour: endTimeHour,
                     endMin: endTimeMin,
-                    id:
-                        val.session.activity === null
-                            ? val.session.workout.id
-                            : val.session.activity.id,
+                    id: val.session.activity
+                        ? val.session.activity.id
+                        : val.session.IndustrySession
+                        ? val.session.IndustrySession.id
+                        : val.session.workout.id,
                     mode: val.session.mode,
                     tag: val.session.tag,
                     sessionId: val.session.id,
@@ -2175,9 +2181,9 @@ const Schedular = (props: any, ref) => {
                                                                 arr[d][h][m]?.map(
                                                                     (val, index: number) => {
                                                                         val.index = index;
+                                                                        console.log('val is ', val);
 
                                                                         return (
-                                                                            
                                                                             <div
                                                                                 key={index}
                                                                                 onClick={() => {
@@ -2239,7 +2245,16 @@ const Schedular = (props: any, ref) => {
                                                                                             ? '#fff'
                                                                                             : '#000'
                                                                                     }`,
-                                                                                    display:`${props && props.showBlockedSlots && val.color === 'red' || val.color !== 'red' ? 'block': 'none'}`,
+                                                                                    display: `${
+                                                                                        (props &&
+                                                                                            props.showBlockedSlots &&
+                                                                                            val.color ===
+                                                                                                'red') ||
+                                                                                        val.color !==
+                                                                                            'red'
+                                                                                            ? 'block'
+                                                                                            : 'none'
+                                                                                    }`,
                                                                                     // background: 'rgb(135,206,235)',
                                                                                     width: `${
                                                                                         val.type ===
@@ -2302,24 +2317,41 @@ const Schedular = (props: any, ref) => {
                                                                                                 ? null
                                                                                                 : val.title}
                                                                                         </div>
+
                                                                                         <div>
                                                                                             {props.showRestDay ? null : handleSessionPastDates(
                                                                                                   val.sessionDate,
                                                                                                   val.endHour,
                                                                                                   val.endMin
                                                                                               ) ? (
-                                                                                                <img
-                                                                                                    style={{
-                                                                                                        height: '20px',
-                                                                                                        position:
-                                                                                                            'absolute',
-                                                                                                        right: '0'
-                                                                                                    }}
-                                                                                                    title="session completed"
-                                                                                                    src="/assets/attended.svg"
-                                                                                                    alt="completed"
-                                                                                                />
+                                                                                                <>
+                                                                                                    <img
+                                                                                                        style={{
+                                                                                                            height: '20px',
+                                                                                                            position:
+                                                                                                                'absolute',
+                                                                                                            right: '0'
+                                                                                                        }}
+                                                                                                        title="session completed"
+                                                                                                        src="/assets/attended.svg"
+                                                                                                        alt="completed"
+                                                                                                    />
+                                
+                                                                                                </>
                                                                                             ) : null}
+                                                                                             <img
+                                                                                                        style={{
+                                                                                                            height: '18px',
+                                                                                                            marginTop:
+                                                                                                                '15px',
+                                                                                                            right: '0',
+                                                                                                            marginRight:
+                                                                                                                '2px'
+                                                                                                        }}
+                                                                                                        title="session"
+                                                                                                        src="/assets/info.svg"
+                                                                                                        alt="completed"
+                                                                                                    />
                                                                                         </div>
                                                                                     </div>
                                                                                     <div className="event-time">
